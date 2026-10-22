@@ -888,14 +888,24 @@
   }
   function updateHubState() { var badge=$("wordState"); badge.textContent="언제든 도전"; badge.className="game-state"; }
   function renderBoard() {
-    var board=$("wgBoard"); board.innerHTML=""; var target=splitHangulWord(curState.wordObj.word), cols=target.length;
-    var rowCount = Math.max(6, curState.guesses.length + 1);
-    for(var r=0;r<rowCount;r++) {
-      var rowEl=el("div","wg-row"), guess=curState.guesses[r];
+    var board=$("wgBoard"); board.innerHTML="";
+    var target=splitHangulWord(curState.wordObj.word), cols=target.length;
+    // 화면은 항상 5줄만 유지합니다. 시도 횟수가 5회를 넘어가면 최근 기록과 입력 줄만 표시합니다.
+    var overflow=curState.guesses.length>4;
+    var startGuess=overflow ? curState.guesses.length-4 : 0;
+    for(var r=0;r<5;r++) {
+      var rowEl=el("div","wg-row"), guess=null, isCurrent=false;
       rowEl.style.gridTemplateColumns="repeat("+cols+",minmax(0,1fr))";
+      if(overflow) {
+        if(r<4) guess=curState.guesses[startGuess+r];
+        else isCurrent=curState.status==="PLAYING";
+      } else {
+        if(r<curState.guesses.length) guess=curState.guesses[r];
+        else if(r===curState.guesses.length) isCurrent=curState.status==="PLAYING";
+      }
       for(var c=0;c<cols;c++) {
         var tile;
-        if(!guess && r===curState.guesses.length && curState.status==="PLAYING") {
+        if(isCurrent) {
           tile=document.createElement("input"); tile.type="text"; tile.className="wg-tile wg-entry";
           tile.inputMode="text"; tile.lang="ko"; tile.autocomplete="off"; tile.autocapitalize="off";
           tile.enterKeyHint="done"; tile.maxLength=8; tile.value=curState.currentInput[c]||"";
@@ -905,15 +915,14 @@
             var at=cells.indexOf(this), entered=splitHangulWord(this.value);
             if(!entered.length){ curState.currentInput[at]=""; }
             else {
-              // 한글 음절로 입력해도 초성/중성/종성을 자모로 분리해 칸마다 하나씩 배치
               for(var k=0;k<entered.length && at+k<cells.length;k++) curState.currentInput[at+k]=entered[k];
             }
             curState.currentInput=curState.currentInput.slice(0,cols);
             cells.forEach(function(cell,i){cell.value=curState.currentInput[i]||"";});
             curState.currentRaw=curState.currentInput.join("");
-            var next= Math.min(cols-1, at + Math.max(1,entered.length));
-            if(entered.length && cells[next] && next !== at) cells[next].focus();
-            else if(entered.length && at < cols-1 && cells[at+1]) cells[at+1].focus();
+            var next=Math.min(cols-1,at+Math.max(1,entered.length));
+            if(entered.length && cells[next] && next!==at) cells[next].focus();
+            else if(entered.length && at<cols-1 && cells[at+1]) cells[at+1].focus();
           });
           tile.addEventListener("keydown",function(e){
             var cells=Array.prototype.slice.call(board.querySelectorAll(".wg-entry")), at=cells.indexOf(this);
