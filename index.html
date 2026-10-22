@@ -3,18 +3,20 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>2030 직장인 드립대학 수다학과</title>
+<title>드립대학 수다학과</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jua&family=Noto+Sans+KR:wght@400;500;700;800&display=swap">
-<!-- Kakao 지도 JavaScript API (services 라이브러리 포함, autoload=false) -->
+<!-- Kakao 지도 JavaScript API (services 라이브러리 포함, autoload=false → kakao.maps.load()로 초기화) -->
 <script src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=65cb25515f828d2dddc4f6be98970b3f&libraries=services&autoload=false"></script>
 <style>
   :root {
-    --paper:#F6F8FC; --dot:#E9EDF5; --ink:#202B45; --muted:#68758E;
-    --card:#FFFFFF; --coral:#E85B52; --row-line:#E6EAF2;
-    --mint-bg:#D8F7E8; --mint-ink:#0B5F43;
-    --butter-bg:#FFF0B3; --butter-ink:#7A4B00;
+    --paper:#FFFAF0; --dot:#E9DDC8; --ink:#1B2340; --muted:#5C6684; --card:#FFFFFF; --coral:#F25430; --kakao:#FEE500;
+    --mint-bg:#D8F7E8; --mint-line:#7CDDB0; --mint-ink:#0B5F43;
+    --butter-bg:#FFF0B3; --butter-line:#F0C54A; --butter-ink:#7A4B00;
+    --pink-bg:#FFE8EE; --pink-line:#F5B3C2; --pink-ink:#D6264A;
+    --slate-bg:#EEF2F8; --slate-ink:#2F3B5A; --row-line:#E0E6F0;
+    --gold:#FFB020; --silver:#9AA8C7; --bronze:#E08A5B; --teal:#3FC2A0;
     --font-display:"Jua","Apple SD Gothic Neo","Malgun Gothic","Noto Sans KR",sans-serif;
     --font-body:"Noto Sans KR","Apple SD Gothic Neo","Malgun Gothic",sans-serif;
     color-scheme: light;
@@ -23,102 +25,381 @@
   [hidden] { display: none !important; }
   body {
     margin:0; background-color:var(--paper);
-    background-image: radial-gradient(#E8EDF5 .8px, transparent 1px); background-size:20px 20px;
-    color:var(--ink); font-family:var(--font-body); font-size:15px; line-height:1.5;
+    background-image: radial-gradient(var(--dot) 1.3px, transparent 1.6px); background-size:22px 22px;
+    color:var(--ink); font-family:var(--font-body); font-size:15px; line-height:1.55;
     padding-block:12px 56px;
     padding-left:max(16px, env(safe-area-inset-left, 0px)); padding-right:max(16px, env(safe-area-inset-right, 0px));
   }
-  .page { max-width:960px; margin:0 auto; width:100%; }
+  .page { max-width:780px; margin:0 auto; }
   button, input, select, textarea { font:inherit; color:inherit; }
   button { cursor:pointer; }
   :focus-visible { outline:3px solid #5B8CFF; outline-offset:2px; }
+  .stage { width:min(100%,720px); margin:0 auto; }
 
-  /* 헤더 & 카드 스타일 */
+  /* 히어로 */
+  .bongchul-hero { width:min(100%,280px); margin:0 auto; text-align:center; }
+  body.signed-in .bongchul-hero { display:none !important; }
+  .bongchul-hero img { display:block; width:100%; height:auto; max-height:230px; object-fit:contain; margin:0 auto; animation:bongchul-greet 1.8s ease-in-out infinite; transform-origin:50% 85%; }
+  .bongchul-hero .fallback { font-size:96px; line-height:1.2; animation:bongchul-greet 1.8s ease-in-out infinite; }
+  @keyframes bongchul-greet { 0%,100%{transform:translateY(0) rotate(-0.5deg)} 50%{transform:translateY(-5px) rotate(0.5deg)} }
+
+  /* 로그인 / 회원가입 */
   .rainbow-title { width:min(100%,720px); display:block; margin:0 auto -4px; overflow:visible; }
   .rainbow-title text { font-family:var(--font-display); font-weight:900; paint-order:stroke fill; stroke:var(--ink); stroke-width:7px; stroke-linejoin:round; }
-  .auth-card { width:min(100%,520px); margin:10px auto 22px; padding:24px; background:#fff; border:1px solid #E2E7F0; border-radius:16px; box-shadow:0 4px 16px rgba(32,43,69,.06); }
+  .auth-card { width:min(100%,520px); margin:10px auto 22px; padding:22px; background:#fff; border:3px solid var(--ink); border-radius:22px; box-shadow:6px 6px 0 var(--ink); }
   .auth-card h2 { margin:0 0 5px; font-family:var(--font-display); font-size:28px; }
-  .auth-help { margin:0 0 16px; color:var(--muted); font-size:13px; line-height:1.5; }
-  .auth-card label { display:block; margin:12px 0 5px; font-weight:800; font-size:13px; }
+  .auth-help { margin:0 0 16px; color:var(--muted); font-size:13px; }
+  .auth-card label { display:block; margin:12px 0 5px; font-weight:800; }
   .remember-row { display:flex !important; align-items:center; gap:9px; margin:12px 0 2px !important; font-size:14px; cursor:pointer; }
   .auth-card input.remember-checkbox { width:19px; min-height:19px; height:19px; margin:0; accent-color:#167a55; }
-  .auth-card input, .community-form input, .community-form textarea, .community-form select { width:100%; min-height:44px; border:1px solid #D8DFEA; border-radius:10px; padding:10px 12px; background:#fff; }
+  .auth-card input { width:100%; min-height:48px; border:2px solid var(--ink); border-radius:12px; padding:10px 12px; background:#fffdf8; }
   .auth-actions { display:grid; gap:10px; margin-top:16px; }
-  .auth-primary,.auth-secondary { min-height:46px; border-radius:10px; font-family:var(--font-body); font-size:15px; font-weight:800; border:1px solid #DCE2ED; }
-  .auth-primary { background:#E85B52; color:#fff; border-color:#E85B52; } 
-  .auth-secondary { background:#FFF1EF; color:#9F3732; border-color:#F2D0CC; }
-  .auth-topline { display:flex; justify-content:space-between; align-items:center; gap:10px; margin:4px auto 12px; max-width:960px; }
+  .auth-primary,.auth-secondary { min-height:48px; border:2.5px solid var(--ink); border-radius:13px; font-family:var(--font-display); font-size:18px; box-shadow:3px 3px 0 var(--ink); }
+  .auth-primary { background:#b8f1d6; } .auth-secondary { background:#ffe8ee; }
+  .auth-status { margin-top:12px; min-height:1.5em; font-size:13px; font-weight:700; color:var(--muted); overflow-wrap:anywhere; }
+  .auth-status.error { color:#c52843; } .auth-status.ok { color:#08734c; }
+  .auth-topline { display:flex; justify-content:space-between; align-items:center; gap:10px; margin:4px auto 12px; max-width:720px; }
   .auth-user { font-weight:800; }
-  .logout-btn { border:1px solid #DCE2ED; background:#fff; border-radius:10px; padding:6px 12px; font-weight:800; }
+  .logout-btn { border:2px solid var(--ink); background:#fff; border-radius:10px; padding:6px 12px; font-weight:800; }
+  .auth-note { font-size:12px; color:var(--muted); margin:12px 0 0; }
+  #signupView { max-width:720px; margin:0 auto; }
+  @media(max-width:520px){ .auth-card{padding:17px;border-radius:18px} .auth-card h2{font-size:25px} .rainbow-title text{stroke-width:9px} }
 
-  /* 메인 네비게이션 버튼 */
-  .nav-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:12px; margin:18px 0 30px; }
-  .nav-btn { display:flex; align-items:center; justify-content:flex-start; gap:8px; border:1px solid rgba(32,43,69,.1); border-radius:15px; padding:14px 16px; font-family:var(--font-body); font-size:15px; font-weight:800; box-shadow:0 3px 10px rgba(32,43,69,.07); background:var(--card); color:var(--ink); transition:transform .15s, box-shadow .15s; text-align:left; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; min-height:58px; }
+  /* 메뉴 버튼 */
+  .nav-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:16px; margin:20px 0 34px; }
+  .nav-btn { display:flex; align-items:center; justify-content:center; gap:10px; border:3px solid var(--ink); border-radius:18px; padding:16px 20px; font-family:var(--font-display); font-size:20px; box-shadow:4px 4px 0 var(--ink); background:var(--card); color:var(--ink); transition:transform .08s, box-shadow .08s; text-align:center; }
+  .nav-btn:hover { transform:translate(-2px,-2px); box-shadow:6px 6px 0 var(--ink); }
+  .nav-btn:active { transform:translate(2px,2px); box-shadow:2px 2px 0 var(--ink); }
+  .nav-btn.coral { background:var(--coral); color:#fff; }
+  .nav-btn.mint { background:var(--mint-bg); color:var(--mint-ink); }
+  .nav-btn.butter { background:var(--butter-bg); color:var(--butter-ink); }
+  .btn { display:inline-flex; align-items:center; gap:8px; border:2.5px solid var(--ink); border-radius:14px; padding:10px 18px; font-weight:800; font-size:15px; box-shadow:3px 3px 0 var(--ink); background:var(--card); color:var(--ink); transition:transform .08s, box-shadow .08s; }
+  .btn:hover { transform:translate(-1px,-1px); box-shadow:4px 4px 0 var(--ink); }
+  .btn:active { transform:translate(2px,2px); box-shadow:1px 1px 0 var(--ink); }
+  .btn.coral { background:var(--coral); color:#fff; }
+  .btn.small { padding:6px 14px; font-size:13.5px; border-radius:10px; }
+
+  /* 섹션 헤더 / 카드 */
+  .head { display:flex; justify-content:space-between; align-items:flex-end; gap:16px; flex-wrap:wrap; margin-bottom:18px; }
+  .head-main { min-width:0; }
+  .pill-live { display:inline-flex; align-items:center; gap:6px; background:var(--mint-bg); border:1.5px solid var(--mint-line); color:var(--mint-ink); font-weight:800; font-size:12px; border-radius:999px; padding:2px 10px; margin-bottom:6px; }
+  .dot { width:7px; height:7px; border-radius:50%; background:#17B26A; animation:pulse 1.6s ease-in-out infinite; }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.3} }
+  h2.title { margin:0; font-family:var(--font-display); font-weight:400; font-size:32px; line-height:1.2; }
+  .sub { margin:4px 0 0; color:var(--muted); font-size:14px; font-weight:500; }
+  .card { background:var(--card); border:2.5px solid var(--ink); border-radius:22px; box-shadow:6px 6px 0 var(--ink); padding:18px 20px; margin-bottom:26px; }
+  .dept { background:var(--butter-bg); border:1.5px solid var(--butter-line); color:var(--butter-ink); border-radius:999px; font-size:12.5px; font-weight:800; padding:1px 9px; margin-left:6px; }
+  .nick { font-weight:800; overflow-wrap:anywhere; }
+  .toast { position:fixed; left:50%; transform:translateX(-50%); bottom:calc(16px + env(safe-area-inset-bottom, 0px)); background:var(--ink); color:#fff; border-radius:12px; padding:10px 16px; font-weight:700; font-size:14px; max-width:calc(100% - 32px); z-index:20; box-shadow:0 4px 12px rgba(0,0,0,.15); }
+
+  /* 수다게시판 / 공통 패널 */
+  .community-panel { max-width:900px; margin:0 auto 28px; }
+  .community-post { background:#fff; border:2px solid var(--ink); border-radius:16px; padding:16px; margin:12px 0; box-shadow:3px 3px 0 var(--ink); }
+  .community-meta { font-size:12px; color:var(--muted); margin-bottom:10px; }
+  .community-body { white-space:pre-wrap; overflow-wrap:anywhere; margin:10px 0 14px; }
+  .community-actions { display:flex; flex-wrap:wrap; gap:8px; }
+  .community-actions button, .community-form button { border:2px solid var(--ink); border-radius:9px; padding:7px 11px; font-weight:800; background:#fff; }
+  .community-form { display:grid; gap:9px; background:#fff; border:2px solid var(--ink); border-radius:14px; padding:14px; margin:12px 0; }
+  .community-form h3 { margin:0; }
+  .community-form input, .community-form textarea, .community-form select { width:100%; border:2px solid var(--ink); border-radius:9px; padding:10px; background:#fffdf8; }
+  .community-form textarea { min-height:90px; resize:vertical; }
+  .comment-list { border-top:1px dashed #aaa; margin-top:12px; padding-top:10px; }
+  .comment-item { padding:8px 0; border-bottom:1px solid #eee; white-space:pre-wrap; overflow-wrap:anywhere; }
+  .community-status { font-size:13px; color:#b4233a; font-weight:700; min-height:1.3em; }
+  .community-row { display:flex; align-items:center; gap:12px; padding:15px 16px; cursor:pointer; border:2px solid var(--ink); border-radius:13px; background:#fff; margin:9px 0; box-shadow:3px 3px 0 var(--ink); }
+  .community-row-title { flex:1; min-width:0; font-weight:800; overflow-wrap:anywhere; }
+  .community-author-photo { width:38px; height:38px; flex:none; border:2px solid var(--ink); border-radius:50%; overflow:hidden; background:#FFF0C2; display:grid; place-items:center; }
+  .community-author-photo svg { width:100%; height:100%; display:block; }
+  .community-author-line { display:flex; align-items:center; gap:8px; font-size:12px; color:var(--muted); margin-bottom:8px; }
+  .community-row-meta { display:flex; gap:10px; white-space:nowrap; font-size:13px; color:#666; }
+  .community-detail { margin:12px 0; padding:16px; border:2px solid var(--ink); border-radius:16px; background:#fff; }
+  .community-photo { max-width:100%; max-height:420px; display:block; border-radius:12px; margin:10px 0; object-fit:contain; }
+  .like-btn { border:1px solid #e7a3b6 !important; border-radius:20px !important; background:#fff0f5 !important; }
+
+  /* 맛집/카페 지도 */
+  .places-tabs { display:flex; gap:8px; flex-wrap:wrap; margin:12px 0; }
+  .places-tabs button { border:2px solid var(--ink); border-radius:18px; padding:8px 13px; background:#fff; font-weight:800; }
+  .places-tabs button.active { background:#c9f3df; }
+  .places-layout { display:grid; grid-template-columns:minmax(280px,.82fr) minmax(0,1.65fr); gap:18px; align-items:start; }
+  .places-left { min-width:0; }
+  .places-right { min-width:0; display:grid; gap:14px; }
+  .places-list-head { display:flex; align-items:center; justify-content:space-between; gap:8px; margin:0 0 10px; }
+  .places-list-head h3 { margin:0; }
+  .places-list { display:grid; gap:10px; max-height:760px; overflow:auto; padding:2px 5px 5px 2px; }
+  .places-map { height: min(72vh, 680px); min-height:520px; border:2px solid var(--ink); border-radius:14px; overflow:hidden; position:relative; background:#eef2f8; }
+  .saved-place { padding:14px; border:1.5px solid var(--ink); border-radius:12px; margin:0; background:#fff; box-shadow:2px 2px 0 var(--ink); cursor:pointer; }
+  .saved-place strong { display:block; font-size:16px; line-height:1.45; margin-bottom:7px; overflow-wrap:anywhere; }
+  .saved-place .place-address { font-size:13px; line-height:1.5; color:#333; overflow-wrap:anywhere; }
+  .saved-place .place-author { font-size:12px; color:#6b7280; margin:6px 0 9px; }
+  .saved-place .place-memo { border-top:1px dashed #ddd; padding-top:9px; margin:0 0 10px; white-space:pre-wrap; overflow-wrap:anywhere; line-height:1.55; }
+  .saved-place .place-actions { display:flex; align-items:center; flex-wrap:wrap; gap:8px; }
+  .saved-place .place-actions a { font-size:12px; }
+  .place-save-form label { display:grid; gap:4px; font-weight:700; font-size:13px; }
+  .saved-place { padding:12px; border:1.5px solid var(--ink); border-radius:12px; margin:8px 0; background:#fff; box-shadow:2px 2px 0 var(--ink); }
+  .saved-place a { overflow-wrap:anywhere; }
+  .saved-place p { margin:6px 0; white-space:pre-wrap; overflow-wrap:anywhere; }
+  .kakao-overlay-iw { padding:10px 14px; border-radius:10px; background:#fff; border:2px solid var(--ink); font-size:13px; font-weight:700; box-shadow:2px 2px 0 var(--ink); white-space:nowrap; }
+  @media(max-width:850px){ .places-layout{grid-template-columns:minmax(0,1fr)} .places-left{order:2} .places-right{order:1} .places-map{height:58vh;min-height:390px} .places-list{max-height:none} }
+  @media(max-width:650px){ .places-map{height:420px;min-height:360px} .community-row{align-items:flex-start; flex-wrap:wrap} .community-row-meta{margin-left:auto} }
+
+  /* 공지사항 */
+  .notice-intro { padding:24px 20px; text-align:center; background:linear-gradient(135deg,#fff0f5,#fff8e9); border:2px solid var(--ink); border-radius:20px; margin:12px 0 14px; box-shadow:4px 4px 0 var(--ink); }
+  .notice-kicker { display:inline-block; padding:5px 10px; margin-bottom:8px; border-radius:999px; background:#fff; border:1px solid #f0c7d4; font-size:12px; font-weight:900; letter-spacing:.04em; }
+  .notice-intro h3 { font-size:26px; margin:0 0 7px; } .notice-intro p { margin:5px 0; color:#666; line-height:1.6; }
+  .notice-highlights { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:9px; margin:0 0 20px; }
+  .notice-highlight { padding:12px 10px; text-align:center; background:#fff; border:1.5px solid var(--ink); border-radius:13px; box-shadow:2px 2px 0 var(--ink); }
+  .notice-highlight .symbol { display:block; font-size:22px; margin-bottom:5px; }
+  .notice-highlight b { display:block; font-size:13px; margin-bottom:3px; }
+  .notice-highlight span:last-child { display:block; font-size:11px; line-height:1.5; color:#666; }
+  .notice-section-label { display:flex; align-items:center; gap:8px; margin:0 0 10px; font-size:16px; font-weight:900; }
+  .notice-rules { display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:12px; }
+  .notice-rule { display:flex; gap:12px; align-items:flex-start; background:#fff; border:1.5px solid #242424; border-radius:15px; padding:15px; box-shadow:3px 3px 0 var(--ink); }
+  .notice-rule-icon { flex:0 0 40px; width:40px; height:40px; display:grid; place-items:center; background:#f8eaf0; border-radius:12px; font-size:21px; }
+  .notice-rule h3 { font-size:15px; margin:3px 0 8px; line-height:1.4; }
+  .notice-rule ul { margin:0; padding-left:17px; } .notice-rule li { font-size:13px; line-height:1.75; margin:3px 0; }
+  .notice-rule strong { color:#cf3f70; }
+  .notice-closing { margin-top:16px; padding:22px 18px; text-align:center; background:#fff3f7; border:2px solid var(--ink); border-radius:17px; box-shadow:3px 3px 0 var(--ink); }
+  .notice-closing h3 { margin:0 0 9px; } .notice-closing p { line-height:1.75; margin:6px 0; }
+  .notice-discord { margin-top:13px; padding:18px; border:2px solid var(--ink); border-radius:15px; background:#f7f7ff; }
+  .notice-discord h3 { margin:0 0 7px; } .notice-discord p { font-size:13px; line-height:1.6; }
+  .notice-discord a { display:inline-block; margin-top:4px; padding:10px 14px; border:2px solid var(--ink); border-radius:11px; background:#fff; font-weight:900; text-decoration:none; color:var(--ink); box-shadow:2px 2px 0 var(--ink); }
+  @media(max-width:600px){ .notice-rules{grid-template-columns:1fr} .notice-intro h3{font-size:22px} .notice-highlights{gap:6px} .notice-highlight{padding:10px 5px} .notice-highlight b{font-size:12px} .notice-highlight span:last-child{font-size:10px} .notice-rule{padding:13px} }
+
+  /* 학생증 */
+  .sid-card { position:relative; max-width:420px; margin:12px auto 22px; padding:20px 22px; background:linear-gradient(180deg,#fff 0%,#eef1f8 100%); border:3px solid var(--ink); border-radius:24px; box-shadow:8px 8px 0 var(--ink); }
+  .sid-top { display:flex; align-items:center; justify-content:space-between; gap:10px; }
+  .sid-dots { display:flex; gap:7px; }
+  .sid-dots i { display:block; width:15px; height:15px; border-radius:50%; border:2px solid var(--ink); }
+  .sid-dots i:nth-child(1) { background:#ef4444; } .sid-dots i:nth-child(2) { background:#facc15; } .sid-dots i:nth-child(3) { background:#22c55e; }
+  .sid-title { font-family:var(--font-display); font-size:20px; letter-spacing:.08em; }
+  .sid-rule { height:3px; background:var(--ink); border-radius:2px; margin:12px 0 16px; }
+  .sid-body { display:flex; gap:16px; align-items:center; }
+  .sid-photo { flex:none; width:96px; height:112px; border:3px solid var(--ink); border-radius:14px; overflow:hidden; background:#fff; }
+  .sid-photo svg { display:block; width:100%; height:100%; }
+  .sid-info { min-width:0; display:grid; gap:3px; }
+  .sid-aff { font-size:12px; font-weight:800; color:#5c6684; }
+  .sid-major { font-size:14px; font-weight:800; color:#6d28d9; overflow-wrap:anywhere; }
+  .sid-name { font-family:var(--font-display); font-size:28px; line-height:1.25; letter-spacing:.3em; overflow-wrap:anywhere; }
+  .sid-no { font-size:12px; font-weight:800; color:#8a96b0; }
+  .sid-motto { position:relative; margin-top:16px; padding:12px 74px 12px 14px; border:1.5px solid #c8d2e4; border-radius:14px; background:rgba(255,255,255,.65); }
+  .sid-motto-label { font-size:11.5px; font-weight:800; color:#8190b0; }
+  .sid-motto-text { font-size:14.5px; font-weight:800; font-style:italic; overflow-wrap:anywhere; }
+  .sid-stamp { position:absolute; right:10px; top:50%; width:54px; height:54px; margin-top:-27px; border:3px solid rgba(214,38,74,.38); border-radius:50%; display:grid; place-items:center; text-align:center; color:rgba(214,38,74,.55); font-family:var(--font-display); font-size:12px; line-height:1.15; transform:rotate(-14deg); }
+  .sid-editor { max-width:420px; margin:0 auto 26px; }
+  .home-student-wrap { max-width:460px; margin:8px auto 18px; }
+  .home-sid-card { max-width:420px; margin:0 auto; }
+  .home-sid-card .sid-name { font-size:24px; }
+  body.signed-in #homeStudentCard { display:block; }
+  #homeStudentCard[hidden] { display:none !important; }
+  .sid-field { margin:12px 0; }
+  .sid-field label { display:block; font-weight:800; font-size:13px; margin-bottom:5px; }
+  .sid-input { width:100%; border:2px solid var(--ink); border-radius:10px; padding:10px 12px; background:#fffdf8; }
+  .sid-h { margin:18px 0 4px; font-family:var(--font-display); font-weight:400; font-size:20px; }
+  .sid-group { margin:12px 0; }
+  .sid-glabel { font-weight:800; font-size:13px; margin-bottom:8px; }
+  /* 학생증 캐릭터 옵션: 카테고리와 옵션을 가로로 밀어서 선택 */
+  #sidAvatarControls { display:flex; gap:12px; overflow-x:auto; padding:4px 3px 12px; scroll-snap-type:x mandatory; overscroll-behavior-x:contain; -webkit-overflow-scrolling:touch; touch-action:pan-x; }
+  #sidAvatarControls .sid-group { flex:0 0 min(86%, 340px); min-width:0; margin:0; padding:12px; border:1.5px solid #d8deeb; border-radius:14px; background:#f8faff; scroll-snap-align:start; }
+  .sid-opts { display:flex; flex-wrap:nowrap; gap:7px; overflow-x:auto; padding:3px 3px 9px; scroll-snap-type:x proximity; overscroll-behavior-x:contain; -webkit-overflow-scrolling:touch; touch-action:pan-x; }
+  .sid-opts > button { flex:0 0 auto; scroll-snap-align:start; }
+  .sid-opt { white-space:nowrap; }
+  .sid-swipe-hint { margin:3px 0 8px; color:var(--muted); font-size:12px; font-weight:700; }
+  .sid-opt { border:2px solid var(--ink); border-radius:999px; background:#fff; padding:5px 11px; font-weight:700; font-size:13px; }
+  .sid-opt.on { background:#c9f3df; box-shadow:2px 2px 0 var(--ink); }
+  .sid-sw { width:30px; height:30px; border-radius:50%; border:2px solid var(--ink); padding:0; }
+  .sid-sw.on { outline:3px solid #5B8CFF; outline-offset:2px; }
+  .sid-actions { display:flex; flex-wrap:wrap; gap:8px; margin-top:16px; }
+  @media(max-width:420px){ .sid-card { padding:16px 14px; box-shadow:6px 6px 0 var(--ink); } .sid-body { gap:12px; } .sid-photo { width:84px; height:98px; } .sid-title { font-size:17px; } .sid-name { font-size:24px; } }
+
+  /* 공지사항 - 세로 한 줄 목록 */
+  .notice-banner { padding:12px 14px; text-align:center; background:linear-gradient(135deg,#fff0f5,#fff8e9); border:2px solid var(--ink); border-radius:14px; box-shadow:3px 3px 0 var(--ink); font-weight:800; font-size:clamp(12px,3.4vw,15px); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin:12px 0 14px; }
+  .notice-list { list-style:none; margin:0; padding:4px 0; background:#fff; border:2px solid var(--ink); border-radius:16px; box-shadow:4px 4px 0 var(--ink); }
+  .notice-row { display:flex; align-items:center; gap:10px; padding:12px 14px; border-bottom:1px dashed #d9dbe4; font-size:clamp(12px,3.5vw,15px); white-space:nowrap; }
+  .notice-row:last-child { border-bottom:none; }
+  .notice-ico { flex:none; width:30px; height:30px; display:grid; place-items:center; background:#f8eaf0; border-radius:10px; font-size:17px; }
+  .notice-text { flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; font-weight:700; }
+  .notice-text em { font-style:normal; font-weight:800; color:#cf3f70; }
+  .notice-foot { display:flex; align-items:center; justify-content:space-between; gap:8px; margin-top:12px; padding:11px 14px; background:#fff3f7; border:2px solid var(--ink); border-radius:14px; box-shadow:3px 3px 0 var(--ink); font-weight:800; font-size:clamp(11.5px,3.4vw,14.5px); white-space:nowrap; }
+  .notice-foot > span { min-width:0; overflow:hidden; text-overflow:ellipsis; }
+  .notice-foot.discord { background:#f7f7ff; }
+  .notice-foot a { flex:none; padding:6px 12px; border:2px solid var(--ink); border-radius:10px; background:#fff; color:var(--ink); text-decoration:none; box-shadow:2px 2px 0 var(--ink); }
+  .notice-more { margin-top:14px; }
+  .notice-more summary { cursor:pointer; font-weight:800; padding:11px 14px; border:2px solid var(--ink); border-radius:12px; background:#fff; box-shadow:2px 2px 0 var(--ink); }
+  .notice-more[open] summary { margin-bottom:12px; }
+  .notice-more p { font-size:13px; margin:10px 2px 0; color:#555; }
+
+  /* 채팅 순위 */
+  .rank-tabs { display:flex; gap:8px; margin-bottom:16px; }
+  .rank-tab { border:2px solid var(--ink); border-radius:999px; background:#fff; padding:5px 14px; font-weight:800; font-size:13.5px; }
+  .rank-tab.active { background:var(--ink); color:#fff; }
+  .rank-item { display:flex; align-items:center; gap:12px; padding:12px 14px; border-bottom:1.5px solid var(--row-line); }
+  .rank-item:last-child { border-bottom:none; }
+  .rank-num { width:28px; height:28px; border-radius:50%; border:2px solid var(--ink); display:grid; place-items:center; font-family:var(--font-display); font-size:16px; background:#fff; }
+  .rank-num.gold { background:var(--gold); color:#fff; } .rank-num.silver { background:var(--silver); color:#fff; } .rank-num.bronze { background:var(--bronze); color:#fff; }
+  .rank-info { flex:1; min-width:0; }
+  .rank-item.me { background:#FFF9DD; border-radius:12px; }
+  .rank-sub { display:block; color:var(--muted); font-size:12.5px; font-weight:500; }
+  .rank-score { font-family:var(--font-display); font-size:18px; color:var(--coral); }
+
+  /* 미니게임 */
+  .game-card { display:flex; align-items:center; gap:16px; width:100%; text-align:left; transition:transform .08s, box-shadow .08s; }
+  .game-card:hover { transform:translate(-1px,-1px); box-shadow:7px 7px 0 var(--ink); }
+  .game-no { flex:none; width:52px; height:52px; border-radius:50%; border:2.5px solid var(--ink); background:var(--butter-bg); display:grid; place-items:center; font-family:var(--font-display); font-size:26px; }
+  .game-info { flex:1 1 auto; min-width:0; display:grid; gap:2px; }
+  .game-info strong { font-family:var(--font-display); font-weight:400; font-size:24px; line-height:1.2; }
+  .game-info small { color:var(--muted); font-size:13.5px; font-weight:500; }
+  .game-state { flex:none; background:var(--mint-bg); border:1.5px solid var(--mint-line); color:var(--mint-ink); font-weight:800; font-size:13px; border-radius:999px; padding:3px 12px; }
+  .wg { max-width:460px; margin-inline:auto; }
+  .wg-top { display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap; margin-bottom:10px; }
+  .wg-date { font-weight:800; font-size:15px; }
+  .wg-timer { display:none;  background:var(--pink-bg); border:1.5px solid var(--pink-line); color:var(--pink-ink); font-weight:800; font-size:12.5px; border-radius:999px; padding:2px 10px; }
+  .wg-hint { background:var(--butter-bg); border:1.5px solid var(--butter-line); color:var(--butter-ink); font-weight:800; font-size:13px; border-radius:9px; padding:2px 10px; }
+  .wg-desc-bar { background:#FFF9DD; border:2px solid var(--ink); border-radius:12px; padding:10px 12px; font-weight:700; font-size:13.5px; text-align:center; margin-bottom:14px; box-shadow:2px 2px 0 var(--ink); }
+  .wg-board { display:grid; gap:8px; margin:8px auto 12px; max-width:320px; }
+  .wg-row { display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:8px; }
+  .wg-row.shake { animation:shake .4s; }
+  @keyframes shake { 0%,100%{transform:translateX(0)} 20%,60%{transform:translateX(-6px)} 40%,80%{transform:translateX(6px)} }
+  .wg-tile { position:relative; aspect-ratio:1; border:2.5px solid var(--ink); border-radius:12px; background:#fff; display:grid; place-items:center; font-family:var(--font-display); font-size:clamp(22px,7vw,32px); line-height:1; box-shadow:2px 2px 0 var(--ink); transition:background-color .2s, transform .1s; }
+  .wg-tile.filled { background:#FFF9DD; transform:scale(1.02); }
+  input.wg-tile { width:100%; min-width:0; padding:0; text-align:center; outline:none; color:var(--ink); font-family:var(--font-display); }
+  input.wg-tile:focus { border-color:var(--teal); box-shadow:0 0 0 3px var(--butter-bg),2px 2px 0 var(--ink); }
+  .wg-tile.correct { background:var(--teal); color:#fff; } .wg-tile.present { background:var(--gold); color:#fff; } .wg-tile.absent { background:#C8D2E4; color:var(--slate-ink); }
+  .wg-preview { min-height:24px; text-align:center; color:var(--muted); font-weight:700; font-size:14px; margin-bottom:6px; }
+  .wg-input-form { display:flex; gap:8px; margin:10px 0; }
+  .wg-word-input { flex:1; min-width:0; border:2px solid var(--ink); border-radius:12px; padding:12px 14px; font:600 17px var(--font-body); background:#fff; color:var(--ink); }
+  .wg-word-input:focus { outline:3px solid var(--butter-bg); outline-offset:1px; }
+  .wg-keys { display:none !important; }
+  .wg-krow { display:flex; gap:5px; justify-content:center; }
+  .wg-key { flex:1 1 0; min-width:0; max-width:44px; height:46px; border:2px solid var(--ink); border-radius:999px; background:#fff; font-family:var(--font-display); font-size:18px; padding:0; box-shadow:2px 2px 0 var(--ink); }
+  .wg-key.wide { flex:1.7 1 0; max-width:72px; font-family:var(--font-body); font-weight:800; font-size:14px; }
+  .wg-key:active { transform:translate(1px,1px); box-shadow:none; }
+  .wg-key.correct { background:var(--teal); color:#fff; } .wg-key.present { background:var(--gold); color:#fff; } .wg-key.absent { background:#C8D2E4; color:#7C89A8; }
+  .wg-key[disabled] { opacity:.5; cursor:not-allowed; }
+  .wg-result { margin-top:14px; border:2.5px solid var(--ink); background:#F2FDF8; border-radius:16px; padding:14px; box-shadow:4px 4px 0 var(--ink); }
+  .wg-result.lose { background:#FFF5F7; }
+  .wg-result strong { display:block; font-family:var(--font-display); font-weight:400; font-size:22px; }
+  .wg-result p { margin:4px 0 0; font-weight:700; }
+  .wg-share { white-space:pre-wrap; background:#fff; border:1.5px solid var(--row-line); border-radius:10px; padding:8px 10px; margin:10px 0 0; font-size:14px; line-height:1.4; }
+  .wg-stats { display:grid; grid-template-columns:repeat(4,1fr); gap:8px; text-align:center; }
+  .wg-stats b { display:block; font-family:var(--font-display); font-weight:400; font-size:26px; line-height:1.2; }
+  .wg-stats span { color:var(--muted); font-size:12.5px; }
+  .wg-statcard h3 { margin:0 0 10px; font-family:var(--font-display); font-weight:400; font-size:20px; }
+  @media(max-width:520px){ h2.title{font-size:26px} .card{padding:16px 14px; box-shadow:4px 4px 0 var(--ink)} .wg-key{height:42px; font-size:16px} .game-info strong{font-size:21px} .nav-btn{font-size:18px; padding:14px} }
+  @media(prefers-reduced-motion:reduce){ .dot, .wg-row.shake, .bongchul-hero img, .bongchul-hero .fallback { animation:none; } .btn, .game-card, .nav-btn { transition:none; } }
+
+
+  /* ===== 공통 UI 정돈: 전체 화면 일관성 / 한눈에 읽히는 레이아웃 ===== */
+  :root {
+    --paper:#F6F8FC; --dot:#E9EDF5; --ink:#202B45; --muted:#68758E;
+    --card:#FFFFFF; --coral:#E85B52;
+    --row-line:#E6EAF2;
+  }
+  body { background-color:var(--paper); background-image:radial-gradient(#E8EDF5 .8px, transparent 1px); background-size:20px 20px; line-height:1.5; }
+  .page { width:100%; }
+  .stage, .community-panel, #signupView, #rankView, #gameHub, #wordGame { width:100%; }
+  .auth-card, .card, .community-post, .community-form, .community-row, .community-detail,
+  .notice-intro, .notice-highlight, .notice-rule, .saved-place, .sid-card, .game-card {
+    border:1px solid #E2E7F0; box-shadow:0 4px 16px rgba(32,43,69,.06); border-radius:16px;
+  }
+  .auth-card { padding:24px; }
+  .card { padding:20px; }
+  .community-post, .community-detail { padding:16px; }
+  .community-row { gap:12px; padding:13px 15px; }
+  .head { align-items:center; gap:12px; margin-bottom:18px; }
+  .head-main { flex:1 1 auto; }
+  h2.title { font-size:clamp(23px,4vw,29px); letter-spacing:-.025em; }
+  .sub { font-size:13px; line-height:1.45; }
+  .pill-live { margin-bottom:7px; }
+  .nav-grid { grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; margin:18px 0 30px; }
+  .nav-btn { min-width:0; min-height:58px; justify-content:flex-start; padding:14px 16px; gap:8px; border:1px solid rgba(32,43,69,.1); border-radius:15px; box-shadow:0 3px 10px rgba(32,43,69,.07); font-family:var(--font-body); font-size:15px; font-weight:800; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
   .nav-btn:hover { transform:translateY(-1px); box-shadow:0 6px 14px rgba(32,43,69,.1); }
+  .nav-btn:active { transform:translateY(0); box-shadow:0 2px 5px rgba(32,43,69,.08); }
   .nav-btn.coral { background:#FFF1EF; color:#A9322D; }
   .nav-btn.mint { background:#EAF9F1; color:#176747; }
   .nav-btn.butter { background:#FFF7DF; color:#78520B; }
-
-  /* 공통 버튼 & 레이아웃 */
-  .btn { display:inline-flex; align-items:center; gap:8px; border:1px solid #DCE2ED; border-radius:10px; padding:9px 13px; font-weight:800; font-size:14px; background:var(--card); color:var(--ink); transition:background-color .15s, transform .15s; }
-  .btn:hover { transform:translateY(-1px); }
-  .btn.coral { background:#E85B52; color:#fff; border-color:#E85B52; }
-  .btn.small { padding:7px 11px; font-size:13px; border-radius:9px; }
-  
-  .head { display:flex; justify-content:space-between; align-items:center; gap:12px; margin-bottom:18px; flex-wrap:wrap; }
-  h2.title { margin:0; font-family:var(--font-display); font-weight:400; font-size:clamp(23px,4vw,29px); line-height:1.2; letter-spacing:-.025em; }
-  .sub { margin:4px 0 0; color:var(--muted); font-size:13px; line-height:1.45; }
-  .community-panel { max-width:960px; margin:0 auto 28px; width:100%; }
-  .community-form { display:grid; gap:10px; background:#fff; border:1px solid #E2E7F0; border-radius:16px; padding:18px; box-shadow:0 4px 16px rgba(32,43,69,.06); }
-  .community-form h3 { margin:0 0 4px; font-size:18px; font-family:var(--font-display); }
-
-  /* ===== 맛집/카페 공유 수정 레이아웃 ===== */
-  .places-tabs { display:flex; gap:8px; flex-wrap:wrap; margin:12px 0 16px; }
-  .places-tabs button { border:1px solid #DCE2ED; border-radius:18px; padding:7px 14px; background:#fff; font-weight:800; font-size:13.5px; transition:all .15s; }
-  .places-tabs button.active { background:#202B45; color:#fff; border-color:#202B45; }
-  
-  /* 반응형 레이아웃: 넓은 화면에서 왼쪽(저장목록) / 오른쪽(지도 & 공유 폼) */
-  .places-layout { display:grid; grid-template-columns:320px 1fr; gap:20px; align-items:start; }
-  .places-left { min-width:0; }
-  .places-right { min-width:0; display:grid; gap:16px; }
-  .places-list-head { display:flex; align-items:center; justify-content:space-between; gap:8px; margin:0 0 12px; }
-  .places-list-head h3 { margin:0; font-size:17px; font-family:var(--font-display); }
-  .places-list { display:grid; gap:12px; max-height:800px; overflow-y:auto; padding-right:4px; }
-  
-  /* 카카오맵 크게 확장 */
-  .places-map { width:100%; height:520px; border:1px solid #DCE2ED; border-radius:16px; overflow:hidden; position:relative; background:#eef2f8; box-shadow:0 4px 16px rgba(32,43,69,.06); }
-  
-  .saved-place { padding:14px; border:1px solid #E2E7F0; border-radius:14px; background:#fff; box-shadow:0 2px 8px rgba(32,43,69,.04); transition:border-color .15s; cursor:pointer; }
-  .saved-place:hover { border-color:#7396E8; }
-  .saved-place strong { display:block; font-size:15.5px; line-height:1.4; margin-bottom:5px; color:#202B45; }
-  .saved-place .place-address { font-size:12.5px; line-height:1.45; color:#555; margin-bottom:6px; }
-  .saved-place .place-author { font-size:12px; color:#888; margin-bottom:8px; }
-  .saved-place .place-memo { border-top:1px dashed #E2E7F0; padding-top:8px; margin:6px 0 8px; white-space:pre-wrap; overflow-wrap:anywhere; font-size:13px; line-height:1.5; color:#333; }
-  .saved-place .place-actions { display:flex; align-items:center; gap:8px; font-size:12px; }
-  .saved-place .place-actions a { color:#3a86ff; text-decoration:none; font-weight:700; }
-  
-  .place-save-form label { display:grid; gap:5px; font-weight:800; font-size:13px; }
-  .kakao-overlay-iw { padding:10px 14px; border-radius:12px; background:#fff; border:1px solid #202B45; font-size:13px; font-weight:700; box-shadow:0 4px 12px rgba(0,0,0,.15); white-space:nowrap; }
-
-  .toast { position:fixed; left:50%; transform:translateX(-50%); bottom:calc(16px + env(safe-area-inset-bottom, 0px)); background:var(--ink); color:#fff; border-radius:12px; padding:10px 16px; font-weight:700; font-size:14px; max-width:calc(100% - 32px); z-index:99; box-shadow:0 4px 12px rgba(0,0,0,.15); }
-
-  @media(max-width:860px){
-    .places-layout { grid-template-columns:1fr; }
-    .places-left { order:2; }
-    .places-right { order:1; }
-    .places-map { height:400px; }
-    .places-list { max-height:none; }
+  .btn, .logout-btn, .community-actions button, .community-form button, .places-tabs button,
+  .rank-tab, .sid-opt, .auth-primary, .auth-secondary {
+    box-shadow:none; border:1px solid #DCE2ED; border-radius:10px; font-family:var(--font-body); font-size:14px; font-weight:800;
+    transition:background-color .15s ease, transform .15s ease, border-color .15s ease;
   }
+  .btn { padding:9px 13px; }
+  .btn:hover, .logout-btn:hover, .community-actions button:hover, .community-form button:hover,
+  .places-tabs button:hover, .rank-tab:hover, .sid-opt:hover { transform:translateY(-1px); box-shadow:none; }
+  .btn.coral, .auth-primary { background:#E85B52; color:#fff; border-color:#E85B52; }
+  .auth-secondary { background:#FFF1EF; color:#9F3732; border-color:#F2D0CC; }
+  .auth-primary, .auth-secondary { min-height:46px; font-size:15px; }
+  .auth-card input, .community-form input, .community-form textarea, .community-form select,
+  .sid-field input, .sid-field textarea, .sid-field select {
+    border:1px solid #D8DFEA; border-radius:10px; background:#fff; min-height:44px;
+  }
+  input:focus, select:focus, textarea:focus { border-color:#7396E8 !important; outline:3px solid rgba(115,150,232,.16); }
+  .auth-card label:not(.remember-row), .sid-field label, .place-save-form label { font-size:13px; font-weight:800; }
+  .auth-help, .auth-note { line-height:1.5; }
+  .community-meta { margin-bottom:7px; }
+  .community-body { line-height:1.65; }
+  .community-actions { gap:7px; }
+  .community-actions button, .community-form button { padding:8px 12px; }
+  .places-map { border:1px solid #DCE2ED; border-radius:14px; }
+  .saved-place { box-shadow:none; }
+  .notice-banner, .notice-foot, .wg-desc-bar { box-shadow:none; border-width:1px; }
+  .notice-row { gap:9px; }
+  .game-no { border-width:1px; box-shadow:none; }
+  .wg-tile { border-width:1px; box-shadow:0 2px 5px rgba(32,43,69,.06); }
+  .toast { box-shadow:0 8px 24px rgba(32,43,69,.2); }
+  /* 짧은 UI 문구는 한 줄 유지하고, 긴 본문은 잘리지 않도록 자연스럽게 줄바꿈 */
+  button, .pill-live, .dept, .rank-tab, .game-state, .wg-timer, .wg-hint { white-space:nowrap; }
+  .community-row-title { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; overflow-wrap:normal; }
+  .community-row-meta { flex-shrink:0; }
+  .sid-aff, .sid-major, .sid-no, .sid-motto-label { white-space:nowrap; }
+  @media(max-width:520px) {
+    body { padding-left:max(12px, env(safe-area-inset-left, 0px)); padding-right:max(12px, env(safe-area-inset-right, 0px)); padding-top:8px; }
+    .auth-card { padding:18px; border-radius:16px; box-shadow:0 4px 14px rgba(32,43,69,.07); }
+    .card { padding:15px 13px; box-shadow:0 4px 14px rgba(32,43,69,.06); }
+    .nav-grid { gap:9px; margin-top:14px; }
+    .nav-btn { min-height:54px; padding:12px 10px; font-size:13px; gap:6px; border-radius:12px; }
+    .head { align-items:flex-start; }
+    .head > div:last-child { flex-wrap:wrap; justify-content:flex-end; }
+    .head .btn.small { padding:7px 9px; font-size:12px; }
+    .community-row { padding:11px 12px; }
+    .notice-highlights { gap:7px; }
+  }
+  @media(max-width:360px) {
+    .nav-btn { font-size:12px; padding:10px 8px; }
+    .nav-grid { gap:7px; }
+    .head .btn.small { font-size:11px; padding:6px 7px; }
+  }
+
+
+  /* 공지사항: 요약 우선, 세부 규칙은 접어서 표시 */
+  #noticeView .head { margin-bottom:14px; }
+  #noticeView .notice-banner { background:#F1F5FF; border:1px solid #DCE5F5; color:#344365; border-radius:12px; box-shadow:none; text-align:left; padding:13px 15px; white-space:normal; line-height:1.45; }
+  #noticeView .notice-list { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:0; background:#fff; border:1px solid #E2E7F0; border-radius:14px; box-shadow:0 4px 14px rgba(32,43,69,.05); overflow:hidden; }
+  #noticeView .notice-row { min-width:0; border-bottom:1px solid #EDF0F5; padding:12px; gap:9px; white-space:normal; }
+  #noticeView .notice-row:nth-last-child(-n+2) { border-bottom:0; }
+  #noticeView .notice-ico { width:32px; height:32px; background:#F2F5FB; border-radius:10px; }
+  #noticeView .notice-text { white-space:normal; overflow:visible; text-overflow:clip; line-height:1.45; font-size:13px; }
+  #noticeView .notice-foot { background:#F8FAFD; border:1px solid #E2E7F0; border-radius:12px; box-shadow:none; white-space:normal; line-height:1.45; }
+  #noticeView .notice-foot.discord { background:#F4F3FF; }
+  #noticeView .notice-foot a { border:1px solid #D8D9F0; box-shadow:none; border-radius:9px; }
+  #noticeView .notice-more { margin-top:12px; }
+  #noticeView .notice-more summary { border:1px solid #E2E7F0; box-shadow:none; border-radius:12px; background:#fff; padding:13px 15px; }
+  #noticeView .notice-rules { grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr)); gap:10px; }
+  #noticeView .notice-rule { border:1px solid #E2E7F0; box-shadow:none; border-radius:13px; padding:14px; }
+  #noticeView .notice-rule-icon { background:#F2F5FB; }
+  #noticeView .notice-rule h3 { line-height:1.35; }
+  #noticeView .notice-rule li { line-height:1.6; }
+  @media(max-width:520px){ #noticeView .notice-list { grid-template-columns:1fr; } #noticeView .notice-row:nth-last-child(-n+2) { border-bottom:1px solid #EDF0F5; } #noticeView .notice-row:last-child { border-bottom:0; } }
+
 </style>
 </head>
 <body>
 <div class="page">
 
-  <!-- 메인 화면 -->
-  <main id="mainView">
-    <svg class="rainbow-title" viewBox="0 0 1000 245" role="img" aria-label="2030 직장인 드립대학 수다학과 무지개 제목">
+  <!-- ===== 메인 화면 ===== -->
+  <main id="mainView" class="stage">
+    <svg class="rainbow-title" viewBox="0 0 1000 245" role="img" aria-label="2030 직장인 드립대학 수다학과 아치형 무지개 제목">
       <defs>
-        <linearGradient id="titleRainbow" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#ff4d6d"/><stop offset="34%" stop-color="#ffe66d"/><stop offset="67%" stop-color="#3a86ff"/><stop offset="100%" stop-color="#ff4d6d"/></linearGradient>
+        <linearGradient id="titleRainbow" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#ff4d6d"/><stop offset="17%" stop-color="#ff9f1c"/><stop offset="34%" stop-color="#ffe66d"/><stop offset="50%" stop-color="#2ec4b6"/><stop offset="67%" stop-color="#3a86ff"/><stop offset="84%" stop-color="#8338ec"/><stop offset="100%" stop-color="#ff4d6d"/></linearGradient>
         <path id="titleArc" d="M 65 218 Q 500 -80 935 218" fill="none"/>
       </defs>
       <text font-size="62" fill="url(#titleRainbow)" text-anchor="middle"><textPath href="#titleArc" startOffset="50%">2030 직장인 드립대학 수다학과</textPath></text>
@@ -126,32 +407,151 @@
 
     <div id="authTopline" class="auth-topline" hidden><span id="signedInLabel" class="auth-user"></span><button id="logoutBtn" class="logout-btn" type="button">로그아웃</button></div>
 
-    <section id="loginCard" class="auth-card">
-      <h2>로그인</h2><p class="auth-help">카카오톡 오픈채팅 닉네임과 인증번호를 입력해 주세요.</p>
-      <form id="loginForm">
-        <label for="loginNickname">닉네임</label><input id="loginNickname" maxlength="24" placeholder="등록한 닉네임" required>
-        <label for="loginCode">인증번호</label><input id="loginCode" type="password" placeholder="인증번호 입력" required>
-        <div class="auth-actions"><button class="auth-primary" type="submit">로그인</button></div>
-      </form>
+    <div class="bongchul-hero" role="img" aria-label="봉춸이가 손을 들고 반갑게 인사하는 그림">
+      <img id="bongchulImg" alt="봉춸이가 손을 흔들며 인사해요!" hidden>
+      <div id="bongchulFallback" class="fallback" aria-hidden="true">🙋</div>
+    </div>
+
+    <section id="homeStudentCard" class="home-student-wrap" hidden aria-label="내 학생증">
+      <div class="sid-card home-sid-card">
+        <div class="sid-top"><div class="sid-dots" aria-hidden="true"><i></i><i></i><i></i></div><div class="sid-title">드립대학교 학생증</div></div>
+        <div class="sid-rule"></div>
+        <div class="sid-body"><div class="sid-photo" id="homeSidPhoto"></div><div class="sid-info">
+          <div class="sid-aff">소속: 수다학과</div><div class="sid-major" id="homeSidMajor">칼퇴기원학 전공</div><div class="sid-name" id="homeSidName">회원</div><div class="sid-no" id="homeSidNo"></div>
+        </div></div>
+        <div class="sid-motto"><div class="sid-motto-label">슬기로운 직장생활 좌우명</div><div class="sid-motto-text" id="homeSidMotto"></div><div class="sid-stamp" aria-hidden="true">드립<br>인증</div></div>
+      </div>
     </section>
 
-    <!-- 버튼 수정: 맛집/카페 등 공유 -->
-    <nav id="mainNav" class="nav-grid">
-      <button class="nav-btn coral" id="goPlaces" type="button">☕ 맛집/카페 등 공유</button>
+    <section id="loginCard" class="auth-card" aria-labelledby="loginTitle">
+      <h2 id="loginTitle">로그인</h2><p class="auth-help">카카오톡 오픈채팅에서 사용하는 닉네임과 인증번호를 입력해 주세요.</p>
+      <form id="loginForm" autocomplete="on">
+        <label for="loginNickname">닉네임</label><input id="loginNickname" name="nickname" maxlength="24" autocomplete="username" placeholder="등록한 닉네임" required>
+        <label for="loginCode">인증번호</label><input id="loginCode" name="code" type="password" autocomplete="current-password" placeholder="인증번호 입력" required>
+        <label class="remember-row" for="rememberLogin"><input class="remember-checkbox" id="rememberLogin" type="checkbox" checked> 자동 로그인 (캐시/사이트 데이터 삭제 전까지 유지)</label>
+        <div class="auth-actions"><button class="auth-primary" type="submit">로그인</button><button class="auth-secondary" id="openSignup" type="button">회원가입</button></div>
+        <div id="loginStatus" class="auth-status" role="status" aria-live="polite"></div>
+      </form>
+      <p class="auth-note">회원가입은 관리자가 Supabase에 미리 등록한 닉네임과 인증번호가 있어야 가능합니다.</p>
+    </section>
+
+    <nav id="mainNav" class="nav-grid" aria-label="메인 메뉴" hidden>
+      <button class="nav-btn coral" id="goNotice" type="button">📢 공지사항</button>
+      <button class="nav-btn butter" id="goBoard" type="button">💬 수다게시판</button>
+      <button class="nav-btn mint" id="goStudentId" type="button">🪪 학생증 만들기</button>
+      <button class="nav-btn coral" id="goGames" type="button">🎮 미니게임</button>
+      <button class="nav-btn butter" id="goFortune" type="button">🔮 오늘의 사주</button>
+      <button class="nav-btn mint" id="goRank" type="button">🏆 채팅순위 보기</button>
+      <button class="nav-btn coral" id="goPlaces" type="button">☕ 맛집/카페 보기</button>
     </nav>
   </main>
 
-  <!-- 맛집 · 카페 · 명소 · 숙소 · 기타 (Kakao 지도 공유) -->
-  <section id="placesView" class="community-panel">
-    <div class="head">
-      <div>
-        <h2 class="title">📍 맛집 · 카페 · 명소 공유</h2>
-        <p class="sub">지도를 크게 확인하고 나만의 추천 장소를 회원들과 실시간으로 공유해 보세요!</p>
+  <!-- ===== 회원가입 ===== -->
+  <section id="signupView" hidden aria-labelledby="signupTitle">
+    <div class="auth-card">
+      <h2 id="signupTitle">회원가입</h2>
+      <p class="auth-help">관리자가 등록한 닉네임과 인증번호를 입력하면 가입할 수 있어요.</p>
+      <form id="signupForm" autocomplete="off">
+        <label for="signupNickname">닉네임</label><input id="signupNickname" name="nickname" maxlength="24" autocomplete="username" placeholder="관리자에게 등록된 닉네임" required>
+        <label for="signupCode">인증번호</label><input id="signupCode" name="code" type="password" autocomplete="new-password" placeholder="관리자에게 받은 인증번호" required>
+        <div class="auth-actions"><button class="auth-primary" type="submit">가입하기</button><button class="auth-secondary" id="backToLogin" type="button">로그인으로 돌아가기</button></div>
+        <div id="signupStatus" class="auth-status" role="status" aria-live="polite"></div>
+      </form>
+      <p class="auth-note">인증번호는 로그인할 때 비밀번호로 사용됩니다. 다른 사이트에서 사용하는 비밀번호와 다르게 설정해 주세요.</p>
+    </div>
+  </section>
+
+  <!-- ===== 수다게시판 ===== -->
+  <section id="boardView" hidden aria-labelledby="boardHead" class="community-panel">
+    <div class="head"><div class="head-main"><span class="pill-live"><span class="dot"></span>실시간 게시판</span><h2 class="title" id="boardHead">💬 수다게시판</h2><p class="sub">게시물과 댓글은 Supabase에 저장됩니다.</p></div><div style="display:flex;gap:8px"><button class="btn small" id="boardBack" type="button">← 메인으로</button><button class="btn small coral" id="newCommunityPost" type="button">글 작성</button></div></div>
+    <form id="communityComposer" class="community-form" hidden><h3 id="communityFormTitle">새 글 작성</h3><input id="communityTitle" maxlength="120" placeholder="제목" required><textarea id="communityContent" maxlength="10000" placeholder="내용을 입력해 주세요." required></textarea><label>사진 첨부 (JPG, PNG, WEBP / 최대 5MB)<input id="communityPhoto" type="file" accept="image/jpeg,image/png,image/webp"></label><div id="communityPhotoPreview"></div><div class="community-actions"><button type="submit">저장</button><button type="button" id="cancelCommunityPost">취소</button></div><div id="communityPostStatus" class="community-status"></div></form>
+    <div id="communityFeed" aria-live="polite"></div><div id="communityStatus" class="community-status"></div>
+  </section>
+
+  <!-- ===== 공지사항 ===== -->
+  <section id="noticeView" hidden class="community-panel"><div class="head"><div class="head-main"><h2 class="title">📢 공지사항</h2><p class="sub">2030 직장인 드립대학 수다학과 이용 규칙</p></div><button class="btn small" id="noticeBack" type="button">← 메인으로</button></div>
+    <div class="notice-banner">📢 편안한 대화를 위해 아래 규칙을 지켜주세요</div>
+    <ul class="notice-list" aria-label="이용 규칙">
+      <li class="notice-row"><span class="notice-ico">🔞</span><span class="notice-text"><em>만 19세 이상</em>만 입장 · 읽고 <em>♥</em> 클릭</span></li>
+      <li class="notice-row"><span class="notice-ico">🤝</span><span class="notice-text">존댓말·음슴체, 닉네임 뒤 <em>‘님’</em></span></li>
+      <li class="notice-row"><span class="notice-ico">🪪</span><span class="notice-text">기본 닉네임 <em>금지</em> · 변경 월 1회</span></li>
+      <li class="notice-row"><span class="notice-ico">🔒</span><span class="notice-text">과한 신상 질문 자제 · SNS는 본인 책임</span></li>
+      <li class="notice-row"><span class="notice-ico">💬</span><span class="notice-text">종교·정치·19금도 갈등 없이 OK</span></li>
+      <li class="notice-row"><span class="notice-ico">🚫</span><span class="notice-text">메시지 <em>임의 삭제 금지</em> · 운영진 호출</span></li>
+      <li class="notice-row"><span class="notice-ico">📞</span><span class="notice-text">신고·문의는 운영진 개인 카톡으로</span></li>
+      <li class="notice-row"><span class="notice-ico">💗</span><span class="notice-text">따돌림·소외시키는 행동 <em>금지</em></span></li>
+      <li class="notice-row"><span class="notice-ico">⚖️</span><span class="notice-text"><em>사전 경고 없이 강퇴</em> 가능</span></li>
+    </ul>
+    <div class="notice-foot"><span>💗 다 읽었다면 하단 ♥ 클릭도 잊지 마세요!</span></div>
+    <div class="notice-foot discord"><span>🎮 게임 전용 디스코드방</span><a href="https://discord.gg/CPx3MfNuz5" target="_blank" rel="noopener noreferrer">입장 ↗</a></div>
+    <details class="notice-more">
+      <summary>📖 규칙 자세히 보기</summary>
+      <div class="notice-rules">
+      <article class="notice-rule"><div class="notice-rule-icon">👥</div><div><h3>01. 기본 입장 규칙</h3><ul><li><strong>만 19세 이상</strong>만 입장할 수 있습니다.</li><li>공지사항을 모두 읽은 뒤 하단의 <strong>♥를 클릭</strong>해 주세요.</li></ul></div></article>
+      <article class="notice-rule"><div class="notice-rule-icon">🤝</div><div><h3>02. 상호 존중</h3><ul><li>존댓말 또는 음슴체를 사용해 주세요.</li><li>상대방을 부를 때는 반드시 <strong>닉네임 뒤에 ‘님’</strong>을 붙여 주세요.</li></ul></div></article>
+      <article class="notice-rule"><div class="notice-rule-icon">🪪</div><div><h3>03. 닉네임 및 프로필</h3><ul><li>‘홍길동’, ‘남자’, ‘여자’ 등 <strong>기본적인 닉네임은 사용 금지</strong>입니다.</li><li>닉네임 양식은 자유롭게 정해 주세요.</li><li>닉네임 변경은 <strong>한 달에 1회</strong> 가능합니다.</li><li>기존 닉네임에 내용을 덧붙이는 것은 가능합니다.</li><li>다른 사람과 비슷한 닉네임이나 프로필 사진은 피해 주세요.</li></ul></div></article>
+      <article class="notice-rule"><div class="notice-rule-icon">🔒</div><div><h3>04. 개인 신상 보호</h3><ul><li>SNS 아이디 공유는 자유이며, 공유에 따른 책임은 본인에게 있습니다.</li><li>상대방이 불쾌할 수 있는 과도한 신상 질문은 자제해 주세요.</li></ul></div></article>
+      <article class="notice-rule"><div class="notice-rule-icon">💬</div><div><h3>05. 대화 주제</h3><ul><li>종교·정치·19금 등 민감한 주제도 <strong>갈등이 생기지 않는 선에서</strong> 가능합니다.</li><li>어떠한 주제든 환영합니다. 서로 배려하며 이야기해 주세요!</li></ul></div></article>
+      <article class="notice-rule"><div class="notice-rule-icon">🚫</div><div><h3>06. 메시지 삭제 및 가리기</h3><ul><li>본인이 작성한 메시지는 임의로 삭제하지 말아 주세요.</li><li>메시지 가리기가 필요하면 운영진을 호출하고 태그해 주세요.</li><li><strong>메시지를 직접 삭제하면 방 인기도가 내려갑니다.</strong></li></ul></div></article>
+      <article class="notice-rule"><div class="notice-rule-icon">📞</div><div><h3>07. 신고 · 제보 · 문의</h3><ul><li>신고나 문의는 <strong>운영진 개인 카카오톡 프로필</strong>로 연락해 주세요.</li></ul></div></article>
+      <article class="notice-rule"><div class="notice-rule-icon">💗</div><div><h3>08. 서로 배려하기</h3><ul><li>채팅방에는 다양한 성격과 생각을 가진 사람들이 함께합니다.</li><li>서로 맞지 않더라도 의도적으로 티 내거나 무시하지 말아 주세요.</li><li><strong>따돌림이나 소외시키는 행동은 삼가 주세요.</strong></li></ul></div></article>
+      <article class="notice-rule"><div class="notice-rule-icon">⚖️</div><div><h3>09. 운영진 관리 방침</h3><ul><li>운영진 판단에 따라 <strong>사전 경고 없이 강퇴</strong>될 수 있습니다.</li><li>엄격한 관리보다는 느슨하고 편안한 분위기를 지향합니다.</li></ul></div></article>
+    </div>
+      <p>🎮 디스코드방은 게임을 함께 즐기기 위한 전용 공간입니다. 친목으로 인해 우리 채팅방 구성원이 소외되는 경우는 허용하지 않습니다.</p>
+    </details>
+  </section>
+
+  <!-- ===== 학생증 / 사주 ===== -->
+  <section id="studentIdView" hidden class="community-panel">
+    <div class="head"><div class="head-main"><h2 class="title">🪪 학생증 만들기</h2><p class="sub">닉네임은 내 계정으로 고정, 학과·좌우명·캐릭터는 마음대로!</p></div><button class="btn small" data-home type="button">← 메인으로</button></div>
+
+    <div class="sid-card" id="sidCard">
+      <div class="sid-top"><div class="sid-dots" aria-hidden="true"><i></i><i></i><i></i></div><div class="sid-title">드립대학교 학생증</div></div>
+      <div class="sid-rule"></div>
+      <div class="sid-body">
+        <div class="sid-photo" id="sidPhoto"></div>
+        <div class="sid-info">
+          <div class="sid-aff">소속: 수다학과</div>
+          <div class="sid-major" id="sidMajor"></div>
+          <div class="sid-name" id="sidName">회원</div>
+          <div class="sid-no" id="sidNo"></div>
+        </div>
       </div>
-      <button class="btn small" id="placesBack" type="button">← 메인으로</button>
+      <div class="sid-motto">
+        <div class="sid-motto-label">슬기로운 직장생활 좌우명</div>
+        <div class="sid-motto-text" id="sidMotto"></div>
+        <div class="sid-stamp" aria-hidden="true">드립<br>인증</div>
+      </div>
     </div>
 
-    <!-- 카테고리 탭 -->
+    <div class="card sid-editor">
+      <p class="community-meta" style="font-size:13px">🔒 닉네임은 로그인한 계정의 닉네임으로 고정돼요. (현재: <b id="sidNickFixed">회원</b>)</p>
+      <div class="sid-field"><label for="sidMajorInput">학과 (전공)</label><input id="sidMajorInput" class="sid-input" list="sidMajorList" maxlength="14" placeholder="예: 칼퇴기원학"><datalist id="sidMajorList"><option value="칼퇴기원학"><option value="월급루팡학"><option value="야근학"><option value="칼퇴학"><option value="회식학"><option value="탕비실학"><option value="커피수혈학"><option value="월요병학"><option value="점심메뉴학"><option value="퇴사준비학"></datalist></div>
+      <div class="sid-field"><label for="sidMottoInput">슬기로운 직장생활 좌우명</label><input id="sidMottoInput" class="sid-input" maxlength="30" placeholder="예: 오늘 야근 진 자 가"></div>
+      <h3 class="sid-h">🎨 프로필 캐릭터</h3>
+      <p class="sid-swipe-hint">👈 손가락으로 좌우로 밀어 옵션 종류와 세부 항목을 넘겨보세요 👉</p>
+      <div id="sidAvatarControls" aria-label="캐릭터 옵션, 좌우로 밀어 보기"></div>
+      <div class="sid-actions"><button class="btn small" id="sidRandom" type="button">🎲 랜덤</button><button class="btn small" id="sidReset" type="button">↺ 기본값</button><button class="btn small coral" id="sidSave" type="button">💾 저장하기</button></div>
+      <div id="sidStatus" class="community-status"></div>
+    </div>
+  </section>
+  <section id="fortuneView" hidden class="community-panel">
+    <div class="head"><div><h2 class="title">🔮 오늘의 사주</h2><p class="sub">Gemini AI가 사주 관련 내용만 해석합니다.</p></div><button class="btn small" data-home type="button">← 메인으로</button></div>
+    <form id="fortuneForm" class="community-post" style="display:grid;gap:12px">
+      <p style="margin:0">생년월일과 태어난 시간을 입력해 주세요. 입력값은 사주 해석 요청에만 사용하며 이 웹페이지의 DB에 저장하지 않습니다.</p>
+      <small style="display:block">개인정보 안내: 입력값은 해석을 위해 Google Gemini API로 전송됩니다. 무료 API 이용 조건에서는 입력·응답이 서비스 개선이나 검토에 사용될 수 있으므로, 개인정보 전송에 동의하지 않으면 이용하지 마세요. 브라우저나 DB에 저장하지 않도록 구성했지만 외부 제공자의 처리·보관까지 보장할 수는 없습니다.</small>
+      <label for="fortuneBirthDate">생년월일</label><input id="fortuneBirthDate" type="date" required>
+      <label for="fortuneBirthHour">태어난 시간</label><select id="fortuneBirthHour"><option value="12">모름 (정오 기준)</option><option value="0">00시</option><option value="1">01시</option><option value="2">02시</option><option value="3">03시</option><option value="4">04시</option><option value="5">05시</option><option value="6">06시</option><option value="7">07시</option><option value="8">08시</option><option value="9">09시</option><option value="10">10시</option><option value="11">11시</option><option value="12">12시</option><option value="13">13시</option><option value="14">14시</option><option value="15">15시</option><option value="16">16시</option><option value="17">17시</option><option value="18">18시</option><option value="19">19시</option><option value="20">20시</option><option value="21">21시</option><option value="22">22시</option><option value="23">23시</option></select>
+      <label style="display:flex;align-items:center;gap:8px"><input id="fortuneIsLunar" type="checkbox" style="width:auto;min-height:0"> 음력 생일입니다</label>
+      <button class="btn coral" id="fortuneButton" type="submit">오늘의 사주 보기</button>
+      <div id="fortuneStatus" class="community-status" role="status" aria-live="polite"></div>
+      <div id="fortuneResult" aria-live="polite"></div>
+    </form>
+  </section>
+
+  <!-- ===== 맛집 · 카페 · 명소 · 숙소 · 기타 (Kakao 지도) ===== -->
+  <section id="placesView" hidden class="community-panel">
+    <div class="head"><div><h2 class="title">📍 맛집 · 카페 · 명소 · 숙소</h2><p class="sub">Kakao 지도 기반 · 저장한 장소는 모든 회원에게 공유됩니다. 지도를 클릭해 위치를 지정할 수도 있어요.</p></div><button class="btn small" data-home type="button">← 메인으로</button></div>
     <div class="places-tabs" id="placesTabs">
       <button class="active" data-category="전체" type="button">🗺️ 전체</button>
       <button data-category="맛집" type="button">🍜 맛집</button>
@@ -160,307 +560,1163 @@
       <button data-category="숙소" type="button">🛏️ 숙소</button>
       <button data-category="기타" type="button">📌 기타</button>
     </div>
-
-    <!-- 신규 배치: 왼쪽 저장 장소 리스트 / 오른쪽 지도 및 장소 공유 폼 -->
     <div class="places-layout">
-      <!-- 왼쪽: 회원들이 저장한 장소 리스트 -->
       <div class="places-left">
-        <div class="places-list-head">
-          <h3>회원들이 저장한 장소</h3>
-          <span class="sub">최신순</span>
-        </div>
-        <div id="savedPlaces" class="places-list">
-          <!-- 스크립트로 렌더링 -->
-        </div>
+        <div class="places-list-head"><h3>회원들이 저장한 장소</h3><span class="sub">최신순</span></div>
+        <div id="savedPlaces" class="places-list"></div>
       </div>
-
-      <!-- 오른쪽: 대형 지도 및 위치 검색 / 저장 폼 -->
       <div class="places-right">
         <div>
           <div id="placesMap" class="places-map" aria-label="Kakao 지도"></div>
-          <p id="placesStatus" style="font-size:13px; color:#666; margin:8px 0 0; min-height:1.2em;"></p>
+          <p class="community-status" id="placesStatus"></p>
         </div>
-
         <form id="placeSaveForm" class="community-form place-save-form">
           <h3>장소 공유하기</h3>
           <label>분류
-            <select id="placeCategory">
-              <option>맛집</option>
-              <option>카페</option>
-              <option>명소</option>
-              <option>숙소</option>
-              <option>기타</option>
-            </select>
+            <select id="placeCategory"><option>맛집</option><option>카페</option><option>명소</option><option>숙소</option><option>기타</option></select>
           </label>
           <label>장소명
-            <input id="placeName" maxlength="120" placeholder="예: 카페 몬타나" required>
+            <input id="placeName" maxlength="120" placeholder="예: 카카오 판교 아지트" required>
           </label>
-          <label>장소 위치 찾기 (카카오맵 검색)
-            <div style="display:flex; gap:6px;">
-              <input id="placeAddress" maxlength="300" placeholder="예: 덕산로312번길 124 또는 카페 이름" required>
-              <button type="button" id="btnSearchKakao" class="btn coral small" style="white-space:nowrap; shrink:0;">📍 위치 검색</button>
+          <label>주소 또는 키워드 검색
+            <div style="display:flex;gap:6px;">
+              <input id="placeAddress" maxlength="300" placeholder="예: 판교역로 166 또는 장소명" required>
+              <button type="button" id="btnSearchKakao" style="white-space:nowrap;padding:6px 10px;">검색</button>
             </div>
           </label>
-          <input type="hidden" id="placeLat">
-          <input type="hidden" id="placeLng">
+          <input type="hidden" id="placeLat"><input type="hidden" id="placeLng">
           <label>추천 메모
-            <textarea id="placeMemo" maxlength="1000" placeholder="추천 메뉴, 일산/파주 맛집 팁, 분위기 등" style="min-height:70px;"></textarea>
+            <textarea id="placeMemo" maxlength="1000" placeholder="추천 메뉴, 분위기, 팁 등"></textarea>
           </label>
-          <button type="submit" class="btn coral" style="justify-content:center; padding:11px;">장소 저장 및 회원 공유</button>
+          <button type="submit">장소 저장 및 공유</button>
         </form>
       </div>
     </div>
   </section>
 
+  <!-- ===== 채팅 순위 ===== -->
+  <section id="rankView" hidden aria-labelledby="rankHead">
+    <div class="head">
+      <div class="head-main"><span class="pill-live"><span class="dot"></span>실시간 수다 랭킹</span><h2 class="title" id="rankHead">🏆 채팅 순위</h2><p class="sub">드립대학 최고의 입담꾼 왕좌에 도전해 보세요!</p></div>
+      <button class="btn small" id="rankBack" type="button">← 메인으로</button>
+    </div>
+    <div class="card">
+      <div class="rank-tabs">
+        <button class="rank-tab active" data-period="daily" type="button">일간</button>
+        <button class="rank-tab" data-period="weekly" type="button">주간</button>
+        <button class="rank-tab" data-period="monthly" type="button">월간</button>
+      </div>
+      <div id="rankList"></div>
+    </div>
+  </section>
+
+  <!-- ===== 미니게임 ===== -->
+  <section id="gameHub" hidden aria-label="미니게임">
+    <div class="head">
+      <div class="head-main"><span class="pill-live"><span class="dot"></span>쉬는 시간</span><h2 class="title">🎮 미니게임</h2><p class="sub">점심 먹고 남은 10분, 가볍게 한 판 해요.</p></div>
+      <button class="btn small" id="hubBack" type="button">← 메인으로</button>
+    </div>
+    <button class="card game-card" id="openWord" type="button">
+      <span class="game-no">1</span>
+      <span class="game-info"><strong>오늘의 단어 (5칸)</strong><small>언제든 다시 도전 · 휴대폰 키보드로 단어를 입력하세요</small></span>
+      <span class="game-state" id="wordState">도전하기</span>
+    </button>
+  </section>
+
+  <section id="wordGame" hidden aria-label="단어 맞추기">
+    <div class="head">
+      <div class="head-main"><span class="pill-live"><span class="dot"></span>무제한 도전</span><h2 class="title">오늘의 단어</h2><p class="sub">칸마다 자음이나 모음 하나씩 입력하세요. 한글 음절은 자모로 나뉘어 들어갑니다.</p></div>
+      <button class="btn small" id="wordBack" type="button">← 미니게임</button>
+    </div>
+    <div class="card wg">
+      <div class="wg-top">
+        <span class="wg-date" id="wgDate">오늘의 단어 (5칸)</span>
+        <div style="display:flex;align-items:center;gap:8px;"><span class="wg-hint" id="wgHint">힌트</span></div>
+      </div>
+      <div class="wg-desc-bar">💡 각 칸에는 자음 또는 모음 하나씩 들어갑니다. 키보드로 입력하고 Enter를 누르세요. 정답을 맞힐 때까지 횟수 제한 없이 도전할 수 있습니다.</div>
+      <div id="wgBoard" class="wg-board"></div>
+      <div id="wgPreview" class="wg-preview" aria-live="polite"></div>
+      <button class="btn small" id="wgNewGame" type="button" style="margin-top:10px">↻ 새 단어로 다시 하기</button>
+      <div id="wgResult" class="wg-result" hidden></div>
+    </div>
+    <div class="card wg wg-statcard"><h3>내 누적 기록</h3><div class="wg-stats" id="wgStats"></div></div>
+    <div class="card wg wg-statcard">
+      <div class="wg-top"><h3 style="margin:0">🏆 승률 랭킹</h3><button class="btn small" id="wordRankRefresh" type="button">새로고침</button></div>
+      <p class="community-meta">승률 → 승리 수 → 참가 판수 순 · 3판 이상 참가자만 표시</p>
+      <div id="wordRankMine" class="community-meta" style="font-size:14px;font-weight:700"></div>
+      <div id="wordRankList"></div>
+      <div id="wordRankStatus" class="community-status"></div>
+    </div>
+  </section>
 </div>
 
-<div class="toast" id="toast" hidden></div>
+<div class="toast" id="toast" role="status" hidden></div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 (function () {
   "use strict";
 
+  /* =====================================================================
+     설정 (여기만 수정하세요)
+     ===================================================================== */
+  // 봉춸이 이미지: 기존 HTML의 <img src="data:image/jpeg;base64,..."> 안의 data:... 값을 아래 따옴표 안에 붙여넣으세요.
+  // 비워두면 🙋 이모지가 대신 표시됩니다.
+  var BONGCHUL_SRC = "";
+
+  var SUPABASE_URL = "https://niuhmceiqxevuzmqsnhf.supabase.co";
+  var SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5pdWhtY2VpcXhldnV6bXFzbmhmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI2NTM0NzEsImV4cCI6MjEwODIyOTQ3MX0.dRNizWoOz5sy5F9Jgixd1m-NfH-CXiQ-vWQQlYeiGbU";
+  var ADMIN_EMAIL = "ua6c1b8b671ad1e8a319f43eebafaca40c5e672b2a095665333dcafac4081a302@login.dripcollege.example.com";
+  var REMEMBER_KEY = "dripcollege_remember_login";
+
+  /* ---------------- 공통 유틸 ---------------- */
   function $(id) { return document.getElementById(id); }
-  function toast(msg) {
-    var t = $("toast"); t.textContent = msg; t.hidden = false;
-    setTimeout(function () { t.hidden = true; }, 3000);
+  function el(tag, cls, text) { var e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; }
+  function escapeHtml(v) { return String(v == null ? "" : v).replace(/[&<>"']/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; }); }
+  var toastTimer = 0;
+  function toast(msg) { var t = $("toast"); t.textContent = msg; t.hidden = false; clearTimeout(toastTimer); toastTimer = setTimeout(function () { t.hidden = true; }, 3200); }
+  function store(k, v) { try { if (v === undefined) return localStorage.getItem(k) || ""; localStorage.setItem(k, v); } catch (e) { return ""; } return ""; }
+  function setText(id, msg) { var n = $(id); if (n) n.textContent = msg || ""; }
+
+  if (BONGCHUL_SRC) { $("bongchulImg").src = BONGCHUL_SRC; $("bongchulImg").hidden = false; $("bongchulFallback").hidden = true; }
+
+  /* ---------------- 화면 전환 ---------------- */
+  var views = { main: $("mainView"), board: $("boardView"), rank: $("rankView"), hub: $("gameHub"), word: $("wordGame"), notice: $("noticeView"), studentId: $("studentIdView"), fortune: $("fortuneView"), places: $("placesView") };
+  var currentAppView = "main";
+  var handlingBrowserBack = false;
+  try { history.replaceState({ dripcollegeApp: true, view: "main" }, "", location.href); } catch (_historyInitError) {}
+  function renderView(target) {
+    if (!views[target]) target = "main";
+    currentAppView = target;
+    Object.keys(views).forEach(function (k) { views[k].hidden = (k !== target); });
+    $("signupView").hidden = true;
+    window.scrollTo({ top: 0, behavior: "smooth" });
   }
-
-  // 초기 샘플 저장 장소
-  var savedPlacesData = [
-    { id: 1, name: "카페 몬타나", category: "카페", address: "경기도 고양시 일산서구 덕산로312번길 124", lat: 37.6934, lng: 126.7451, author: "일산드립왕", memo: "넓은 정원과 뷰가 좋은 카페입니다!" },
-    { id: 2, name: "피콕그린", category: "카페", address: "경기도 고양시 일산동구 성석로 111-45", lat: 37.6978, lng: 126.7923, author: "칼퇴요정", memo: "조용하고 분위기 넘치는 힐링 스팟이에요." }
-  ];
-
-  var map = null;
-  var markers = [];
-  var currentInfoWindow = null;
-  var selectedCategory = "전체";
-
-  // Kakao 지도 초기화
-  function initKakaoMap() {
-    if (typeof kakao === "undefined" || !kakao.maps) {
-      $("placesStatus").textContent = "카카오맵 API를 불러오는 중이거나 키 설정이 필요합니다.";
-      renderPlacesList();
+  function showView(target, options) {
+    options = options || {};
+    if (!views[target]) target = "main";
+    if (!options.fromPop && !handlingBrowserBack) {
+      try { history.pushState({ dripcollegeApp: true, view: target }, "", location.href); } catch (_historyPushError) {}
+    }
+    renderView(target);
+  }
+  // 브라우저/안드로이드 뒤로가기는 앱 내부의 직전 화면으로 이동합니다.
+  // 메인 화면에서는 웹페이지가 휴대폰을 직접 최소화할 수 없으므로, 네이티브 앱 브리지가 있을 때만 요청합니다.
+  window.addEventListener("popstate", function (event) {
+    if (event.state && event.state.dripcollegeApp && event.state.screen === "signup") {
+      handlingBrowserBack = true; showSignup({ fromPop: true }); handlingBrowserBack = false;
       return;
     }
+    if (event.state && event.state.dripcollegeApp && event.state.screen === "login") {
+      handlingBrowserBack = true; showLogin({ fromPop: true }); handlingBrowserBack = false;
+      return;
+    }
+    var target = event.state && event.state.dripcollegeApp && views[event.state.view] ? event.state.view : "main";
+    if (currentAppView === "main" && target === "main") {
+      try {
+        if (window.Android && typeof window.Android.minimizeApp === "function") {
+          window.Android.minimizeApp();
+        } else if (window.NativeApp && typeof window.NativeApp.minimize === "function") {
+          window.NativeApp.minimize();
+        } else {
+          toast("메인 화면입니다. 휴대폰 홈 제스처 또는 홈 버튼으로 최소화해 주세요.");
+        }
+      } catch (_minimizeError) {
+        toast("메인 화면입니다. 휴대폰 홈 제스처 또는 홈 버튼으로 최소화해 주세요.");
+      }
+      try { history.pushState({ dripcollegeApp: true, view: "main" }, "", location.href); } catch (_historyRootError) {}
+      return;
+    }
+    handlingBrowserBack = true;
+    renderView(target);
+    handlingBrowserBack = false;
+  });
+  $("goBoard").addEventListener("click", function () { showView("board"); selectedPostId = null; loadCommunity(); });
+  $("boardBack").onclick = function () { showView("main"); };
+  $("goRank").onclick = function () { showView("rank"); renderRankings("daily"); };
+  $("rankBack").onclick = function () { showView("main"); };
+  $("goGames").onclick = function () { showView("hub"); updateHubState(); };
+  $("hubBack").onclick = function () { showView("main"); };
+  $("openWord").onclick = function () { showView("word"); initWordGame(); };
+  $("wordBack").onclick = function () { showView("hub"); updateHubState(); };
+  $("wordRankRefresh").onclick = function () { renderWordRanking(); };
+  $("goNotice").onclick = function () { showView("notice"); };
+  $("noticeBack").onclick = function () { showView("main"); };
+  $("goStudentId").onclick = function () { showView("studentId"); loadStudentCard(); };
+  $("goFortune").onclick = function () { showView("fortune"); };
+  $("goPlaces").onclick = function () { showView("places"); initKakaoMap(); };
+  Array.prototype.forEach.call(document.querySelectorAll("[data-home]"), function (b) { b.onclick = function () { showView("main"); }; });
 
-    kakao.maps.load(function () {
-      var container = $("placesMap");
-      var options = {
-        center: new kakao.maps.LatLng(37.6934, 126.7451), // 일산/고양시 중심
-        level: 5
+  // Gemini 사주 해석: 브라우저에서는 API 키를 보관하지 않고 Supabase Edge Function만 호출합니다.
+  // 생년월일/시간은 DB나 브라우저 저장소에 기록하지 않습니다.
+  $("fortuneForm").addEventListener("submit", async function (event) {
+    event.preventDefault();
+    var status = $("fortuneStatus"), result = $("fortuneResult");
+    status.textContent = "사주를 해석하는 중…"; status.className = "community-status";
+    result.replaceChildren();
+    var birthDate = $("fortuneBirthDate").value;
+    var birthHour = Number($("fortuneBirthHour").value);
+    var isLunar = $("fortuneIsLunar").checked;
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(birthDate) || !Number.isInteger(birthHour) || birthHour < 0 || birthHour > 23) {
+      status.textContent = "생년월일과 태어난 시간을 확인해 주세요."; status.className = "community-status error"; return;
+    }
+    var parts = birthDate.split("-").map(Number);
+    var birthObj = new Date(parts[0], parts[1] - 1, parts[2]);
+    var now = new Date();
+    if (birthObj.getFullYear() !== parts[0] || birthObj.getMonth() !== parts[1]-1 || birthObj.getDate() !== parts[2] || birthObj > new Date(now.getFullYear(), now.getMonth(), now.getDate())) {
+      status.textContent = "올바른 과거 생년월일을 입력해 주세요."; status.className = "community-status error"; return;
+    }
+    var fortuneAbortController = new AbortController();
+    var fortuneTimeoutId = setTimeout(function () { fortuneAbortController.abort(); }, 60000);
+    try {
+      var response = await fetch(SUPABASE_URL + "/functions/v1/saju-fortune", {
+        method: "POST",
+        signal: fortuneAbortController.signal,
+        headers: { "Content-Type": "application/json", "apikey": SUPABASE_ANON_KEY, "Authorization": "Bearer " + SUPABASE_ANON_KEY },
+        body: JSON.stringify({ birthDate: birthDate, birthHour: birthHour, isLunar: isLunar, today: [now.getFullYear(), String(now.getMonth()+1).padStart(2,"0"), String(now.getDate()).padStart(2,"0")].join("-") })
+      });
+      var payload = await response.json().catch(function () { return {}; });
+      if (!response.ok || !payload.success || typeof payload.fortune !== "string") throw new Error(payload.error || "사주 해석을 불러오지 못했습니다.");
+      var card = el("article", "community-post"); card.style.margin = "12px 0";
+      var heading = el("h3", "", "🔮 오늘의 사주 해석"); heading.style.marginTop = "0"; card.appendChild(heading);
+      payload.fortune.split(/\n{2,}/).map(function (line) { return line.trim(); }).filter(Boolean).forEach(function (line) { card.appendChild(el("p", "", line)); });
+      result.appendChild(card);
+      status.textContent = "사주 해석을 완료했습니다. 이 내용은 AI가 생성한 참고용 해석입니다."; status.className = "community-status ok";
+    } catch (error) {
+      status.textContent = error && error.name === "AbortError"
+        ? "사주 조회 시간이 초과되었습니다. 잠시 후 다시 시도해 주세요."
+        : "사주 조회 실패: " + (error && error.message ? error.message : "잠시 후 다시 시도해 주세요.");
+      status.className = "community-status error";
+    } finally {
+      clearTimeout(fortuneTimeoutId);
+      // 입력값은 화면에 남겨두되 저장하지 않습니다. 자동 저장/로그 기록 코드는 두지 않습니다.
+    }
+  });
+  // 오늘 날짜를 기본 생년월일로 채우지 않고 사용자가 직접 입력하도록 둡니다.
+  (function setFortuneDateLimit() {
+    var today = new Date();
+    $("fortuneBirthDate").max = [today.getFullYear(), String(today.getMonth()+1).padStart(2,"0"), String(today.getDate()).padStart(2,"0")].join("-");
+  })();
+
+  /* ---------------- 채팅 순위 (샘플 데이터) ---------------- */
+  var mockRanks = {
+    daily: [{ nick: "월급루팡3세", dept: "월급루팡학", score: "1,240 드립" }, { nick: "부장님킬러", dept: "칼퇴학", score: "980 드립" }, { nick: "탕비실요정", dept: "탕비실학", score: "850 드립" }, { nick: "칼퇴마스터", dept: "칼퇴학", score: "720 드립" }, { nick: "아메리카노", dept: "커피수혈학", score: "610 드립" }],
+    weekly: [{ nick: "부장님킬러", dept: "칼퇴학", score: "5,420 드립" }, { nick: "월급루팡3세", dept: "월급루팡학", score: "4,890 드립" }, { nick: "퇴사희망자", dept: "퇴사준비학", score: "3,750 드립" }, { nick: "탕비실요정", dept: "탕비실학", score: "3,100 드립" }, { nick: "야근거부자", dept: "야근학", score: "2,840 드립" }],
+    monthly: [{ nick: "퇴사희망자", dept: "퇴사준비학", score: "18,400 드립" }, { nick: "부장님킬러", dept: "칼퇴학", score: "16,200 드립" }, { nick: "월급루팡3세", dept: "월급루팡학", score: "15,100 드립" }, { nick: "월요병백신", dept: "월요병학", score: "12,300 드립" }, { nick: "점심메뉴고민", dept: "점심메뉴학", score: "11,500 드립" }]
+  };
+  function renderRankings(period) {
+    var list = $("rankList"); list.innerHTML = "";
+    (mockRanks[period] || []).forEach(function (item, idx) {
+      var row = el("div", "rank-item");
+      row.appendChild(el("div", "rank-num" + (idx === 0 ? " gold" : idx === 1 ? " silver" : idx === 2 ? " bronze" : ""), String(idx + 1)));
+      var info = el("div", "rank-info"), top = el("div");
+      top.appendChild(el("span", "nick", item.nick)); top.appendChild(el("span", "dept", item.dept)); info.appendChild(top);
+      row.appendChild(info); row.appendChild(el("div", "rank-score", item.score)); list.appendChild(row);
+    });
+  }
+  var rankTabs = document.querySelectorAll(".rank-tab");
+  Array.prototype.forEach.call(rankTabs, function (tab) {
+    tab.onclick = function () {
+      Array.prototype.forEach.call(rankTabs, function (t) { t.classList.remove("active"); });
+      tab.classList.add("active"); renderRankings(tab.getAttribute("data-period"));
+    };
+  });
+
+  /* =====================================================================
+     오늘의 단어 (5칸) 게임
+     ===================================================================== */
+  // 국어사전에 등재된 일반 어휘 중심의 정답 후보. 모든 단어는 자모 확장 후 5칸인 경우만 사용합니다.
+  var WORD_POOL_5 = [
+    { word: "바람", hint: "공기의 움직임" },
+    { word: "사람", hint: "생각하고 말하는 존재" },
+    { word: "학교", hint: "배우고 공부하는 곳" },
+    { word: "공부", hint: "배우고 익히는 일" },
+    { word: "하늘", hint: "머리 위로 펼쳐진 공간" },
+    { word: "사랑", hint: "아끼고 소중히 여기는 마음" },
+    { word: "가방", hint: "물건을 넣어 들고 다니는 것" },
+    { word: "기분", hint: "마음의 상태" },
+    { word: "가족", hint: "함께 살아가거나 친족인 사람들" },
+    { word: "편지", hint: "글로 안부를 전하는 것" },
+    { word: "감자", hint: "땅속에서 자라는 작물" },
+    { word: "김치", hint: "배추나 무로 담그는 음식" },
+    { word: "장미", hint: "가시가 있는 꽃" },
+    { word: "거울", hint: "모습을 비추는 물건" },
+    { word: "까치", hint: "검고 흰 깃털을 가진 새" },
+    { word: "끄다", hint: "불이나 전원을 멈추다" },
+    { word: "빼다", hint: "속에 있는 것을 밖으로 꺼내다" },
+    { word: "쏘다", hint: "화살이나 총알을 날리다" },
+    { word: "짜다", hint: "소금기가 많거나 천을 만들다" },
+    { word: "찌다", hint: "김으로 익히다" },
+    { word: "쪼다", hint: "뾰족한 것으로 찍거나 파다" },
+    { word: "뿌리", hint: "식물을 땅에 붙들어 주는 부분" },
+    { word: "뛰다", hint: "달리거나 공중으로 솟다" },
+    { word: "싸다", hint: "물건을 종이 등으로 감싸다" },
+    { word: "쓰다", hint: "글자를 적다 또는 사용하다" },
+    { word: "따다", hint: "열매를 가지에서 떼다" },
+    { word: "떠다", hint: "물이나 공중에 떠서 움직이다" },
+    { word: "찌개", hint: "국물을 적게 넣고 끓인 음식" },
+    { word: "꼬리", hint: "동물의 꽁무니 부분" },
+    { word: "꾸다", hint: "꿈을 경험하거나 돈을 빌리다" },
+    { word: "깨다", hint: "잠에서 일어나다 또는 부수다" },
+    { word: "삐다", hint: "관절을 접질리다" },
+    { word: "꼬마", hint: "몸집이 작은 아이" },
+    { word: "빼기", hint: "수를 덜어 내는 셈" },
+    { word: "토끼", hint: "긴 귀를 가진 동물" },
+    { word: "여름", hint: "한 해 중 더운 계절" },
+    { word: "겨울", hint: "한 해 중 추운 계절" },
+    { word: "연구", hint: "어떤 대상을 깊이 조사하고 공부함" },
+    { word: "단어", hint: "일정한 뜻을 가진 말" },
+    { word: "기억", hint: "지난 일을 마음에 간직함" },
+    { word: "희망", hint: "앞으로 잘되기를 바라는 마음" },
+    { word: "마음", hint: "생각과 감정이 일어나는 곳" },
+    { word: "퇴근", hint: "일터에서 일을 마치고 돌아감" },
+    { word: "근무", hint: "직장에서 일함" },
+    { word: "철도", hint: "열차가 다니는 길" },
+    { word: "앵두", hint: "작고 붉은 열매" }
+  ];
+  var KEY_MAP = {};
+  function splitHangulWord(word) {
+    var out = [], initial = ["ㄱ","ㄲ","ㄴ","ㄷ","ㄸ","ㄹ","ㅁ","ㅂ","ㅃ","ㅅ","ㅆ","ㅇ","ㅈ","ㅉ","ㅊ","ㅋ","ㅌ","ㅍ","ㅎ"],
+        vowel = ["ㅏ","ㅐ","ㅑ","ㅒ","ㅓ","ㅔ","ㅕ","ㅖ","ㅗ","ㅘ","ㅙ","ㅚ","ㅛ","ㅜ","ㅝ","ㅞ","ㅟ","ㅠ","ㅡ","ㅢ","ㅣ"],
+        final = ["","ㄱ","ㄲ","ㄳ","ㄴ","ㄵ","ㄶ","ㄷ","ㄹ","ㄺ","ㄻ","ㄼ","ㄽ","ㄾ","ㄿ","ㅀ","ㅁ","ㅂ","ㅄ","ㅅ","ㅆ","ㅇ","ㅈ","ㅊ","ㅋ","ㅌ","ㅍ","ㅎ"],
+        tense = {"ㄲ":["ㄱ","ㄱ"],"ㄸ":["ㄷ","ㄷ"],"ㅃ":["ㅂ","ㅂ"],"ㅆ":["ㅅ","ㅅ"],"ㅉ":["ㅈ","ㅈ"]};
+    function pushJamo(j) { if (tense[j]) out.push.apply(out, tense[j]); else out.push(j); }
+    Array.from(String(word || "").normalize("NFC")).forEach(function(ch) {
+      var code = ch.charCodeAt(0);
+      if (code >= 0xAC00 && code <= 0xD7A3) {
+        var n=code-0xAC00, fi=n%28, vi=Math.floor(n/28)%21, ii=Math.floor(n/588);
+        pushJamo(initial[ii]); out.push(vowel[vi]); if(final[fi]) pushJamo(final[fi]);
+      } else if ("ㄱㄲㄴㄷㄸㄹㅁㅂㅃㅅㅆㅇㅈㅉㅊㅋㅌㅍㅎㅏㅐㅑㅒㅓㅔㅕㅖㅗㅘㅙㅚㅛㅜㅝㅞㅟㅠㅡㅢㅣ".indexOf(ch)>=0) pushJamo(ch);
+    });
+    return out;
+  }
+  function getNewRound() {
+    // 자모 확장 규칙을 바꾸면 이전 라운드는 재사용하지 않습니다.
+    var candidates = WORD_POOL_5.filter(function(w) { return splitHangulWord(w.word).length === 5; });
+    var idx = Math.floor(Math.random() * candidates.length), base = candidates[idx];
+    var wordObj = { word: base.word, hint: base.hint, jamo: splitHangulWord(base.word) };
+    return { version: 2, key: "wg_round_" + Date.now() + "_" + Math.random().toString(36).slice(2,8), wordObj: wordObj };
+  }
+  var curState = { periodKey: "", wordObj: null, guesses: [], currentInput: [], currentRaw: "", status: "PLAYING", keyColors: {} };
+  function initWordGame(newRound) {
+    var active = null;
+    if (!newRound) { try { active = JSON.parse(store("wg_active_round") || "null"); } catch(e) {} }
+    if (!active || !active.key || !active.wordObj || active.version !== 2 || newRound) { active = getNewRound(); store("wg_active_round", JSON.stringify(active)); }
+    curState.periodKey = active.key; curState.wordObj = active.wordObj;
+    var saved = store(active.key); curState.guesses=[]; curState.status="PLAYING"; curState.keyColors={};
+    if (saved) { try { var o=JSON.parse(saved); curState.guesses=o.guesses||[]; curState.status=o.status||"PLAYING"; curState.keyColors=o.keyColors||{}; } catch(e) {} }
+    curState.currentInput=[]; $("wgDate").textContent="새 단어 도전"; $("wgHint").textContent="힌트: "+curState.wordObj.hint;
+    renderBoard(); renderResult(); renderStats();
+    curState.currentRaw="";
+    if (curState.status === "PLAYING") { var firstTile = $("wgBoard").querySelector(".wg-entry"); if (firstTile) setTimeout(function(){ firstTile.focus(); }, 0); }
+    if (curState.status !== "PLAYING") syncWordResult(); else renderWordRanking();
+  }
+  function updateHubState() { var badge=$("wordState"); badge.textContent="언제든 도전"; badge.className="game-state"; }
+  function renderBoard() {
+    var board=$("wgBoard"); board.innerHTML="";
+    var target=splitHangulWord(curState.wordObj.word), cols=target.length;
+    // 정답 도전은 총 5회입니다. 게임판은 고정 5줄이며, 입력이 많아져도 기록을 밀어내지 않습니다.
+    for(var r=0;r<5;r++) {
+      var rowEl=el("div","wg-row"), guess=null, isCurrent=false;
+      rowEl.style.gridTemplateColumns="repeat("+cols+",minmax(0,1fr))";
+      if(r<curState.guesses.length) guess=curState.guesses[r];
+      else if(r===curState.guesses.length && curState.guesses.length<5) isCurrent=curState.status==="PLAYING";
+      for(var c=0;c<cols;c++) {
+        var tile;
+        if(isCurrent) {
+          tile=document.createElement("input"); tile.type="text"; tile.className="wg-tile wg-entry";
+          tile.inputMode="text"; tile.lang="ko"; tile.autocomplete="off"; tile.autocapitalize="off";
+          tile.enterKeyHint="done"; tile.maxLength=8; tile.value=curState.currentInput[c]||"";
+          tile.setAttribute("aria-label", "자음 또는 모음 입력 칸 "+(c+1));
+          tile.addEventListener("input",function(){
+            var cells=Array.prototype.slice.call(board.querySelectorAll(".wg-entry"));
+            var at=cells.indexOf(this), entered=splitHangulWord(this.value);
+            if(!entered.length){ curState.currentInput[at]=""; }
+            else {
+              for(var k=0;k<entered.length && at+k<cells.length;k++) curState.currentInput[at+k]=entered[k];
+            }
+            curState.currentInput=curState.currentInput.slice(0,cols);
+            cells.forEach(function(cell,i){cell.value=curState.currentInput[i]||"";});
+            curState.currentRaw=curState.currentInput.join("");
+            var next=Math.min(cols-1,at+Math.max(1,entered.length));
+            if(entered.length && cells[next] && next!==at) cells[next].focus();
+            else if(entered.length && at<cols-1 && cells[at+1]) cells[at+1].focus();
+          });
+          tile.addEventListener("keydown",function(e){
+            var cells=Array.prototype.slice.call(board.querySelectorAll(".wg-entry")), at=cells.indexOf(this);
+            if(e.key==="Enter"){e.preventDefault();submitGuess();}
+            else if(e.key==="Backspace" && !this.value && at>0){e.preventDefault();curState.currentInput[at-1]="";curState.currentRaw=curState.currentInput.join("");cells[at-1].value="";cells[at-1].focus();}
+            else if(e.key==="ArrowLeft" && at>0){e.preventDefault();cells[at-1].focus();}
+            else if(e.key==="ArrowRight" && at<cells.length-1){e.preventDefault();cells[at+1].focus();}
+          });
+        } else {
+          tile=el("div","wg-tile");
+          if(guess){tile.textContent=guess.input[c]||"";tile.classList.add(guess.result[c]||"absent");}
+        }
+        rowEl.appendChild(tile);
+      }
+      board.appendChild(rowEl);
+    }
+    $("wgPreview").textContent="";
+  }
+  function renderKeys() { /* 사용자 키보드 사용: 화면 키보드 제거 */ }
+  function handleInput(key) {
+    if(curState.status!=="PLAYING") return;
+    if(key==="Enter") submitGuess();
+  }
+  function submitGuess() {
+    if(curState.status!=="PLAYING") return;
+    var inputText=String(curState.currentRaw||"").trim().replace(/\s/g, ""), input=(curState.currentInput||[]).filter(Boolean), target=splitHangulWord(curState.wordObj.word);
+    if(!inputText || input.length!==target.length){toast("정답과 같은 길이의 한글 단어를 입력해 주세요.");return;}
+    var result=target.map(function(ch,i){return input[i]===ch?"correct":"absent";}), remaining=target.slice();
+    for(var i=0;i<target.length;i++) if(result[i]==="correct") remaining[i]=null;
+    for(var j=0;j<target.length;j++) if(result[j]!=="correct"){var f=remaining.indexOf(input[j]);if(f!==-1){result[j]="present";remaining[f]=null;}}
+    curState.guesses.push({input:input,result:result});
+    if(result.every(function(r){return r==="correct";})){curState.status="WON";saveStat(true);}
+    else if(curState.guesses.length>=5){curState.status="LOST";saveStat(false);}
+    store(curState.periodKey,JSON.stringify({guesses:curState.guesses,status:curState.status,keyColors:curState.keyColors}));
+    curState.currentRaw=""; curState.currentInput=[];
+    if(curState.status!=="PLAYING") syncWordResult(); renderBoard(); renderResult(); renderStats();
+    if(curState.status==="PLAYING") { var nextTile=$("wgBoard").querySelector(".wg-entry"); if(nextTile) nextTile.focus(); }
+  }
+  $("wgNewGame").addEventListener("click",function(){initWordGame(true);var first=$("wgBoard").querySelector(".wg-entry");if(first)first.focus();});
+  window.addEventListener("keydown", function(e) {
+    if(views.word.hidden || curState.status!=="PLAYING") return;
+    if(e.key==="Enter"){e.preventDefault();submitGuess();}
+  });
+
+  function renderResult() {
+    var rd = $("wgResult");
+    if (curState.status === "PLAYING") { rd.hidden = true; return; }
+    rd.hidden = false; rd.className = "wg-result";
+    var win = curState.status === "WON", lost = curState.status === "LOST";
+    var share = "드립대학 [오늘의 단어 5칸]\n" + (win ? curState.guesses.length + "회 시도 성공!" : lost ? "5회 도전 종료" : "도전 중") + "\n";
+    curState.guesses.forEach(function (g) { g.result.forEach(function (r) { share += (r === "correct" ? "🟩" : r === "present" ? "🟨" : "⬛"); }); share += "\n"; });
+    rd.innerHTML = "<strong>" + (win ? "🎉 정답입니다!" : "💪 5번의 기회를 모두 사용했어요.") + "</strong><p>정답 단어: <b>" + escapeHtml(curState.wordObj.word + " (" + curState.wordObj.jamo.join("") + ")") + "</b></p><div class='wg-share'>" + escapeHtml(share.trim()) + "</div><button class='btn small coral' style='margin-top:10px;' id='btnShare' type='button'>결과 복사하기</button>";
+    $("btnShare").onclick = function () {
+      if (navigator.clipboard && navigator.clipboard.writeText) { navigator.clipboard.writeText(share).then(function () { toast("결과가 클립보드에 복사되었습니다!"); }, function () { toast("복사에 실패했습니다."); }); return; }
+      var ta = document.createElement("textarea"); ta.value = share; document.body.appendChild(ta); ta.select();
+      try { document.execCommand("copy"); toast("결과가 클립보드에 복사되었습니다!"); } catch (e) { toast("복사 기능을 지원하지 않는 브라우저입니다."); }
+      document.body.removeChild(ta);
+    };
+  }
+  function readStat() { var s = { played: 0, win: 0, streak: 0, maxStreak: 0 }, raw = store("wg_stats_v2"); if (raw) { try { s = JSON.parse(raw); } catch (e) {} } return s; }
+  function saveStat(win) {
+    var s = readStat(); s.played++;
+    if (win) { s.win++; s.streak++; if (s.streak > s.maxStreak) s.maxStreak = s.streak; } else s.streak = 0;
+    store("wg_stats_v2", JSON.stringify(s));
+  }
+  function renderStats() {
+    var s = readStat(), rate = s.played ? Math.round((s.win / s.played) * 100) : 0;
+    $("wgStats").innerHTML = "<div><b>" + s.played + "</b><span>판수</span></div><div><b>" + rate + "%</b><span>승률</span></div><div><b>" + s.streak + "</b><span>연승</span></div><div><b>" + s.maxStreak + "</b><span>최다연승</span></div>";
+  }
+  window.addEventListener("keydown", function (e) {
+    if (views.word.hidden || curState.status !== "PLAYING") return;
+    var tag = document.activeElement ? document.activeElement.tagName : "";
+    if (tag === "INPUT" || tag === "TEXTAREA") return;
+    var k = e.key;
+    if (k === "Backspace") { handleInput("지우기"); e.preventDefault(); }
+    else if (k === "Enter") { handleInput("확인"); e.preventDefault(); }
+    else if (KEY_MAP[k]) { handleInput(KEY_MAP[k]); e.preventDefault(); }
+    else if ("ㄱㄴㄷㄹㅁㅂㅅㅇㅈㅊㅋㅌㅍㅎㅏㅑㅓㅕㅗㅛㅜㅠㅡㅣㅐㅔㅚㅟㅢ".indexOf(k) !== -1 && k.length === 1) { handleInput(k); e.preventDefault(); }
+  });
+
+  /* =====================================================================
+     Supabase 로그인 / 회원가입
+     ===================================================================== */
+  function selectedStorage() { try { return localStorage.getItem(REMEMBER_KEY) === "0" ? sessionStorage : localStorage; } catch (_e) { return sessionStorage; } }
+  var authStorage = {
+    getItem: function (key) { try { return selectedStorage().getItem(key); } catch (_e) { return null; } },
+    setItem: function (key, value) { try { selectedStorage().setItem(key, value); } catch (_e) {} },
+    removeItem: function (key) { try { localStorage.removeItem(key); sessionStorage.removeItem(key); } catch (_e) {} }
+  };
+  var loginCard = $("loginCard"), signupView = $("signupView"), mainView = $("mainView"), mainNav = $("mainNav"), authTopline = $("authTopline");
+  var supabase = null;
+  if (window.supabase && SUPABASE_URL.indexOf("niuhmceiqxevuzmqsnhf") !== -1 && SUPABASE_ANON_KEY.indexOf("eyJ") === 0) {
+    supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, { auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: false, storage: authStorage } });
+  }
+  function status(id, message, kind) { var n = $(id); n.textContent = message || ""; n.className = "auth-status" + (kind ? " " + kind : ""); }
+  function normalizeNick(n) { return String(n || "").trim().normalize("NFC"); }
+  async function sha256Hex(value) {
+    var digest = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(value));
+    return Array.from(new Uint8Array(digest)).map(function (b) { return b.toString(16).padStart(2, "0"); }).join("");
+  }
+  async function nickEmail(nick) { return "u" + await sha256Hex(normalizeNick(nick).toLowerCase()) + "@login.dripcollege.example.com"; }
+  async function authPassword(nick, code) { return await sha256Hex("dripcollege-auth-v1|" + normalizeNick(nick).toLowerCase() + "|" + String(code)); }
+  function saveRememberChoice() {
+    var remember = $("rememberLogin").checked;
+    try { localStorage.setItem(REMEMBER_KEY, remember ? "1" : "0"); } catch (_e) {}
+    if (!remember) {
+      try { var k = "sb-" + new URL(SUPABASE_URL).hostname.split(".")[0] + "-auth-token", old = localStorage.getItem(k); if (old) sessionStorage.setItem(k, old); } catch (_e) {}
+    }
+  }
+  try { $("rememberLogin").checked = localStorage.getItem(REMEMBER_KEY) !== "0"; } catch (_e) {}
+
+  function showLogin(options) {
+    options = options || {};
+    if (!options.fromPop) { try { history.pushState({ dripcollegeApp: true, screen: "login", view: "main" }, "", location.href); } catch (_e) {} }
+    document.body.classList.remove("signed-in");
+    Object.keys(views).forEach(function (k) { views[k].hidden = (k !== "main"); });
+    signupView.hidden = true; loginCard.hidden = false; mainNav.hidden = true; authTopline.hidden = true; $("homeStudentCard").hidden = true;
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+  function showSignup(options) { options = options || {}; if (!options.fromPop) { try { history.pushState({ dripcollegeApp: true, screen: "signup", view: "main" }, "", location.href); } catch (_e) {} } mainView.hidden = true; signupView.hidden = false; status("signupStatus", "", ""); window.scrollTo({ top: 0, behavior: "smooth" }); }
+  function showSignedIn(nick) {
+    document.body.classList.add("signed-in");
+    signupView.hidden = true; mainView.hidden = false; loginCard.hidden = true; mainNav.hidden = false; authTopline.hidden = false; $("homeStudentCard").hidden = true;
+    $("signedInLabel").textContent = nick + " 님, 환영합니다!";
+    loadStudentCard();
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+  function ready() { if (!supabase) { status("loginStatus", "Supabase 초기화에 실패했습니다. CDN 로딩, 프로젝트 URL, 공개 API 키를 확인해 주세요.", "error"); return false; } return true; }
+
+  $("openSignup").addEventListener("click", showSignup);
+  $("backToLogin").addEventListener("click", showLogin);
+  $("loginForm").addEventListener("submit", async function (e) {
+    e.preventDefault(); if (!ready()) return;
+    var nick = normalizeNick($("loginNickname").value), code = $("loginCode").value;
+    saveRememberChoice(); status("loginStatus", "로그인 중입니다…", "");
+    try {
+      var res = await supabase.auth.signInWithPassword({ email: await nickEmail(nick), password: await authPassword(nick, code) });
+      if (res.error) throw res.error;
+      showSignedIn(nick); status("loginStatus", "", "");
+      try { sessionStorage.setItem("dripcollege_nickname", nick); } catch (_e) {}
+    } catch (err) { status("loginStatus", "로그인에 실패했습니다. 닉네임과 인증번호를 확인해 주세요.", "error"); console.error(err); }
+  });
+  $("signupForm").addEventListener("submit", async function (e) {
+    e.preventDefault(); if (!ready()) return;
+    var nick = normalizeNick($("signupNickname").value), code = $("signupCode").value;
+    if (nick.length < 2) { status("signupStatus", "닉네임은 2자 이상 입력해 주세요.", "error"); return; }
+    if (!code) { status("signupStatus", "인증번호를 입력해 주세요.", "error"); return; }
+    saveRememberChoice(); status("signupStatus", "등록된 닉네임과 인증번호를 확인하고 있습니다…", "");
+    try {
+      var chk = await supabase.rpc("validate_member_invite", { p_nickname: nick, p_auth_code: code });
+      if (chk.error) throw chk.error;
+      if (chk.data !== true) { status("signupStatus", "등록 정보를 찾을 수 없거나 이미 사용된 인증번호입니다. 관리자에게 확인해 주세요.", "error"); return; }
+      var su = await supabase.auth.signUp({ email: await nickEmail(nick), password: await authPassword(nick, code), options: { data: { nickname: nick } } });
+      if (su.error) throw su.error;
+      if (!su.data.session || !su.data.user) { status("signupStatus", "Supabase에서 이메일 확인을 비활성화해야 닉네임/인증번호만으로 가입할 수 있습니다. Auth 설정을 확인해 주세요.", "error"); return; }
+      var cl = await supabase.rpc("claim_member_invite", { p_nickname: nick, p_auth_code: code });
+      if (cl.error || cl.data !== true) { await supabase.auth.signOut(); status("signupStatus", "계정은 생성됐지만 인증번호 등록 완료에 실패했습니다. 관리자에게 문의해 주세요.", "error"); console.error(cl.error); return; }
+      saveRememberChoice(); showSignedIn(nick); status("signupStatus", "가입이 완료되었습니다!", "ok");
+      try { sessionStorage.setItem("dripcollege_nickname", nick); } catch (_e) {}
+    } catch (err) { status("signupStatus", "회원가입에 실패했습니다. 관리자에게 등록된 닉네임/인증번호인지 확인해 주세요.", "error"); console.error(err); }
+  });
+  $("logoutBtn").addEventListener("click", async function () {
+    if (supabase) await supabase.auth.signOut();
+    try { sessionStorage.removeItem("dripcollege_nickname"); } catch (_e) {}
+    $("loginCode").value = ""; showLogin(); status("loginStatus", "로그아웃되었습니다.", "ok");
+  });
+  if (supabase) {
+    supabase.auth.getSession().then(function (r) {
+      if (r.data.session) { var u = r.data.session.user; showSignedIn((u.user_metadata && u.user_metadata.nickname) || "회원"); }
+    });
+    supabase.auth.onAuthStateChange(function (event, session) {
+      window.__dripCurrentUser = session ? session.user : null;
+      window.__dripIsAdmin = !!(session && session.user && session.user.email === ADMIN_EMAIL);
+      if (event === "SIGNED_OUT" || !session) showLogin();
+    });
+  } else {
+    status("loginStatus", "Supabase 클라이언트 초기화에 실패했습니다. 인터넷 연결과 Supabase 설정을 확인해 주세요.", "");
+  }
+  async function currentUser() { var r = await supabase.auth.getUser(); return r.data.user; }
+
+  /* =====================================================================
+     수다게시판 (Supabase)
+     ===================================================================== */
+  var editingPostId = null, selectedPostId = null;
+  async function loadCommunity() {
+    if (!supabase) return;
+    var feed = $("communityFeed"); feed.innerHTML = ""; setText("communityStatus", "게시글을 불러오는 중…");
+    var q = await supabase.from("community_posts").select("id,title,content,author_id,author_nickname,created_at,updated_at,image_url,like_count,community_comments(id,content,author_id,author_nickname,created_at)").order("created_at", { ascending: false });
+    if (q.error) { setText("communityStatus", "게시판 테이블 설정을 확인해 주세요: " + q.error.message); return; }
+    var posts = q.data, user = await currentUser(), avatarByUser = {}, avatarLookupFailed = false;
+    // 게시글 작성자별로 Supabase에 저장된 학생증 아바타를 조회합니다.
+    // 각 작성자의 author_id와 student_cards.user_id를 연결하므로 로그인한 사용자 본인의 프로필이 아니라 글쓴이의 프로필이 표시됩니다.
+    try {
+      var authorIds = Array.from(new Set(posts.map(function(p){ return p.author_id; }).filter(Boolean)));
+      if (authorIds.length) {
+        var cards = await supabase.from("student_cards").select("user_id,avatar").in("user_id", authorIds);
+        if (cards.error) { avatarLookupFailed = true; console.warn("학생증 프로필 조회 권한을 확인해 주세요.", cards.error); }
+        else (cards.data || []).forEach(function(c){ avatarByUser[c.user_id] = c.avatar; });
+      }
+    } catch (avatarErr) { avatarLookupFailed = true; console.warn("학생증 프로필 사진을 불러오지 못했습니다.", avatarErr); }
+    function authorPhoto(authorId) {
+      var avatar = sanitizeAvatar(avatarByUser[authorId] || AV_DEFAULT);
+      return '<span class="community-author-photo" aria-label="작성자 프로필 사진">' + avatarSVG(avatar) + '</span>';
+    }
+    setText("communityStatus", avatarLookupFailed ? "작성자별 학생증 프로필을 불러오지 못했습니다. Supabase에서 student_cards 조회 정책을 확인해 주세요." : (posts.length ? "" : "아직 게시물이 없습니다. 첫 글을 작성해 보세요."));
+    posts.forEach(function (p) {
+      var row = document.createElement("div"); row.className = "community-row"; row.setAttribute("role", "button"); row.tabIndex = 0;
+      row.innerHTML = authorPhoto(p.author_id) + '<div class="community-row-title">' + escapeHtml(p.title) + '</div><div class="community-row-meta"><span>♥ ' + Number(p.like_count || 0) + '</span><span>💬 ' + (p.community_comments || []).length + '</span></div>';
+      var open = function () { selectedPostId = (selectedPostId === p.id) ? null : p.id; loadCommunity(); };
+      row.onclick = open; row.onkeydown = function (e) { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); open(); } };
+      feed.appendChild(row);
+      if (selectedPostId !== p.id) return;
+
+      var own = user && user.id === p.author_id, admin = window.__dripIsAdmin === true;
+      var detail = document.createElement("article"); detail.className = "community-detail";
+      detail.innerHTML = '<h3>' + escapeHtml(p.title) + '</h3><div class="community-author-line">' + authorPhoto(p.author_id) + '<span>' + escapeHtml(p.author_nickname) + ' · ' + new Date(p.created_at).toLocaleString("ko-KR") + '</span></div><div class="community-body">' + escapeHtml(p.content) + '</div>'
+        + (p.image_url ? '<a href="' + escapeHtml(p.image_url) + '" target="_blank" rel="noopener"><img class="community-photo" src="' + escapeHtml(p.image_url) + '" alt="게시물 첨부 사진"></a>' : '')
+        + '<div class="community-actions"><button class="like-btn" data-like type="button">♥ 좋아요 ' + Number(p.like_count || 0) + '</button>' + (own ? '<button data-edit type="button">수정</button>' : '') + (own || admin ? '<button data-delete type="button">삭제</button>' : '') + '</div>'
+        + '<div class="comment-list"><strong>댓글 ' + (p.community_comments || []).length + '개</strong><div class="comments"></div><form class="community-form comment-form"><textarea maxlength="2000" placeholder="댓글을 입력해 주세요." required></textarea><button type="submit">댓글 작성</button><div class="community-status"></div></form></div>';
+      var comments = detail.querySelector(".comments");
+      (p.community_comments || []).sort(function (a, b) { return new Date(a.created_at) - new Date(b.created_at); }).forEach(function (c) {
+        var item = document.createElement("div"); item.className = "comment-item";
+        item.innerHTML = '<strong>' + escapeHtml(c.author_nickname) + '</strong> · ' + escapeHtml(c.content) + ' ' + (((user && user.id === c.author_id) || admin) ? '<button data-comment-delete type="button">삭제</button>' : '');
+        var d = item.querySelector("[data-comment-delete]");
+        if (d) d.onclick = async function () { var r = await supabase.from("community_comments").delete().eq("id", c.id); if (r.error) alert("댓글 삭제 실패: " + r.error.message); else loadCommunity(); };
+        comments.appendChild(item);
+      });
+      detail.querySelector("[data-like]").onclick = async function () { var r = await supabase.rpc("toggle_community_like", { p_post_id: p.id }); if (r.error) alert("좋아요 기능 SQL을 먼저 실행해 주세요: " + r.error.message); else loadCommunity(); };
+      var edit = detail.querySelector("[data-edit]");
+      if (edit) edit.onclick = function () {
+        editingPostId = p.id; $("communityTitle").value = p.title; $("communityContent").value = p.content; $("communityFormTitle").textContent = "게시물 수정";
+        $("communityPhotoPreview").innerHTML = p.image_url ? '<img class="community-photo" src="' + escapeHtml(p.image_url) + '" alt="현재 사진"><small>새 사진을 선택하면 교체됩니다.</small>' : "";
+        $("communityComposer").hidden = false; window.scrollTo({ top: 0, behavior: "smooth" });
       };
-      map = new kakao.maps.Map(container, options);
+      var del = detail.querySelector("[data-delete]");
+      if (del) del.onclick = async function () {
+        if (!confirm("이 게시물을 삭제할까요? 댓글도 함께 삭제됩니다.")) return;
+        var r = await supabase.from("community_posts").delete().eq("id", p.id);
+        if (r.error) alert("게시물 삭제 실패: " + r.error.message); else { selectedPostId = null; loadCommunity(); }
+      };
+      detail.querySelector(".comment-form").onsubmit = async function (e) {
+        e.preventDefault();
+        var content = e.currentTarget.querySelector("textarea").value.trim(), u = await currentUser();
+        if (!u) { alert("로그인이 필요합니다."); return; }
+        var r = await supabase.from("community_comments").insert({ post_id: p.id, content: content, author_id: u.id, author_nickname: (u.user_metadata && u.user_metadata.nickname) || "회원" });
+        if (r.error) alert("댓글 작성 실패: " + r.error.message); else loadCommunity();
+      };
+      feed.appendChild(detail);
+    });
+  }
+  $("newCommunityPost").onclick = function () {
+    editingPostId = null; $("communityTitle").value = ""; $("communityContent").value = ""; $("communityPhoto").value = ""; $("communityPhotoPreview").innerHTML = "";
+    $("communityFormTitle").textContent = "새 글 작성"; $("communityComposer").hidden = false;
+  };
+  $("cancelCommunityPost").onclick = function () { $("communityComposer").hidden = true; editingPostId = null; };
+  $("communityPhoto").onchange = function () {
+    var f = $("communityPhoto").files[0];
+    if (!f) { $("communityPhotoPreview").innerHTML = ""; return; }
+    if (f.size > 5 * 1024 * 1024) { alert("사진은 5MB 이하만 첨부할 수 있습니다."); $("communityPhoto").value = ""; return; }
+    if (!/^image\/(jpeg|png|webp)$/.test(f.type)) { alert("JPG, PNG, WEBP 사진만 첨부할 수 있습니다."); $("communityPhoto").value = ""; return; }
+    $("communityPhotoPreview").innerHTML = '<img class="community-photo" src="' + URL.createObjectURL(f) + '" alt="사진 미리보기">';
+  };
+  async function uploadCommunityPhoto(file) {
+    if (!file) return null;
+    var ext = (file.name.split(".").pop() || "jpg").toLowerCase().replace(/[^a-z0-9]/g, "");
+    var path = (await currentUser()).id + "/" + Date.now() + "-" + crypto.randomUUID() + "." + ext;
+    var up = await supabase.storage.from("community-photos").upload(path, file, { upsert: false, contentType: file.type });
+    if (up.error) throw up.error;
+    return supabase.storage.from("community-photos").getPublicUrl(path).data.publicUrl;
+  }
+  $("communityComposer").onsubmit = async function (e) {
+    e.preventDefault(); if (!supabase) return;
+    var u = await currentUser();
+    if (!u) { setText("communityPostStatus", "로그인이 필요합니다."); return; }
+    var title = $("communityTitle").value.trim(), content = $("communityContent").value.trim(), nickname = (u.user_metadata && u.user_metadata.nickname) || "회원";
+    try {
+      var imageUrl = null, file = $("communityPhoto").files[0];
+      if (file) imageUrl = await uploadCommunityPhoto(file);
+      var result;
+      if (editingPostId) {
+        var updates = { title: title, content: content, updated_at: new Date().toISOString() };
+        if (imageUrl) updates.image_url = imageUrl;
+        result = await supabase.from("community_posts").update(updates).eq("id", editingPostId);
+      } else result = await supabase.from("community_posts").insert({ title: title, content: content, author_id: u.id, author_nickname: nickname, image_url: imageUrl });
+      if (result.error) throw result.error;
+      $("communityComposer").hidden = true; editingPostId = null; $("communityPhoto").value = ""; $("communityPhotoPreview").innerHTML = ""; loadCommunity();
+    } catch (err) { setText("communityPostStatus", "저장 실패: " + err.message + " (게시판 SQL 및 사진 저장소 설정을 확인해 주세요.)"); }
+  };
 
-      // 지도 클릭 시 좌표 및 주소 추출
-      kakao.maps.event.addListener(map, 'click', function(mouseEvent) {
-        var latlng = mouseEvent.latLng;
-        $("placeLat").value = latlng.getLat();
-        $("placeLng").value = latlng.getLng();
-        
-        // 역지오코딩
-        var geocoder = new kakao.maps.services.Geocoder();
-        geocoder.coord2Address(latlng.getLng(), latlng.getLat(), function(result, status) {
-          if (status === kakao.maps.services.Status.OK) {
-            var addr = result[0].address ? result[0].address.address_name : '';
-            $("placeAddress").value = addr;
-            toast("지도에서 선택한 위치의 주소가 입력되었습니다.");
-          }
-        });
+  /* =====================================================================
+     Kakao 지도 · 장소 공유 (맛집 / 카페 / 명소 / 숙소 / 기타)
+     ===================================================================== */
+  var CAT_EMOJI = { "맛집": "🍜", "카페": "☕", "명소": "📸", "숙소": "🛏️", "기타": "📌" };
+  var selectedCategory = "전체";
+  var kakaoMap = null, kakaoMarkers = [], kakaoInfoWindow = null, geocoder = null, ps = null, pickMarker = null, mapReady = false;
+
+  function placesStatus(msg) { setText("placesStatus", msg); }
+
+  function initKakaoMap() {
+    if (mapReady && kakaoMap) { setTimeout(function () { kakaoMap.relayout(); }, 100); loadSavedPlaces(); return; }
+    if (!window.kakao || !window.kakao.maps) {
+      placesStatus("Kakao 지도 API를 불러올 수 없습니다. JavaScript 키와 카카오 개발자 콘솔의 Web 사이트 도메인 등록을 확인하세요. (장소 목록은 계속 볼 수 있어요)");
+      loadSavedPlaces(); return;
+    }
+    kakao.maps.load(function () {
+      kakaoMap = new kakao.maps.Map($("placesMap"), { center: new kakao.maps.LatLng(37.395297, 127.110449), level: 4 });
+      kakaoInfoWindow = new kakao.maps.InfoWindow({ zIndex: 1 });
+      if (kakao.maps.services) { geocoder = new kakao.maps.services.Geocoder(); ps = new kakao.maps.services.Places(); }
+      mapReady = true;
+
+      // 지도를 클릭해 위치 지정
+      kakao.maps.event.addListener(kakaoMap, "click", function (e) {
+        var ll = e.latLng;
+        $("placeLat").value = ll.getLat(); $("placeLng").value = ll.getLng();
+        if (pickMarker) pickMarker.setMap(null);
+        pickMarker = new kakao.maps.Marker({ position: ll, map: kakaoMap });
+        if (geocoder) {
+          geocoder.coord2Address(ll.getLng(), ll.getLat(), function (r, s) {
+            if (s === kakao.maps.services.Status.OK && r[0]) {
+              $("placeAddress").value = (r[0].road_address && r[0].road_address.address_name) || (r[0].address && r[0].address.address_name) || "";
+            }
+          });
+        }
+        placesStatus("지도에서 위치를 선택했어요. 장소명과 메모를 적고 저장해 주세요.");
       });
 
-      renderMarkersAndList();
+      setTimeout(function () { kakaoMap.relayout(); }, 100);
+      loadSavedPlaces();
     });
   }
 
-  // 카카오맵 장소/주소 검색 구현
-  function searchKakaoPlace() {
-    var query = $("placeAddress").value.trim() || $("placeName").value.trim();
-    if (!query) {
-      toast("검색할 장소명이나 주소를 입력해 주세요.");
-      return;
+  function clearKakaoMarkers() { kakaoMarkers.forEach(function (m) { m.setMap(null); }); kakaoMarkers = []; }
+
+  function searchKakaoAddressOrKeyword() {
+    var addr = $("placeAddress").value.trim();
+    if (!addr) { placesStatus("주소 또는 검색할 장소명을 입력해주세요."); return; }
+    if (!mapReady || !ps) { placesStatus("지도가 아직 준비되지 않았습니다. 잠시 후 다시 시도해 주세요."); return; }
+    placesStatus("Kakao 지도로 검색 중...");
+    function pick(lat, lng, label) {
+      $("placeLat").value = lat; $("placeLng").value = lng;
+      var pos = new kakao.maps.LatLng(lat, lng);
+      kakaoMap.setCenter(pos);
+      if (pickMarker) pickMarker.setMap(null);
+      pickMarker = new kakao.maps.Marker({ position: pos, map: kakaoMap });
+      if (label) { kakaoInfoWindow.setContent('<div class="kakao-overlay-iw">' + escapeHtml(label) + '</div>'); kakaoInfoWindow.open(kakaoMap, pickMarker); }
     }
-
-    if (!map || typeof kakao === "undefined") {
-      toast("지도 서비스를 불러올 수 없습니다.");
-      return;
-    }
-
-    $("placesStatus").textContent = "'" + query + "' 위치를 검색 중입니다...";
-
-    var ps = new kakao.maps.services.Places();
-    ps.keywordSearch(query, function (data, status) {
-      if (status === kakao.maps.services.Status.OK) {
-        var first = data[0];
-        var moveLatLon = new kakao.maps.LatLng(first.y, first.x);
-        
-        map.setCenter(moveLatLon);
-        map.setLevel(3);
-
-        $("placeLat").value = first.y;
-        $("placeLng").value = first.x;
-        $("placeAddress").value = first.road_address_name || first.address_name;
-        if (!$("placeName").value.trim()) {
-          $("placeName").value = first.place_name;
-        }
-
-        if (currentInfoWindow) currentInfoWindow.close();
-        currentInfoWindow = new kakao.maps.InfoWindow({
-          content: '<div class="kakao-overlay-iw">📍 ' + first.place_name + '</div>'
+    ps.keywordSearch(addr, function (data, st) {
+      if (st === kakao.maps.services.Status.OK) {
+        var f = data[0];
+        if (!$("placeName").value.trim()) $("placeName").value = f.place_name;
+        $("placeAddress").value = f.road_address_name || f.address_name || addr;
+        pick(parseFloat(f.y), parseFloat(f.x), f.place_name);
+        placesStatus("위치를 찾았습니다: " + f.place_name + " (" + (f.road_address_name || f.address_name) + ")");
+      } else if (geocoder) {
+        geocoder.addressSearch(addr, function (res, sg) {
+          if (sg === kakao.maps.services.Status.OK) { pick(parseFloat(res[0].y), parseFloat(res[0].x), null); placesStatus("주소 위치를 찾았습니다."); }
+          else placesStatus("장소를 찾을 수 없습니다. 정확한 주소나 키워드로 다시 검색하거나 지도를 직접 클릭해 주세요.");
         });
-        currentInfoWindow.open(map, new kakao.maps.Marker({ map: map, position: moveLatLon }));
+      } else placesStatus("검색 서비스를 이용할 수 없습니다.");
+    });
+  }
 
-        $("placesStatus").textContent = "위치를 찾았습니다: " + first.place_name;
-        toast("장소 위치가 지도에 지정되었습니다.");
+  async function loadSavedPlaces() {
+    if (!supabase) { placesStatus("Supabase 연결 설정이 없어 공유 장소를 불러올 수 없습니다. 페이지의 Supabase URL/anon key 설정을 확인하세요."); return; }
+    var q = supabase.from("shared_places").select("id,category,name,address,memo,author_id,author_nickname,created_at,lat,lon").order("created_at", { ascending: false });
+    if (selectedCategory !== "전체") q = q.eq("category", selectedCategory);
+    var res, box = $("savedPlaces"); box.innerHTML = "";
+    try { res = await q; } catch (err) { placesStatus("장소 불러오기 중 오류가 발생했습니다: " + (err && err.message ? err.message : String(err))); return; }
+    if (res.error) {
+      var msg = res.error.message || "알 수 없는 오류";
+      if (/shared_places|relation|does not exist|schema cache/i.test(msg)) {
+        placesStatus("장소 목록을 불러오지 못했습니다. Supabase에 shared_places 테이블이 없거나 API 스키마 갱신이 필요합니다. 제공된 shared_places_setup.sql을 SQL Editor에서 실행한 뒤 새로고침해 주세요. 상세 오류: " + msg);
+      } else if (/permission|policy|row-level security|rls/i.test(msg)) {
+        placesStatus("장소 조회 권한이 없습니다. Supabase에서 shared_places_setup.sql의 RLS 정책을 적용했는지 확인해 주세요. 상세 오류: " + msg);
       } else {
-        // 주소 검색 재시도
-        var geocoder = new kakao.maps.services.Geocoder();
-        geocoder.addressSearch(query, function (result, geoStatus) {
-          if (geoStatus === kakao.maps.services.Status.OK) {
-            var moveLatLon = new kakao.maps.LatLng(result[0].y, result[0].x);
-            map.setCenter(moveLatLon);
-            map.setLevel(3);
-            $("placeLat").value = result[0].y;
-            $("placeLng").value = result[0].x;
-            $("placesStatus").textContent = "주소 위치를 찾았습니다.";
-            toast("주소 위치가 지도에 지정되었습니다.");
-          } else {
-            $("placesStatus").textContent = "장소를 찾지 못했습니다. 정확한 명칭이나 주소를 입력해 주세요.";
-            toast("검색 결과가 없습니다.");
-          }
+        placesStatus("장소 불러오기 실패: " + msg);
+      }
+      return;
+    }
+    var data = res.data;
+    placesStatus(data.length ? "" : "아직 저장된 장소가 없습니다. 첫 장소를 공유해 보세요!");
+
+    if (kakaoMap) { clearKakaoMarkers(); if (pickMarker) { pickMarker.setMap(null); pickMarker = null; } }
+    var bounds = (kakaoMap && window.kakao && kakao.maps) ? new kakao.maps.LatLngBounds() : null, hasCoords = false;
+
+    data.forEach(function (p) {
+      var emoji = CAT_EMOJI[p.category] || "📌";
+      var d = document.createElement("article"); d.className = "saved-place";
+      var url = (p.lat != null && p.lon != null) ? "https://map.kakao.com/link/map/" + encodeURIComponent(p.name) + "," + p.lat + "," + p.lon : "https://map.kakao.com/link/search/" + encodeURIComponent(p.name);
+      var canDelete = (window.__dripCurrentUser && window.__dripCurrentUser.id === p.author_id) || window.__dripIsAdmin;
+      d.innerHTML = '<strong>' + emoji + ' ' + escapeHtml(p.name) + ' <span class="dept">' + escapeHtml(p.category) + '</span></strong><div class="place-address"><b>주소명</b> · ' + escapeHtml(p.address || "주소 미등록") + '</div><div class="place-author"><b>작성자</b> · ' + escapeHtml(p.author_nickname || "회원") + ' · ' + new Date(p.created_at).toLocaleDateString("ko-KR") + '</div><p class="place-memo"><b>작성자의 메모</b><br>' + escapeHtml(p.memo || "등록된 메모가 없습니다.") + '</p><div class="place-actions"><a href="' + url + '" target="_blank" rel="noopener">Kakao 지도에서 보기/길찾기 ↗</a>' + (canDelete ? ' <button data-place-delete type="button">삭제</button>' : '') + '</div>';
+      box.appendChild(d);
+
+      var del = d.querySelector("[data-place-delete]");
+      if (del) del.onclick = async function (ev) {
+        ev.stopPropagation();
+        if (!confirm("이 장소 공유를 삭제할까요?")) return;
+        var r = await supabase.from("shared_places").delete().eq("id", p.id);
+        if (r.error) alert(r.error.message); else loadSavedPlaces();
+      };
+
+      if (kakaoMap && p.lat != null && p.lon != null) {
+        var pos = new kakao.maps.LatLng(p.lat, p.lon);
+        var marker = new kakao.maps.Marker({ position: pos, map: kakaoMap, title: p.name });
+        kakaoMarkers.push(marker); hasCoords = true; if (bounds) bounds.extend(pos);
+        var openInfo = function () {
+          kakaoInfoWindow.setContent('<div class="kakao-overlay-iw">' + emoji + ' <b>' + escapeHtml(p.name) + '</b><br><span style="font-size:11px;color:#666;">' + escapeHtml(p.address) + '</span></div>');
+          kakaoInfoWindow.open(kakaoMap, marker);
+        };
+        kakao.maps.event.addListener(marker, "click", openInfo);
+        d.style.cursor = "pointer";
+        d.addEventListener("click", function (ev) {
+          if (ev.target.closest("a,button")) return;
+          kakaoMap.setLevel(3); kakaoMap.panTo(pos); openInfo();
         });
       }
     });
+    if (kakaoMap && hasCoords && bounds) kakaoMap.setBounds(bounds);
   }
 
-  // 마커 및 좌측 장소 목록 렌더링
-  function renderMarkersAndList() {
-    // 기존 마커 제거
-    markers.forEach(function (m) { m.setMap(null); });
-    markers = [];
+  Array.prototype.forEach.call($("placesTabs").querySelectorAll("button"), function (b) {
+    b.onclick = function () {
+      Array.prototype.forEach.call($("placesTabs").querySelectorAll("button"), function (x) { x.classList.remove("active"); });
+      b.classList.add("active");
+      selectedCategory = b.dataset.category;
+      if (selectedCategory !== "전체") $("placeCategory").value = selectedCategory;
+      loadSavedPlaces();
+    };
+  });
+  $("btnSearchKakao").onclick = searchKakaoAddressOrKeyword;
+  $("placeAddress").addEventListener("keydown", function (e) { if (e.key === "Enter") { e.preventDefault(); searchKakaoAddressOrKeyword(); } });
 
-    var filtered = savedPlacesData.filter(function (p) {
-      return selectedCategory === "전체" || p.category === selectedCategory;
-    });
+  $("placeSaveForm").onsubmit = async function (e) {
+    e.preventDefault();
+    if (!supabase) { placesStatus("Supabase 연결 설정이 없어 장소를 저장할 수 없습니다."); return; }
+    var u = await currentUser();
+    if (!u) { alert("로그인이 필요합니다."); return; }
+    var category = $("placeCategory").value, name = $("placeName").value.trim(), address = $("placeAddress").value.trim(), memo = $("placeMemo").value.trim();
+    var lat = $("placeLat").value ? parseFloat($("placeLat").value) : null, lon = $("placeLng").value ? parseFloat($("placeLng").value) : null;
 
-    renderPlacesList(filtered);
-
-    if (!map) return;
-
-    filtered.forEach(function (place) {
-      if (!place.lat || !place.lng) return;
-      var pos = new kakao.maps.LatLng(place.lat, place.lng);
-      var marker = new kakao.maps.Marker({
-        map: map,
-        position: pos,
-        title: place.name
-      });
-
-      kakao.maps.event.addListener(marker, 'click', function () {
-        if (currentInfoWindow) currentInfoWindow.close();
-        currentInfoWindow = new kakao.maps.InfoWindow({
-          content: '<div class="kakao-overlay-iw"><b>[' + place.category + ']</b> ' + place.name + '</div>'
+    // 좌표가 없으면 키워드/주소로 한 번 더 찾아본다
+    if ((lat == null || lon == null) && ps) {
+      await new Promise(function (resolve) {
+        ps.keywordSearch(address, function (data, st) {
+          if (st === kakao.maps.services.Status.OK) { lat = parseFloat(data[0].y); lon = parseFloat(data[0].x); }
+          resolve();
         });
-        currentInfoWindow.open(map, marker);
       });
-
-      markers.push(marker);
-    });
-  }
-
-  // 왼쪽 영역 장소 목록 출력
-  function renderPlacesList(list) {
-    var container = $("savedPlaces");
-    container.innerHTML = "";
-
-    var targetList = list || savedPlacesData;
-
-    if (targetList.length === 0) {
-      container.innerHTML = '<p style="font-size:13px; color:#888; padding:12px;">등록된 장소가 없습니다.</p>';
+    }
+    var ins;
+    try {
+      ins = await supabase.from("shared_places").insert({
+        category: category, name: name, address: address, memo: memo,
+        author_id: u.id,
+        author_nickname: (u.user_metadata && u.user_metadata.nickname) || "회원",
+        lat: lat, lon: lon
+      });
+    } catch (err) {
+      placesStatus("장소 저장 중 연결 오류가 발생했습니다: " + (err && err.message ? err.message : String(err)));
+      return;
+    }
+    if (ins.error) {
+      var saveMsg = ins.error.message || "알 수 없는 오류";
+      if (/shared_places|relation|does not exist|schema cache/i.test(saveMsg)) {
+        placesStatus("장소 저장 실패: Supabase에 shared_places 테이블이 없습니다. shared_places_setup.sql을 SQL Editor에서 실행해 주세요. 상세 오류: " + saveMsg);
+      } else if (/permission|policy|row-level security|rls/i.test(saveMsg)) {
+        placesStatus("장소 저장 권한이 없습니다. 로그인 상태와 shared_places_setup.sql의 INSERT 정책을 확인해 주세요. 상세 오류: " + saveMsg);
+      } else {
+        placesStatus("장소 저장 실패: " + saveMsg);
+      }
       return;
     }
 
-    targetList.forEach(function (item) {
-      var div = document.createElement("div");
-      div.className = "saved-place";
-      div.innerHTML = 
-        '<strong>[' + item.category + '] ' + item.name + '</strong>' +
-        '<div class="place-address">📍 ' + item.address + '</div>' +
-        '<div class="place-author">작성자: ' + (item.author || '익명') + '</div>' +
-        (item.memo ? '<div class="place-memo">' + item.memo + '</div>' : '') +
-        '<div class="place-actions">' +
-          '<a href="https://map.kakao.com/link/search/' + encodeURIComponent(item.name) + '" target="_blank">카카오맵 바로가기 ↗</a>' +
-        '</div>';
+    if (selectedCategory !== "전체") {
+      selectedCategory = category;
+      Array.prototype.forEach.call($("placesTabs").querySelectorAll("button"), function (x) { x.classList.toggle("active", x.dataset.category === category); });
+    }
+    $("placeSaveForm").reset(); $("placeLat").value = ""; $("placeLng").value = "";
+    toast("장소가 지도에 저장되었습니다!");
+    loadSavedPlaces();
+  };
 
-      div.onclick = function () {
-        if (map && item.lat && item.lng) {
-          var moveLatLon = new kakao.maps.LatLng(item.lat, item.lng);
-          map.setCenter(moveLatLon);
-          map.setLevel(3);
-          toast(item.name + " 위치로 이동했습니다.");
-        }
-      };
+  /* =====================================================================
+     학생증 만들기 — 캐릭터 데이터 / SVG 생성
+     ===================================================================== */
+  var AV_GROUPS = [
+    { key: "gender", label: "성별", type: "seg", opts: [["m", "남성"], ["f", "여성"]] },
+    { key: "hair", label: "헤어스타일", type: "seg", opts: [["slick", "빗어넘김"], ["buzz", "스포츠"], ["part", "가르마"], ["bob", "단발"], ["long", "긴머리"], ["curly", "곱슬"], ["bun", "똥머리"], ["bald", "민머리"]] },
+    { key: "hairColor", label: "머리색", type: "color", opts: [["#1b1b1b", "검정"], ["#6b3f1d", "갈색"], ["#e6b94a", "금발"], ["#9aa3b2", "회색"], ["#c0392b", "빨강"], ["#f08bb4", "분홍"]] },
+    { key: "face", label: "얼굴형", type: "seg", opts: [["long", "길쭉"], ["round", "둥근"], ["square", "각진"]] },
+    { key: "skin", label: "피부색", type: "color", opts: [["#FFDEBF", "밝은"], ["#F6C9A5", "보통"], ["#E0A97D", "황갈"], ["#B97A56", "갈색"], ["#8D5A3B", "짙은"]] },
+    { key: "expr", label: "표정", type: "seg", opts: [["neutral", "기본"], ["smile", "웃음"], ["wow", "놀람"], ["sleepy", "졸림"], ["tired", "야근"], ["angry", "화남"], ["sad", "울상"]] },
+    { key: "eyes", label: "눈", type: "seg", opts: [["dot", "점눈"], ["round", "동그란눈"], ["thin", "가는눈"], ["sparkle", "반짝눈"], ["arch", "웃는눈"]] },
+    { key: "nose", label: "코", type: "seg", opts: [["long", "긴코"], ["dot", "점코"], ["L", "L자코"], ["big", "동그란코"]] },
+    { key: "glasses", label: "안경", type: "seg", opts: [["no", "없음"], ["yes", "안경"]] },
+    { key: "clothes", label: "옷", type: "seg", opts: [["shirt", "셔츠"], ["hoodie", "후드"], ["tee", "티셔츠"], ["suit", "정장"], ["turtle", "목폴라"]] },
+    { key: "clothesColor", label: "옷 색", type: "color", opts: [["#E8763A", "주황"], ["#4A7BD0", "파랑"], ["#3FA878", "초록"], ["#8A63C7", "보라"], ["#2B2F3A", "검정"], ["#EE7FA5", "분홍"], ["#F5F5F5", "흰색"]] },
+    { key: "bg", label: "배경색", type: "color", opts: [["#FFF0C2", "노랑"], ["#D8F7E8", "민트"], ["#FFE8EE", "분홍"], ["#DDEBFF", "하늘"], ["#E8DFFF", "라벤더"], ["#E9EDF3", "회색"], ["#FFD9CC", "코랄"], ["#FFFFFF", "흰색"]] }
+  ];
+  var AV_DEFAULT = { gender: "m", hair: "slick", hairColor: "#1b1b1b", face: "long", skin: "#FFDEBF", expr: "neutral", eyes: "dot", nose: "long", glasses: "no", clothes: "shirt", clothesColor: "#E8763A", bg: "#FFF0C2" };
+  var AV_INK = "#141414";
 
-      container.appendChild(div);
+  // 서버/로컬에서 불러온 값은 허용 목록에 있는 값만 통과시킨다 (SVG에 그대로 들어가므로 중요)
+  function sanitizeAvatar(o) {
+    var out = {}; o = (o && typeof o === "object") ? o : {};
+    AV_GROUPS.forEach(function (g) {
+      var v = String(o[g.key] == null ? "" : o[g.key]);
+      out[g.key] = g.opts.some(function (x) { return String(x[0]) === v; }) ? v : AV_DEFAULT[g.key];
     });
+    return out;
+  }
+  function svgP(d, fill, sw) { return '<path d="' + d + '" fill="' + fill + '" stroke="' + AV_INK + '" stroke-width="' + (sw == null ? 2.4 : sw) + '" stroke-linejoin="round" stroke-linecap="round"/>'; }
+  function svgL(d, sw, color) { return '<path d="' + d + '" fill="none" stroke="' + (color || AV_INK) + '" stroke-width="' + sw + '" stroke-linecap="round" stroke-linejoin="round"/>'; }
+  function svgC(cx, cy, r, fill, sw) { return '<circle cx="' + cx + '" cy="' + cy + '" r="' + r + '" fill="' + fill + '"' + (sw ? ' stroke="' + AV_INK + '" stroke-width="' + sw + '"' : '') + '/>'; }
+
+  function avEye(t, x) {
+    if (t === "dot") return svgC(x, 52, 2.4, AV_INK);
+    if (t === "round") return svgC(x, 52, 4.6, "#fff", 1.8) + svgC(x, 52.6, 2, AV_INK);
+    if (t === "thin") return svgL("M" + (x - 4.6) + " 52 L" + (x + 4.6) + " 52", 2.6);
+    if (t === "sparkle") return svgC(x, 52, 5.6, "#fff", 1.8) + svgC(x, 52.6, 3.4, AV_INK) + svgC(x + 1.2, 51, 1.1, "#fff");
+    return svgL("M" + (x - 4.6) + " 54 Q" + x + " 47.5 " + (x + 4.6) + " 54", 2.4);
+  }
+  var AV_BROWS = {
+    neutral: ["M35 45 L46 45", "M54 45 L65 45"],
+    smile: ["M35 46 Q40.5 41.5 46 44.5", "M54 44.5 Q59.5 41.5 65 46"],
+    wow: ["M35 41 Q40.5 36.5 46 40.5", "M54 40.5 Q59.5 36.5 65 41"],
+    sleepy: ["M35 44 L46 46", "M54 46 L65 44"],
+    tired: ["M35 44 L46 46.5", "M54 46.5 L65 44"],
+    angry: ["M35 41.5 L46 46", "M54 46 L65 41.5"],
+    sad: ["M35 46 L46 42.5", "M54 42.5 L65 46"]
+  };
+
+  function avHair(a, part) {
+    var hc = a.hairColor, h = a.hair, s = "";
+    if (part === "back") {
+      if (h === "bob") s = svgP("M24 72 Q22 12 50 11 Q78 12 76 72 Q69 78 64 68 L36 68 Q31 78 24 72 Z", hc);
+      else if (h === "long") s = svgP("M22 100 Q20 10 50 9 Q80 10 78 100 Q66 96 63 84 L37 84 Q34 96 22 100 Z", hc);
+      else if (h === "curly") s = [[27, 36, 10], [32, 23, 10], [43, 15, 10], [57, 15, 10], [68, 23, 10], [73, 36, 10], [24, 50, 7], [76, 50, 7]].map(function (c) { return svgC(c[0], c[1], c[2], hc, 2.4); }).join("");
+      else if (h === "bun") s = svgC(50, 11, 9, hc, 2.4);
+    } else {
+      if (h === "slick") s = svgP("M29 37 Q29 14 50 14 Q71 14 71 37 Q66 25 50 27 Q34 25 29 37 Z", hc) + svgL("M39 21 Q50 17 61 21", 1.4);
+      else if (h === "buzz") s = svgP("M30 35 Q31 18 50 18 Q69 18 70 35 Q62 28 50 28 Q38 28 30 35 Z", hc);
+      else if (h === "part") s = svgP("M27 42 Q24 12 52 12 Q76 12 73 42 Q72 27 60 24 Q46 31 33 30 Q28 33 27 42 Z", hc);
+      else if (h === "bob") s = svgP("M28 38 Q30 18 50 18 Q70 18 72 38 Q62 27 50 31 Q38 27 28 38 Z", hc);
+      else if (h === "long") s = svgP("M28 40 Q28 17 50 17 Q72 17 72 40 Q64 26 50 24 Q36 26 28 40 Z", hc);
+      else if (h === "curly") s = svgC(38, 28, 6.5, hc, 2.2) + svgC(50, 25, 7, hc, 2.2) + svgC(62, 28, 6.5, hc, 2.2);
+      else if (h === "bun") s = svgP("M30 36 Q30 17 50 17 Q70 17 70 36 Q62 27 50 29 Q38 27 30 36 Z", hc);
+    }
+    if (!s) return "";
+    var sx = a.face === "round" ? 1.19 : a.face === "square" ? 1.1 : 1;
+    return '<g transform="translate(50 0) scale(' + sx + ' 1) translate(-50 0)">' + s + '</g>';
   }
 
-  // 이벤트 바인딩
-  window.onload = function () {
-    $("goPlaces").onclick = function () {
-      initKakaoMap();
-    };
+  function avatarSVG(a) {
+    var f = a.gender === "f", skin = a.skin, cc = a.clothesColor, o = "";
+    var fw = a.face === "round" ? 25 : a.face === "square" ? 23 : 21;
+    o += '<rect width="100" height="112" fill="' + a.bg + '"/>';
+    o += '<rect x="43" y="74" width="14" height="16" fill="' + skin + '" stroke="' + AV_INK + '" stroke-width="2.4"/>';
 
-    $("btnSearchKakao").onclick = searchKakaoPlace;
+    // 몸 / 옷
+    o += svgP(f ? "M16 112 Q18 93 35 88 L65 88 Q82 93 84 112 Z" : "M10 112 Q12 92 34 88 L66 88 Q88 92 90 112 Z", cc);
+    if (a.clothes === "shirt") o += svgP("M37 88 L50 103 L33 97 Z", "#fff", 2) + svgP("M63 88 L50 103 L67 97 Z", "#fff", 2) + svgP("M50 102 L46.5 108 L50 112 L53.5 108 Z", "#2B2F3A", 1.6);
+    else if (a.clothes === "hoodie") o += svgP("M32 90 Q50 110 68 90 Q62 83 50 83 Q38 83 32 90 Z", cc) + svgP("M32 90 Q50 110 68 90 Q62 83 50 83 Q38 83 32 90 Z", "rgba(0,0,0,.16)") + svgL("M44 98 L44 108", 2.2) + svgL("M56 98 L56 108", 2.2);
+    else if (a.clothes === "tee") o += svgP("M39 88 Q50 101 61 88 Z", skin, 2.2);
+    else if (a.clothes === "suit") o += svgP("M41 88 L50 107 L59 88 Z", "#fff", 2) + svgL("M41 88 L32 108", 2) + svgL("M59 88 L68 108", 2) + svgP("M50 99 L47 105 L50 112 L53 105 Z", "#c0392b", 1.6);
+    else o += '<rect x="38" y="82" width="24" height="12" rx="6" fill="' + cc + '" stroke="' + AV_INK + '" stroke-width="2.4"/><rect x="38" y="82" width="24" height="12" rx="6" fill="rgba(0,0,0,.16)"/>';
 
-    // 카테고리 탭 변경
-    var tabs = document.querySelectorAll("#placesTabs button");
-    tabs.forEach(function (btn) {
-      btn.onclick = function () {
-        tabs.forEach(function (b) { b.classList.remove("active"); });
-        btn.classList.add("active");
-        selectedCategory = btn.getAttribute("data-category");
-        renderMarkersAndList();
-      };
+    o += avHair(a, "back");
+
+    // 귀 + 얼굴
+    o += svgC(50 - fw, 55, 4.5, skin, 2.2) + svgC(50 + fw, 55, 4.5, skin, 2.2);
+    if (a.face === "square") o += '<rect x="' + (50 - fw) + '" y="25" width="' + (2 * fw) + '" height="55" rx="17" fill="' + skin + '" stroke="' + AV_INK + '" stroke-width="2.4"/>';
+    else o += '<ellipse cx="50" cy="52" rx="' + fw + '" ry="' + (a.face === "round" ? 26 : 28) + '" fill="' + skin + '" stroke="' + AV_INK + '" stroke-width="2.4"/>';
+    if (f) o += svgC(50 - fw, 61, 1.8, "#ffd34d", 1) + svgC(50 + fw, 61, 1.8, "#ffd34d", 1);
+
+    // 표정: 볼 / 눈썹 / 입
+    var e = a.expr, lip = f ? "#c0405f" : AV_INK, browW = f ? 1.7 : 2.8;
+    if (e === "smile" || e === "angry") o += '<circle cx="35" cy="62" r="4.2" fill="#ff8a8a" opacity=".5"/><circle cx="65" cy="62" r="4.2" fill="#ff8a8a" opacity=".5"/>';
+    if (e === "tired") o += svgL("M37 57.5 Q41 60 45 57.5", 1.3, "#7a6a8a") + svgL("M55 57.5 Q59 60 63 57.5", 1.3, "#7a6a8a");
+    var b = AV_BROWS[e] || AV_BROWS.neutral;
+    o += svgL(b[0], browW) + svgL(b[1], browW);
+
+    // 눈
+    o += avEye(a.eyes, 41) + avEye(a.eyes, 59);
+    if (f) o += svgL("M36.2 50 L34 47.8", 1.6) + svgL("M63.8 50 L66 47.8", 1.6);
+
+    // 코
+    if (a.nose === "dot") o += svgC(50, 60, 1.5, AV_INK);
+    else if (a.nose === "L") o += svgL("M51 54 L51 61.5 L47.5 61.5", 2);
+    else if (a.nose === "big") o += '<ellipse cx="50" cy="60" rx="3.4" ry="2.6" fill="rgba(0,0,0,.08)" stroke="' + AV_INK + '" stroke-width="1.8"/>';
+    else o += svgL("M49.5 53 Q46.5 61 50.5 62.5", 2);
+
+    // 입
+    if (e === "smile") o += svgP("M41.5 66 Q50 77 58.5 66 Z", "#fff", 2);
+    else if (e === "wow") o += '<ellipse cx="50" cy="69" rx="3.8" ry="5" fill="#5a2a2a" stroke="' + AV_INK + '" stroke-width="1.8"/>';
+    else if (e === "sleepy") o += svgL("M46 69 Q50 71.5 54 69", 2.2, lip) + '<text x="68" y="36" font-size="9" font-weight="800" fill="#6b7aa8" font-family="sans-serif">z</text><text x="74" y="27" font-size="12" font-weight="800" fill="#6b7aa8" font-family="sans-serif">Z</text>';
+    else if (e === "tired") o += svgL("M43 69.5 Q46.5 66 50 69.5 Q53.5 73 57 69.5", 2.2, lip) + svgP("M71 38 Q67.5 44 71 46.5 Q74.5 44 71 38 Z", "#8fd3ff", 1.2);
+    else if (e === "angry") o += svgL("M43 71 Q50 65.5 57 71", 2.4, lip) + svgL("M68 30 L73 35 M73 30 L68 35", 2.2, "#e11d48");
+    else if (e === "sad") o += svgL("M44 71.5 Q50 66 56 71.5", 2.4, lip) + svgP("M35 58 Q32 63 35 65.5 Q38 63 35 58 Z", "#8fd3ff", 1.2);
+    else o += '<ellipse cx="50" cy="68.5" rx="2.6" ry="3.2" fill="' + (f ? "#c0405f" : "#5a2a2a") + '" stroke="' + AV_INK + '" stroke-width="1.6"/>';
+
+    o += avHair(a, "front");
+
+    if (a.glasses === "yes") o += '<circle cx="41" cy="52" r="7.6" fill="rgba(255,255,255,.28)" stroke="' + AV_INK + '" stroke-width="2"/><circle cx="59" cy="52" r="7.6" fill="rgba(255,255,255,.28)" stroke="' + AV_INK + '" stroke-width="2"/>' + svgL("M48.6 52 L51.4 52", 2) + svgL("M33.4 52 L29.5 50", 2) + svgL("M66.6 52 L70.5 50", 2);
+
+    return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 112" width="100%" height="100%" preserveAspectRatio="xMidYMid slice" role="img" aria-label="프로필 캐릭터">' + o + '</svg>';
+  }
+
+  /* =====================================================================
+     학생증 만들기 — 화면 / 저장 (Supabase: student_cards)
+     ===================================================================== */
+  var SID_DEFAULT_MAJOR = "칼퇴기원학", SID_DEFAULT_MOTTO = "오늘도 칼퇴를 향해!";
+  var sidState = { major: SID_DEFAULT_MAJOR, motto: SID_DEFAULT_MOTTO, avatar: sanitizeAvatar(AV_DEFAULT) };
+  var sidUser = null, sidNick = "", sidHasSavedCard = false, sidLoadSeq = 0;
+
+  function studentNo(u) {
+    var h = 0, s = String(u.id || "");
+    for (var i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) >>> 0;
+    var yr = new Date(u.created_at || Date.now()).getFullYear();
+    return yr + "-DRIP-" + String(h % 10000).padStart(4, "0");
+  }
+  function renderSidCard() {
+    var n = sidNick || "회원", no = "학번: " + (sidUser ? studentNo(sidUser) : "----");
+    ["sidPhoto", "homeSidPhoto"].forEach(function (id) { if ($(id)) { $(id).innerHTML = avatarSVG(sidState.avatar); $(id).style.background = sidState.avatar.bg; } });
+    [["sidMajor", "sidMotto", "sidName", "sidNo"], ["homeSidMajor", "homeSidMotto", "homeSidName", "homeSidNo"]].forEach(function (ids) {
+      if (!$(ids[0])) return;
+      $(ids[0]).textContent = (sidState.major || "미정") + " 전공";
+      $(ids[1]).textContent = "“" + (sidState.motto || "좌우명을 적어 주세요") + "”";
+      $(ids[2]).textContent = n;
+      $(ids[2]).style.fontSize = n.length > 9 ? "18px" : n.length > 6 ? "22px" : "";
+      $(ids[2]).style.letterSpacing = n.length > 6 ? ".1em" : "";
+      $(ids[3]).textContent = no;
     });
+    $("sidNickFixed").textContent = n;
+  }
+  function buildSidControls() {
+    var box = $("sidAvatarControls"); box.innerHTML = "";
+    AV_GROUPS.forEach(function (g) {
+      var wrap = el("div", "sid-group"), opts = el("div", "sid-opts");
+      wrap.appendChild(el("div", "sid-glabel", g.label));
+      g.opts.forEach(function (o) {
+        var b = el("button", g.type === "color" ? "sid-sw" : "sid-opt", g.type === "color" ? "" : o[1]);
+        b.type = "button"; b.dataset.key = g.key; b.dataset.val = o[0]; b.title = o[1]; b.setAttribute("aria-label", g.label + " " + o[1]);
+        if (g.type === "color") b.style.background = o[0];
+        b.onclick = function () { sidState.avatar[g.key] = String(o[0]); syncSidControls(); renderSidCard(); };
+        opts.appendChild(b);
+      });
+      wrap.appendChild(opts); box.appendChild(wrap);
+    });
+    syncSidControls();
+  }
+  function syncSidControls() {
+    Array.prototype.forEach.call($("sidAvatarControls").querySelectorAll("button"), function (b) {
+      b.classList.toggle("on", sidState.avatar[b.dataset.key] === b.dataset.val);
+    });
+  }
+  function fillSidInputs() { $("sidMajorInput").value = sidState.major; $("sidMottoInput").value = sidState.motto; }
 
-    // 장소 저장 폼
-    $("placeSaveForm").onsubmit = function (e) {
-      e.preventDefault();
-      var name = $("placeName").value.trim();
-      var category = $("placeCategory").value;
-      var address = $("placeAddress").value.trim();
-      var memo = $("placeMemo").value.trim();
-      var lat = parseFloat($("placeLat").value) || 37.6934;
-      var lng = parseFloat($("placeLng").value) || 126.7451;
-
-      var newPlace = {
-        id: Date.now(),
-        name: name,
-        category: category,
-        address: address,
-        memo: memo,
-        lat: lat,
-        lng: lng,
-        author: "드립회원"
-      };
-
-      savedPlacesData.unshift(newPlace);
-      renderMarkersAndList();
-      
-      $("placeName").value = "";
-      $("placeAddress").value = "";
-      $("placeMemo").value = "";
-      $("placeLat").value = "";
-      $("placeLng").value = "";
-
-      toast("장소가 정상적으로 공유 및 저장되었습니다!");
-    };
-
-    // 초기 실행
-    initKakaoMap();
+  $("sidMajorInput").addEventListener("input", function () { sidState.major = this.value.trim(); renderSidCard(); });
+  $("sidMottoInput").addEventListener("input", function () { sidState.motto = this.value.trim(); renderSidCard(); });
+  $("sidRandom").onclick = function () {
+    AV_GROUPS.forEach(function (g) { sidState.avatar[g.key] = String(g.opts[Math.floor(Math.random() * g.opts.length)][0]); });
+    syncSidControls(); renderSidCard();
   };
+  $("sidReset").onclick = function () { sidState.avatar = sanitizeAvatar(AV_DEFAULT); syncSidControls(); renderSidCard(); };
+
+  async function loadStudentCard() {
+    setText("sidStatus", "");
+    var u = null;
+    try { u = supabase ? await currentUser() : null; } catch (e) {}
+    if (!u) { setText("sidStatus", "로그인이 필요합니다."); return; }
+    sidUser = u;
+    sidNick = (u.user_metadata && u.user_metadata.nickname) || "회원";
+    var thisLoad = ++sidLoadSeq;
+    var homeCard = $("homeStudentCard");
+    if (homeCard) homeCard.hidden = true;
+    var local = null, data = null;
+    try { local = JSON.parse(localStorage.getItem("dripcollege_sid_" + u.id) || "null"); } catch (e) {}
+    var r;
+    try {
+      r = await supabase.from("student_cards").select("major,motto,avatar").eq("user_id", u.id).maybeSingle();
+    } catch (err) {
+      setText("sidStatus", "Supabase에서 학생증을 불러오지 못했어요. 연결 상태와 student_card.sql 실행 여부를 확인해 주세요.");
+      data = local;
+    }
+    if (r && r.error) {
+      setText("sidStatus", "Supabase 학생증 테이블 설정을 확인해 주세요: " + r.error.message + " (student_card.sql을 실행하면 다른 기기에서도 저장 정보를 불러올 수 있어요.)");
+      data = local;
+    } else if (r) data = r.data || local;
+    if (thisLoad !== sidLoadSeq) return; // 늦게 끝난 이전 요청이 최신 학생증을 덮어쓰지 않게 함
+    sidHasSavedCard = !!(data && typeof data === "object" && (data.major || data.motto || data.avatar));
+    sidState = {
+      major: String((data && data.major) || SID_DEFAULT_MAJOR).slice(0, 14),
+      motto: String((data && data.motto) || SID_DEFAULT_MOTTO).slice(0, 30),
+      avatar: sanitizeAvatar(data && data.avatar)
+    };
+    fillSidInputs(); syncSidControls(); renderSidCard();
+    if (homeCard) homeCard.hidden = !sidHasSavedCard;
+  }
+
+  $("sidSave").onclick = async function () {
+    var u = null;
+    try { u = supabase ? await currentUser() : null; } catch (e) {}
+    if (!u) { setText("sidStatus", "로그인이 필요합니다."); return; }
+    var major = sidState.major.slice(0, 14), motto = sidState.motto.slice(0, 30);
+    var payload = {
+      user_id: u.id, nickname: (u.user_metadata && u.user_metadata.nickname) || sidNick || "회원",
+      major: major, motto: motto, avatar: sidState.avatar, updated_at: new Date().toISOString()
+    };
+    setText("sidStatus", "Supabase에 저장하는 중…");
+    try {
+      var r = await supabase.from("student_cards").upsert(payload, { onConflict: "user_id" }).select("user_id").single();
+      if (r.error) throw r.error;
+      try { localStorage.setItem("dripcollege_sid_" + u.id, JSON.stringify({ major: major, motto: motto, avatar: sidState.avatar })); } catch (e) {}
+      sidHasSavedCard = true;
+      if ($("homeStudentCard")) $("homeStudentCard").hidden = false;
+      setText("sidStatus", "Supabase 저장 완료! 다른 기기에서도 로그인하면 불러올 수 있어요.");
+      toast("학생증이 Supabase에 저장되었어요! 🎓");
+      renderSidCard();
+    } catch (err) {
+      try { localStorage.setItem("dripcollege_sid_" + u.id, JSON.stringify({ major: major, motto: motto, avatar: sidState.avatar })); } catch (e) {}
+      sidHasSavedCard = true;
+      if ($("homeStudentCard")) $("homeStudentCard").hidden = false;
+      setText("sidStatus", "Supabase 저장 실패: " + (err && err.message ? err.message : String(err)) + " — 아래 SQL을 Supabase SQL Editor에서 실행했는지, RLS 정책이 있는지 확인해 주세요. 현재 기기에는 임시 저장했습니다.");
+    }
+  };
+
+  buildSidControls(); fillSidInputs(); renderSidCard();
+
+
+  /* =====================================================================
+     오늘의 단어 랭킹 (Supabase) — 회원별 승률
+     ===================================================================== */
+  var WORD_RANK_MIN = 3;
+
+  // 한 판이 끝나면 서버에 기록 (같은 6시간 단어는 한 번만 반영되므로 여러 번 호출해도 안전)
+  async function syncWordResult() {
+    if (!supabase || !curState.periodKey) return;
+    try {
+      var u = await currentUser();
+      if (!u) return;
+      var r = await supabase.rpc("record_word_result", { p_period_key: curState.periodKey, p_won: curState.status === "WON", p_attempts: curState.guesses.length });
+      if (r.error) console.error("단어 랭킹 기록 실패", r.error);
+    } catch (e) { console.error(e); }
+    renderWordRanking();
+  }
+
+  async function renderWordRanking() {
+    var list = $("wordRankList"), st = $("wordRankStatus"), mine = $("wordRankMine");
+    list.innerHTML = ""; mine.textContent = ""; st.textContent = "불러오는 중…";
+    if (!supabase) { st.textContent = "Supabase 연결을 확인해 주세요."; return; }
+    var r = await supabase.rpc("get_word_ranking", { p_min_played: WORD_RANK_MIN, p_limit: 50 });
+    if (r.error) { st.textContent = "랭킹 SQL(word_game_ranking.sql)을 먼저 실행해 주세요: " + r.error.message; return; }
+    var data = r.data || [];
+    st.textContent = data.length ? "" : "아직 순위에 오른 회원이 없어요. " + WORD_RANK_MIN + "판 이상 플레이하면 이름이 올라갑니다!";
+    data.forEach(function (row, idx) {
+      var item = el("div", "rank-item" + (row.is_me ? " me" : ""));
+      item.appendChild(el("div", "rank-num" + (idx === 0 ? " gold" : idx === 1 ? " silver" : idx === 2 ? " bronze" : ""), String(row.ranking)));
+      var info = el("div", "rank-info");
+      var top = el("div"); top.appendChild(el("span", "nick", row.nickname + (row.is_me ? " (나)" : ""))); info.appendChild(top);
+      info.appendChild(el("span", "rank-sub", row.wins + "승 / " + row.played + "판 · 최다연승 " + row.max_streak));
+      item.appendChild(info);
+      item.appendChild(el("div", "rank-score", Number(row.win_rate).toFixed(1) + "%"));
+      list.appendChild(item);
+    });
+    try {
+      var me = await currentUser();
+      if (me) {
+        var m = await supabase.from("word_game_stats").select("played,wins").eq("user_id", me.id).maybeSingle();
+        if (m.data && m.data.played > 0) {
+          var rate = Math.round((m.data.wins / m.data.played) * 1000) / 10;
+          mine.textContent = "내 기록: " + m.data.played + "판 " + m.data.wins + "승 (" + rate + "%)" + (m.data.played < WORD_RANK_MIN ? " · " + (WORD_RANK_MIN - m.data.played) + "판 더 하면 순위에 표시돼요" : "");
+        } else mine.textContent = "아직 기록이 없어요. 오늘의 단어에 도전해 보세요!";
+      }
+    } catch (e) { console.error(e); }
+  }
 })();
 </script>
 </body>
