@@ -108,6 +108,9 @@
   .community-status { font-size:13px; color:#b4233a; font-weight:700; min-height:1.3em; }
   .community-row { display:flex; align-items:center; gap:12px; padding:15px 16px; cursor:pointer; border:2px solid var(--ink); border-radius:13px; background:#fff; margin:9px 0; box-shadow:3px 3px 0 var(--ink); }
   .community-row-title { flex:1; min-width:0; font-weight:800; overflow-wrap:anywhere; }
+  .community-author-photo { width:38px; height:38px; flex:none; border:2px solid var(--ink); border-radius:50%; overflow:hidden; background:#FFF0C2; display:grid; place-items:center; }
+  .community-author-photo svg { width:100%; height:100%; display:block; }
+  .community-author-line { display:flex; align-items:center; gap:8px; font-size:12px; color:var(--muted); margin-bottom:8px; }
   .community-row-meta { display:flex; gap:10px; white-space:nowrap; font-size:13px; color:#666; }
   .community-detail { margin:12px 0; padding:16px; border:2px solid var(--ink); border-radius:16px; background:#fff; }
   .community-photo { max-width:100%; max-height:420px; display:block; border-radius:12px; margin:10px 0; object-fit:contain; }
@@ -952,6 +955,7 @@
     store(curState.periodKey,JSON.stringify({guesses:curState.guesses,status:curState.status,keyColors:curState.keyColors}));
     curState.currentRaw=""; curState.currentInput=[];
     if(curState.status!=="PLAYING") syncWordResult(); renderBoard(); renderResult(); renderStats();
+    if(curState.status==="PLAYING") { var nextTile=$("wgBoard").querySelector(".wg-entry"); if(nextTile) nextTile.focus(); }
   }
   $("wgNewGame").addEventListener("click",function(){initWordGame(true);var first=$("wgBoard").querySelector(".wg-entry");if(first)first.focus();});
   window.addEventListener("keydown", function(e) {
@@ -1104,11 +1108,23 @@
     var feed = $("communityFeed"); feed.innerHTML = ""; setText("communityStatus", "게시글을 불러오는 중…");
     var q = await supabase.from("community_posts").select("id,title,content,author_id,author_nickname,created_at,updated_at,image_url,like_count,community_comments(id,content,author_id,author_nickname,created_at)").order("created_at", { ascending: false });
     if (q.error) { setText("communityStatus", "게시판 테이블 설정을 확인해 주세요: " + q.error.message); return; }
-    var posts = q.data, user = await currentUser();
+    var posts = q.data, user = await currentUser(), avatarByUser = {};
+    // 게시글 작성자들의 학생증 아바타를 한 번에 조회합니다. 조회 권한이 없는 경우 기본 아바타로 표시합니다.
+    try {
+      var authorIds = Array.from(new Set(posts.map(function(p){ return p.author_id; }).filter(Boolean)));
+      if (authorIds.length) {
+        var cards = await supabase.from("student_cards").select("user_id,avatar").in("user_id", authorIds);
+        if (!cards.error) (cards.data || []).forEach(function(c){ avatarByUser[c.user_id] = c.avatar; });
+      }
+    } catch (avatarErr) { console.warn("학생증 프로필 사진을 불러오지 못했습니다.", avatarErr); }
+    function authorPhoto(authorId) {
+      var avatar = sanitizeAvatar(avatarByUser[authorId] || AV_DEFAULT);
+      return '<span class="community-author-photo" aria-label="작성자 프로필 사진">' + avatarSVG(avatar) + '</span>';
+    }
     setText("communityStatus", posts.length ? "" : "아직 게시물이 없습니다. 첫 글을 작성해 보세요.");
     posts.forEach(function (p) {
       var row = document.createElement("div"); row.className = "community-row"; row.setAttribute("role", "button"); row.tabIndex = 0;
-      row.innerHTML = '<div class="community-row-title">' + escapeHtml(p.title) + '</div><div class="community-row-meta"><span>♥ ' + Number(p.like_count || 0) + '</span><span>💬 ' + (p.community_comments || []).length + '</span></div>';
+      row.innerHTML = authorPhoto(p.author_id) + '<div class="community-row-title">' + escapeHtml(p.title) + '</div><div class="community-row-meta"><span>♥ ' + Number(p.like_count || 0) + '</span><span>💬 ' + (p.community_comments || []).length + '</span></div>';
       var open = function () { selectedPostId = (selectedPostId === p.id) ? null : p.id; loadCommunity(); };
       row.onclick = open; row.onkeydown = function (e) { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); open(); } };
       feed.appendChild(row);
@@ -1116,7 +1132,7 @@
 
       var own = user && user.id === p.author_id, admin = window.__dripIsAdmin === true;
       var detail = document.createElement("article"); detail.className = "community-detail";
-      detail.innerHTML = '<h3>' + escapeHtml(p.title) + '</h3><div class="community-meta">' + escapeHtml(p.author_nickname) + ' · ' + new Date(p.created_at).toLocaleString("ko-KR") + '</div><div class="community-body">' + escapeHtml(p.content) + '</div>'
+      detail.innerHTML = '<h3>' + escapeHtml(p.title) + '</h3><div class="community-author-line">' + authorPhoto(p.author_id) + '<span>' + escapeHtml(p.author_nickname) + ' · ' + new Date(p.created_at).toLocaleString("ko-KR") + '</span></div><div class="community-body">' + escapeHtml(p.content) + '</div>'
         + (p.image_url ? '<a href="' + escapeHtml(p.image_url) + '" target="_blank" rel="noopener"><img class="community-photo" src="' + escapeHtml(p.image_url) + '" alt="게시물 첨부 사진"></a>' : '')
         + '<div class="community-actions"><button class="like-btn" data-like type="button">♥ 좋아요 ' + Number(p.like_count || 0) + '</button>' + (own ? '<button data-edit type="button">수정</button>' : '') + (own || admin ? '<button data-delete type="button">삭제</button>' : '') + '</div>'
         + '<div class="comment-list"><strong>댓글 ' + (p.community_comments || []).length + '개</strong><div class="comments"></div><form class="community-form comment-form"><textarea maxlength="2000" placeholder="댓글을 입력해 주세요." required></textarea><button type="submit">댓글 작성</button><div class="community-status"></div></form></div>';
