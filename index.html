@@ -342,6 +342,27 @@
     .head .btn.small { font-size:11px; padding:6px 7px; }
   }
 
+
+  /* 공지사항: 요약 우선, 세부 규칙은 접어서 표시 */
+  #noticeView .head { margin-bottom:14px; }
+  #noticeView .notice-banner { background:#F1F5FF; border:1px solid #DCE5F5; color:#344365; border-radius:12px; box-shadow:none; text-align:left; padding:13px 15px; white-space:normal; line-height:1.45; }
+  #noticeView .notice-list { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:0; background:#fff; border:1px solid #E2E7F0; border-radius:14px; box-shadow:0 4px 14px rgba(32,43,69,.05); overflow:hidden; }
+  #noticeView .notice-row { min-width:0; border-bottom:1px solid #EDF0F5; padding:12px; gap:9px; white-space:normal; }
+  #noticeView .notice-row:nth-last-child(-n+2) { border-bottom:0; }
+  #noticeView .notice-ico { width:32px; height:32px; background:#F2F5FB; border-radius:10px; }
+  #noticeView .notice-text { white-space:normal; overflow:visible; text-overflow:clip; line-height:1.45; font-size:13px; }
+  #noticeView .notice-foot { background:#F8FAFD; border:1px solid #E2E7F0; border-radius:12px; box-shadow:none; white-space:normal; line-height:1.45; }
+  #noticeView .notice-foot.discord { background:#F4F3FF; }
+  #noticeView .notice-foot a { border:1px solid #D8D9F0; box-shadow:none; border-radius:9px; }
+  #noticeView .notice-more { margin-top:12px; }
+  #noticeView .notice-more summary { border:1px solid #E2E7F0; box-shadow:none; border-radius:12px; background:#fff; padding:13px 15px; }
+  #noticeView .notice-rules { grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr)); gap:10px; }
+  #noticeView .notice-rule { border:1px solid #E2E7F0; box-shadow:none; border-radius:13px; padding:14px; }
+  #noticeView .notice-rule-icon { background:#F2F5FB; }
+  #noticeView .notice-rule h3 { line-height:1.35; }
+  #noticeView .notice-rule li { line-height:1.6; }
+  @media(max-width:520px){ #noticeView .notice-list { grid-template-columns:1fr; } #noticeView .notice-row:nth-last-child(-n+2) { border-bottom:1px solid #EDF0F5; } #noticeView .notice-row:last-child { border-bottom:0; } }
+
 </style>
 </head>
 <body>
@@ -921,7 +942,7 @@
   function showSignup() { mainView.hidden = true; signupView.hidden = false; status("signupStatus", "", ""); window.scrollTo({ top: 0, behavior: "smooth" }); }
   function showSignedIn(nick) {
     document.body.classList.add("signed-in");
-    signupView.hidden = true; mainView.hidden = false; loginCard.hidden = true; mainNav.hidden = false; authTopline.hidden = false; $("homeStudentCard").hidden = false;
+    signupView.hidden = true; mainView.hidden = false; loginCard.hidden = true; mainNav.hidden = false; authTopline.hidden = false; $("homeStudentCard").hidden = true;
     $("signedInLabel").textContent = nick + " 님, 환영합니다!";
     loadStudentCard();
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -1366,7 +1387,7 @@
      ===================================================================== */
   var SID_DEFAULT_MAJOR = "칼퇴기원학", SID_DEFAULT_MOTTO = "오늘도 칼퇴를 향해!";
   var sidState = { major: SID_DEFAULT_MAJOR, motto: SID_DEFAULT_MOTTO, avatar: sanitizeAvatar(AV_DEFAULT) };
-  var sidUser = null, sidNick = "";
+  var sidUser = null, sidNick = "", sidHasSavedCard = false, sidLoadSeq = 0;
 
   function studentNo(u) {
     var h = 0, s = String(u.id || "");
@@ -1426,6 +1447,9 @@
     if (!u) { setText("sidStatus", "로그인이 필요합니다."); return; }
     sidUser = u;
     sidNick = (u.user_metadata && u.user_metadata.nickname) || "회원";
+    var thisLoad = ++sidLoadSeq;
+    var homeCard = $("homeStudentCard");
+    if (homeCard) homeCard.hidden = true;
     var local = null, data = null;
     try { local = JSON.parse(localStorage.getItem("dripcollege_sid_" + u.id) || "null"); } catch (e) {}
     var r;
@@ -1439,12 +1463,15 @@
       setText("sidStatus", "Supabase 학생증 테이블 설정을 확인해 주세요: " + r.error.message + " (student_card.sql을 실행하면 다른 기기에서도 저장 정보를 불러올 수 있어요.)");
       data = local;
     } else if (r) data = r.data || local;
+    if (thisLoad !== sidLoadSeq) return; // 늦게 끝난 이전 요청이 최신 학생증을 덮어쓰지 않게 함
+    sidHasSavedCard = !!(data && typeof data === "object" && (data.major || data.motto || data.avatar));
     sidState = {
       major: String((data && data.major) || SID_DEFAULT_MAJOR).slice(0, 14),
       motto: String((data && data.motto) || SID_DEFAULT_MOTTO).slice(0, 30),
       avatar: sanitizeAvatar(data && data.avatar)
     };
     fillSidInputs(); syncSidControls(); renderSidCard();
+    if (homeCard) homeCard.hidden = !sidHasSavedCard;
   }
 
   $("sidSave").onclick = async function () {
@@ -1461,11 +1488,15 @@
       var r = await supabase.from("student_cards").upsert(payload, { onConflict: "user_id" }).select("user_id").single();
       if (r.error) throw r.error;
       try { localStorage.setItem("dripcollege_sid_" + u.id, JSON.stringify({ major: major, motto: motto, avatar: sidState.avatar })); } catch (e) {}
+      sidHasSavedCard = true;
+      if ($("homeStudentCard")) $("homeStudentCard").hidden = false;
       setText("sidStatus", "Supabase 저장 완료! 다른 기기에서도 로그인하면 불러올 수 있어요.");
       toast("학생증이 Supabase에 저장되었어요! 🎓");
       renderSidCard();
     } catch (err) {
       try { localStorage.setItem("dripcollege_sid_" + u.id, JSON.stringify({ major: major, motto: motto, avatar: sidState.avatar })); } catch (e) {}
+      sidHasSavedCard = true;
+      if ($("homeStudentCard")) $("homeStudentCard").hidden = false;
       setText("sidStatus", "Supabase 저장 실패: " + (err && err.message ? err.message : String(err)) + " — 아래 SQL을 Supabase SQL Editor에서 실행했는지, RLS 정책이 있는지 확인해 주세요. 현재 기기에는 임시 저장했습니다.");
     }
   };
