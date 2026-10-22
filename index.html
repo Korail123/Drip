@@ -7,70 +7,46 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jua&family=Noto+Sans+KR:wght@400;500;700;800&display=swap">
-<!-- Kakao 지도 JavaScript API (서비스 라이브러리 포함) -->
-<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=65cb25515f828d2dddc4f6be98970b3f&libraries=services"></script>
+<!-- Kakao 지도 JavaScript API (services 라이브러리 포함, autoload=false → kakao.maps.load()로 초기화) -->
+<script src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=65cb25515f828d2dddc4f6be98970b3f&libraries=services&autoload=false"></script>
 <style>
-  /* Layout & Design Tokens */
   :root {
-    --paper: #FFFAF0;
-    --dot: #E9DDC8;
-    --ink: #1B2340;
-    --muted: #5C6684;
-    --card: #FFFFFF;
-    --coral: #F25430;
-    --kakao: #FEE500;
-    --mint-bg: #D8F7E8;  --mint-line: #7CDDB0;  --mint-ink: #0B5F43;
-    --butter-bg: #FFF0B3; --butter-line: #F0C54A; --butter-ink: #7A4B00;
-    --pink-bg: #FFE8EE;  --pink-line: #F5B3C2;  --pink-ink: #D6264A;
-    --slate-bg: #EEF2F8; --slate-line: #C8D2E4; --slate-ink: #2F3B5A;
-    --row-bg: #F3F5FA;   --row-line: #E0E6F0;
-    --gold: #FFB020; --silver: #9AA8C7; --bronze: #E08A5B; --teal: #3FC2A0;
-    --skin: #FFDEBF;
-    --line: #141414;
-    --bubble: #FFFFFF;
-    --font-display: "Jua", "Apple SD Gothic Neo", "Malgun Gothic", "Noto Sans KR", sans-serif;
-    --font-body: "Noto Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+    --paper:#FFFAF0; --dot:#E9DDC8; --ink:#1B2340; --muted:#5C6684; --card:#FFFFFF; --coral:#F25430; --kakao:#FEE500;
+    --mint-bg:#D8F7E8; --mint-line:#7CDDB0; --mint-ink:#0B5F43;
+    --butter-bg:#FFF0B3; --butter-line:#F0C54A; --butter-ink:#7A4B00;
+    --pink-bg:#FFE8EE; --pink-line:#F5B3C2; --pink-ink:#D6264A;
+    --slate-bg:#EEF2F8; --slate-ink:#2F3B5A; --row-line:#E0E6F0;
+    --gold:#FFB020; --silver:#9AA8C7; --bronze:#E08A5B; --teal:#3FC2A0;
+    --font-display:"Jua","Apple SD Gothic Neo","Malgun Gothic","Noto Sans KR",sans-serif;
+    --font-body:"Noto Sans KR","Apple SD Gothic Neo","Malgun Gothic",sans-serif;
     color-scheme: light;
   }
   * { box-sizing: border-box; }
   [hidden] { display: none !important; }
   body {
-    margin: 0;
-    background-color: var(--paper);
-    background-image: radial-gradient(var(--dot) 1.3px, transparent 1.6px);
-    background-size: 22px 22px;
-    color: var(--ink);
-    font-family: var(--font-body);
-    font-size: 15px;
-    line-height: 1.55;
-    padding-block: 12px 56px;
-    padding-left: max(16px, env(safe-area-inset-left, 0px));
-    padding-right: max(16px, env(safe-area-inset-right, 0px));
+    margin:0; background-color:var(--paper);
+    background-image: radial-gradient(var(--dot) 1.3px, transparent 1.6px); background-size:22px 22px;
+    color:var(--ink); font-family:var(--font-body); font-size:15px; line-height:1.55;
+    padding-block:12px 56px;
+    padding-left:max(16px, env(safe-area-inset-left, 0px)); padding-right:max(16px, env(safe-area-inset-right, 0px));
   }
-  .page { max-width: 780px; margin: 0 auto; }
-  button, input, select, textarea { font: inherit; color: inherit; }
-  button { cursor: pointer; }
-  :focus-visible { outline: 3px solid #5B8CFF; outline-offset: 2px; }
-  .ic { display: inline-flex; width: 1.15em; height: 1.15em; flex: none; align-items: center; justify-content: center; }
-  .ic svg { width: 100%; height: 100%; display: block; }
+  .page { max-width:780px; margin:0 auto; }
+  button, input, select, textarea { font:inherit; color:inherit; }
+  button { cursor:pointer; }
+  :focus-visible { outline:3px solid #5B8CFF; outline-offset:2px; }
+  .stage { width:min(100%,720px); margin:0 auto; }
 
-  /* ---------- hero ---------- */
-  .stage { width: min(100%, 720px); margin: 0 auto; }
-  .stage svg { display: block; width: 100%; height: auto; overflow: visible; }
-  .wave { transform-origin: 215px 665px; animation: wave 0.62s ease-in-out infinite alternate; }
-  @keyframes wave { from { transform: rotate(-13deg); } to { transform: rotate(11deg); } }
-  .bubble { animation: float 3.2s ease-in-out infinite; }
-  @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
-  /* 봉춸이 메인 캐릭터 */
-  .bongchul-hero { width: min(100%, 280px); margin: 0 auto; text-align: center; }
+  /* 히어로 */
+  .bongchul-hero { width:min(100%,280px); margin:0 auto; text-align:center; }
   body.signed-in .bongchul-hero { display:none !important; }
-  .bongchul-hero img { display: block; width: 100%; height: auto; max-height: 230px; object-fit: contain; margin: 0 auto; animation: bongchul-greet 1.8s ease-in-out infinite; transform-origin: 50% 85%; }
-  @keyframes bongchul-greet { 0%, 100% { transform: translateY(0) rotate(-0.5deg); } 50% { transform: translateY(-5px) rotate(0.5deg); } }
+  .bongchul-hero img { display:block; width:100%; height:auto; max-height:230px; object-fit:contain; margin:0 auto; animation:bongchul-greet 1.8s ease-in-out infinite; transform-origin:50% 85%; }
+  .bongchul-hero .fallback { font-size:96px; line-height:1.2; animation:bongchul-greet 1.8s ease-in-out infinite; }
+  @keyframes bongchul-greet { 0%,100%{transform:translateY(0) rotate(-0.5deg)} 50%{transform:translateY(-5px) rotate(0.5deg)} }
 
   /* 로그인 / 회원가입 */
-  .rainbow-title { width: min(100%, 720px); display:block; margin: 0 auto -4px; overflow: visible; }
-  .rainbow-title text { font-family: var(--font-display); font-weight: 900; paint-order: stroke fill; stroke: var(--ink); stroke-width: 7px; stroke-linejoin: round; }
-  .auth-card { width:min(100%, 520px); margin: 10px auto 22px; padding: 22px; background:#fff; border:3px solid var(--ink); border-radius:22px; box-shadow:6px 6px 0 var(--ink); }
+  .rainbow-title { width:min(100%,720px); display:block; margin:0 auto -4px; overflow:visible; }
+  .rainbow-title text { font-family:var(--font-display); font-weight:900; paint-order:stroke fill; stroke:var(--ink); stroke-width:7px; stroke-linejoin:round; }
+  .auth-card { width:min(100%,520px); margin:10px auto 22px; padding:22px; background:#fff; border:3px solid var(--ink); border-radius:22px; box-shadow:6px 6px 0 var(--ink); }
   .auth-card h2 { margin:0 0 5px; font-family:var(--font-display); font-size:28px; }
   .auth-help { margin:0 0 16px; color:var(--muted); font-size:13px; }
   .auth-card label { display:block; margin:12px 0 5px; font-weight:800; }
@@ -87,277 +63,163 @@
   .logout-btn { border:2px solid var(--ink); background:#fff; border-radius:10px; padding:6px 12px; font-weight:800; }
   .auth-note { font-size:12px; color:var(--muted); margin:12px 0 0; }
   #signupView { max-width:720px; margin:0 auto; }
-  @media(max-width:520px){ .auth-card{padding:17px;border-radius:18px}.auth-card h2{font-size:25px}.rainbow-title text{stroke-width:9px} }
+  @media(max-width:520px){ .auth-card{padding:17px;border-radius:18px} .auth-card h2{font-size:25px} .rainbow-title text{stroke-width:9px} }
 
-  /* 드립대학 대시보드 및 Supabase 게시판 */
-  .dashboard-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px;margin:22px auto 34px;max-width:900px}
-  .dashboard-grid .nav-btn{min-height:88px;font-size:17px;border-radius:18px;box-shadow:4px 4px 0 var(--ink);}
-  .community-panel{max-width:900px;margin:0 auto 28px}
-  .community-post{background:#fff;border:2px solid var(--ink);border-radius:16px;padding:16px;margin:12px 0;box-shadow:3px 3px 0 var(--ink)}
-  .community-post h3{margin:0 0 8px;overflow-wrap:anywhere}.community-meta{font-size:12px;color:var(--muted);margin-bottom:10px}
-  .community-body{white-space:pre-wrap;overflow-wrap:anywhere;margin:10px 0 14px}
-  .community-actions{display:flex;flex-wrap:wrap;gap:8px}.community-actions button,.community-form button{border:2px solid var(--ink);border-radius:9px;padding:7px 11px;font-weight:800;background:#fff}
-  .community-form{display:grid;gap:9px;background:#fff;border:2px solid var(--ink);border-radius:14px;padding:14px;margin:12px 0}
-  .community-form input,.community-form textarea,.community-form select{width:100%;border:2px solid var(--ink);border-radius:9px;padding:10px;background:#fffdf8}
-  .community-form textarea{min-height:90px;resize:vertical}.comment-list{border-top:1px dashed #aaa;margin-top:12px;padding-top:10px}.comment-item{padding:8px 0;border-bottom:1px solid #eee;white-space:pre-wrap;overflow-wrap:anywhere}
-  .community-status{font-size:13px;color:#b4233a;font-weight:700;min-height:1.3em}
-  .community-row{display:flex;align-items:center;gap:12px;padding:15px 16px;cursor:pointer;border:2px solid var(--ink);border-radius:13px;background:#fff;margin:9px 0;box-shadow:3px 3px 0 var(--ink)}
-  .community-row-title{flex:1;min-width:0;font-weight:850;overflow-wrap:anywhere}.community-row-meta{display:flex;gap:10px;white-space:nowrap;font-size:13px;color:#666}.community-detail{margin:12px 0;padding:16px;border:2px solid var(--ink);border-radius:16px;background:#fff}.community-detail[hidden]{display:none}
-  .community-photo{max-width:100%;max-height:420px;display:block;border-radius:12px;margin:10px 0;object-fit:contain}.like-btn{border:1px solid #e7a3b6;border-radius:20px;background:#fff0f5;padding:6px 11px;font-weight:800;cursor:pointer}
-  
-  /* 카카오 지도 및 장소 관련 스타일 */
-  .places-tabs{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}.places-tabs button{border:2px solid var(--ink);border-radius:18px;padding:8px 13px;background:white;font-weight:800}.places-tabs button.active{background:#c9f3df}.places-layout{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(250px,1fr);gap:14px}.places-map{height:420px;border:2px solid var(--ink);border-radius:14px;overflow:hidden;position:relative}.place-save-form{display:grid;gap:8px}.place-save-form input,.place-save-form textarea,.place-save-form select{width:100%;padding:10px;border:1px solid #bbb;border-radius:9px}.saved-place{padding:12px;border:1.5px solid var(--ink);border-radius:12px;margin:8px 0;background:#fff;box-shadow:2px 2px 0 var(--ink)}.saved-place a{overflow-wrap:anywhere}@media(max-width:650px){.places-layout{grid-template-columns:1fr}.places-map{height:320px}.community-row{align-items:flex-start;flex-wrap:wrap}.community-row-meta{margin-left:auto}}
-  .kakao-overlay-iw { padding:10px 14px; border-radius:10px; background:#fff; border:2px solid var(--ink); font-size:13px; font-weight:700; box-shadow:2px 2px 0 var(--ink); }
-  
-  .notice-intro{padding:24px 20px;text-align:center;background:linear-gradient(135deg,#fff0f5,#fff8e9);border:2px solid var(--ink);border-radius:20px;margin:12px 0 14px;box-shadow:4px 4px 0 var(--ink)}
-  .notice-intro .notice-kicker{display:inline-block;padding:5px 10px;margin-bottom:8px;border-radius:999px;background:#fff;border:1px solid #f0c7d4;font-size:12px;font-weight:900;letter-spacing:.04em}
-  .notice-intro h3{font-size:26px;margin:0 0 7px}.notice-intro p{margin:5px 0;color:#666;line-height:1.6}
-  .notice-highlights{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;margin:0 0 20px}
-  .notice-highlight{padding:12px 10px;text-align:center;background:#fff;border:1.5px solid var(--ink);border-radius:13px;box-shadow:2px 2px 0 var(--ink)}
-  .notice-highlight .symbol{display:block;font-size:22px;margin-bottom:5px}.notice-highlight b{display:block;font-size:13px;margin-bottom:3px}.notice-highlight span:last-child{display:block;font-size:11px;line-height:1.5;color:#666}
-  .notice-section-label{display:flex;align-items:center;gap:8px;margin:0 0 10px;font-size:16px;font-weight:900}
-  .notice-rules{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px}
-  .notice-rule{display:flex;gap:12px;align-items:flex-start;background:#fff;border:1.5px solid #242424;border-radius:15px;padding:15px;box-shadow:3px 3px 0 var(--ink)}
-  .notice-rule-icon{flex:0 0 40px;width:40px;height:40px;display:grid;place-items:center;background:#f8eaf0;border-radius:12px;font-size:21px}
-  .notice-rule h3{font-size:15px;margin:3px 0 8px;line-height:1.4}.notice-rule ul{margin:0;padding-left:17px}.notice-rule li{font-size:13px;line-height:1.75;margin:3px 0}
-  .notice-rule strong{color:#cf3f70}.notice-closing{margin-top:16px;padding:22px 18px;text-align:center;background:#fff3f7;border:2px solid var(--ink);border-radius:17px;box-shadow:3px 3px 0 var(--ink)}
-  .notice-closing h3{margin:0 0 9px}.notice-closing p{line-height:1.75;margin:6px 0}.notice-discord{margin-top:13px;padding:18px;border:2px solid var(--ink);border-radius:15px;background:#f7f7ff}.notice-discord h3{margin:0 0 7px}.notice-discord p{font-size:13px;line-height:1.6}.notice-discord a{display:inline-block;margin-top:4px;padding:10px 14px;border:2px solid var(--ink);border-radius:11px;background:#fff;font-weight:900;text-decoration:none;box-shadow:2px 2px 0 var(--ink)}
-  @media(max-width:600px){.notice-rules{grid-template-columns:1fr}.notice-intro h3{font-size:22px}.notice-highlights{gap:6px}.notice-highlight{padding:10px 5px}.notice-highlight b{font-size:12px}.notice-highlight span:last-child{font-size:10px}.notice-rule{padding:13px}}
-  body.signed-in #mainView .bongchul-hero{display:none}
-  /* ---------- main navigation buttons ---------- */
-  .nav-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 16px;
-    margin: 20px 0 34px;
-  }
-  .nav-btn {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    border: 3px solid var(--ink);
-    border-radius: 18px;
-    padding: 16px 20px;
-    font-family: var(--font-display);
-    font-size: 20px;
-    box-shadow: 4px 4px 0 var(--ink);
-    background: var(--card);
-    text-decoration: none;
-    color: var(--ink);
-    transition: transform .08s, box-shadow .08s;
-    text-align: center;
-  }
-  .nav-btn:hover { transform: translate(-2px, -2px); box-shadow: 6px 6px 0 var(--ink); }
-  .nav-btn:active { transform: translate(2px, 2px); box-shadow: 2px 2px 0 var(--ink); }
-  .nav-btn.coral { background: var(--coral); color: #fff; }
-  .nav-btn.kakao { background: var(--kakao); color: #3C1E1E; }
-  .nav-btn.mint { background: var(--mint-bg); color: var(--mint-ink); }
-  .nav-btn.butter { background: var(--butter-bg); color: var(--butter-ink); }
+  /* 메뉴 버튼 */
+  .nav-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:16px; margin:20px 0 34px; }
+  .nav-btn { display:flex; align-items:center; justify-content:center; gap:10px; border:3px solid var(--ink); border-radius:18px; padding:16px 20px; font-family:var(--font-display); font-size:20px; box-shadow:4px 4px 0 var(--ink); background:var(--card); color:var(--ink); transition:transform .08s, box-shadow .08s; text-align:center; }
+  .nav-btn:hover { transform:translate(-2px,-2px); box-shadow:6px 6px 0 var(--ink); }
+  .nav-btn:active { transform:translate(2px,2px); box-shadow:2px 2px 0 var(--ink); }
+  .nav-btn.coral { background:var(--coral); color:#fff; }
+  .nav-btn.mint { background:var(--mint-bg); color:var(--mint-ink); }
+  .nav-btn.butter { background:var(--butter-bg); color:var(--butter-ink); }
+  .btn { display:inline-flex; align-items:center; gap:8px; border:2.5px solid var(--ink); border-radius:14px; padding:10px 18px; font-weight:800; font-size:15px; box-shadow:3px 3px 0 var(--ink); background:var(--card); color:var(--ink); transition:transform .08s, box-shadow .08s; }
+  .btn:hover { transform:translate(-1px,-1px); box-shadow:4px 4px 0 var(--ink); }
+  .btn:active { transform:translate(2px,2px); box-shadow:1px 1px 0 var(--ink); }
+  .btn.coral { background:var(--coral); color:#fff; }
+  .btn.small { padding:6px 14px; font-size:13.5px; border-radius:10px; }
 
-  .btn {
-    display: inline-flex; align-items: center; gap: 8px;
-    border: 2.5px solid var(--ink); border-radius: 14px;
-    padding: 10px 18px; font-weight: 800; font-size: 15px;
-    box-shadow: 3px 3px 0 var(--ink);
-    background: var(--card); text-decoration: none; color: var(--ink);
-    transition: transform .08s, box-shadow .08s;
-  }
-  .btn:hover { transform: translate(-1px, -1px); box-shadow: 4px 4px 0 var(--ink); }
-  .btn:active { transform: translate(2px, 2px); box-shadow: 1px 1px 0 var(--ink); }
-  .btn.coral { background: var(--coral); color: #fff; }
-  .btn.kakao { background: var(--kakao); }
-  .btn.mint { background: var(--mint-bg); }
-  .btn.small { padding: 6px 14px; font-size: 13.5px; border-radius: 10px; }
+  /* 섹션 헤더 / 카드 */
+  .head { display:flex; justify-content:space-between; align-items:flex-end; gap:16px; flex-wrap:wrap; margin-bottom:18px; }
+  .head-main { min-width:0; }
+  .pill-live { display:inline-flex; align-items:center; gap:6px; background:var(--mint-bg); border:1.5px solid var(--mint-line); color:var(--mint-ink); font-weight:800; font-size:12px; border-radius:999px; padding:2px 10px; margin-bottom:6px; }
+  .dot { width:7px; height:7px; border-radius:50%; background:#17B26A; animation:pulse 1.6s ease-in-out infinite; }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.3} }
+  h2.title { margin:0; font-family:var(--font-display); font-weight:400; font-size:32px; line-height:1.2; }
+  .sub { margin:4px 0 0; color:var(--muted); font-size:14px; font-weight:500; }
+  .card { background:var(--card); border:2.5px solid var(--ink); border-radius:22px; box-shadow:6px 6px 0 var(--ink); padding:18px 20px; margin-bottom:26px; }
+  .dept { background:var(--butter-bg); border:1.5px solid var(--butter-line); color:var(--butter-ink); border-radius:999px; font-size:12.5px; font-weight:800; padding:1px 9px; margin-left:6px; }
+  .nick { font-weight:800; overflow-wrap:anywhere; }
+  .toast { position:fixed; left:50%; transform:translateX(-50%); bottom:calc(16px + env(safe-area-inset-bottom, 0px)); background:var(--ink); color:#fff; border-radius:12px; padding:10px 16px; font-weight:700; font-size:14px; max-width:calc(100% - 32px); z-index:20; box-shadow:0 4px 12px rgba(0,0,0,.15); }
 
-  /* ---------- section head ---------- */
-  .head { display: flex; justify-content: space-between; align-items: flex-end; gap: 16px; flex-wrap: wrap; margin-bottom: 18px; }
-  .head-main { min-width: 0; }
-  .pill-live {
-    display: inline-flex; align-items: center; gap: 6px;
-    background: var(--mint-bg); border: 1.5px solid var(--mint-line); color: var(--mint-ink);
-    font-weight: 800; font-size: 12px; border-radius: 999px; padding: 2px 10px; margin-bottom: 6px;
-  }
-  .dot { width: 7px; height: 7px; border-radius: 50%; background: #17B26A; animation: pulse 1.6s ease-in-out infinite; }
-  @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: .3; } }
-  h2.title { margin: 0; font-family: var(--font-display); font-weight: 400; font-size: 32px; line-height: 1.2; display: flex; align-items: center; gap: 12px; }
-  h2.title .ic { width: 38px; height: 38px; }
-  .sub { margin: 4px 0 0; color: var(--muted); font-size: 14px; font-weight: 500; }
+  /* 수다게시판 / 공통 패널 */
+  .community-panel { max-width:900px; margin:0 auto 28px; }
+  .community-post { background:#fff; border:2px solid var(--ink); border-radius:16px; padding:16px; margin:12px 0; box-shadow:3px 3px 0 var(--ink); }
+  .community-meta { font-size:12px; color:var(--muted); margin-bottom:10px; }
+  .community-body { white-space:pre-wrap; overflow-wrap:anywhere; margin:10px 0 14px; }
+  .community-actions { display:flex; flex-wrap:wrap; gap:8px; }
+  .community-actions button, .community-form button { border:2px solid var(--ink); border-radius:9px; padding:7px 11px; font-weight:800; background:#fff; }
+  .community-form { display:grid; gap:9px; background:#fff; border:2px solid var(--ink); border-radius:14px; padding:14px; margin:12px 0; }
+  .community-form h3 { margin:0; }
+  .community-form input, .community-form textarea, .community-form select { width:100%; border:2px solid var(--ink); border-radius:9px; padding:10px; background:#fffdf8; }
+  .community-form textarea { min-height:90px; resize:vertical; }
+  .comment-list { border-top:1px dashed #aaa; margin-top:12px; padding-top:10px; }
+  .comment-item { padding:8px 0; border-bottom:1px solid #eee; white-space:pre-wrap; overflow-wrap:anywhere; }
+  .community-status { font-size:13px; color:#b4233a; font-weight:700; min-height:1.3em; }
+  .community-row { display:flex; align-items:center; gap:12px; padding:15px 16px; cursor:pointer; border:2px solid var(--ink); border-radius:13px; background:#fff; margin:9px 0; box-shadow:3px 3px 0 var(--ink); }
+  .community-row-title { flex:1; min-width:0; font-weight:800; overflow-wrap:anywhere; }
+  .community-row-meta { display:flex; gap:10px; white-space:nowrap; font-size:13px; color:#666; }
+  .community-detail { margin:12px 0; padding:16px; border:2px solid var(--ink); border-radius:16px; background:#fff; }
+  .community-photo { max-width:100%; max-height:420px; display:block; border-radius:12px; margin:10px 0; object-fit:contain; }
+  .like-btn { border:1px solid #e7a3b6 !important; border-radius:20px !important; background:#fff0f5 !important; }
 
-  /* ---------- cards ---------- */
-  .card {
-    background: var(--card); border: 2.5px solid var(--ink); border-radius: 22px;
-    box-shadow: 6px 6px 0 var(--ink); padding: 18px 20px; margin-bottom: 26px;
-  }
-  .composer h3 { margin: 0 0 12px; font-family: var(--font-display); font-weight: 400; font-size: 22px; }
-  .field-row { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 10px; }
-  .field-row > * { min-width: 0; }
-  .in, select.in, textarea.in {
-    width: 100%; border: 2px solid var(--ink); border-radius: 12px; background: #fff; padding: 9px 12px;
-  }
-  .grow { flex: 1 1 180px; }
-  textarea.in { min-height: 96px; resize: vertical; display: block; }
-  .row-between { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; margin-top: 10px; }
-  .count { color: var(--muted); font-size: 13px; font-variant-numeric: tabular-nums; }
+  /* 맛집/카페 지도 */
+  .places-tabs { display:flex; gap:8px; flex-wrap:wrap; margin:12px 0; }
+  .places-tabs button { border:2px solid var(--ink); border-radius:18px; padding:8px 13px; background:#fff; font-weight:800; }
+  .places-tabs button.active { background:#c9f3df; }
+  .places-layout { display:grid; grid-template-columns:minmax(0,1.2fr) minmax(250px,1fr); gap:14px; }
+  .places-map { height:420px; border:2px solid var(--ink); border-radius:14px; overflow:hidden; position:relative; background:#eef2f8; }
+  .place-save-form label { display:grid; gap:4px; font-weight:700; font-size:13px; }
+  .saved-place { padding:12px; border:1.5px solid var(--ink); border-radius:12px; margin:8px 0; background:#fff; box-shadow:2px 2px 0 var(--ink); }
+  .saved-place a { overflow-wrap:anywhere; }
+  .saved-place p { margin:6px 0; white-space:pre-wrap; overflow-wrap:anywhere; }
+  .kakao-overlay-iw { padding:10px 14px; border-radius:10px; background:#fff; border:2px solid var(--ink); font-size:13px; font-weight:700; box-shadow:2px 2px 0 var(--ink); white-space:nowrap; }
+  @media(max-width:650px){ .places-layout{grid-template-columns:1fr} .places-map{height:320px} .community-row{align-items:flex-start; flex-wrap:wrap} .community-row-meta{margin-left:auto} }
 
-  /* ---------- post ---------- */
-  .post-top { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; }
-  .who { display: flex; align-items: center; gap: 8px; min-width: 0; flex-wrap: wrap; }
-  .nick { font-weight: 800; overflow-wrap: anywhere; }
-  .dept {
-    background: var(--butter-bg); border: 1.5px solid var(--butter-line); color: var(--butter-ink);
-    border-radius: 999px; font-size: 12.5px; font-weight: 800; padding: 1px 9px;
-  }
-  .meta { display: flex; align-items: center; gap: 10px; color: #8190B0; font-weight: 700; font-size: 13px; }
-  .post-body { margin: 14px 0 12px; font-size: 16.5px; font-weight: 700; white-space: pre-wrap; overflow-wrap: anywhere; }
-  .post-actions { display: flex; gap: 12px; border-top: 1.5px dashed var(--row-line); padding-top: 10px; margin-top: 8px; }
-  .act-btn {
-    background: none; border: none; padding: 4px 8px; border-radius: 8px;
-    font-weight: 700; font-size: 13.5px; color: var(--muted); display: inline-flex; align-items: center; gap: 5px;
-  }
-  .act-btn:hover { background: var(--slate-bg); color: var(--ink); }
-  .act-btn.active { color: var(--coral); }
+  /* 공지사항 */
+  .notice-intro { padding:24px 20px; text-align:center; background:linear-gradient(135deg,#fff0f5,#fff8e9); border:2px solid var(--ink); border-radius:20px; margin:12px 0 14px; box-shadow:4px 4px 0 var(--ink); }
+  .notice-kicker { display:inline-block; padding:5px 10px; margin-bottom:8px; border-radius:999px; background:#fff; border:1px solid #f0c7d4; font-size:12px; font-weight:900; letter-spacing:.04em; }
+  .notice-intro h3 { font-size:26px; margin:0 0 7px; } .notice-intro p { margin:5px 0; color:#666; line-height:1.6; }
+  .notice-highlights { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:9px; margin:0 0 20px; }
+  .notice-highlight { padding:12px 10px; text-align:center; background:#fff; border:1.5px solid var(--ink); border-radius:13px; box-shadow:2px 2px 0 var(--ink); }
+  .notice-highlight .symbol { display:block; font-size:22px; margin-bottom:5px; }
+  .notice-highlight b { display:block; font-size:13px; margin-bottom:3px; }
+  .notice-highlight span:last-child { display:block; font-size:11px; line-height:1.5; color:#666; }
+  .notice-section-label { display:flex; align-items:center; gap:8px; margin:0 0 10px; font-size:16px; font-weight:900; }
+  .notice-rules { display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:12px; }
+  .notice-rule { display:flex; gap:12px; align-items:flex-start; background:#fff; border:1.5px solid #242424; border-radius:15px; padding:15px; box-shadow:3px 3px 0 var(--ink); }
+  .notice-rule-icon { flex:0 0 40px; width:40px; height:40px; display:grid; place-items:center; background:#f8eaf0; border-radius:12px; font-size:21px; }
+  .notice-rule h3 { font-size:15px; margin:3px 0 8px; line-height:1.4; }
+  .notice-rule ul { margin:0; padding-left:17px; } .notice-rule li { font-size:13px; line-height:1.75; margin:3px 0; }
+  .notice-rule strong { color:#cf3f70; }
+  .notice-closing { margin-top:16px; padding:22px 18px; text-align:center; background:#fff3f7; border:2px solid var(--ink); border-radius:17px; box-shadow:3px 3px 0 var(--ink); }
+  .notice-closing h3 { margin:0 0 9px; } .notice-closing p { line-height:1.75; margin:6px 0; }
+  .notice-discord { margin-top:13px; padding:18px; border:2px solid var(--ink); border-radius:15px; background:#f7f7ff; }
+  .notice-discord h3 { margin:0 0 7px; } .notice-discord p { font-size:13px; line-height:1.6; }
+  .notice-discord a { display:inline-block; margin-top:4px; padding:10px 14px; border:2px solid var(--ink); border-radius:11px; background:#fff; font-weight:900; text-decoration:none; color:var(--ink); box-shadow:2px 2px 0 var(--ink); }
+  @media(max-width:600px){ .notice-rules{grid-template-columns:1fr} .notice-intro h3{font-size:22px} .notice-highlights{gap:6px} .notice-highlight{padding:10px 5px} .notice-highlight b{font-size:12px} .notice-highlight span:last-child{font-size:10px} .notice-rule{padding:13px} }
 
-  /* ---------- leaderboard ---------- */
-  .rank-tabs { display: flex; gap: 8px; margin-bottom: 16px; }
-  .rank-tab {
-    border: 2px solid var(--ink); border-radius: 999px; background: #fff;
-    padding: 5px 14px; font-weight: 800; font-size: 13.5px;
-  }
-  .rank-tab.active { background: var(--ink); color: #fff; }
-  .rank-item {
-    display: flex; align-items: center; gap: 12px; padding: 12px 14px;
-    border-bottom: 1.5px solid var(--row-line);
-  }
-  .rank-item:last-child { border-bottom: none; }
-  .rank-num {
-    width: 28px; height: 28px; border-radius: 50%; border: 2px solid var(--ink);
-    display: grid; place-items: center; font-family: var(--font-display); font-size: 16px; background: #fff;
-  }
-  .rank-num.gold { background: var(--gold); color: #fff; }
-  .rank-num.silver { background: var(--silver); color: #fff; }
-  .rank-num.bronze { background: var(--bronze); color: #fff; }
-  .rank-info { flex: 1; min-width: 0; }
-  .rank-score { font-family: var(--font-display); font-size: 18px; color: var(--coral); }
+  /* 채팅 순위 */
+  .rank-tabs { display:flex; gap:8px; margin-bottom:16px; }
+  .rank-tab { border:2px solid var(--ink); border-radius:999px; background:#fff; padding:5px 14px; font-weight:800; font-size:13.5px; }
+  .rank-tab.active { background:var(--ink); color:#fff; }
+  .rank-item { display:flex; align-items:center; gap:12px; padding:12px 14px; border-bottom:1.5px solid var(--row-line); }
+  .rank-item:last-child { border-bottom:none; }
+  .rank-num { width:28px; height:28px; border-radius:50%; border:2px solid var(--ink); display:grid; place-items:center; font-family:var(--font-display); font-size:16px; background:#fff; }
+  .rank-num.gold { background:var(--gold); color:#fff; } .rank-num.silver { background:var(--silver); color:#fff; } .rank-num.bronze { background:var(--bronze); color:#fff; }
+  .rank-info { flex:1; min-width:0; }
+  .rank-score { font-family:var(--font-display); font-size:18px; color:var(--coral); }
 
-  .toast {
-    position: fixed; left: 50%; transform: translateX(-50%);
-    bottom: calc(16px + env(safe-area-inset-bottom, 0px));
-    background: var(--ink); color: #fff; border-radius: 12px; padding: 10px 16px; font-weight: 700; font-size: 14px;
-    max-width: calc(100% - 32px); z-index: 20; box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-  }
-
-  /* ---------- 미니게임 (오늘의 단어 - 5칸) ---------- */
-  .game-card {
-    display: flex; align-items: center; gap: 16px; width: 100%; text-align: left;
-    transition: transform .08s, box-shadow .08s;
-  }
-  .game-card:hover { transform: translate(-1px, -1px); box-shadow: 7px 7px 0 var(--ink); }
-  .game-card:active { transform: translate(3px, 3px); box-shadow: 3px 3px 0 var(--ink); }
-  .game-no {
-    flex: none; width: 52px; height: 52px; border-radius: 50%; border: 2.5px solid var(--ink);
-    background: var(--butter-bg); display: grid; place-items: center; font-family: var(--font-display); font-size: 26px;
-  }
-  .game-info { flex: 1 1 auto; min-width: 0; display: grid; gap: 2px; }
-  .game-info strong { font-family: var(--font-display); font-weight: 400; font-size: 24px; line-height: 1.2; }
-  .game-info small { color: var(--muted); font-size: 13.5px; font-weight: 500; }
-  .game-state {
-    flex: none; background: var(--mint-bg); border: 1.5px solid var(--mint-line); color: var(--mint-ink);
-    font-weight: 800; font-size: 13px; border-radius: 999px; padding: 3px 12px;
-  }
-
-  .wg { max-width: 460px; margin-inline: auto; }
-  .wg-top { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 10px; }
-  .wg-date { font-weight: 800; font-size: 15px; }
-  .wg-timer {
-    background: var(--pink-bg); border: 1.5px solid var(--pink-line); color: var(--pink-ink);
-    font-weight: 800; font-size: 12.5px; border-radius: 999px; padding: 2px 10px;
-  }
-  .wg-hint {
-    background: var(--butter-bg); border: 1.5px solid var(--butter-line); color: var(--butter-ink);
-    font-weight: 800; font-size: 13px; border-radius: 9px; padding: 2px 10px;
-  }
-  
-  /* 직관적 1줄 게임 설명 바 */
-  .wg-desc-bar {
-    background: #FFF9DD; border: 2px solid var(--ink); border-radius: 12px;
-    padding: 10px 12px; font-weight: 700; font-size: 13.5px; text-align: center;
-    color: var(--ink); margin-bottom: 14px; box-shadow: 2px 2px 0 var(--ink);
-  }
-
-  /* 5칸 레이아웃 정렬 */
-  .wg-board { display: grid; gap: 8px; margin: 8px auto 12px; max-width: 320px; }
-  .wg-row { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 8px; }
-  .wg-row.shake { animation: shake .4s; }
-  @keyframes shake { 0%, 100% { transform: translateX(0); } 20%, 60% { transform: translateX(-6px); } 40%, 80% { transform: translateX(6px); } }
-  
-  .wg-tile {
-    position: relative; aspect-ratio: 1; border: 2.5px solid var(--ink); border-radius: 12px; background: #fff;
-    display: grid; place-items: center; font-family: var(--font-display); font-size: clamp(22px, 7vw, 32px); line-height: 1;
-    box-shadow: 2px 2px 0 var(--ink); transition: background-color .2s, transform .1s;
-  }
-  .wg-tile.filled { background: #FFF9DD; transform: scale(1.02); }
-  .wg-tile.correct { background: var(--teal); color: #fff; text-shadow: 0 1px 2px rgba(0,0,0,0.2); }
-  .wg-tile.present { background: var(--gold); color: #fff; text-shadow: 0 1px 2px rgba(0,0,0,0.2); }
-  .wg-tile.absent { background: #C8D2E4; color: var(--slate-ink); }
-
-  .wg-preview { min-height: 24px; text-align: center; color: var(--muted); font-weight: 700; font-size: 14px; margin-bottom: 6px; }
-  
-  .wg-keys { display: grid; gap: 6px; margin-top: 6px; }
-  .wg-krow { display: flex; gap: 5px; justify-content: center; }
-  .wg-key {
-    flex: 1 1 0; min-width: 0; max-width: 44px; height: 46px; border: 2px solid var(--ink); border-radius: 999px; background: #fff;
-    font-family: var(--font-display); font-size: 18px; padding: 0; box-shadow: 2px 2px 0 var(--ink);
-  }
-  .wg-key.wide { flex: 1.7 1 0; max-width: 72px; font-family: var(--font-body); font-weight: 800; font-size: 14px; }
-  .wg-key:active { transform: translate(1px, 1px); box-shadow: none; }
-  .wg-key.correct { background: var(--teal); color: #fff; }
-  .wg-key.present { background: var(--gold); color: #fff; }
-  .wg-key.absent { background: #C8D2E4; color: #7C89A8; }
-  .wg-key[disabled] { opacity: .5; cursor: not-allowed; }
-
-  .wg-result { margin-top: 14px; border: 2.5px solid var(--ink); background: #F2FDF8; border-radius: 16px; padding: 14px; box-shadow: 4px 4px 0 var(--ink); }
-  .wg-result.lose { background: #FFF5F7; }
-  .wg-result strong { display: block; font-family: var(--font-display); font-weight: 400; font-size: 22px; }
-  .wg-result p { margin: 4px 0 0; font-weight: 700; }
-  .wg-share { white-space: pre-wrap; background: #fff; border: 1.5px solid var(--row-line); border-radius: 10px; padding: 8px 10px; margin: 10px 0 0; font-size: 14px; line-height: 1.4; }
-
-  .wg-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; text-align: center; }
-  .wg-stats b { display: block; font-family: var(--font-display); font-weight: 400; font-size: 26px; line-height: 1.2; }
-  .wg-stats span { color: var(--muted); font-size: 12.5px; }
-  .wg-statcard h3 { margin: 0 0 10px; font-family: var(--font-display); font-weight: 400; font-size: 20px; }
-
-  @media (max-width: 520px) {
-    h2.title { font-size: 26px; }
-    h2.title .ic { width: 30px; height: 30px; }
-    .card { padding: 16px 14px; box-shadow: 4px 4px 0 var(--ink); }
-    .post-body { font-size: 15.5px; }
-    .wg-key { height: 42px; font-size: 16px; }
-    .game-info strong { font-size: 21px; }
-    .wg-tile { font-size: 22px; }
-    .nav-btn { font-size: 18px; padding: 14px; }
-  }
-  @media (prefers-reduced-motion: reduce) {
-    .wave, .bubble, .dot, .wg-row.shake, .bongchul-hero img { animation: none; }
-    .btn, .game-card, .nav-btn { transition: none; }
-  }
+  /* 미니게임 */
+  .game-card { display:flex; align-items:center; gap:16px; width:100%; text-align:left; transition:transform .08s, box-shadow .08s; }
+  .game-card:hover { transform:translate(-1px,-1px); box-shadow:7px 7px 0 var(--ink); }
+  .game-no { flex:none; width:52px; height:52px; border-radius:50%; border:2.5px solid var(--ink); background:var(--butter-bg); display:grid; place-items:center; font-family:var(--font-display); font-size:26px; }
+  .game-info { flex:1 1 auto; min-width:0; display:grid; gap:2px; }
+  .game-info strong { font-family:var(--font-display); font-weight:400; font-size:24px; line-height:1.2; }
+  .game-info small { color:var(--muted); font-size:13.5px; font-weight:500; }
+  .game-state { flex:none; background:var(--mint-bg); border:1.5px solid var(--mint-line); color:var(--mint-ink); font-weight:800; font-size:13px; border-radius:999px; padding:3px 12px; }
+  .wg { max-width:460px; margin-inline:auto; }
+  .wg-top { display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap; margin-bottom:10px; }
+  .wg-date { font-weight:800; font-size:15px; }
+  .wg-timer { background:var(--pink-bg); border:1.5px solid var(--pink-line); color:var(--pink-ink); font-weight:800; font-size:12.5px; border-radius:999px; padding:2px 10px; }
+  .wg-hint { background:var(--butter-bg); border:1.5px solid var(--butter-line); color:var(--butter-ink); font-weight:800; font-size:13px; border-radius:9px; padding:2px 10px; }
+  .wg-desc-bar { background:#FFF9DD; border:2px solid var(--ink); border-radius:12px; padding:10px 12px; font-weight:700; font-size:13.5px; text-align:center; margin-bottom:14px; box-shadow:2px 2px 0 var(--ink); }
+  .wg-board { display:grid; gap:8px; margin:8px auto 12px; max-width:320px; }
+  .wg-row { display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:8px; }
+  .wg-row.shake { animation:shake .4s; }
+  @keyframes shake { 0%,100%{transform:translateX(0)} 20%,60%{transform:translateX(-6px)} 40%,80%{transform:translateX(6px)} }
+  .wg-tile { position:relative; aspect-ratio:1; border:2.5px solid var(--ink); border-radius:12px; background:#fff; display:grid; place-items:center; font-family:var(--font-display); font-size:clamp(22px,7vw,32px); line-height:1; box-shadow:2px 2px 0 var(--ink); transition:background-color .2s, transform .1s; }
+  .wg-tile.filled { background:#FFF9DD; transform:scale(1.02); }
+  .wg-tile.correct { background:var(--teal); color:#fff; } .wg-tile.present { background:var(--gold); color:#fff; } .wg-tile.absent { background:#C8D2E4; color:var(--slate-ink); }
+  .wg-preview { min-height:24px; text-align:center; color:var(--muted); font-weight:700; font-size:14px; margin-bottom:6px; }
+  .wg-keys { display:grid; gap:6px; margin-top:6px; }
+  .wg-krow { display:flex; gap:5px; justify-content:center; }
+  .wg-key { flex:1 1 0; min-width:0; max-width:44px; height:46px; border:2px solid var(--ink); border-radius:999px; background:#fff; font-family:var(--font-display); font-size:18px; padding:0; box-shadow:2px 2px 0 var(--ink); }
+  .wg-key.wide { flex:1.7 1 0; max-width:72px; font-family:var(--font-body); font-weight:800; font-size:14px; }
+  .wg-key:active { transform:translate(1px,1px); box-shadow:none; }
+  .wg-key.correct { background:var(--teal); color:#fff; } .wg-key.present { background:var(--gold); color:#fff; } .wg-key.absent { background:#C8D2E4; color:#7C89A8; }
+  .wg-key[disabled] { opacity:.5; cursor:not-allowed; }
+  .wg-result { margin-top:14px; border:2.5px solid var(--ink); background:#F2FDF8; border-radius:16px; padding:14px; box-shadow:4px 4px 0 var(--ink); }
+  .wg-result.lose { background:#FFF5F7; }
+  .wg-result strong { display:block; font-family:var(--font-display); font-weight:400; font-size:22px; }
+  .wg-result p { margin:4px 0 0; font-weight:700; }
+  .wg-share { white-space:pre-wrap; background:#fff; border:1.5px solid var(--row-line); border-radius:10px; padding:8px 10px; margin:10px 0 0; font-size:14px; line-height:1.4; }
+  .wg-stats { display:grid; grid-template-columns:repeat(4,1fr); gap:8px; text-align:center; }
+  .wg-stats b { display:block; font-family:var(--font-display); font-weight:400; font-size:26px; line-height:1.2; }
+  .wg-stats span { color:var(--muted); font-size:12.5px; }
+  .wg-statcard h3 { margin:0 0 10px; font-family:var(--font-display); font-weight:400; font-size:20px; }
+  @media(max-width:520px){ h2.title{font-size:26px} .card{padding:16px 14px; box-shadow:4px 4px 0 var(--ink)} .wg-key{height:42px; font-size:16px} .game-info strong{font-size:21px} .nav-btn{font-size:18px; padding:14px} }
+  @media(prefers-reduced-motion:reduce){ .dot, .wg-row.shake, .bongchul-hero img, .bongchul-hero .fallback { animation:none; } .btn, .game-card, .nav-btn { transition:none; } }
 </style>
 </head>
 <body>
 <div class="page">
-  <!-- ===== 메인 화면 (비주얼 + 메뉴 버튼만 노출) ===== -->
+
+  <!-- ===== 메인 화면 ===== -->
   <main id="mainView" class="stage">
     <svg class="rainbow-title" viewBox="0 0 1000 245" role="img" aria-label="2030 직장인 드립대학 수다학과 아치형 무지개 제목">
-      <defs><linearGradient id="titleRainbow" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#ff4d6d"/><stop offset="17%" stop-color="#ff9f1c"/><stop offset="34%" stop-color="#ffe66d"/><stop offset="50%" stop-color="#2ec4b6"/><stop offset="67%" stop-color="#3a86ff"/><stop offset="84%" stop-color="#8338ec"/><stop offset="100%" stop-color="#ff4d6d"/></linearGradient>
-      <path id="titleArc" d="M 65 218 Q 500 -80 935 218" fill="none"/></defs>
+      <defs>
+        <linearGradient id="titleRainbow" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#ff4d6d"/><stop offset="17%" stop-color="#ff9f1c"/><stop offset="34%" stop-color="#ffe66d"/><stop offset="50%" stop-color="#2ec4b6"/><stop offset="67%" stop-color="#3a86ff"/><stop offset="84%" stop-color="#8338ec"/><stop offset="100%" stop-color="#ff4d6d"/></linearGradient>
+        <path id="titleArc" d="M 65 218 Q 500 -80 935 218" fill="none"/>
+      </defs>
       <text font-size="62" fill="url(#titleRainbow)" text-anchor="middle"><textPath href="#titleArc" startOffset="50%">2030 직장인 드립대학 수다학과</textPath></text>
     </svg>
-    <!-- 기존 스크립트와의 호환용 숨김 SVG 그룹 -->
-    <svg aria-hidden="true" style="display:none" viewBox="0 0 1000 810"><g id="arch"></g></svg>
+
     <div id="authTopline" class="auth-topline" hidden><span id="signedInLabel" class="auth-user"></span><button id="logoutBtn" class="logout-btn" type="button">로그아웃</button></div>
 
     <div class="bongchul-hero" role="img" aria-label="봉춸이가 손을 들고 반갑게 인사하는 그림">
-      <img src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAQDAwQDAwQEBAQFBQQFBwsHBwYGBw4KCggLEA4RERAOEA8SFBoWEhMYEw8QFh8XGBsbHR0dERYgIh8cIhocHRz/2wBDAQUFBQcGBw0HBw0cEhASHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBz/wAARCATmBOYDASIAAhEBAxEB/8QAHQABAQACAwEBAQAAAAAAAAAAAAEICQIGBwMEBf/EAFUQAAIBAgUCBQEFBQQGBgYHCQABAgMRBAUGITEHQQgSUWFxExQigZGxCRUyQqEjUmKcFiQzcpLBF0NTorLCJWOT0dLhGCY0NUZzg/DxJ0VW4jZEVP/EABsBAQEAAwEBAQAAAAAAAAAAAAABAgQFAwYH/8QAOBEBAAICAQMBBQUIAQQDAQAAAAECAxEEEiExBRMiMkFRFDNSYZEjcYGhscHR8FMGJELhFUPxNP/aAAwDAQACEQMRAD8Az1Be49zXZgdwAIxdF4IFV8EvcvYnsEUAL0AANDkCe5bkaKA2QBFyBb2Ae4t7gOWCLkrAgZVewClxcEtuEUCwsBLlCQAXAe3JLgUcILggAoY7ASw/EvYWAXYaCYfqBB3LwvcBV4OPBRYIX2uQtiWAoT2DuTgCkLa7DQVChkCKLi5PYC3sF7DtuSwF7gE7gOB3KAILsotYAycgtgJxuXgdiXAF3A7gGyclYtYKheCXKEAEEA7gWHAEKEAAuGAqXuLhcF7gByLgIMdggA3sQo4uAJyXsLALpD5Ae4VBa5dgEQtyLcu34gSxewYQEsLFJcCq3BBwOwFt3A3SDXoBOSti3uRhRhclRAF9x7HKxHswiLYo5D2AXF9wO4Bi1w/YAR8FI+Re4FXAsLWJcC3sO48oAlrMr3HJEAWwKJBUv6CwQAt0TdjgPgC9yCxbWAiYL3DW4RC9xbsAo9huHuLBAcDkANyc9xbuWwAXD2J7gUWuC8Acbl77i/cm7AtgH8gAO4SAAjL3AEsCvkARlA5AfoAAIHuw2ALwH6gAHwR7l5FtgBLblHIAPYWfqACHuLbbAAUnHJfcDi9y8BhsCPkth2JwAvsLFvsL35AnYtg9gwA4F0TuAQ3LwRgABcCtbAjAFYfAIA7F+RyL7gS9mUcMMAUguAtuXsRFfsBCX3HICqwByEA1sEAHsVNIgsgHuR3LyLAO3uGCXAo42IUAO4YQBoiKTuBbhq4bDYF2sQl2EBeQP1J8gXgcAlwKXYnZCwD3HKJfsUAnsC8E7AALgB7E4Lf0IBeSnEqCoVAASxSNiwD5Kw0OAgOQwAHKJwygHsCbluFNiFuidwKL7AgRWRIdhyA5HsUl9wpwLhjYANxyW4AImw4CHwUE7gUfJP1F+wVVsCMvHIRLBC5QA2ILAW3cbXIFyFUlh39i8gW9kTtsO4CFwOSWCqLkvsUCBFSJfcCtE7lIECi1xYKtick5DCKxewDYB7oKwvYAO+wuEVgQXD3J3AofA7juBC2HAANDsQAUMcIABsQWsBQwHuA43HuQoAIci/YCg4gALXBeAAb2IFwFO5Wyd9hcIdipBcE3ArJyLl5YUfAW49icBF7BDlEABrucuURgQMLkoEXBeSfoOwVRYm5QgtgXgl7gAvcnfcPcKrQ+SWYsAHIZQG4Jfcv4ARXD3KAgS9yvcPYBfcKxGihTgnISKtgCHYESuECkXcdwoVEvcXAMqJcrewQ5IXglwK3YXuS44CqOSFAEKOAILjkXAP1DYXqUIJi445J3Cm4t3HcMBsVhEAvYconcr9gFrobEvctgh8gnyAqi9gPcCIXY5HoELsIMoUsTvyXt7kuA4F7C1twEUbsnAAttydyvj3J8AX3JcCwF9ycscj3AF3CZP0AvA2FiMK5P0OPcpLhFZELNF/ABbYlioXAgXJXuLBSxEWxLgF7jgfI5CLsT9Rb1HIDuPcJi1gBU7ggU7hj8wuAi2I9i3uT4AtyWAYURWyWHADkD4KuAHYncNDsA5A53Fwi2JaxSNhV3QQARLBjkWAqQD5AVHsyv2A3CIUj/AFHADkvYnCHKAt0ET5D9QKhwCcAXgjBXyFRjcW3LyEBsRvcvYB2FiMoC1hYBAVuxAAFkCWAFFyMBTuA2L3ArsBwQCoEZUEQAchVtsPYX7kW4ReCO4Fu4AFZO4UsUEuwFhaxb+o2CCJ3FwuQKSxRcKnCC5K/cmzCHwAVIBci2Lb1AUXJG9x3LZABcWARbEYv6DkAPgBoB7E+SslwqjuQoQtYly39SPdgUncrROQKPYWJyFNxYp3A3A+S32I9gAILa5L/AIBWAnI/AB2AC5O4QAnILa4sAs/kIInLBy/c3InwBeScDkIChPcAOChf1AA/Uhf3sAAt7D9w/gAO4S+S7/kBAi2I0AAtcE4KBByAtgByALuQIA/Ulu5eSboIe3Yq/EhbgOTs0S3YthbcByL2/IB3AiIq33LbgICAticBFF7i5O4FsAHC/qO4F5JwLguwSAsSwvuW/oEX/mS1uCk4YQ+ScpIe3YW3AnAtYcFI3uEXgk9g3sLbhTncO5EAtgOAtxcfADtYhX3J3AfA9x2AAnA/UD4CHsAOBYvIHYl9yoMBbsNgAD4Acj3A252AF4/AnI5DApONy3I7gXsByOwAMcBC/IE2KSw3AvIsOABQe/4AAPsQthawE7lb2/Mg/UCl5FhwwF9vchU7kSAvgX3AewAvBL7gtgAncchIB3Fh3DAcegt2AQAtwAnb1Ag4/AWAoewIARu/JdwiXAC24YHYAdgA9w9gIsV3sEAGxU/1AnAtcg53AoCsw3uEABbgByL8C4AE2AtgB/MAH6hS5E/xG4A4/Aew4C4At9ycsoXqAY5A/AnYChB2AE4KtyW2KBLb3L/AMBygH6F4/AicFXAAd/YXInYoE4+Si+4Ae4KAEUdyWCAqFwSwEAnIt4A3/QW4AY2AF9wHyO/uXgCJ9hyL23/MdyoHAtcNhbX3CIn4K/YX5BBEsUj4AtycAWAEAnp/xH2AfItf3AtbluAtYnkAtxawewDkB+gAAt2GAn8AOQ3sL3Aew4KToAosS3A5A3sAtuL3D/mFgg4v23/Mc/In5KAs/ksAARXswhwwI2/At/Ucv255+RbgIs3sP35AIL3AnILyO4/AAn/MvI/E3/Aewv2F+C/1fIEX83Aew/cO3+S92B/9k=" alt="봉춸이가 손을 흔들며 인사해요!" fetchpriority="high">
+      <img id="bongchulImg" alt="봉춸이가 손을 흔들며 인사해요!" hidden>
+      <div id="bongchulFallback" class="fallback" aria-hidden="true">🙋</div>
     </div>
 
     <section id="loginCard" class="auth-card" aria-labelledby="loginTitle">
@@ -372,7 +234,6 @@
       <p class="auth-note">회원가입은 관리자가 Supabase에 미리 등록한 닉네임과 인증번호가 있어야 가능합니다.</p>
     </section>
 
-    <!-- 메인 기능 버튼 4개 -->
     <nav id="mainNav" class="nav-grid" aria-label="메인 메뉴" hidden>
       <button class="nav-btn coral" id="goNotice" type="button">📢 공지사항</button>
       <button class="nav-btn butter" id="goBoard" type="button">💬 수다게시판</button>
@@ -384,11 +245,11 @@
     </nav>
   </main>
 
-  <!-- ===== 회원가입 화면 ===== -->
+  <!-- ===== 회원가입 ===== -->
   <section id="signupView" hidden aria-labelledby="signupTitle">
     <div class="auth-card">
       <h2 id="signupTitle">회원가입</h2>
-      <p class="auth-help">관리자가 등록한 닉네임과 인증번호 2030을 입력하면 가입할 수 있어요.</p>
+      <p class="auth-help">관리자가 등록한 닉네임과 인증번호를 입력하면 가입할 수 있어요.</p>
       <form id="signupForm" autocomplete="off">
         <label for="signupNickname">닉네임</label><input id="signupNickname" name="nickname" maxlength="24" autocomplete="username" placeholder="관리자에게 등록된 닉네임" required>
         <label for="signupCode">인증번호</label><input id="signupCode" name="code" type="password" autocomplete="new-password" placeholder="관리자에게 받은 인증번호" required>
@@ -399,14 +260,15 @@
     </div>
   </section>
 
-  <!-- ===== Supabase 수다게시판 ===== -->
+  <!-- ===== 수다게시판 ===== -->
   <section id="boardView" hidden aria-labelledby="boardHead" class="community-panel">
     <div class="head"><div class="head-main"><span class="pill-live"><span class="dot"></span>실시간 게시판</span><h2 class="title" id="boardHead">💬 수다게시판</h2><p class="sub">게시물과 댓글은 Supabase에 저장됩니다.</p></div><div style="display:flex;gap:8px"><button class="btn small" id="boardBack" type="button">← 메인으로</button><button class="btn small coral" id="newCommunityPost" type="button">글 작성</button></div></div>
     <form id="communityComposer" class="community-form" hidden><h3 id="communityFormTitle">새 글 작성</h3><input id="communityTitle" maxlength="120" placeholder="제목" required><textarea id="communityContent" maxlength="10000" placeholder="내용을 입력해 주세요." required></textarea><label>사진 첨부 (JPG, PNG, WEBP / 최대 5MB)<input id="communityPhoto" type="file" accept="image/jpeg,image/png,image/webp"></label><div id="communityPhotoPreview"></div><div class="community-actions"><button type="submit">저장</button><button type="button" id="cancelCommunityPost">취소</button></div><div id="communityPostStatus" class="community-status"></div></form>
     <div id="communityFeed" aria-live="polite"></div><div id="communityStatus" class="community-status"></div>
   </section>
 
-  <section id="noticeView" hidden class="community-panel"><div class="head"><div class="head-main"><h2 class="title">📢 공지사항</h2><p class="sub">2030 직장인 드립대학 수다학과 이용 규칙</p></div><button class="btn small" id="noticeBack">← 메인으로</button></div>
+  <!-- ===== 공지사항 ===== -->
+  <section id="noticeView" hidden class="community-panel"><div class="head"><div class="head-main"><h2 class="title">📢 공지사항</h2><p class="sub">2030 직장인 드립대학 수다학과 이용 규칙</p></div><button class="btn small" id="noticeBack" type="button">← 메인으로</button></div>
     <div class="notice-intro"><span class="notice-kicker">WELCOME TO DRIP COLLEGE</span><h3>📢 공지사항을 확인해 주세요!</h3><p>모두가 편안하고 즐겁게 대화할 수 있도록<br><strong>아래 규칙을 읽고 함께 지켜주세요.</strong></p></div>
     <div class="notice-highlights" aria-label="핵심 규칙">
       <div class="notice-highlight"><span class="symbol">🔞</span><b>만 19세 이상</b><span>성인만 입장 가능</span></div>
@@ -428,12 +290,22 @@
     <div class="notice-closing"><h3>🎈 오래 함께하고 싶은 우리를 위해</h3><p>우리 모두 성인인 만큼, 서로 마음 상하지 않도록 조금씩 배려해 주세요.</p><p>매일 함께하고 싶은 <strong>2030 직장인 드립대학 수다학과</strong>가 될 수 있도록 함께 노력해 봅시다. 💗</p><p><strong>공지사항을 다 읽었다면 하단의 ♥ 클릭도 잊지 마세요!</strong></p></div>
     <div class="notice-discord"><h3>🎮 게임 전용 디스코드방</h3><p>게임을 함께 즐기기 위한 전용 공간입니다.<br><strong>친목으로 인해 우리 채팅방 구성원이 소외되는 경우는 허용하지 않습니다.</strong></p><a href="https://discord.gg/CPx3MfNuz5" target="_blank" rel="noopener noreferrer">🎮 디스코드 입장하기 ↗</a></div>
   </section>
-  <section id="studentIdView" hidden class="community-panel"><div class="head"><h2 class="title">🪪 학생증 만들기</h2><button class="btn small" data-home>← 메인으로</button></div><div class="community-post"><label>학생 닉네임 <input id="studentIdNick" maxlength="24"></label><p id="studentIdPreview"></p><button class="btn small" id="makeStudentId">학생증 미리보기</button></div></section>
-  <section id="fortuneView" hidden class="community-panel"><div class="head"><h2 class="title">🔮 오늘의 사주</h2><button class="btn small" data-home>← 메인으로</button></div><div class="community-post"><p>오늘의 운세를 가볍게 확인해 보세요.</p><button class="btn small" id="fortuneButton">오늘의 운세 보기</button><p id="fortuneResult"></p></div></section>
-  
-  <!-- ===== Kakao 지도 기반 맛집/카페/명소/숙소 뷰 ===== -->
-  <section id="placesView" hidden class="community-panel"><div class="head"><div><h2 class="title">📍 맛집 · 카페 · 명소 · 숙소</h2><p class="sub">Kakao 지도 API 기반 · 저장한 장소는 다른 회원과 공유됩니다.</p></div><button class="btn small" data-home>← 메인으로</button></div>
-    <div class="places-tabs" id="placesTabs"><button class="active" data-category="맛집">🍜 맛집</button><button data-category="카페">☕ 카페</button><button data-category="명소">📸 명소</button><button data-category="숙소">🛏️ 숙소</button></div>
+
+  <!-- ===== 학생증 / 사주 ===== -->
+  <section id="studentIdView" hidden class="community-panel"><div class="head"><h2 class="title">🪪 학생증 만들기</h2><button class="btn small" data-home type="button">← 메인으로</button></div><div class="community-post"><label>학생 닉네임 <input id="studentIdNick" maxlength="24"></label><p id="studentIdPreview"></p><button class="btn small" id="makeStudentId" type="button">학생증 미리보기</button></div></section>
+  <section id="fortuneView" hidden class="community-panel"><div class="head"><h2 class="title">🔮 오늘의 사주</h2><button class="btn small" data-home type="button">← 메인으로</button></div><div class="community-post"><p>오늘의 운세를 가볍게 확인해 보세요.</p><button class="btn small" id="fortuneButton" type="button">오늘의 운세 보기</button><p id="fortuneResult"></p></div></section>
+
+  <!-- ===== 맛집 · 카페 · 명소 · 숙소 · 기타 (Kakao 지도) ===== -->
+  <section id="placesView" hidden class="community-panel">
+    <div class="head"><div><h2 class="title">📍 맛집 · 카페 · 명소 · 숙소</h2><p class="sub">Kakao 지도 기반 · 저장한 장소는 모든 회원에게 공유됩니다. 지도를 클릭해 위치를 지정할 수도 있어요.</p></div><button class="btn small" data-home type="button">← 메인으로</button></div>
+    <div class="places-tabs" id="placesTabs">
+      <button class="active" data-category="전체" type="button">🗺️ 전체</button>
+      <button data-category="맛집" type="button">🍜 맛집</button>
+      <button data-category="카페" type="button">☕ 카페</button>
+      <button data-category="명소" type="button">📸 명소</button>
+      <button data-category="숙소" type="button">🛏️ 숙소</button>
+      <button data-category="기타" type="button">📌 기타</button>
+    </div>
     <div class="places-layout">
       <div>
         <div id="placesMap" class="places-map" aria-label="Kakao 지도"></div>
@@ -443,24 +315,18 @@
         <form id="placeSaveForm" class="community-form place-save-form">
           <h3>장소 공유하기</h3>
           <label>분류
-            <select id="placeCategory">
-              <option>맛집</option>
-              <option>카페</option>
-              <option>명소</option>
-              <option>숙소</option>
-            </select>
+            <select id="placeCategory"><option>맛집</option><option>카페</option><option>명소</option><option>숙소</option><option>기타</option></select>
           </label>
           <label>장소명
             <input id="placeName" maxlength="120" placeholder="예: 카카오 판교 아지트" required>
           </label>
           <label>주소 또는 키워드 검색
             <div style="display:flex;gap:6px;">
-              <input id="placeAddress" maxlength="300" placeholder="예: 판교역로 166 또는 주소 입력" required>
+              <input id="placeAddress" maxlength="300" placeholder="예: 판교역로 166 또는 장소명" required>
               <button type="button" id="btnSearchKakao" style="white-space:nowrap;padding:6px 10px;">검색</button>
             </div>
           </label>
-          <input type="hidden" id="placeLat">
-          <input type="hidden" id="placeLng">
+          <input type="hidden" id="placeLat"><input type="hidden" id="placeLng">
           <label>추천 메모
             <textarea id="placeMemo" maxlength="1000" placeholder="추천 메뉴, 분위기, 팁 등"></textarea>
           </label>
@@ -472,307 +338,140 @@
     </div>
   </section>
 
-  <!-- 구형 게시판 스크립트 호환용 숨김 요소 (실제 게시판 데이터는 Supabase 사용) -->
-  <div hidden aria-hidden="true"><button id="openComposer" type="button"></button><form id="composer"><input id="fNick"><select id="fDept"></select><textarea id="fText"></textarea><span id="fCount"></span><button id="cancelComposer" type="button"></button><button id="submitPost" type="submit"></button></form><div id="feed"></div></div>
-
-  <!-- ===== 채팅 순위 뷰 ===== -->
+  <!-- ===== 채팅 순위 ===== -->
   <section id="rankView" hidden aria-labelledby="rankHead">
     <div class="head">
-      <div class="head-main">
-        <span class="pill-live"><span class="dot"></span>실시간 수다 랭킹</span>
-        <h2 class="title" id="rankHead">🏆 채팅 순위</h2>
-        <p class="sub">드립대학 최고의 입담꾼 왕좌에 도전해 보세요!</p>
-      </div>
+      <div class="head-main"><span class="pill-live"><span class="dot"></span>실시간 수다 랭킹</span><h2 class="title" id="rankHead">🏆 채팅 순위</h2><p class="sub">드립대학 최고의 입담꾼 왕좌에 도전해 보세요!</p></div>
       <button class="btn small" id="rankBack" type="button">← 메인으로</button>
     </div>
-
     <div class="card">
       <div class="rank-tabs">
-        <button class="rank-tab active" data-period="daily">일간</button>
-        <button class="rank-tab" data-period="weekly">주간</button>
-        <button class="rank-tab" data-period="monthly">월간</button>
+        <button class="rank-tab active" data-period="daily" type="button">일간</button>
+        <button class="rank-tab" data-period="weekly" type="button">주간</button>
+        <button class="rank-tab" data-period="monthly" type="button">월간</button>
       </div>
       <div id="rankList"></div>
     </div>
   </section>
 
-  <!-- ===== 미니게임 허브 뷰 ===== -->
+  <!-- ===== 미니게임 ===== -->
   <section id="gameHub" hidden aria-label="미니게임">
     <div class="head">
-      <div class="head-main">
-        <span class="pill-live"><span class="dot"></span>쉬는 시간</span>
-        <h2 class="title">🎮 미니게임</h2>
-        <p class="sub">점심 먹고 남은 10분, 가볍게 한 판 해요.</p>
-      </div>
+      <div class="head-main"><span class="pill-live"><span class="dot"></span>쉬는 시간</span><h2 class="title">🎮 미니게임</h2><p class="sub">점심 먹고 남은 10분, 가볍게 한 판 해요.</p></div>
       <button class="btn small" id="hubBack" type="button">← 메인으로</button>
     </div>
-
     <button class="card game-card" id="openWord" type="button">
       <span class="game-no">1</span>
-      <span class="game-info">
-        <strong>오늘의 단어 (5칸)</strong>
-        <small>6시간마다 변경 · 자음/모음 5칸을 6번 안에 맞혀보세요!</small>
-      </span>
+      <span class="game-info"><strong>오늘의 단어 (5칸)</strong><small>6시간마다 변경 · 자음/모음 5칸을 6번 안에 맞혀보세요!</small></span>
       <span class="game-state" id="wordState">도전하기</span>
     </button>
   </section>
 
-  <!-- ===== 단어 맞추기 게임 뷰 ===== -->
   <section id="wordGame" hidden aria-label="단어 맞추기">
     <div class="head">
-      <div class="head-main">
-        <span class="pill-live"><span class="dot"></span>6시간마다 새로고침</span>
-        <h2 class="title">오늘의 단어</h2>
-        <p class="sub">직장 및 일상 속 단어를 자음·모음 5칸 조합으로 맞혀보세요.</p>
-      </div>
+      <div class="head-main"><span class="pill-live"><span class="dot"></span>6시간마다 새로고침</span><h2 class="title">오늘의 단어</h2><p class="sub">직장 및 일상 속 단어를 자음·모음 5칸 조합으로 맞혀보세요.</p></div>
       <button class="btn small" id="wordBack" type="button">← 미니게임</button>
     </div>
-
     <div class="card wg">
       <div class="wg-top">
         <span class="wg-date" id="wgDate">오늘의 단어 (5칸)</span>
-        <div style="display:flex; align-items:center; gap:8px;">
-          <span class="wg-timer" id="wgTimer">남은시간 --:--:--</span>
-          <span class="wg-hint" id="wgHint">힌트</span>
-        </div>
+        <div style="display:flex;align-items:center;gap:8px;"><span class="wg-timer" id="wgTimer">남은시간 --:--:--</span><span class="wg-hint" id="wgHint">힌트</span></div>
       </div>
-
-      <!-- 정확한 1줄 설명 바 -->
-      <div class="wg-desc-bar">
-        💡 <b>규칙:</b> 직장·일상 속 두 글자 단어를 자음·모음 5칸(6회 시도)으로 맞혀보세요!
-      </div>
-
+      <div class="wg-desc-bar">💡 <b>규칙:</b> 직장·일상 속 두 글자 단어를 자음·모음 5칸(6회 시도)으로 맞혀보세요!</div>
       <div id="wgBoard" class="wg-board"></div>
       <div id="wgPreview" class="wg-preview" aria-live="polite"></div>
       <div id="wgKeys" class="wg-keys"></div>
       <div id="wgResult" class="wg-result" hidden></div>
     </div>
-
-    <div class="card wg wg-statcard">
-      <h3>내 누적 기록</h3>
-      <div class="wg-stats" id="wgStats"></div>
-    </div>
+    <div class="card wg wg-statcard"><h3>내 누적 기록</h3><div class="wg-stats" id="wgStats"></div></div>
   </section>
 </div>
 
 <div class="toast" id="toast" role="status" hidden></div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 (function () {
   "use strict";
-  var NS = "http://www.w3.org/2000/svg";
 
-  /* ---------------- SVG 헤더 아치 ---------------- */
-  var TEXT = "2030 직장인 드립대학 수다학과";
-  var R = 560, CX = 500, TOP = 135, CY = TOP + R, SIZE = 64, GAP = 4;
-  var FONT = "Jua, 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif";
-  var arch = document.getElementById("arch");
-  function layoutArch() {
-    while (arch.firstChild) arch.removeChild(arch.firstChild);
-    var chars = Array.from(TEXT);
-    var visible = chars.filter(function (c) { return c !== " "; }).length;
-    var widths = chars.map(function (c) {
-      if (c === " ") return SIZE * 0.55;
-      var t = document.createElementNS(NS, "text");
-      t.setAttribute("font-family", FONT); t.setAttribute("font-size", SIZE);
-      t.textContent = c; arch.appendChild(t);
-      var w = t.getComputedTextLength() || SIZE * 0.9;
-      arch.removeChild(t);
-      return w + GAP;
-    });
-    var total = widths.reduce(function (a, b) { return a + b; }, 0);
-    var pos = -total / 2, idx = 0;
-    chars.forEach(function (c, i) {
-      var mid = pos + widths[i] / 2; pos += widths[i];
-      if (c === " ") return;
-      var th = mid / R;
-      var x = CX + R * Math.sin(th), y = CY - R * Math.cos(th);
-      var hue = 8 + (idx / (visible - 1)) * 255; idx++;
-      var t = document.createElementNS(NS, "text");
-      t.setAttribute("transform", "translate(" + x.toFixed(1) + " " + y.toFixed(1) + ") rotate(" + (th * 180 / Math.PI).toFixed(2) + ")");
-      t.setAttribute("text-anchor", "middle");
-      t.setAttribute("font-family", FONT); t.setAttribute("font-size", SIZE);
-      t.setAttribute("fill", "hsl(" + hue.toFixed(0) + " 92% 58%)");
-      t.setAttribute("stroke", "#1B2340"); t.setAttribute("stroke-width", "10");
-      t.setAttribute("stroke-linejoin", "round"); t.setAttribute("paint-order", "stroke fill");
-      t.textContent = c; arch.appendChild(t);
-    });
-  }
-  layoutArch();
+  /* =====================================================================
+     설정 (여기만 수정하세요)
+     ===================================================================== */
+  // 봉춸이 이미지: 기존 HTML의 <img src="data:image/jpeg;base64,..."> 안의 data:... 값을 아래 따옴표 안에 붙여넣으세요.
+  // 비워두면 🙋 이모지가 대신 표시됩니다.
+  var BONGCHUL_SRC = "";
 
-  /* ---------------- 유틸리티 & 아이콘 ---------------- */
-  var ICONS = {
-    bubbleBig: '<svg viewBox="0 0 24 24"><path d="M4 4h16a2 2 0 012 2v9a2 2 0 01-2 2H11l-5 4v-4H4a2 2 0 01-2-2V6a2 2 0 012-2z" fill="#D9C9F7" stroke="#1B2340" stroke-width="1.4" stroke-linejoin="round"/></svg>',
-    pen: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-6"/><path d="M18.500 3.500a2.100 2.100 0 013 3L12 16l-4 1 1-4z"/></svg>'
-  };
-  function $(s, r) { return (r || document).querySelector(s); }
-  function el(tag, cls, text) {
-    var e = document.createElement(tag);
-    if (cls) e.className = cls;
-    if (text != null) e.textContent = text;
-    return e;
-  }
-  Array.prototype.forEach.call(document.querySelectorAll("[data-ic]"), function (n) {
-    n.setAttribute("aria-hidden", "true"); n.innerHTML = ICONS[n.getAttribute("data-ic")];
-  });
+  var SUPABASE_URL = "https://niuhmceiqxevuzmqsnhf.supabase.co";
+  var SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInRefiI6Im5pdWhtY2VpcXhldnV6bXFzbmhmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI2NTM0NzEsImV4cCI6MjEwODIyOTQ3MX0.dRNizWoOz5sy5F9Jgixd1m-NfH-CXiQ-vWQQlYeiGbU";
+  var ADMIN_EMAIL = "ua6c1b8b671ad1e8a319f43eebafaca40c5e672b2a095665333dcafac4081a302@login.dripcollege.example.com";
+  var REMEMBER_KEY = "dripcollege_remember_login";
+
+  /* ---------------- 공통 유틸 ---------------- */
+  function $(id) { return document.getElementById(id); }
+  function el(tag, cls, text) { var e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; }
+  function escapeHtml(v) { return String(v == null ? "" : v).replace(/[&<>"']/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; }); }
   var toastTimer = 0;
-  function toast(msg) {
-    var t = $("#toast"); t.textContent = msg; t.hidden = false;
-    clearTimeout(toastTimer); toastTimer = setTimeout(function () { t.hidden = true; }, 3200);
-  }
+  function toast(msg) { var t = $("toast"); t.textContent = msg; t.hidden = false; clearTimeout(toastTimer); toastTimer = setTimeout(function () { t.hidden = true; }, 3200); }
   function store(k, v) { try { if (v === undefined) return localStorage.getItem(k) || ""; localStorage.setItem(k, v); } catch (e) { return ""; } return ""; }
+  function setText(id, msg) { var n = $(id); if (n) n.textContent = msg || ""; }
 
-  var DEPTS = ["월급루팡학", "야근학", "칼퇴학", "회식학", "탕비실학", "커피수혈학", "월요병학", "점심메뉴학", "퇴사준비학"];
-  var deptSel = $("#fDept");
-  DEPTS.forEach(function (d) { var o = el("option", null, d); o.value = d; deptSel.appendChild(o); });
+  if (BONGCHUL_SRC) { $("bongchulImg").src = BONGCHUL_SRC; $("bongchulImg").hidden = false; $("bongchulFallback").hidden = true; }
 
-  /* ---------------- 네비게이션 & 뷰 전환 ---------------- */
-  var views = {
-    main: $("#mainView"),
-    board: $("#boardView"),
-    rank: $("#rankView"),
-    hub: $("#gameHub"),
-    word: $("#wordGame"),
-    notice: $("#noticeView"),
-    studentId: $("#studentIdView"),
-    fortune: $("#fortuneView"),
-    places: $("#placesView")
-  };
-  
+  /* ---------------- 화면 전환 ---------------- */
+  var views = { main: $("mainView"), board: $("boardView"), rank: $("rankView"), hub: $("gameHub"), word: $("wordGame"), notice: $("noticeView"), studentId: $("studentIdView"), fortune: $("fortuneView"), places: $("placesView") };
   function showView(target) {
-    for (var key in views) {
-      if (views.hasOwnProperty(key)) {
-        views[key].hidden = (key !== target);
-      }
-    }
-    window.scrollTo({top: 0, behavior: "smooth"});
+    Object.keys(views).forEach(function (k) { views[k].hidden = (k !== target); });
+    $("signupView").hidden = true;
+    window.scrollTo({ top: 0, behavior: "smooth" });
   }
+  $("goBoard").addEventListener("click", function () { showView("board"); selectedPostId = null; loadCommunity(); });
+  $("boardBack").onclick = function () { showView("main"); };
+  $("goRank").onclick = function () { showView("rank"); renderRankings("daily"); };
+  $("rankBack").onclick = function () { showView("main"); };
+  $("goGames").onclick = function () { showView("hub"); updateHubState(); };
+  $("hubBack").onclick = function () { showView("main"); };
+  $("openWord").onclick = function () { showView("word"); initWordGame(); };
+  $("wordBack").onclick = function () { showView("hub"); updateHubState(); };
+  $("goNotice").onclick = function () { showView("notice"); };
+  $("noticeBack").onclick = function () { showView("main"); };
+  $("goStudentId").onclick = function () { showView("studentId"); };
+  $("goFortune").onclick = function () { showView("fortune"); };
+  $("goPlaces").onclick = function () { showView("places"); initKakaoMap(); };
+  Array.prototype.forEach.call(document.querySelectorAll("[data-home]"), function (b) { b.onclick = function () { showView("main"); }; });
 
-  $("#goBoard").onclick = function() { showView("board"); };
-  $("#boardBack").onclick = function() { showView("main"); };
-  $("#goRank").onclick = function() { showView("rank"); renderRankings("daily"); };
-  $("#rankBack").onclick = function() { showView("main"); };
-  $("#goGames").onclick = function() { showView("hub"); updateHubState(); };
-  $("#hubBack").onclick = function() { showView("main"); };
-  $("#openWord").onclick = function() { showView("word"); initWordGame(); };
-  $("#wordBack").onclick = function() { showView("hub"); updateHubState(); };
-
-  /* ---------------- 게시판 기능 ---------------- */
-  var posts = [
-    { id: 1, nick: "칼퇴요정", dept: "칼퇴학", text: "오늘 6시 정각에 광속 퇴근 성공했습니다. 다들 무사 퇴근하셨나요?", time: Date.now() - 3600000, likes: 12, comments: 3 },
-    { id: 2, nick: "커피중독자", dept: "커피수혈학", text: "오늘 탕비실 커피머신 고장남... 전직원 긴급 상황 발생 ㅠㅠ", time: Date.now() - 7200000, likes: 25, comments: 8 }
-  ];
-
-  function renderFeed() {
-    var feed = $("#feed"); feed.innerHTML = "";
-    posts.forEach(function(p) {
-      var c = el("div", "card");
-      var top = el("div", "post-top");
-      var who = el("div", "who");
-      who.appendChild(el("span", "nick", p.nick));
-      who.appendChild(el("span", "dept", p.dept));
-      top.appendChild(who);
-      top.appendChild(el("span", "meta", "방금 전"));
-      c.appendChild(top);
-      c.appendChild(el("div", "post-body", p.text));
-
-      var acts = el("div", "post-actions");
-      var btnLike = el("button", "act-btn", "❤️ 공감 " + p.likes);
-      btnLike.onclick = function() {
-        p.likes++;
-        btnLike.textContent = "❤️ 공감 " + p.likes;
-        btnLike.classList.add("active");
-      };
-      var btnComment = el("button", "act-btn", "💬 댓글 " + p.comments);
-      btnComment.onclick = function() { toast("댓글 기능 준비 중입니다!"); };
-      acts.appendChild(btnLike);
-      acts.appendChild(btnComment);
-      c.appendChild(acts);
-
-      feed.appendChild(c);
-    });
-  }
-  renderFeed();
-
-  $("#openComposer").onclick = function() { $("#composer").hidden = false; };
-  $("#cancelComposer").onclick = function() { $("#composer").hidden = true; };
-  
-  $("#fText").oninput = function() {
-    $("#fCount").textContent = this.value.length + " / 300";
+  $("makeStudentId").onclick = function () { var n = $("studentIdNick").value.trim(); $("studentIdPreview").textContent = n ? "🎓 2030 직장인 드립대학 | " + n + " 학생" : "닉네임을 입력해 주세요."; };
+  $("fortuneButton").onclick = function () {
+    var f = ["작은 드립 하나가 분위기를 바꿉니다.", "오늘은 칼퇴를 향해 차근차근 전진하세요.", "뜻밖의 간식과 좋은 대화가 기다립니다.", "말은 짧게, 센스는 길게!", "커피 한 잔이 행운의 시작입니다."];
+    $("fortuneResult").textContent = f[Math.floor(Math.random() * f.length)];
   };
 
-  $("#composer").onsubmit = function(e) {
-    e.preventDefault();
-    var nick = $("#fNick").value.trim() || "익명";
-    var dept = $("#fDept").value;
-    var text = $("#fText").value.trim();
-    if(!text) return;
-    posts.unshift({ id: Date.now(), nick: nick, dept: dept, text: text, time: Date.now(), likes: 0, comments: 0 });
-    renderFeed();
-    $("#fText").value = "";
-    $("#fCount").textContent = "0 / 300";
-    $("#composer").hidden = true;
-    toast("드립이 성공적으로 올려졌습니다!");
-  };
-
-  /* ---------------- 채팅 순위 (랭킹) ---------------- */
+  /* ---------------- 채팅 순위 (샘플 데이터) ---------------- */
   var mockRanks = {
-    daily: [
-      { nick: "월급루팡3세", dept: "월급루팡학", score: "1,240 드립" },
-      { nick: "부장님킬러", dept: "칼퇴학", score: "980 드립" },
-      { nick: "탕비실요정", dept: "탕비실학", score: "850 드립" },
-      { nick: "칼퇴마스터", dept: "칼퇴학", score: "720 드립" },
-      { nick: "아메리카노", dept: "커피수혈학", score: "610 드립" }
-    ],
-    weekly: [
-      { nick: "부장님킬러", dept: "칼퇴학", score: "5,420 드립" },
-      { nick: "월급루팡3세", dept: "월급루팡학", score: "4,890 드립" },
-      { nick: "퇴사희망자", dept: "퇴사준비학", score: "3,750 드립" },
-      { nick: "탕비실요정", dept: "탕비실학", score: "3,100 드립" },
-      { nick: "야근거부자", dept: "야근학", score: "2,840 드립" }
-    ],
-    monthly: [
-      { nick: "퇴사희망자", dept: "퇴사준비학", score: "18,400 드립" },
-      { nick: "부장님킬러", dept: "칼퇴학", score: "16,200 드립" },
-      { nick: "월급루팡3세", dept: "월급루팡학", score: "15,100 드립" },
-      { nick: "월요병백신", dept: "월요병학", score: "12,300 드립" },
-      { nick: "점심메뉴고민", dept: "점심메뉴학", score: "11,500 드립" }
-    ]
+    daily: [{ nick: "월급루팡3세", dept: "월급루팡학", score: "1,240 드립" }, { nick: "부장님킬러", dept: "칼퇴학", score: "980 드립" }, { nick: "탕비실요정", dept: "탕비실학", score: "850 드립" }, { nick: "칼퇴마스터", dept: "칼퇴학", score: "720 드립" }, { nick: "아메리카노", dept: "커피수혈학", score: "610 드립" }],
+    weekly: [{ nick: "부장님킬러", dept: "칼퇴학", score: "5,420 드립" }, { nick: "월급루팡3세", dept: "월급루팡학", score: "4,890 드립" }, { nick: "퇴사희망자", dept: "퇴사준비학", score: "3,750 드립" }, { nick: "탕비실요정", dept: "탕비실학", score: "3,100 드립" }, { nick: "야근거부자", dept: "야근학", score: "2,840 드립" }],
+    monthly: [{ nick: "퇴사희망자", dept: "퇴사준비학", score: "18,400 드립" }, { nick: "부장님킬러", dept: "칼퇴학", score: "16,200 드립" }, { nick: "월급루팡3세", dept: "월급루팡학", score: "15,100 드립" }, { nick: "월요병백신", dept: "월요병학", score: "12,300 드립" }, { nick: "점심메뉴고민", dept: "점심메뉴학", score: "11,500 드립" }]
   };
-
   function renderRankings(period) {
-    var list = $("#rankList"); list.innerHTML = "";
-    var data = mockRanks[period] || [];
-    data.forEach(function(item, idx) {
+    var list = $("rankList"); list.innerHTML = "";
+    (mockRanks[period] || []).forEach(function (item, idx) {
       var row = el("div", "rank-item");
-      var numCls = "rank-num" + (idx === 0 ? " gold" : idx === 1 ? " silver" : idx === 2 ? " bronze" : "");
-      row.appendChild(el("div", numCls, (idx + 1).toString()));
-      
-      var info = el("div", "rank-info");
-      var topRow = el("div", null);
-      topRow.appendChild(el("span", "nick", item.nick));
-      topRow.appendChild(el("span", "dept", item.dept));
-      info.appendChild(topRow);
-      
-      row.appendChild(info);
-      row.appendChild(el("div", "rank-score", item.score));
-      list.appendChild(row);
+      row.appendChild(el("div", "rank-num" + (idx === 0 ? " gold" : idx === 1 ? " silver" : idx === 2 ? " bronze" : ""), String(idx + 1)));
+      var info = el("div", "rank-info"), top = el("div");
+      top.appendChild(el("span", "nick", item.nick)); top.appendChild(el("span", "dept", item.dept)); info.appendChild(top);
+      row.appendChild(info); row.appendChild(el("div", "rank-score", item.score)); list.appendChild(row);
     });
   }
-
   var rankTabs = document.querySelectorAll(".rank-tab");
-  rankTabs.forEach(function(tab) {
-    tab.onclick = function() {
-      rankTabs.forEach(function(t) { t.classList.remove("active"); });
-      tab.classList.add("active");
-      renderRankings(tab.getAttribute("data-period"));
+  Array.prototype.forEach.call(rankTabs, function (tab) {
+    tab.onclick = function () {
+      Array.prototype.forEach.call(rankTabs, function (t) { t.classList.remove("active"); });
+      tab.classList.add("active"); renderRankings(tab.getAttribute("data-period"));
     };
   });
 
-  /* =========================================================================
-     🎮 5칸 오늘의 단어 게임 (6시간 주기 / 물리+가상 키보드 지원)
-     ========================================================================= */
-
+  /* =====================================================================
+     오늘의 단어 (5칸) 게임
+     ===================================================================== */
   var WORD_POOL_5 = [
     { word: "커피", hint: "직장인 생명수", jamo: ["ㅋ", "ㅓ", "ㅍ", "ㅣ", "ㅣ"] },
     { word: "야근", hint: "달갑지 않은 저녁", jamo: ["ㅇ", "ㅑ", "ㄱ", "ㅡ", "ㄴ"] },
@@ -787,721 +486,494 @@
     { word: "승진", hint: "직급의 상승", jamo: ["ㅅ", "ㅡ", "ㅇ", "ㅈ", "ㅣ"] },
     { word: "출근", hint: "매일 아침 고통", jamo: ["ㅊ", "ㅜ", "ㄹ", "ㄱ", "ㅡ"] }
   ];
-
   var KBD_LAYOUT = [
     ["ㅂ", "ㅈ", "ㄷ", "ㄱ", "ㅅ", "ㅛ", "ㅕ", "ㅑ", "ㅐ", "ㅔ"],
     ["ㅁ", "ㄴ", "ㅇ", "ㄹ", "ㅎ", "ㅗ", "ㅓ", "ㅏ", "ㅣ"],
     ["지우기", "ㅋ", "ㅌ", "ㅍ", "ㅊ", "ㅠ", "ㅜ", "ㅡ", "확인"]
   ];
-
-  var KEY_MAP = {
-    'q':'ㅂ', 'w':'ㅈ', 'e':'ㄷ', 'r':'ㄱ', 't':'ㅅ', 'y':'ㅛ', 'u':'ㅕ', 'i':'ㅑ', 'o':'ㅐ', 'p':'ㅔ',
-    'a':'ㅁ', 's':'ㄴ', 'd':'ㅇ', 'f':'ㄹ', 'g':'ㅎ', 'h':'ㅗ', 'j':'ㅓ', 'k':'ㅏ', 'l':'ㅣ',
-    'z':'ㅋ', 'x':'ㅌ', 'c':'ㅊ', 'v':'ㅍ', 'b':'ㅠ', 'n':'ㅜ', 'm':'ㅡ',
-    'Q':'ㅃ', 'W':'ㅉ', 'E':'ㄸ', 'R':'ㄲ', 'T':'ㅆ', 'O':'ㅖ', 'P':'ㅖ'
-  };
+  var KEY_MAP = { q: "ㅂ", w: "ㅈ", e: "ㄷ", r: "ㄱ", t: "ㅅ", y: "ㅛ", u: "ㅕ", i: "ㅑ", o: "ㅐ", p: "ㅔ", a: "ㅁ", s: "ㄴ", d: "ㅇ", f: "ㄹ", g: "ㅎ", h: "ㅗ", j: "ㅓ", k: "ㅏ", l: "ㅣ", z: "ㅋ", x: "ㅌ", c: "ㅊ", v: "ㅍ", b: "ㅠ", n: "ㅜ", m: "ㅡ", Q: "ㅃ", W: "ㅉ", E: "ㄸ", R: "ㄲ", T: "ㅆ", O: "ㅖ", P: "ㅖ" };
 
   function get6HourPeriodInfo() {
-    var now = new Date();
-    var year = now.getFullYear();
-    var month = now.getMonth();
-    var date = now.getDate();
-    var hours = now.getHours();
-
-    var pIndex = Math.floor(hours / 6);
-    var periodStartHours = pIndex * 6;
-    
-    var currentPeriodStart = new Date(year, month, date, periodStartHours, 0, 0);
-    var nextPeriodStart = new Date(year, month, date, periodStartHours + 6, 0, 0);
-
-    var timeSeed = Math.floor(currentPeriodStart.getTime() / (1000 * 60 * 60 * 6));
-    var wordIdx = timeSeed % WORD_POOL_5.length;
-
-    return {
-      key: "wg_5tile_" + timeSeed,
-      wordObj: WORD_POOL_5[wordIdx],
-      nextTime: nextPeriodStart
-    };
+    var now = new Date(), y = now.getFullYear(), mo = now.getMonth(), d = now.getDate();
+    var startH = Math.floor(now.getHours() / 6) * 6;
+    var cur = new Date(y, mo, d, startH, 0, 0), next = new Date(y, mo, d, startH + 6, 0, 0);
+    var seed = Math.floor(cur.getTime() / (1000 * 60 * 60 * 6));
+    return { key: "wg_5tile_" + seed, wordObj: WORD_POOL_5[seed % WORD_POOL_5.length], nextTime: next };
   }
-
-  var curState = {
-    periodKey: "",
-    wordObj: null,
-    guesses: [],
-    currentInput: [],
-    status: "PLAYING",
-    keyColors: {}
-  };
-
+  var curState = { periodKey: "", wordObj: null, guesses: [], currentInput: [], status: "PLAYING", keyColors: {} };
   var timerInterval = 0;
 
   function initWordGame() {
-    var pInfo = get6HourPeriodInfo();
-    curState.periodKey = pInfo.key;
-    curState.wordObj = pInfo.wordObj;
-
-    var saved = store(curState.periodKey);
-    if (saved) {
-      try {
-        var parsed = JSON.parse(saved);
-        curState.guesses = parsed.guesses || [];
-        curState.status = parsed.status || "PLAYING";
-        curState.keyColors = parsed.keyColors || {};
-      } catch (e) {
-        curState.guesses = []; curState.status = "PLAYING"; curState.keyColors = {};
-      }
-    } else {
-      curState.guesses = [];
-      curState.status = "PLAYING";
-      curState.keyColors = {};
-    }
+    var p = get6HourPeriodInfo();
+    curState.periodKey = p.key; curState.wordObj = p.wordObj;
+    var saved = store(p.key);
+    curState.guesses = []; curState.status = "PLAYING"; curState.keyColors = {};
+    if (saved) { try { var o = JSON.parse(saved); curState.guesses = o.guesses || []; curState.status = o.status || "PLAYING"; curState.keyColors = o.keyColors || {}; } catch (e) {} }
     curState.currentInput = [];
-
-    $("#wgDate").textContent = "오늘의 단어 (5칸)";
-    $("#wgHint").textContent = "힌트: " + curState.wordObj.hint;
-
-    startTimer(pInfo.nextTime);
-    renderBoard();
-    renderKeys();
-    renderResult();
-    renderStats();
+    $("wgDate").textContent = "오늘의 단어 (5칸)";
+    $("wgHint").textContent = "힌트: " + curState.wordObj.hint;
+    startTimer(p.nextTime); renderBoard(); renderKeys(); renderResult(); renderStats();
   }
-
   function startTimer(nextTime) {
     clearInterval(timerInterval);
-    function updateTimer() {
+    function pad(n) { return (n < 10 ? "0" : "") + n; }
+    function tick() {
       var diff = Math.max(0, Math.floor((nextTime.getTime() - Date.now()) / 1000));
-      var h = Math.floor(diff / 3600);
-      var m = Math.floor((diff % 3600) / 60);
-      var s = diff % 60;
-      $("#wgTimer").textContent = "새 단어까지 " + (h<10?"0":"")+h + ":" + (m<10?"0":"")+m + ":" + (s<10?"0":"")+s;
-      if (diff <= 0) {
-        clearInterval(timerInterval);
-        initWordGame();
-      }
+      $("wgTimer").textContent = "새 단어까지 " + pad(Math.floor(diff / 3600)) + ":" + pad(Math.floor((diff % 3600) / 60)) + ":" + pad(diff % 60);
+      if (diff <= 0) { clearInterval(timerInterval); initWordGame(); }
     }
-    updateTimer();
-    timerInterval = setInterval(updateTimer, 1000);
+    tick(); timerInterval = setInterval(tick, 1000);
   }
-
   function updateHubState() {
-    var pInfo = get6HourPeriodInfo();
-    var saved = store(pInfo.key);
-    var badge = $("#wordState");
-    if (saved) {
-      try {
-        var parsed = JSON.parse(saved);
-        if (parsed.status === "WON") {
-          badge.textContent = "성공!"; badge.className = "game-state done"; return;
-        } else if (parsed.status === "LOST") {
-          badge.textContent = "아쉬워요"; badge.className = "game-state done"; return;
-        }
-      } catch(e){}
-    }
+    var p = get6HourPeriodInfo(), saved = store(p.key), badge = $("wordState");
     badge.textContent = "도전하기"; badge.className = "game-state";
+    if (saved) { try { var o = JSON.parse(saved); if (o.status === "WON") badge.textContent = "성공!"; else if (o.status === "LOST") badge.textContent = "아쉬워요"; } catch (e) {} }
   }
-
   function renderBoard() {
-    var board = $("#wgBoard"); board.innerHTML = "";
-
+    var board = $("wgBoard"); board.innerHTML = "";
     for (var r = 0; r < 6; r++) {
-      var rowEl = el("div", "wg-row");
-      var guess = curState.guesses[r];
-      var isCurrent = (r === curState.guesses.length && curState.status === "PLAYING");
-
+      var rowEl = el("div", "wg-row"), guess = curState.guesses[r];
+      var isCur = (r === curState.guesses.length && curState.status === "PLAYING");
       for (var c = 0; c < 5; c++) {
         var tile = el("div", "wg-tile");
-        if (guess) {
-          tile.textContent = guess.input[c];
-          tile.classList.add(guess.result[c]);
-        } else if (isCurrent && curState.currentInput[c]) {
-          tile.textContent = curState.currentInput[c];
-          tile.classList.add("filled");
-        }
+        if (guess) { tile.textContent = guess.input[c]; tile.classList.add(guess.result[c]); }
+        else if (isCur && curState.currentInput[c]) { tile.textContent = curState.currentInput[c]; tile.classList.add("filled"); }
         rowEl.appendChild(tile);
       }
       board.appendChild(rowEl);
     }
-
-    $("#wgPreview").textContent = curState.status === "PLAYING" ? (curState.currentInput.join(" ") || "자음·모음을 조합하세요") : "";
+    $("wgPreview").textContent = curState.status === "PLAYING" ? (curState.currentInput.join(" ") || "자음·모음을 조합하세요") : "";
   }
-
   function renderKeys() {
-    var keysDiv = $("#wgKeys"); keysDiv.innerHTML = "";
+    var kd = $("wgKeys"); kd.innerHTML = "";
     KBD_LAYOUT.forEach(function (row) {
-      var krow = el("div", "wg-krow");
+      var kr = el("div", "wg-krow");
       row.forEach(function (k) {
-        var isWide = (k === "지우기" || k === "확인");
-        var btn = el("button", "wg-key" + (isWide ? " wide" : ""), k);
+        var btn = el("button", "wg-key" + ((k === "지우기" || k === "확인") ? " wide" : ""), k);
         btn.type = "button";
-        
-        if (curState.keyColors[k]) {
-          btn.classList.add(curState.keyColors[k]);
-        }
-        if (curState.status !== "PLAYING") {
-          btn.disabled = true;
-        }
+        if (curState.keyColors[k]) btn.classList.add(curState.keyColors[k]);
+        if (curState.status !== "PLAYING") btn.disabled = true;
         btn.onclick = function () { handleInput(k); };
-        krow.appendChild(btn);
+        kr.appendChild(btn);
       });
-      keysDiv.appendChild(krow);
+      kd.appendChild(kr);
     });
   }
-
   function handleInput(key) {
     if (curState.status !== "PLAYING") return;
-
-    if (key === "지우기" || key === "Backspace") {
-      if (curState.currentInput.length > 0) {
-        curState.currentInput.pop();
-        renderBoard();
-      }
-    } else if (key === "확인" || key === "Enter") {
-      submitGuess();
-    } else {
-      if (curState.currentInput.length < 5) {
-        curState.currentInput.push(key);
-        renderBoard();
-      }
-    }
+    if (key === "지우기" || key === "Backspace") { if (curState.currentInput.length) { curState.currentInput.pop(); renderBoard(); } }
+    else if (key === "확인" || key === "Enter") submitGuess();
+    else if (curState.currentInput.length < 5) { curState.currentInput.push(key); renderBoard(); }
   }
-
   function submitGuess() {
     if (curState.currentInput.length < 5) {
       toast("5칸을 모두 채워주세요!");
-      var rows = document.querySelectorAll(".wg-row");
-      var curRow = rows[curState.guesses.length];
-      if (curRow) {
-        curRow.classList.add("shake");
-        setTimeout(function() { curRow.classList.remove("shake"); }, 400);
-      }
+      var cr = document.querySelectorAll(".wg-row")[curState.guesses.length];
+      if (cr) { cr.classList.add("shake"); setTimeout(function () { cr.classList.remove("shake"); }, 400); }
       return;
     }
-
-    var target = curState.wordObj.jamo;
-    var input = curState.currentInput.slice();
-    var result = Array(5).fill("absent");
-    var targetCopy = target.slice();
-
-    for (var i = 0; i < 5; i++) {
-      if (input[i] === target[i]) {
-        result[i] = "correct";
-        targetCopy[i] = null;
-      }
+    var target = curState.wordObj.jamo, input = curState.currentInput.slice(), result = ["absent", "absent", "absent", "absent", "absent"], tc = target.slice(), i;
+    for (i = 0; i < 5; i++) if (input[i] === target[i]) { result[i] = "correct"; tc[i] = null; }
+    for (i = 0; i < 5; i++) if (result[i] !== "correct") { var f = tc.indexOf(input[i]); if (f !== -1) { result[i] = "present"; tc[f] = null; } }
+    for (i = 0; i < 5; i++) {
+      var ch = input[i], res = result[i], prev = curState.keyColors[ch];
+      if (res === "correct" || (res === "present" && prev !== "correct") || (!prev && res === "absent")) curState.keyColors[ch] = res;
     }
-
-    for (var j = 0; j < 5; j++) {
-      if (result[j] !== "correct") {
-        var foundIdx = targetCopy.indexOf(input[j]);
-        if (foundIdx !== -1) {
-          result[j] = "present";
-          targetCopy[foundIdx] = null;
-        }
-      }
-    }
-
-    for (var k = 0; k < 5; k++) {
-      var char = input[k];
-      var res = result[k];
-      var prev = curState.keyColors[char];
-      if (res === "correct" || (res === "present" && prev !== "correct") || (!prev && res === "absent")) {
-        curState.keyColors[char] = res;
-      }
-    }
-
-    curState.guesses.push({ input: input, result: result });
-    curState.currentInput = [];
-
-    var isWin = result.every(function (r) { return r === "correct"; });
-    if (isWin) {
-      curState.status = "WON";
-      saveStat(true, curState.guesses.length);
-    } else if (curState.guesses.length >= 6) {
-      curState.status = "LOST";
-      saveStat(false, 6);
-    }
-
-    store(curState.periodKey, JSON.stringify({
-      guesses: curState.guesses,
-      status: curState.status,
-      keyColors: curState.keyColors
-    }));
-
-    renderBoard();
-    renderKeys();
-    renderResult();
-    renderStats();
+    curState.guesses.push({ input: input, result: result }); curState.currentInput = [];
+    if (result.every(function (r) { return r === "correct"; })) { curState.status = "WON"; saveStat(true); }
+    else if (curState.guesses.length >= 6) { curState.status = "LOST"; saveStat(false); }
+    store(curState.periodKey, JSON.stringify({ guesses: curState.guesses, status: curState.status, keyColors: curState.keyColors }));
+    renderBoard(); renderKeys(); renderResult(); renderStats();
   }
-
   function renderResult() {
-    var resDiv = $("#wgResult");
-    if (curState.status === "PLAYING") {
-      resDiv.hidden = true;
-      return;
-    }
-
-    resDiv.hidden = false;
-    resDiv.className = "wg-result" + (curState.status === "LOST" ? " lose" : "");
-
-    var isWin = (curState.status === "WON");
-    var targetWord = curState.wordObj.word + " (" + curState.wordObj.jamo.join("") + ")";
-    
-    var html = "<strong>" + (isWin ? "🎉 정답입니다!" : "아쉽네요! 다음 기회에") + "</strong>";
-    html += "<p>정답 단어: <b>" + targetWord + "</b></p>";
-
-    var shareText = "드립대학 [오늘의 단어 5칸]\n" + (isWin ? curState.guesses.length + "/6 시도 성공!" : "실패 ㅠㅠ") + "\n";
-    curState.guesses.forEach(function (g) {
-      g.result.forEach(function (r) {
-        shareText += (r === "correct" ? "🟩" : r === "present" ? "🟨" : "⬛");
-      });
-      shareText += "\n";
-    });
-
-    html += "<div class='wg-share'>" + shareText.trim() + "</div>";
-    html += "<button class='btn small coral' style='margin-top:10px;' id='btnShare'>결과 복사하기</button>";
-
-    resDiv.innerHTML = html;
-
-    $("#btnShare").onclick = function() {
-      if (document.queryCommandSupported && document.queryCommandSupported('copy')) {
-        var textarea = document.createElement('textarea');
-        textarea.value = shareText;
-        document.body.appendChild(textarea);
-        textarea.select();
-        document.execCommand('copy');
-        document.body.removeChild(textarea);
-        toast("결과가 클립보드에 복사되었습니다!");
-      } else {
-        toast("복사 기능을 지원하지 않는 브라우저입니다.");
-      }
+    var rd = $("wgResult");
+    if (curState.status === "PLAYING") { rd.hidden = true; return; }
+    rd.hidden = false; rd.className = "wg-result" + (curState.status === "LOST" ? " lose" : "");
+    var win = curState.status === "WON";
+    var share = "드립대학 [오늘의 단어 5칸]\n" + (win ? curState.guesses.length + "/6 시도 성공!" : "실패 ㅠㅠ") + "\n";
+    curState.guesses.forEach(function (g) { g.result.forEach(function (r) { share += (r === "correct" ? "🟩" : r === "present" ? "🟨" : "⬛"); }); share += "\n"; });
+    rd.innerHTML = "<strong>" + (win ? "🎉 정답입니다!" : "아쉽네요! 다음 기회에") + "</strong><p>정답 단어: <b>" + escapeHtml(curState.wordObj.word + " (" + curState.wordObj.jamo.join("") + ")") + "</b></p><div class='wg-share'>" + escapeHtml(share.trim()) + "</div><button class='btn small coral' style='margin-top:10px;' id='btnShare' type='button'>결과 복사하기</button>";
+    $("btnShare").onclick = function () {
+      if (navigator.clipboard && navigator.clipboard.writeText) { navigator.clipboard.writeText(share).then(function () { toast("결과가 클립보드에 복사되었습니다!"); }, function () { toast("복사에 실패했습니다."); }); return; }
+      var ta = document.createElement("textarea"); ta.value = share; document.body.appendChild(ta); ta.select();
+      try { document.execCommand("copy"); toast("결과가 클립보드에 복사되었습니다!"); } catch (e) { toast("복사 기능을 지원하지 않는 브라우저입니다."); }
+      document.body.removeChild(ta);
     };
   }
-
-  function saveStat(isWin, attempts) {
-    var stat = { played: 0, win: 0, streak: 0, maxStreak: 0 };
-    var raw = store("wg_stats_v2");
-    if (raw) { try { stat = JSON.parse(raw); } catch(e){} }
-
-    stat.played++;
-    if (isWin) {
-      stat.win++;
-      stat.streak++;
-      if (stat.streak > stat.maxStreak) stat.maxStreak = stat.streak;
-    } else {
-      stat.streak = 0;
-    }
-    store("wg_stats_v2", JSON.stringify(stat));
+  function readStat() { var s = { played: 0, win: 0, streak: 0, maxStreak: 0 }, raw = store("wg_stats_v2"); if (raw) { try { s = JSON.parse(raw); } catch (e) {} } return s; }
+  function saveStat(win) {
+    var s = readStat(); s.played++;
+    if (win) { s.win++; s.streak++; if (s.streak > s.maxStreak) s.maxStreak = s.streak; } else s.streak = 0;
+    store("wg_stats_v2", JSON.stringify(s));
   }
-
   function renderStats() {
-    var stat = { played: 0, win: 0, streak: 0, maxStreak: 0 };
-    var raw = store("wg_stats_v2");
-    if (raw) { try { stat = JSON.parse(raw); } catch(e){} }
-
-    var rate = stat.played ? Math.round((stat.win / stat.played) * 100) : 0;
-    var html = "";
-    html += "<div><b>" + stat.played + "</b><span>판수</span></div>";
-    html += "<div><b>" + rate + "%</b><span>승률</span></div>";
-    html += "<div><b>" + stat.streak + "</b><span>연승</span></div>";
-    html += "<div><b>" + stat.maxStreak + "</b><span>최다연승</span></div>";
-    $("#wgStats").innerHTML = html;
+    var s = readStat(), rate = s.played ? Math.round((s.win / s.played) * 100) : 0;
+    $("wgStats").innerHTML = "<div><b>" + s.played + "</b><span>판수</span></div><div><b>" + rate + "%</b><span>승률</span></div><div><b>" + s.streak + "</b><span>연승</span></div><div><b>" + s.maxStreak + "</b><span>최다연승</span></div>";
   }
-
-  /* ---------------- 물리 키보드 Event Listener ---------------- */
   window.addEventListener("keydown", function (e) {
     if (views.word.hidden || curState.status !== "PLAYING") return;
-
-    var activeTag = document.activeElement ? document.activeElement.tagName : "";
-    if (activeTag === "INPUT" || activeTag === "TEXTAREA") return;
-
-    var key = e.key;
-
-    if (key === "Backspace") {
-      handleInput("지우기");
-      e.preventDefault();
-    } else if (key === "Enter") {
-      handleInput("확인");
-      e.preventDefault();
-    } else if (KEY_MAP[key]) {
-      handleInput(KEY_MAP[key]);
-      e.preventDefault();
-    } else {
-      var KOREAN_JAMO = ["ㄱ","ㄴ","ㄷ","ㄹ","ㅁ","ㅂ","ㅅ","ㅇ","ㅈ","ㅊ","ㅋ","ㅌ","ㅍ","ㅎ","ㅏ","ㅑ","ㅓ","ㅕ","ㅗ","ㅛ","ㅜ","ㅠ","ㅡ","ㅣ","ㅐ","ㅔ","ㅚ","ㅟ","ㅢ"];
-      if (KOREAN_JAMO.indexOf(key) !== -1) {
-        handleInput(key);
-        e.preventDefault();
-      }
-    }
+    var tag = document.activeElement ? document.activeElement.tagName : "";
+    if (tag === "INPUT" || tag === "TEXTAREA") return;
+    var k = e.key;
+    if (k === "Backspace") { handleInput("지우기"); e.preventDefault(); }
+    else if (k === "Enter") { handleInput("확인"); e.preventDefault(); }
+    else if (KEY_MAP[k]) { handleInput(KEY_MAP[k]); e.preventDefault(); }
+    else if ("ㄱㄴㄷㄹㅁㅂㅅㅇㅈㅊㅋㅌㅍㅎㅏㅑㅓㅕㅗㅛㅜㅠㅡㅣㅐㅔㅚㅟㅢ".indexOf(k) !== -1 && k.length === 1) { handleInput(k); e.preventDefault(); }
   });
 
-  $("#goNotice").onclick=function(){showView("notice");};
-  $("#noticeBack").onclick=function(){showView("main");};
-  $("#goStudentId").onclick=function(){showView("studentId");};
-  $("#goFortune").onclick=function(){showView("fortune");};
-  $("#goPlaces").onclick=function(){showView("places");};
-  document.querySelectorAll("[data-home]").forEach(function(b){b.onclick=function(){showView("main");};});
-  $("#makeStudentId").onclick=function(){var n=$("#studentIdNick").value.trim();$("#studentIdPreview").textContent=n?"🎓 2030 직장인 드립대학 | "+n+" 학생":"닉네임을 입력해 주세요.";};
-  $("#fortuneButton").onclick=function(){var fortunes=["작은 드립 하나가 분위기를 바꿉니다.","오늘은 칼퇴를 향해 차근차근 전진하세요.","뜻밖의 간식과 좋은 대화가 기다립니다.","말은 짧게, 센스는 길게!","커피 한 잔이 행운의 시작입니다."];$("#fortuneResult").textContent=fortunes[Math.floor(Math.random()*fortunes.length)];};
-
-})();
-</script>
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script>
-(function(){
-  "use strict";
-  // Supabase Dashboard > Project Settings > API에서 URL과 publishable/anon key를 입력하세요.
-  const SUPABASE_URL = "https://niuhmceiqxevuzmqsnhf.supabase.co";
-  const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInRefiI6Im5pdWhtY2VpcXhldnV6bXFzbmhmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI2NTM0NzEsImV4cCI6MjEwODIyOTQ3MX0.dRNizWoOz5sy5F9Jgixd1m-NfH-CXiQ-vWQQlYeiGbU";
-  const REMEMBER_KEY = "dripcollege_remember_login";
-  const $ = (id) => document.getElementById(id);
-  function selectedStorage(){ try { return localStorage.getItem(REMEMBER_KEY) === "0" ? sessionStorage : localStorage; } catch(_e) { return sessionStorage; } }
-  const authStorage = {
-    getItem: (key) => { try { return selectedStorage().getItem(key); } catch(_e) { return null; } },
-    setItem: (key,value) => { try { selectedStorage().setItem(key,value); } catch(_e) {} },
-    removeItem: (key) => { try { localStorage.removeItem(key); sessionStorage.removeItem(key); } catch(_e) {} }
+  /* =====================================================================
+     Supabase 로그인 / 회원가입
+     ===================================================================== */
+  function selectedStorage() { try { return localStorage.getItem(REMEMBER_KEY) === "0" ? sessionStorage : localStorage; } catch (_e) { return sessionStorage; } }
+  var authStorage = {
+    getItem: function (key) { try { return selectedStorage().getItem(key); } catch (_e) { return null; } },
+    setItem: function (key, value) { try { selectedStorage().setItem(key, value); } catch (_e) {} },
+    removeItem: function (key) { try { localStorage.removeItem(key); sessionStorage.removeItem(key); } catch (_e) {} }
   };
-  const loginCard = $("loginCard"), signupView = $("signupView"), mainView = $("mainView"), mainNav = $("mainNav");
-  const authTopline = $("authTopline");
-  let supabase = null;
-  if (window.supabase && SUPABASE_URL.includes("niuhmceiqxevuzmqsnhf") && SUPABASE_ANON_KEY.startsWith("eyJ")) {
+  var loginCard = $("loginCard"), signupView = $("signupView"), mainView = $("mainView"), mainNav = $("mainNav"), authTopline = $("authTopline");
+  var supabase = null;
+  if (window.supabase && SUPABASE_URL.indexOf("niuhmceiqxevuzmqsnhf") !== -1 && SUPABASE_ANON_KEY.indexOf("eyJ") === 0) {
     supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, { auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: false, storage: authStorage } });
   }
-  function status(id, message, kind){ const node=$(id); node.textContent=message||""; node.className="auth-status"+(kind?" "+kind:""); }
-  function normalizeNick(n){ return String(n||"").trim().normalize("NFC"); }
-  async function sha256Hex(value){
-    const digest = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(value));
-    return Array.from(new Uint8Array(digest)).map(b=>b.toString(16).padStart(2,"0")).join("");
+  function status(id, message, kind) { var n = $(id); n.textContent = message || ""; n.className = "auth-status" + (kind ? " " + kind : ""); }
+  function normalizeNick(n) { return String(n || "").trim().normalize("NFC"); }
+  async function sha256Hex(value) {
+    var digest = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(value));
+    return Array.from(new Uint8Array(digest)).map(function (b) { return b.toString(16).padStart(2, "0"); }).join("");
   }
-  async function nickEmail(nick){ return "u"+await sha256Hex(normalizeNick(nick).toLowerCase())+"@login.dripcollege.example.com"; }
-  async function authPassword(nick,code){ return await sha256Hex("dripcollege-auth-v1|"+normalizeNick(nick).toLowerCase()+"|"+String(code)); }
-  function saveRememberChoice(){
-    const remember = $("rememberLogin").checked;
-    try { localStorage.setItem(REMEMBER_KEY, remember ? "1" : "0"); } catch(_e) {}
-    if(!remember){ try { const old=localStorage.getItem("sb-"+new URL(SUPABASE_URL).hostname.split(".")[0]+"-auth-token"); if(old) sessionStorage.setItem("sb-"+new URL(SUPABASE_URL).hostname.split(".")[0]+"-auth-token",old); } catch(_e) {} }
+  async function nickEmail(nick) { return "u" + await sha256Hex(normalizeNick(nick).toLowerCase()) + "@login.dripcollege.example.com"; }
+  async function authPassword(nick, code) { return await sha256Hex("dripcollege-auth-v1|" + normalizeNick(nick).toLowerCase() + "|" + String(code)); }
+  function saveRememberChoice() {
+    var remember = $("rememberLogin").checked;
+    try { localStorage.setItem(REMEMBER_KEY, remember ? "1" : "0"); } catch (_e) {}
+    if (!remember) {
+      try { var k = "sb-" + new URL(SUPABASE_URL).hostname.split(".")[0] + "-auth-token", old = localStorage.getItem(k); if (old) sessionStorage.setItem(k, old); } catch (_e) {}
+    }
   }
-  try { $("rememberLogin").checked = localStorage.getItem(REMEMBER_KEY) !== "0"; } catch(_e) {}
-  function showLogin(){ document.body.classList.remove("signed-in"); signupView.hidden=true; mainView.hidden=false; loginCard.hidden=false; mainNav.hidden=true; authTopline.hidden=true; window.scrollTo({top:0,behavior:"smooth"}); }
-  function showSignup(){ mainView.hidden=true; signupView.hidden=false; status("signupStatus", "", ""); window.scrollTo({top:0,behavior:"smooth"}); }
-  function showSignedIn(nick){ document.body.classList.add("signed-in"); signupView.hidden=true; mainView.hidden=false; loginCard.hidden=true; mainNav.hidden=false; authTopline.hidden=false; $("signedInLabel").textContent=nick+" 님, 환영합니다!"; window.scrollTo({top:0,behavior:"smooth"}); }
-  function ready(){ if(!supabase){ status("loginStatus","Supabase 초기화에 실패했습니다. CDN 로딩, 프로젝트 URL, 공개 API 키를 확인해 주세요.","error"); return false; } return true; }
+  try { $("rememberLogin").checked = localStorage.getItem(REMEMBER_KEY) !== "0"; } catch (_e) {}
+
+  function showLogin() {
+    document.body.classList.remove("signed-in");
+    Object.keys(views).forEach(function (k) { views[k].hidden = (k !== "main"); });
+    signupView.hidden = true; loginCard.hidden = false; mainNav.hidden = true; authTopline.hidden = true;
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+  function showSignup() { mainView.hidden = true; signupView.hidden = false; status("signupStatus", "", ""); window.scrollTo({ top: 0, behavior: "smooth" }); }
+  function showSignedIn(nick) {
+    document.body.classList.add("signed-in");
+    signupView.hidden = true; mainView.hidden = false; loginCard.hidden = true; mainNav.hidden = false; authTopline.hidden = false;
+    $("signedInLabel").textContent = nick + " 님, 환영합니다!";
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+  function ready() { if (!supabase) { status("loginStatus", "Supabase 초기화에 실패했습니다. CDN 로딩, 프로젝트 URL, 공개 API 키를 확인해 주세요.", "error"); return false; } return true; }
+
   $("openSignup").addEventListener("click", showSignup);
   $("backToLogin").addEventListener("click", showLogin);
-  $("loginForm").addEventListener("submit", async (e)=>{
-    e.preventDefault(); if(!ready()) return;
-    const nick=normalizeNick($("loginNickname").value), code=$("loginCode").value;
-    saveRememberChoice();
-    status("loginStatus","로그인 중입니다…","");
-    try{
-      const email=await nickEmail(nick);
-      const password=await authPassword(nick,code);
-      const {data,error}=await supabase.auth.signInWithPassword({email,password});
-      if(error) throw error;
-      showSignedIn(nick); status("loginStatus","","");
-      try{ sessionStorage.setItem("dripcollege_nickname",nick); }catch(_e){}
-    }catch(err){ status("loginStatus","로그인에 실패했습니다. 닉네임과 인증번호를 확인해 주세요.","error"); console.error(err); }
+  $("loginForm").addEventListener("submit", async function (e) {
+    e.preventDefault(); if (!ready()) return;
+    var nick = normalizeNick($("loginNickname").value), code = $("loginCode").value;
+    saveRememberChoice(); status("loginStatus", "로그인 중입니다…", "");
+    try {
+      var res = await supabase.auth.signInWithPassword({ email: await nickEmail(nick), password: await authPassword(nick, code) });
+      if (res.error) throw res.error;
+      showSignedIn(nick); status("loginStatus", "", "");
+      try { sessionStorage.setItem("dripcollege_nickname", nick); } catch (_e) {}
+    } catch (err) { status("loginStatus", "로그인에 실패했습니다. 닉네임과 인증번호를 확인해 주세요.", "error"); console.error(err); }
   });
-  $("signupForm").addEventListener("submit", async (e)=>{
-    e.preventDefault(); if(!ready()) return;
-    const nick=normalizeNick($("signupNickname").value), code=$("signupCode").value;
-    if(nick.length<2){status("signupStatus","닉네임은 2자 이상 입력해 주세요.","error");return;}
-    if(!code){status("signupStatus","인증번호를 입력해 주세요.","error");return;}
-    saveRememberChoice();
-    status("signupStatus","등록된 닉네임과 인증번호를 확인하고 있습니다…","");
-    try{
-      const {data:valid,error:checkError}=await supabase.rpc("validate_member_invite",{p_nickname:nick,p_auth_code:code});
-      if(checkError) throw checkError;
-      if(valid!==true){status("signupStatus","등록 정보를 찾을 수 없거나 이미 사용된 인증번호입니다. 관리자에게 확인해 주세요.","error");return;}
-      const email=await nickEmail(nick);
-      const password=await authPassword(nick,code);
-      const {data,error}=await supabase.auth.signUp({email,password,options:{data:{nickname:nick}}});
-      if(error) throw error;
-      if(!data.session || !data.user){
-        status("signupStatus","Supabase에서 이메일 확인을 비활성화해야 닉네임/인증번호만으로 가입할 수 있습니다. Auth 설정을 확인해 주세요.","error");return;
-      }
-      const {data:claimed,error:claimError}=await supabase.rpc("claim_member_invite",{p_nickname:nick,p_auth_code:code});
-      if(claimError || claimed!==true){
-        await supabase.auth.signOut();
-        status("signupStatus","계정은 생성됐지만 인증번호 등록 완료에 실패했습니다. 관리자에게 문의해 주세요.","error");
-        console.error(claimError);return;
-      }
-      saveRememberChoice();
-      showSignedIn(nick); status("signupStatus","가입이 완료되었습니다!", "ok");
-      try{ sessionStorage.setItem("dripcollege_nickname",nick); }catch(_e){}
-    }catch(err){
-      status("signupStatus","회원가입에 실패했습니다. 관리자에게 등록된 닉네임/인증번호인지 확인해 주세요.","error"); console.error(err);
-    }
+  $("signupForm").addEventListener("submit", async function (e) {
+    e.preventDefault(); if (!ready()) return;
+    var nick = normalizeNick($("signupNickname").value), code = $("signupCode").value;
+    if (nick.length < 2) { status("signupStatus", "닉네임은 2자 이상 입력해 주세요.", "error"); return; }
+    if (!code) { status("signupStatus", "인증번호를 입력해 주세요.", "error"); return; }
+    saveRememberChoice(); status("signupStatus", "등록된 닉네임과 인증번호를 확인하고 있습니다…", "");
+    try {
+      var chk = await supabase.rpc("validate_member_invite", { p_nickname: nick, p_auth_code: code });
+      if (chk.error) throw chk.error;
+      if (chk.data !== true) { status("signupStatus", "등록 정보를 찾을 수 없거나 이미 사용된 인증번호입니다. 관리자에게 확인해 주세요.", "error"); return; }
+      var su = await supabase.auth.signUp({ email: await nickEmail(nick), password: await authPassword(nick, code), options: { data: { nickname: nick } } });
+      if (su.error) throw su.error;
+      if (!su.data.session || !su.data.user) { status("signupStatus", "Supabase에서 이메일 확인을 비활성화해야 닉네임/인증번호만으로 가입할 수 있습니다. Auth 설정을 확인해 주세요.", "error"); return; }
+      var cl = await supabase.rpc("claim_member_invite", { p_nickname: nick, p_auth_code: code });
+      if (cl.error || cl.data !== true) { await supabase.auth.signOut(); status("signupStatus", "계정은 생성됐지만 인증번호 등록 완료에 실패했습니다. 관리자에게 문의해 주세요.", "error"); console.error(cl.error); return; }
+      saveRememberChoice(); showSignedIn(nick); status("signupStatus", "가입이 완료되었습니다!", "ok");
+      try { sessionStorage.setItem("dripcollege_nickname", nick); } catch (_e) {}
+    } catch (err) { status("signupStatus", "회원가입에 실패했습니다. 관리자에게 등록된 닉네임/인증번호인지 확인해 주세요.", "error"); console.error(err); }
   });
-  $("logoutBtn").addEventListener("click", async ()=>{
-    if(supabase) await supabase.auth.signOut();
-    try{sessionStorage.removeItem("dripcollege_nickname");}catch(_e){}
-    $("loginCode").value=""; showLogin(); status("loginStatus","로그아웃되었습니다.","ok");
+  $("logoutBtn").addEventListener("click", async function () {
+    if (supabase) await supabase.auth.signOut();
+    try { sessionStorage.removeItem("dripcollege_nickname"); } catch (_e) {}
+    $("loginCode").value = ""; showLogin(); status("loginStatus", "로그아웃되었습니다.", "ok");
   });
-  if(supabase){
-    supabase.auth.getSession().then(({data})=>{
-      if(data.session){ const nick=data.session.user.user_metadata?.nickname || "회원"; showSignedIn(nick); }
+  if (supabase) {
+    supabase.auth.getSession().then(function (r) {
+      if (r.data.session) { var u = r.data.session.user; showSignedIn((u.user_metadata && u.user_metadata.nickname) || "회원"); }
     });
-    supabase.auth.onAuthStateChange((event,session)=>{
-      if(event==="SIGNED_OUT" || !session){ showLogin(); }
+    supabase.auth.onAuthStateChange(function (event, session) {
+      window.__dripCurrentUser = session ? session.user : null;
+      window.__dripIsAdmin = !!(session && session.user && session.user.email === ADMIN_EMAIL);
+      if (event === "SIGNED_OUT" || !session) showLogin();
     });
   } else {
-    status("loginStatus","Supabase 클라이언트 초기화에 실패했습니다. 인터넷 연결과 Supabase 설정을 확인해 주세요.","");
+    status("loginStatus", "Supabase 클라이언트 초기화에 실패했습니다. 인터넷 연결과 Supabase 설정을 확인해 주세요.", "");
   }
-  // Supabase 기반 게시물/댓글/사진/좋아요
-  let editingPostId=null, selectedPostId=null, selectedCategory="맛집";
-  let kakaoMap=null, kakaoMarkers=[], kakaoInfoWindow=null, geocoder=null, ps=null;
+  async function currentUser() { var r = await supabase.auth.getUser(); return r.data.user; }
 
-  const boardStatus=(id,msg)=>{const n=$(id);if(n)n.textContent=msg||"";};
-  function escapeHtml(v){return String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
-  function isAdmin(){return !!(window.__dripCurrentUser && window.__dripCurrentUser.email===window.__dripAdminEmail);}
-  async function currentUser(){const {data:{user}}=await supabase.auth.getUser();return user;}
-  async function loadCommunity(){
-    if(!supabase)return; const feed=$("communityFeed");feed.innerHTML="";boardStatus("communityStatus","게시글을 불러오는 중…");
-    const {data:posts,error}=await supabase.from("community_posts").select("id,title,content,author_id,author_nickname,created_at,updated_at,image_url,like_count,community_comments(id,content,author_id,author_nickname,created_at)").order("created_at",{ascending:false});
-    if(error){boardStatus("communityStatus","게시판 테이블 설정을 확인해 주세요: "+error.message);return;}
-    const user=await currentUser(); boardStatus("communityStatus",posts.length?"":"아직 게시물이 없습니다. 첫 글을 작성해 보세요.");
-    for(const p of posts){
-      const row=document.createElement("div");row.className="community-row";row.setAttribute("role","button");row.tabIndex=0;
-      row.innerHTML=`<div class="community-row-title">${escapeHtml(p.title)}</div><div class="community-row-meta"><span>♥ ${Number(p.like_count||0)}</span><span>💬 ${(p.community_comments||[]).length}</span></div>`;
-      const open=()=>{if(selectedPostId===p.id){selectedPostId=null;}else selectedPostId=p.id;loadCommunity();};row.onclick=open;row.onkeydown=e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();open();}};feed.appendChild(row);
-      if(selectedPostId!==p.id)continue;
-      const own=user&&user.id===p.author_id, admin=window.__dripIsAdmin===true;
-      const detail=document.createElement("article");detail.className="community-detail";
-      detail.innerHTML=`<h3>${escapeHtml(p.title)}</h3><div class="community-meta">${escapeHtml(p.author_nickname)} · ${new Date(p.created_at).toLocaleString("ko-KR")}</div><div class="community-body">${escapeHtml(p.content)}</div>${p.image_url?`<a href="${escapeHtml(p.image_url)}" target="_blank" rel="noopener"><img class="community-photo" src="${escapeHtml(p.image_url)}" alt="게시물 첨부 사진"></a>`:""}<div class="community-actions"><button class="like-btn" data-like>♥ 좋아요 ${Number(p.like_count||0)}</button>${own?'<button data-edit>수정</button>':''}${own||admin?'<button data-delete>삭제</button>':''}</div><div class="comment-list"><strong>댓글 ${(p.community_comments||[]).length}개</strong><div class="comments"></div><form class="community-form comment-form"><textarea maxlength="2000" placeholder="댓글을 입력해 주세요." required></textarea><button type="submit">댓글 작성</button><div class="community-status"></div></form></div>`;
-      const comments=detail.querySelector(".comments");(p.community_comments||[]).sort((a,b)=>new Date(a.created_at)-new Date(b.created_at)).forEach(c=>{const item=document.createElement("div");item.className="comment-item";item.innerHTML=`<strong>${escapeHtml(c.author_nickname)}</strong> · ${escapeHtml(c.content)} ${(user&&user.id===c.author_id)||admin?'<button data-comment-delete>삭제</button>':''}`;const del=item.querySelector("[data-comment-delete]");if(del)del.onclick=async()=>{const {error}=await supabase.from("community_comments").delete().eq("id",c.id);if(error)alert("댓글 삭제 실패: "+error.message);else loadCommunity();};comments.appendChild(item);});
-      detail.querySelector("[data-like]").onclick=async()=>{const {data,error}=await supabase.rpc("toggle_community_like",{p_post_id:p.id});if(error)alert("좋아요 기능 SQL을 먼저 실행해 주세요: "+error.message);else loadCommunity();};
-      const edit=detail.querySelector("[data-edit]");if(edit)edit.onclick=()=>{editingPostId=p.id;$("communityTitle").value=p.title;$("communityContent").value=p.content;$("communityFormTitle").textContent="게시물 수정";$("communityPhotoPreview").innerHTML=p.image_url?`<img class="community-photo" src="${escapeHtml(p.image_url)}" alt="현재 사진"><small>새 사진을 선택하면 교체됩니다.</small>`:"";$("communityComposer").hidden=false;window.scrollTo({top:0,behavior:"smooth"});};
-      const del=detail.querySelector("[data-delete]");if(del)del.onclick=async()=>{if(!confirm("이 게시물을 삭제할까요? 댓글도 함께 삭제됩니다."))return;const {error}=await supabase.from("community_posts").delete().eq("id",p.id);if(error)alert("게시물 삭제 실패: "+error.message);else{selectedPostId=null;loadCommunity();}};
-      detail.querySelector(".comment-form").onsubmit=async e=>{e.preventDefault();const content=e.currentTarget.querySelector("textarea").value.trim();const u=await currentUser();if(!u){alert("로그인이 필요합니다.");return;}const nick=u.user_metadata?.nickname||"회원";const {error}=await supabase.from("community_comments").insert({post_id:p.id,content,author_id:u.id,author_nickname:nick});if(error)alert("댓글 작성 실패: "+error.message);else loadCommunity();};
-      feed.appendChild(detail);
-    }
-  }
-  $("goBoard").addEventListener("click",()=>{selectedPostId=null;setTimeout(loadCommunity,0);});
-  $("newCommunityPost").onclick=()=>{editingPostId=null;$("communityTitle").value="";$("communityContent").value="";$("communityPhoto").value="";$("communityPhotoPreview").innerHTML="";$("communityFormTitle").textContent="새 글 작성";$("communityComposer").hidden=false;};
-  $("cancelCommunityPost").onclick=()=>{$("communityComposer").hidden=true;editingPostId=null;};
-  $("communityPhoto").onchange=()=>{const f=$("communityPhoto").files[0];if(!f){$("communityPhotoPreview").innerHTML="";return;}if(f.size>5*1024*1024){alert("사진은 5MB 이하만 첨부할 수 있습니다.");$("communityPhoto").value="";return;}if(!/^image\/(jpeg|png|webp)$/.test(f.type)){alert("JPG, PNG, WEBP 사진만 첨부할 수 있습니다.");$("communityPhoto").value="";return;}const url=URL.createObjectURL(f);$("communityPhotoPreview").innerHTML=`<img class="community-photo" src="${url}" alt="사진 미리보기">`;};
-  async function uploadCommunityPhoto(file){if(!file)return null;const ext=(file.name.split(".").pop()||"jpg").toLowerCase().replace(/[^a-z0-9]/g,"");const path=`${(await currentUser()).id}/${Date.now()}-${crypto.randomUUID()}.${ext}`;const {error}=await supabase.storage.from("community-photos").upload(path,file,{upsert:false,contentType:file.type});if(error)throw error;const {data}=supabase.storage.from("community-photos").getPublicUrl(path);return data.publicUrl;}
-  $("communityComposer").onsubmit=async e=>{e.preventDefault();if(!supabase)return;const u=await currentUser();if(!u){boardStatus("communityPostStatus","로그인이 필요합니다.");return;}const title=$("communityTitle").value.trim(),content=$("communityContent").value.trim(),nickname=u.user_metadata?.nickname||"회원";let imageUrl=null;try{const file=$("communityPhoto").files[0];if(file)imageUrl=await uploadCommunityPhoto(file);let result;if(editingPostId){const updates={title,content,updated_at:new Date().toISOString()};if(imageUrl)updates.image_url=imageUrl;result=await supabase.from("community_posts").update(updates).eq("id",editingPostId);}else result=await supabase.from("community_posts").insert({title,content,author_id:u.id,author_nickname:nickname,image_url:imageUrl});if(result.error)throw result.error;$("communityComposer").hidden=true;editingPostId=null;$("communityPhoto").value="";$("communityPhotoPreview").innerHTML="";loadCommunity();}catch(err){boardStatus("communityPostStatus","저장 실패: "+err.message+" (게시판 SQL 및 사진 저장소 설정을 확인해 주세요.)");}};
+  /* =====================================================================
+     수다게시판 (Supabase)
+     ===================================================================== */
+  var editingPostId = null, selectedPostId = null;
+  async function loadCommunity() {
+    if (!supabase) return;
+    var feed = $("communityFeed"); feed.innerHTML = ""; setText("communityStatus", "게시글을 불러오는 중…");
+    var q = await supabase.from("community_posts").select("id,title,content,author_id,author_nickname,created_at,updated_at,image_url,like_count,community_comments(id,content,author_id,author_nickname,created_at)").order("created_at", { ascending: false });
+    if (q.error) { setText("communityStatus", "게시판 테이블 설정을 확인해 주세요: " + q.error.message); return; }
+    var posts = q.data, user = await currentUser();
+    setText("communityStatus", posts.length ? "" : "아직 게시물이 없습니다. 첫 글을 작성해 보세요.");
+    posts.forEach(function (p) {
+      var row = document.createElement("div"); row.className = "community-row"; row.setAttribute("role", "button"); row.tabIndex = 0;
+      row.innerHTML = '<div class="community-row-title">' + escapeHtml(p.title) + '</div><div class="community-row-meta"><span>♥ ' + Number(p.like_count || 0) + '</span><span>💬 ' + (p.community_comments || []).length + '</span></div>';
+      var open = function () { selectedPostId = (selectedPostId === p.id) ? null : p.id; loadCommunity(); };
+      row.onclick = open; row.onkeydown = function (e) { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); open(); } };
+      feed.appendChild(row);
+      if (selectedPostId !== p.id) return;
 
-  // ---------------- Kakao 지도 API 연동 ----------------
-  function placesStatus(msg){boardStatus("placesStatus",msg);}
-  
-  function initKakaoMap(){
-    if(kakaoMap) {
-      setTimeout(()=>kakaoMap.relayout(), 100);
-      return;
-    }
-    if(!window.kakao || !window.kakao.maps){
-      placesStatus("Kakao 지도 API를 불러올 수 없습니다. APP KEY 및 도메인 설정을 확인하세요.");
-      return;
-    }
-    kakao.maps.load(()=>{
-      const container = $("placesMap");
-      const options = {
-        center: new kakao.maps.LatLng(37.395297, 127.110449), // 기본 중심좌표: 판교
-        level: 4
+      var own = user && user.id === p.author_id, admin = window.__dripIsAdmin === true;
+      var detail = document.createElement("article"); detail.className = "community-detail";
+      detail.innerHTML = '<h3>' + escapeHtml(p.title) + '</h3><div class="community-meta">' + escapeHtml(p.author_nickname) + ' · ' + new Date(p.created_at).toLocaleString("ko-KR") + '</div><div class="community-body">' + escapeHtml(p.content) + '</div>'
+        + (p.image_url ? '<a href="' + escapeHtml(p.image_url) + '" target="_blank" rel="noopener"><img class="community-photo" src="' + escapeHtml(p.image_url) + '" alt="게시물 첨부 사진"></a>' : '')
+        + '<div class="community-actions"><button class="like-btn" data-like type="button">♥ 좋아요 ' + Number(p.like_count || 0) + '</button>' + (own ? '<button data-edit type="button">수정</button>' : '') + (own || admin ? '<button data-delete type="button">삭제</button>' : '') + '</div>'
+        + '<div class="comment-list"><strong>댓글 ' + (p.community_comments || []).length + '개</strong><div class="comments"></div><form class="community-form comment-form"><textarea maxlength="2000" placeholder="댓글을 입력해 주세요." required></textarea><button type="submit">댓글 작성</button><div class="community-status"></div></form></div>';
+      var comments = detail.querySelector(".comments");
+      (p.community_comments || []).sort(function (a, b) { return new Date(a.created_at) - new Date(b.created_at); }).forEach(function (c) {
+        var item = document.createElement("div"); item.className = "comment-item";
+        item.innerHTML = '<strong>' + escapeHtml(c.author_nickname) + '</strong> · ' + escapeHtml(c.content) + ' ' + (((user && user.id === c.author_id) || admin) ? '<button data-comment-delete type="button">삭제</button>' : '');
+        var d = item.querySelector("[data-comment-delete]");
+        if (d) d.onclick = async function () { var r = await supabase.from("community_comments").delete().eq("id", c.id); if (r.error) alert("댓글 삭제 실패: " + r.error.message); else loadCommunity(); };
+        comments.appendChild(item);
+      });
+      detail.querySelector("[data-like]").onclick = async function () { var r = await supabase.rpc("toggle_community_like", { p_post_id: p.id }); if (r.error) alert("좋아요 기능 SQL을 먼저 실행해 주세요: " + r.error.message); else loadCommunity(); };
+      var edit = detail.querySelector("[data-edit]");
+      if (edit) edit.onclick = function () {
+        editingPostId = p.id; $("communityTitle").value = p.title; $("communityContent").value = p.content; $("communityFormTitle").textContent = "게시물 수정";
+        $("communityPhotoPreview").innerHTML = p.image_url ? '<img class="community-photo" src="' + escapeHtml(p.image_url) + '" alt="현재 사진"><small>새 사진을 선택하면 교체됩니다.</small>' : "";
+        $("communityComposer").hidden = false; window.scrollTo({ top: 0, behavior: "smooth" });
       };
-      kakaoMap = new kakao.maps.Map(container, options);
-      kakaoInfoWindow = new kakao.maps.InfoWindow({zIndex:1});
-      if(kakao.maps.services){
-        geocoder = new kakao.maps.services.Geocoder();
-        ps = new kakao.maps.services.Places();
-      }
-      setTimeout(()=>kakaoMap.relayout(), 100);
+      var del = detail.querySelector("[data-delete]");
+      if (del) del.onclick = async function () {
+        if (!confirm("이 게시물을 삭제할까요? 댓글도 함께 삭제됩니다.")) return;
+        var r = await supabase.from("community_posts").delete().eq("id", p.id);
+        if (r.error) alert("게시물 삭제 실패: " + r.error.message); else { selectedPostId = null; loadCommunity(); }
+      };
+      detail.querySelector(".comment-form").onsubmit = async function (e) {
+        e.preventDefault();
+        var content = e.currentTarget.querySelector("textarea").value.trim(), u = await currentUser();
+        if (!u) { alert("로그인이 필요합니다."); return; }
+        var r = await supabase.from("community_comments").insert({ post_id: p.id, content: content, author_id: u.id, author_nickname: (u.user_metadata && u.user_metadata.nickname) || "회원" });
+        if (r.error) alert("댓글 작성 실패: " + r.error.message); else loadCommunity();
+      };
+      feed.appendChild(detail);
+    });
+  }
+  $("newCommunityPost").onclick = function () {
+    editingPostId = null; $("communityTitle").value = ""; $("communityContent").value = ""; $("communityPhoto").value = ""; $("communityPhotoPreview").innerHTML = "";
+    $("communityFormTitle").textContent = "새 글 작성"; $("communityComposer").hidden = false;
+  };
+  $("cancelCommunityPost").onclick = function () { $("communityComposer").hidden = true; editingPostId = null; };
+  $("communityPhoto").onchange = function () {
+    var f = $("communityPhoto").files[0];
+    if (!f) { $("communityPhotoPreview").innerHTML = ""; return; }
+    if (f.size > 5 * 1024 * 1024) { alert("사진은 5MB 이하만 첨부할 수 있습니다."); $("communityPhoto").value = ""; return; }
+    if (!/^image\/(jpeg|png|webp)$/.test(f.type)) { alert("JPG, PNG, WEBP 사진만 첨부할 수 있습니다."); $("communityPhoto").value = ""; return; }
+    $("communityPhotoPreview").innerHTML = '<img class="community-photo" src="' + URL.createObjectURL(f) + '" alt="사진 미리보기">';
+  };
+  async function uploadCommunityPhoto(file) {
+    if (!file) return null;
+    var ext = (file.name.split(".").pop() || "jpg").toLowerCase().replace(/[^a-z0-9]/g, "");
+    var path = (await currentUser()).id + "/" + Date.now() + "-" + crypto.randomUUID() + "." + ext;
+    var up = await supabase.storage.from("community-photos").upload(path, file, { upsert: false, contentType: file.type });
+    if (up.error) throw up.error;
+    return supabase.storage.from("community-photos").getPublicUrl(path).data.publicUrl;
+  }
+  $("communityComposer").onsubmit = async function (e) {
+    e.preventDefault(); if (!supabase) return;
+    var u = await currentUser();
+    if (!u) { setText("communityPostStatus", "로그인이 필요합니다."); return; }
+    var title = $("communityTitle").value.trim(), content = $("communityContent").value.trim(), nickname = (u.user_metadata && u.user_metadata.nickname) || "회원";
+    try {
+      var imageUrl = null, file = $("communityPhoto").files[0];
+      if (file) imageUrl = await uploadCommunityPhoto(file);
+      var result;
+      if (editingPostId) {
+        var updates = { title: title, content: content, updated_at: new Date().toISOString() };
+        if (imageUrl) updates.image_url = imageUrl;
+        result = await supabase.from("community_posts").update(updates).eq("id", editingPostId);
+      } else result = await supabase.from("community_posts").insert({ title: title, content: content, author_id: u.id, author_nickname: nickname, image_url: imageUrl });
+      if (result.error) throw result.error;
+      $("communityComposer").hidden = true; editingPostId = null; $("communityPhoto").value = ""; $("communityPhotoPreview").innerHTML = ""; loadCommunity();
+    } catch (err) { setText("communityPostStatus", "저장 실패: " + err.message + " (게시판 SQL 및 사진 저장소 설정을 확인해 주세요.)"); }
+  };
+
+  /* =====================================================================
+     Kakao 지도 · 장소 공유 (맛집 / 카페 / 명소 / 숙소 / 기타)
+     ===================================================================== */
+  var CAT_EMOJI = { "맛집": "🍜", "카페": "☕", "명소": "📸", "숙소": "🛏️", "기타": "📌" };
+  var selectedCategory = "전체";
+  var kakaoMap = null, kakaoMarkers = [], kakaoInfoWindow = null, geocoder = null, ps = null, pickMarker = null, mapReady = false;
+
+  function placesStatus(msg) { setText("placesStatus", msg); }
+
+  function initKakaoMap() {
+    if (mapReady && kakaoMap) { setTimeout(function () { kakaoMap.relayout(); }, 100); loadSavedPlaces(); return; }
+    if (!window.kakao || !window.kakao.maps) {
+      placesStatus("Kakao 지도 API를 불러올 수 없습니다. JavaScript 키와 카카오 개발자 콘솔의 Web 사이트 도메인 등록을 확인하세요. (장소 목록은 계속 볼 수 있어요)");
+      loadSavedPlaces(); return;
+    }
+    kakao.maps.load(function () {
+      kakaoMap = new kakao.maps.Map($("placesMap"), { center: new kakao.maps.LatLng(37.395297, 127.110449), level: 4 });
+      kakaoInfoWindow = new kakao.maps.InfoWindow({ zIndex: 1 });
+      if (kakao.maps.services) { geocoder = new kakao.maps.services.Geocoder(); ps = new kakao.maps.services.Places(); }
+      mapReady = true;
+
+      // 지도를 클릭해 위치 지정
+      kakao.maps.event.addListener(kakaoMap, "click", function (e) {
+        var ll = e.latLng;
+        $("placeLat").value = ll.getLat(); $("placeLng").value = ll.getLng();
+        if (pickMarker) pickMarker.setMap(null);
+        pickMarker = new kakao.maps.Marker({ position: ll, map: kakaoMap });
+        if (geocoder) {
+          geocoder.coord2Address(ll.getLng(), ll.getLat(), function (r, s) {
+            if (s === kakao.maps.services.Status.OK && r[0]) {
+              $("placeAddress").value = (r[0].road_address && r[0].road_address.address_name) || (r[0].address && r[0].address.address_name) || "";
+            }
+          });
+        }
+        placesStatus("지도에서 위치를 선택했어요. 장소명과 메모를 적고 저장해 주세요.");
+      });
+
+      setTimeout(function () { kakaoMap.relayout(); }, 100);
       loadSavedPlaces();
     });
   }
 
-  function clearKakaoMarkers(){
-    kakaoMarkers.forEach(m => m.setMap(null));
-    kakaoMarkers = [];
-  }
+  function clearKakaoMarkers() { kakaoMarkers.forEach(function (m) { m.setMap(null); }); kakaoMarkers = []; }
 
-  // 주소 또는 키워드로 카카오 좌표 검색
-  function searchKakaoAddressOrKeyword(){
-    const addr = $("placeAddress").value.trim();
-    if(!addr){
-      placesStatus("주소 또는 검색할 장소명을 입력해주세요.");
-      return;
-    }
+  function searchKakaoAddressOrKeyword() {
+    var addr = $("placeAddress").value.trim();
+    if (!addr) { placesStatus("주소 또는 검색할 장소명을 입력해주세요."); return; }
+    if (!mapReady || !ps) { placesStatus("지도가 아직 준비되지 않았습니다. 잠시 후 다시 시도해 주세요."); return; }
     placesStatus("Kakao 지도로 검색 중...");
-    
-    // 1. 키워드 검색 시도
-    if(ps){
-      ps.keywordSearch(addr, (data, statusRes) => {
-        if(statusRes === kakao.maps.services.Status.OK) {
-          const first = data[0];
-          const lat = parseFloat(first.y);
-          const lng = parseFloat(first.x);
-          $("placeLat").value = lat;
-          $("placeLng").value = lng;
-          if(!$("placeName").value.trim()) $("placeName").value = first.place_name;
-          
-          const moveLatLon = new kakao.maps.LatLng(lat, lng);
-          kakaoMap.setCenter(moveLatLon);
-          
-          // 임시 마커 표시
-          clearKakaoMarkers();
-          const marker = new kakao.maps.Marker({ position: moveLatLon, map: kakaoMap });
-          kakaoMarkers.push(marker);
-          kakaoInfoWindow.setContent(`<div class="kakao-overlay-iw">${escapeHtml(first.place_name)}</div>`);
-          kakaoInfoWindow.open(kakaoMap, marker);
-
-          placesStatus(`위치를 찾았습니다: ${first.place_name} (${first.address_name || first.road_address_name})`);
-        } else if(geocoder) {
-          // 2. 주소 검색 시도
-          geocoder.addressSearch(addr, (result, statusGeo) => {
-            if (statusGeo === kakao.maps.services.Status.OK) {
-              const lat = parseFloat(result[0].y);
-              const lng = parseFloat(result[0].x);
-              $("placeLat").value = lat;
-              $("placeLng").value = lng;
-
-              const moveLatLon = new kakao.maps.LatLng(lat, lng);
-              kakaoMap.setCenter(moveLatLon);
-
-              clearKakaoMarkers();
-              const marker = new kakao.maps.Marker({ position: moveLatLon, map: kakaoMap });
-              kakaoMarkers.push(marker);
-
-              placesStatus("주소 위치를 찾았습니다.");
-            } else {
-              placesStatus("장소를 찾을 수 없습니다. 정확한 주소나 키워드로 다시 검색해 주세요.");
-            }
-          });
-        } else {
-          placesStatus("검색 서비스를 이용할 수 없습니다.");
-        }
-      });
+    function pick(lat, lng, label) {
+      $("placeLat").value = lat; $("placeLng").value = lng;
+      var pos = new kakao.maps.LatLng(lat, lng);
+      kakaoMap.setCenter(pos);
+      if (pickMarker) pickMarker.setMap(null);
+      pickMarker = new kakao.maps.Marker({ position: pos, map: kakaoMap });
+      if (label) { kakaoInfoWindow.setContent('<div class="kakao-overlay-iw">' + escapeHtml(label) + '</div>'); kakaoInfoWindow.open(kakaoMap, pickMarker); }
     }
+    ps.keywordSearch(addr, function (data, st) {
+      if (st === kakao.maps.services.Status.OK) {
+        var f = data[0];
+        if (!$("placeName").value.trim()) $("placeName").value = f.place_name;
+        $("placeAddress").value = f.road_address_name || f.address_name || addr;
+        pick(parseFloat(f.y), parseFloat(f.x), f.place_name);
+        placesStatus("위치를 찾았습니다: " + f.place_name + " (" + (f.road_address_name || f.address_name) + ")");
+      } else if (geocoder) {
+        geocoder.addressSearch(addr, function (res, sg) {
+          if (sg === kakao.maps.services.Status.OK) { pick(parseFloat(res[0].y), parseFloat(res[0].x), null); placesStatus("주소 위치를 찾았습니다."); }
+          else placesStatus("장소를 찾을 수 없습니다. 정확한 주소나 키워드로 다시 검색하거나 지도를 직접 클릭해 주세요.");
+        });
+      } else placesStatus("검색 서비스를 이용할 수 없습니다.");
+    });
   }
 
-  async function loadSavedPlaces(){
-    if(!supabase) return;
-    const {data, error} = await supabase.from("shared_places").select("id,category,name,address,memo,author_id,author_nickname,created_at,lat,lon").eq("category", selectedCategory).order("created_at",{ascending:false});
-    const box = $("savedPlaces");
-    box.innerHTML = "";
-    
-    if(error){
-      placesStatus("장소 저장 DB 불러오기 실패: " + error.message);
-      return;
-    }
-    placesStatus(data.length ? "" : "아직 이 카테고리에 저장된 장소가 없습니다.");
-    
-    if(kakaoMap) clearKakaoMarkers();
-    const bounds = kakaoMap && kakao.maps ? new kakao.maps.LatLngBounds() : null;
-    let hasCoords = false;
+  async function loadSavedPlaces() {
+    if (!supabase) return;
+    var q = supabase.from("shared_places").select("id,category,name,address,memo,author_id,author_nickname,created_at,lat,lon").order("created_at", { ascending: false });
+    if (selectedCategory !== "전체") q = q.eq("category", selectedCategory);
+    var res = await q, box = $("savedPlaces"); box.innerHTML = "";
+    if (res.error) { placesStatus("장소 불러오기 실패: " + res.error.message); return; }
+    var data = res.data;
+    placesStatus(data.length ? "" : "아직 저장된 장소가 없습니다. 첫 장소를 공유해 보세요!");
 
-    data.forEach(p => {
-      const d = document.createElement("article");
-      d.className = "saved-place";
-      const kakaoMapUrl = (p.lat && p.lon) ? `https://map.kakao.com/link/map/${encodeURIComponent(p.name)},${p.lat},${p.lon}` : `https://map.kakao.com/link/search/${encodeURIComponent(p.name)}`;
-      
-      d.innerHTML = `<strong>${escapeHtml(p.name)}</strong><div class="community-meta">${escapeHtml(p.author_nickname)} · ${new Date(p.created_at).toLocaleDateString("ko-KR")}</div><div>${escapeHtml(p.address)}</div><p>${escapeHtml(p.memo||"")}</p><a href="${kakaoMapUrl}" target="_blank" rel="noopener">Kakao 지도로 길찾기/보기 ↗</a> ${(window.__dripCurrentUser?.id===p.author_id||window.__dripIsAdmin)?'<button data-place-delete style="margin-left:8px;">삭제</button>':''}`;
-      
-      const del = d.querySelector("[data-place-delete]");
-      if(del) del.onclick = async () => {
-        if(!confirm("이 장소 공유를 삭제할까요?")) return;
-        const {error} = await supabase.from("shared_places").delete().eq("id", p.id);
-        if(error) alert(error.message); else loadSavedPlaces();
-      };
+    if (kakaoMap) { clearKakaoMarkers(); if (pickMarker) { pickMarker.setMap(null); pickMarker = null; } }
+    var bounds = (kakaoMap && window.kakao && kakao.maps) ? new kakao.maps.LatLngBounds() : null, hasCoords = false;
+
+    data.forEach(function (p) {
+      var emoji = CAT_EMOJI[p.category] || "📌";
+      var d = document.createElement("article"); d.className = "saved-place";
+      var url = (p.lat != null && p.lon != null) ? "https://map.kakao.com/link/map/" + encodeURIComponent(p.name) + "," + p.lat + "," + p.lon : "https://map.kakao.com/link/search/" + encodeURIComponent(p.name);
+      var canDelete = (window.__dripCurrentUser && window.__dripCurrentUser.id === p.author_id) || window.__dripIsAdmin;
+      d.innerHTML = '<strong>' + emoji + ' ' + escapeHtml(p.name) + '</strong><span class="dept">' + escapeHtml(p.category) + '</span><div class="community-meta">' + escapeHtml(p.author_nickname) + ' · ' + new Date(p.created_at).toLocaleDateString("ko-KR") + '</div><div>' + escapeHtml(p.address) + '</div><p>' + escapeHtml(p.memo || "") + '</p><a href="' + url + '" target="_blank" rel="noopener">Kakao 지도에서 보기/길찾기 ↗</a>' + (canDelete ? ' <button data-place-delete type="button" style="margin-left:8px;">삭제</button>' : '');
       box.appendChild(d);
 
-      // 카카오 지도 마커 표시
-      if(kakaoMap && p.lat != null && p.lon != null){
-        const pos = new kakao.maps.LatLng(p.lat, p.lon);
-        const marker = new kakao.maps.Marker({
-          position: pos,
-          map: kakaoMap,
-          title: p.name
-        });
-        kakaoMarkers.push(marker);
-        hasCoords = true;
-        if(bounds) bounds.extend(pos);
+      var del = d.querySelector("[data-place-delete]");
+      if (del) del.onclick = async function (ev) {
+        ev.stopPropagation();
+        if (!confirm("이 장소 공유를 삭제할까요?")) return;
+        var r = await supabase.from("shared_places").delete().eq("id", p.id);
+        if (r.error) alert(r.error.message); else loadSavedPlaces();
+      };
 
-        kakao.maps.event.addListener(marker, 'click', function() {
-          kakaoInfoWindow.setContent(`<div class="kakao-overlay-iw"><b>${escapeHtml(p.name)}</b><br><span style="font-size:11px;color:#666;">${escapeHtml(p.address)}</span></div>`);
+      if (kakaoMap && p.lat != null && p.lon != null) {
+        var pos = new kakao.maps.LatLng(p.lat, p.lon);
+        var marker = new kakao.maps.Marker({ position: pos, map: kakaoMap, title: p.name });
+        kakaoMarkers.push(marker); hasCoords = true; if (bounds) bounds.extend(pos);
+        var openInfo = function () {
+          kakaoInfoWindow.setContent('<div class="kakao-overlay-iw">' + emoji + ' <b>' + escapeHtml(p.name) + '</b><br><span style="font-size:11px;color:#666;">' + escapeHtml(p.address) + '</span></div>');
           kakaoInfoWindow.open(kakaoMap, marker);
+        };
+        kakao.maps.event.addListener(marker, "click", openInfo);
+        d.style.cursor = "pointer";
+        d.addEventListener("click", function (ev) {
+          if (ev.target.closest("a,button")) return;
+          kakaoMap.setLevel(3); kakaoMap.panTo(pos); openInfo();
         });
       }
     });
-
-    if(kakaoMap && hasCoords && bounds){
-      kakaoMap.setBounds(bounds);
-    }
+    if (kakaoMap && hasCoords && bounds) kakaoMap.setBounds(bounds);
   }
 
-  $("goPlaces").onclick = () => {
-    showView("places");
-    initKakaoMap();
-  };
-
+  Array.prototype.forEach.call($("placesTabs").querySelectorAll("button"), function (b) {
+    b.onclick = function () {
+      Array.prototype.forEach.call($("placesTabs").querySelectorAll("button"), function (x) { x.classList.remove("active"); });
+      b.classList.add("active");
+      selectedCategory = b.dataset.category;
+      if (selectedCategory !== "전체") $("placeCategory").value = selectedCategory;
+      loadSavedPlaces();
+    };
+  });
   $("btnSearchKakao").onclick = searchKakaoAddressOrKeyword;
+  $("placeAddress").addEventListener("keydown", function (e) { if (e.key === "Enter") { e.preventDefault(); searchKakaoAddressOrKeyword(); } });
 
-  $("placesTabs").querySelectorAll("button").forEach(b => b.onclick = () => {
-    $("placesTabs").querySelectorAll("button").forEach(x => x.classList.remove("active"));
-    b.classList.add("active");
-    selectedCategory = b.dataset.category;
-    $("placeCategory").value = selectedCategory;
-    loadSavedPlaces();
-  });
-
-  $("placeSaveForm").onsubmit = async e => {
+  $("placeSaveForm").onsubmit = async function (e) {
     e.preventDefault();
-    const u = await currentUser();
-    if(!u){ alert("로그인이 필요합니다."); return; }
-    
-    const category = $("placeCategory").value;
-    const name = $("placeName").value.trim();
-    const address = $("placeAddress").value.trim();
-    const memo = $("placeMemo").value.trim();
-    let lat = $("placeLat").value ? parseFloat($("placeLat").value) : null;
-    let lon = $("placeLng").value ? parseFloat($("placeLng").value) : null;
+    if (!supabase) return;
+    var u = await currentUser();
+    if (!u) { alert("로그인이 필요합니다."); return; }
+    var category = $("placeCategory").value, name = $("placeName").value.trim(), address = $("placeAddress").value.trim(), memo = $("placeMemo").value.trim();
+    var lat = $("placeLat").value ? parseFloat($("placeLat").value) : null, lon = $("placeLng").value ? parseFloat($("placeLng").value) : null;
 
-    // 만약 좌표가 없는 경우 동기적 위치 검색 시도
-    if(!lat || !lon) {
-      if(ps){
-        await new Promise((resolve) => {
-          ps.keywordSearch(address, (data, statusRes) => {
-            if(statusRes === kakao.maps.services.Status.OK) {
-              lat = parseFloat(data[0].y);
-              lon = parseFloat(data[0].x);
-            }
-            resolve();
-          });
+    // 좌표가 없으면 키워드/주소로 한 번 더 찾아본다
+    if ((lat == null || lon == null) && ps) {
+      await new Promise(function (resolve) {
+        ps.keywordSearch(address, function (data, st) {
+          if (st === kakao.maps.services.Status.OK) { lat = parseFloat(data[0].y); lon = parseFloat(data[0].x); }
+          resolve();
         });
-      }
+      });
     }
+    var ins = await supabase.from("shared_places").insert({ category: category, name: name, address: address, memo: memo, author_id: u.id, author_nickname: (u.user_metadata && u.user_metadata.nickname) || "회원", lat: lat, lon: lon });
+    if (ins.error) { placesStatus("장소 저장 실패: " + ins.error.message); return; }
 
-    const {error} = await supabase.from("shared_places").insert({
-      category, name, address, memo,
-      author_id: u.id,
-      author_nickname: u.user_metadata?.nickname || "회원",
-      lat, lon
-    });
-
-    if(error){
-      placesStatus("장소 저장 실패: " + error.message);
-      return;
+    if (selectedCategory !== "전체") {
+      selectedCategory = category;
+      Array.prototype.forEach.call($("placesTabs").querySelectorAll("button"), function (x) { x.classList.toggle("active", x.dataset.category === category); });
     }
-
-    selectedCategory = category;
-    $("placesTabs").querySelectorAll("button").forEach(x => x.classList.toggle("active", x.dataset.category === category));
-    $("placeSaveForm").reset();
-    $("placeLat").value = "";
-    $("placeLng").value = "";
-    toast("장소가 카카오 지도에 저장되었습니다!");
+    $("placeSaveForm").reset(); $("placeLat").value = ""; $("placeLng").value = "";
+    toast("장소가 지도에 저장되었습니다!");
     loadSavedPlaces();
   };
-
-  supabase?.auth.onAuthStateChange((_event,session)=>{
-    window.__dripCurrentUser=session?.user||null;
-    window.__dripAdminEmail="ua6c1b8b671ad1e8a319f43eebafaca40c5e672b2a095665333dcafac4081a302@login.dripcollege.example.com";
-    window.__dripIsAdmin=(session?.user?.email||"")===window.__dripAdminEmail;
-  });
-
 })();
 </script>
-
 </body>
 </html>
