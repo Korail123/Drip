@@ -1,1 +1,665 @@
 
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2030 직장인 드립대학 수다학과</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts (Gaegu & Nanum Gothic) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Gaegu:wght@400;700&family=Nanum+Gothic:wght@400;700;800&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            orange: '#FF6B4A',
+                            yellow: '#FFD166',
+                            green: '#06D6A0',
+                            blue: '#118AB2',
+                            purple: '#8338EC',
+                            bg: '#FFFBF5'
+                        }
+                    },
+                    fontFamily: {
+                        gaegu: ['Gaegu', 'cursive', 'sans-serif'],
+                        nanum: ['Nanum Gothic', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Nanum Gothic', sans-serif;
+            background-color: #FFFBF5;
+            background-image: radial-gradient(#E5E7EB 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+
+        /* 손 흔드는 애니메이션 */
+        @keyframes wave {
+            0% { transform: rotate(0deg); }
+            15% { transform: rotate(18deg); }
+            30% { transform: rotate(-12deg); }
+            45% { transform: rotate(18deg); }
+            60% { transform: rotate(-8deg); }
+            75% { transform: rotate(12deg); }
+            100% { transform: rotate(0deg); }
+        }
+
+        .animate-hand-wave {
+            transform-origin: 215px 230px;
+            animation: wave 2s infinite ease-in-out;
+        }
+
+        /* 말풍선 둥둥 떠있는 애니메이션 */
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+        }
+
+        .animate-float {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        /* 무지개 그라데이션 텍스트 */
+        .rainbow-text {
+            fill: url(#rainbow-gradient);
+            filter: drop-shadow(3px 3px 0px rgba(0,0,0,0.15));
+        }
+
+        /* 버튼 바운스 효과 */
+        .btn-bounce {
+            transition: all 0.2s ease;
+        }
+        .btn-bounce:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+        .btn-bounce:active {
+            transform: translateY(1px) scale(0.98);
+        }
+
+        /* 학생증 카드 스타일 */
+        .id-card {
+            background: linear-gradient(135deg, #ffffff 0%, #f3f4f6 100%);
+            border: 3px solid #1e293b;
+            box-shadow: 8px 8px 0px #1e293b;
+        }
+    </style>
+</head>
+<body class="text-slate-800 min-h-screen flex flex-col">
+
+    <!-- Header Navigation -->
+    <header class="bg-white/80 backdrop-blur-md border-b-2 border-slate-900 sticky top-0 z-50 px-4 py-3">
+        <div class="max-w-6xl mx-auto flex justify-between items-center">
+            <div class="flex items-center gap-2 font-bold text-xl font-gaegu text-2xl text-slate-900">
+                <span class="bg-amber-400 text-slate-900 px-2 py-0.5 rounded-lg border-2 border-slate-900">드립大</span>
+                <span>수다학과</span>
+            </div>
+            <nav class="hidden md:flex items-center gap-6 font-bold text-sm">
+                <a href="#hero" class="hover:text-brand-orange transition">메인</a>
+                <a href="#student-id" class="hover:text-brand-orange transition">학생증 발급</a>
+                <a href="#board" class="hover:text-brand-orange transition">드립 게시판</a>
+                <a href="#energy-zone" class="hover:text-brand-orange transition">직장인 충전소</a>
+            </nav>
+            <button onclick="scrollToSection('board')" class="bg-brand-orange text-white px-4 py-1.5 rounded-full font-bold text-sm border-2 border-slate-900 shadow-[2px_2px_0px_#000] hover:translate-y-0.5 transition">
+                🗣️ 수다 떨러가기
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Hero Section -->
+    <main class="flex-grow">
+        <section id="hero" class="max-w-4xl mx-auto px-4 pt-6 pb-12 text-center relative overflow-hidden">
+            
+            <!-- Rainbow Arch Header Text (SVG textPath) -->
+            <div class="w-full max-w-2xl mx-auto mb-2">
+                <svg viewBox="0 0 500 130" class="w-full h-auto drop-shadow-md">
+                    <defs>
+                        <!-- Rainbow Gradient Definition -->
+                        <linearGradient id="rainbow-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                            <stop offset="0%" stop-color="#FF595E" />
+                            <stop offset="25%" stop-color="#FFCA3A" />
+                            <stop offset="50%" stop-color="#8AC926" />
+                            <stop offset="75%" stop-color="#1982C4" />
+                            <stop offset="100%" stop-color="#6A4C93" />
+                        </linearGradient>
+                        <!-- Curved Path for Text -->
+                        <path id="arch-path" d="M 30,120 Q 250,-10 470,120" fill="none" />
+                    </defs>
+                    
+                    <!-- Background Arc Shadow/Outline for Readability -->
+                    <text class="font-gaegu font-bold" font-size="34" letter-spacing="2" text-anchor="middle">
+                        <textPath href="#arch-path" startOffset="50%" stroke="#1e293b" stroke-width="6" stroke-linejoin="round">
+                            [ 2030 직장인 드립대학 수다학과 ]
+                        </textPath>
+                    </text>
+                    <!-- Foreground Rainbow Curved Text -->
+                    <text class="font-gaegu font-bold rainbow-text" font-size="34" letter-spacing="2" text-anchor="middle">
+                        <textPath href="#arch-path" startOffset="50%">
+                            [ 2030 직장인 드립대학 수다학과 ]
+                        </textPath>
+                    </text>
+                </svg>
+            </div>
+
+            <!-- Subtitle -->
+            <p class="text-slate-600 font-bold mb-8 text-sm md:text-base bg-white/70 inline-block px-4 py-1.5 rounded-full border border-slate-300">
+                🔥 월요병 극복, 칼퇴 기원! 2030 직장인들의 드립과 수다 놀이터 🔥
+            </p>
+
+            <!-- Character & Speech Bubble Wrapper -->
+            <div class="relative w-full max-w-md mx-auto flex flex-col items-center justify-center min-h-[360px]">
+                
+                <!-- Speech Bubble (환영합니다!) -->
+                <div class="animate-float z-10 mb-2 relative">
+                    <div class="bg-white border-4 border-slate-900 rounded-3xl px-6 py-3 shadow-[4px_4px_0px_#1e293b] flex items-center gap-2">
+                        <span class="text-2xl">👋</span>
+                        <span class="font-gaegu text-3xl font-bold text-slate-900 tracking-wide">환영합니다!</span>
+                    </div>
+                    <!-- Speech Bubble Tail -->
+                    <div class="w-0 h-0 border-l-[12px] border-l-transparent border-r-[12px] border-r-transparent border-t-[16px] border-t-slate-900 mx-auto -mt-0.5"></div>
+                    <div class="w-0 h-0 border-l-[8px] border-l-transparent border-r-[8px] border-r-transparent border-t-[12px] border-t-white mx-auto -mt-[17px]"></div>
+                </div>
+
+                <!-- Hand-Drawn Style Character SVG ("봉춸이") -->
+                <div class="w-72 h-80 relative">
+                    <svg viewBox="0 0 300 320" class="w-full h-full drop-shadow-xl" xmlns="http://www.w3.org/2000/svg">
+                        <!-- Hair (Back/Top) -->
+                        <path d="M 105 50 C 100 32, 120 25, 140 28 C 150 22, 170 25, 185 30 C 195 32, 205 45, 195 55 Z" fill="#111" stroke="#111" stroke-width="4" stroke-linejoin="round"/>
+                        <path d="M 110 40 Q 130 30 150 38 Q 170 30 190 42" fill="#111" stroke="#111" stroke-width="8"/>
+
+                        <!-- Body / Torso (Orange Sleeveless Shirt) -->
+                        <path d="M 80 250 L 90 220 L 110 225 L 120 310 L 180 310 L 190 225 L 210 220 L 220 250 L 235 320 L 65 320 Z" fill="#D96B43" stroke="#111" stroke-width="5" stroke-linejoin="round"/>
+
+                        <!-- Neck / Neckline -->
+                        <path d="M 120 225 Q 150 250 180 225" fill="#FCE0C6" stroke="#111" stroke-width="5"/>
+
+                        <!-- Left Arm (Down) -->
+                        <path d="M 85 220 C 70 240, 65 270, 72 290" fill="none" stroke="#111" stroke-width="6" stroke-linecap="round"/>
+
+                        <!-- Right Arm & Hand (Waving Arm) -->
+                        <!-- Stationed Arm Base -->
+                        <path d="M 215 220 C 230 230, 240 240, 245 250" fill="none" stroke="#111" stroke-width="6" stroke-linecap="round"/>
+
+                        <!-- Waving Group (Pivot from shoulder/elbow area) -->
+                        <g class="animate-hand-wave">
+                            <!-- Upper Arm & Forearm up -->
+                            <path d="M 215 220 C 235 200, 245 170, 240 140" fill="none" stroke="#111" stroke-width="7" stroke-linecap="round"/>
+                            <!-- Right Hand (Raised & Open Waving Palm) -->
+                            <!-- Palm -->
+                            <path d="M 240 140 C 248 135, 255 145, 248 152 C 240 160, 230 150, 240 140 Z" fill="#FCE0C6" stroke="#111" stroke-width="4"/>
+                            <!-- Thumb -->
+                            <path d="M 232 145 C 222 140, 220 130, 226 128 C 232 126, 236 136, 232 145 Z" fill="#FCE0C6" stroke="#111" stroke-width="4"/>
+                            <!-- Fingers -->
+                            <path d="M 238 132 C 236 118, 244 116, 247 128" fill="#FCE0C6" stroke="#111" stroke-width="4" stroke-linecap="round"/>
+                            <path d="M 246 130 C 248 114, 256 114, 255 129" fill="#FCE0C6" stroke="#111" stroke-width="4" stroke-linecap="round"/>
+                            <path d="M 253 135 C 259 120, 266 122, 261 135" fill="#FCE0C6" stroke="#111" stroke-width="4" stroke-linecap="round"/>
+                            <path d="M 256 142 C 265 132, 270 138, 260 147" fill="#FCE0C6" stroke="#111" stroke-width="4" stroke-linecap="round"/>
+                            <!-- Motion lines for wave -->
+                            <path d="M 268 115 C 275 120, 275 130, 268 135" fill="none" stroke="#111" stroke-width="3" stroke-linecap="round"/>
+                            <path d="M 276 120 C 282 124, 282 128, 276 132" fill="none" stroke="#111" stroke-width="2.5" stroke-linecap="round"/>
+                        </g>
+
+                        <!-- Main Elongated Head -->
+                        <path d="M 100 130 C 95 60, 115 35, 150 35 C 185 35, 205 60, 200 130 C 198 170, 210 215, 185 240 C 165 255, 135 255, 115 240 C 90 215, 102 170, 100 130 Z" fill="#FCE0C6" stroke="#111" stroke-width="5" stroke-linejoin="round"/>
+
+                        <!-- Ears -->
+                        <path d="M 100 135 C 88 135, 88 165, 100 160" fill="#FCE0C6" stroke="#111" stroke-width="4"/>
+                        <path d="M 200 135 C 212 135, 212 165, 200 160" fill="#FCE0C6" stroke="#111" stroke-width="4"/>
+
+                        <!-- Hair Fringe/Bangs (Wavy W-shape on forehead) -->
+                        <path d="M 102 55 Q 115 70 128 58 Q 140 72 152 58 Q 165 72 178 58 Q 188 70 198 55 Q 180 36 150 35 Q 120 36 102 55 Z" fill="#111" stroke="#111" stroke-width="2"/>
+
+                        <!-- Eyebrows (Short curved lines) -->
+                        <path d="M 125 78 Q 132 70 138 78" fill="none" stroke="#111" stroke-width="4" stroke-linecap="round"/>
+                        <path d="M 162 78 Q 168 70 175 78" fill="none" stroke="#111" stroke-width="4" stroke-linecap="round"/>
+
+                        <!-- Eyes (Small dots) -->
+                        <circle cx="132" cy="100" r="4.5" fill="#111"/>
+                        <circle cx="172" cy="100" r="4.5" fill="#111"/>
+
+                        <!-- Long Nose -->
+                        <path d="M 153 100 L 150 175 L 142 180" fill="none" stroke="#111" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+
+                        <!-- Mustache (Small wavy lines under nose) -->
+                        <path d="M 140 188 Q 146 182 150 188 Q 155 182 160 188" fill="none" stroke="#111" stroke-width="3" stroke-linecap="round"/>
+
+                        <!-- Cute Lips/Mouth -->
+                        <ellipse cx="150" cy="202" rx="7" ry="9" fill="#E87A90" stroke="#111" stroke-width="3.5"/>
+                        <path d="M 143 202 Q 150 205 157 202" fill="none" stroke="#111" stroke-width="2"/>
+
+                        <!-- Double Chin Line -->
+                        <path d="M 135 250 Q 150 262 165 250" fill="none" stroke="#111" stroke-width="4" stroke-linecap="round"/>
+                    </svg>
+                </div>
+
+                <!-- Character Info Badge -->
+                <div class="mt-2 bg-slate-900 text-white text-xs px-3 py-1 rounded-full font-bold shadow-sm">
+                    마스코트 : 봉춸이 수석조교 🎓
+                </div>
+            </div>
+        </section>
+
+        <!-- Quick Interaction / Energy Zone Section -->
+        <section id="energy-zone" class="bg-amber-100/60 border-y-2 border-slate-900 py-10 px-4">
+            <div class="max-w-4xl mx-auto text-center">
+                <h2 class="font-gaegu text-3xl font-bold text-slate-900 mb-2">⚡ 2030 직장인 순간 스트레스 해소 버튼 ⚡</h2>
+                <p class="text-slate-600 text-sm mb-6">마음이 답답할 때 원하는 반응 버튼을 꾹 눌러보세요!</p>
+
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <!-- Button 1 -->
+                    <button onclick="triggerReaction('칼퇴', '🏃‍♂️💨 야근은 거부한다! 칼퇴 보더 승차 완료!')" class="btn-bounce bg-emerald-400 border-2 border-slate-900 p-4 rounded-2xl shadow-[4px_4px_0px_#000] text-center">
+                        <div class="text-3xl mb-1">🏃‍♂️</div>
+                        <div class="font-bold text-slate-900">칼퇴 성공</div>
+                        <div class="text-xs text-slate-700 font-semibold mt-1">+칼퇴 기운 100%</div>
+                    </button>
+
+                    <!-- Button 2 -->
+                    <button onclick="triggerReaction('커피', '☕ 아아 완샷! 카페인 혈중 농도 정상 회복!')" class="btn-bounce bg-amber-300 border-2 border-slate-900 p-4 rounded-2xl shadow-[4px_4px_0px_#000] text-center">
+                        <div class="text-3xl mb-1">☕</div>
+                        <div class="font-bold text-slate-900">카페인 수혈</div>
+                        <div class="text-xs text-slate-700 font-semibold mt-1">+생존력 상승</div>
+                    </button>
+
+                    <!-- Button 3 -->
+                    <button onclick="triggerReaction('월요병', '🔨 월요병 파괴! 다음 휴무일까지 존버!')" class="btn-bounce bg-sky-300 border-2 border-slate-900 p-4 rounded-2xl shadow-[4px_4px_0px_#000] text-center">
+                        <div class="text-3xl mb-1">💥</div>
+                        <div class="font-bold text-slate-900">월요병 퇴치</div>
+                        <div class="text-xs text-slate-700 font-semibold mt-1">+멘탈 강화</div>
+                    </button>
+
+                    <!-- Button 4 -->
+                    <button onclick="triggerReaction('월급', '💸 월급 통장 스쳐 지나가도 일단 입금 최고!')" class="btn-bounce bg-rose-300 border-2 border-slate-900 p-4 rounded-2xl shadow-[4px_4px_0px_#000] text-center">
+                        <div class="text-3xl mb-1">🤑</div>
+                        <div class="font-bold text-slate-900">월급날 도착</div>
+                        <div class="text-xs text-slate-700 font-semibold mt-1">+행복 지수 폭발</div>
+                    </button>
+                </div>
+
+                <!-- Live Toast Banner for Interactions -->
+                <div id="reaction-toast" class="hidden mt-6 bg-slate-900 text-white font-bold text-sm md:text-base py-3 px-6 rounded-2xl shadow-lg inline-block border-2 border-amber-400 transition-all">
+                    <!-- Dynamic message goes here -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Student ID Generator Section -->
+        <section id="student-id" class="max-w-4xl mx-auto px-4 py-12">
+            <div class="text-center mb-8">
+                <span class="bg-purple-100 text-purple-700 font-bold px-3 py-1 rounded-full text-xs border border-purple-300">입학 증명</span>
+                <h2 class="font-gaegu text-4xl font-bold text-slate-900 mt-2">🪪 수다학과 학생증 발급기</h2>
+                <p class="text-slate-600 text-sm mt-1">나만의 직장인 캐릭터 학생증을 만들고 커뮤니티 활동을 시작하세요!</p>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-8 items-center bg-white p-6 md:p-8 rounded-3xl border-2 border-slate-900 shadow-[6px_6px_0px_#1e293b]">
+                <!-- Form Inputs -->
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">닉네임 / 이름</label>
+                        <input type="text" id="input-name" placeholder="예: 칼퇴요정 김대리" value="칼퇴요정 봉춸" oninput="updateStudentCard()" class="w-full px-4 py-2.5 rounded-xl border-2 border-slate-900 focus:outline-none focus:border-brand-orange text-sm font-bold">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">세부 전공 선택</label>
+                        <select id="input-major" onchange="updateStudentCard()" class="w-full px-4 py-2.5 rounded-xl border-2 border-slate-900 focus:outline-none focus:border-brand-orange text-sm font-bold bg-white">
+                            <option value="칼퇴기원학 전공">🏃‍♂️ 칼퇴기원학 전공</option>
+                            <option value="야근회피학 전공">🛡️ 야근회피학 전공</option>
+                            <option value="월급루팡학 전공">💎 월급루팡학 전공</option>
+                            <option value="아아수혈학 전공">☕ 아아수혈학 전공</option>
+                            <option value="탕비실탐방학 전공">🍬 탕비실탐방학 전공</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">나의 좌우명 / 한마디</label>
+                        <input type="text" id="input-motto" placeholder="예: 오늘 할 일은 내일의 나에게" value="퇴근 시간 10분 전엔 건드리지 마라" oninput="updateStudentCard()" class="w-full px-4 py-2.5 rounded-xl border-2 border-slate-900 focus:outline-none focus:border-brand-orange text-sm font-bold">
+                    </div>
+
+                    <button onclick="shareStudentCard()" class="w-full bg-brand-purple text-white font-bold py-3 rounded-xl border-2 border-slate-900 shadow-[3px_3px_0px_#000] hover:bg-purple-700 transition flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-download"></i> 학생증 완료 메시지 보기
+                    </button>
+                </div>
+
+                <!-- Student Card Preview -->
+                <div class="flex justify-center">
+                    <div id="card-preview" class="id-card w-full max-w-sm rounded-2xl p-5 relative overflow-hidden transition-all duration-300">
+                        <!-- Top Header -->
+                        <div class="flex justify-between items-center border-b-2 border-slate-900 pb-3 mb-4">
+                            <div class="flex items-center gap-1.5">
+                                <div class="w-3 h-3 rounded-full bg-red-500 border border-slate-900"></div>
+                                <div class="w-3 h-3 rounded-full bg-yellow-400 border border-slate-900"></div>
+                                <div class="w-3 h-3 rounded-full bg-green-500 border border-slate-900"></div>
+                            </div>
+                            <span class="font-gaegu text-xl font-bold text-slate-900 tracking-wider">드립대학교 학생증</span>
+                        </div>
+
+                        <!-- Main Content -->
+                        <div class="flex gap-4 items-center">
+                            <!-- Small Avatar Avatar -->
+                            <div class="w-24 h-28 bg-amber-100 border-2 border-slate-900 rounded-xl overflow-hidden flex-shrink-0 flex items-center justify-center relative">
+                                <svg viewBox="0 0 300 320" class="w-full h-full scale-110 translate-y-2">
+                                    <!-- Mini Bons Chul Drawing -->
+                                    <path d="M 105 50 C 100 32, 120 25, 140 28 C 150 22, 170 25, 185 30 C 195 32, 205 45, 195 55 Z" fill="#111"/>
+                                    <path d="M 80 250 L 90 220 L 110 225 L 120 310 L 180 310 L 190 225 L 210 220 L 220 250 L 235 320 L 65 320 Z" fill="#D96B43" stroke="#111" stroke-width="6"/>
+                                    <path d="M 100 130 C 95 60, 115 35, 150 35 C 185 35, 205 60, 200 130 C 198 170, 210 215, 185 240 C 165 255, 135 255, 115 240 C 90 215, 102 170, 100 130 Z" fill="#FCE0C6" stroke="#111" stroke-width="6"/>
+                                    <circle cx="132" cy="100" r="5" fill="#111"/>
+                                    <circle cx="172" cy="100" r="5" fill="#111"/>
+                                    <path d="M 153 100 L 150 175 L 142 180" fill="none" stroke="#111" stroke-width="5"/>
+                                    <ellipse cx="150" cy="202" rx="7" ry="9" fill="#E87A90" stroke="#111" stroke-width="4"/>
+                                </svg>
+                            </div>
+
+                            <!-- Details -->
+                            <div class="flex-grow min-w-0">
+                                <div class="text-[10px] text-slate-500 font-bold">소속: 수다학과</div>
+                                <div id="card-major" class="text-xs font-bold text-brand-purple truncate mb-1">칼퇴기원학 전공</div>
+                                <div id="card-name" class="font-bold text-lg text-slate-900 truncate">칼퇴요정 봉춸</div>
+                                <div class="text-[10px] text-slate-400 font-bold mt-1">학번: 2026-DRIP-0421</div>
+                            </div>
+                        </div>
+
+                        <!-- Motto Box -->
+                        <div class="mt-4 bg-slate-100 p-2.5 rounded-xl border border-slate-300">
+                            <div class="text-[10px] font-bold text-slate-400 mb-0.5">슬기로운 직장생활 좌우명</div>
+                            <div id="card-motto" class="text-xs font-bold text-slate-800 italic truncate">"퇴근 시간 10분 전엔 건드리지 마라"</div>
+                        </div>
+
+                        <!-- Stamp -->
+                        <div class="absolute bottom-3 right-3 opacity-20 pointer-events-none">
+                            <div class="w-14 h-14 border-4 border-red-600 rounded-full flex items-center justify-center font-gaegu text-red-600 text-xs font-bold transform -rotate-12">
+                                직장인인증
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Drip Board / Forum Section -->
+        <section id="board" class="max-w-4xl mx-auto px-4 py-12 border-t-2 border-slate-200">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-6 gap-4">
+                <div>
+                    <span class="bg-emerald-100 text-emerald-800 font-bold px-3 py-1 rounded-full text-xs border border-emerald-300">실시간 피드</span>
+                    <h2 class="font-gaegu text-4xl font-bold text-slate-900 mt-2">💬 수다학과 드립 게시판</h2>
+                    <p class="text-slate-600 text-sm">오늘 직장에서 있었던 황당한 일, 재치있는 드립을 나누세요.</p>
+                </div>
+                <button onclick="openPostModal()" class="bg-brand-orange text-white font-bold px-5 py-2.5 rounded-xl border-2 border-slate-900 shadow-[3px_3px_0px_#000] hover:bg-orange-600 transition flex items-center gap-2">
+                    <i class="fa-solid fa-pen-to-square"></i> 드립 작성하기
+                </button>
+            </div>
+
+            <!-- Feed List -->
+            <div id="drip-posts-container" class="space-y-4">
+                <!-- Posts will be generated dynamically by JS -->
+            </div>
+        </section>
+    </main>
+
+    <!-- Create Post Modal -->
+    <div id="post-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white border-4 border-slate-900 rounded-3xl p-6 w-full max-w-lg shadow-[8px_8px_0px_#000] relative">
+            <button onclick="closePostModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-900 font-bold text-xl">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <h3 class="font-gaegu text-3xl font-bold text-slate-900 mb-4">✍️ 따끈따끈한 드립 쓰기</h3>
+            
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">작성자 닉네임</label>
+                    <input type="text" id="post-author" placeholder="닉네임 입력" class="w-full px-4 py-2 border-2 border-slate-900 rounded-xl font-bold text-sm">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">내용 (드립 or 직장 푸념)</label>
+                    <textarea id="post-content" rows="4" placeholder="예: 팀장님이 오늘 '간단하게 회의하자'고 하셨다. 2시간 지났다..." class="w-full px-4 py-2 border-2 border-slate-900 rounded-xl font-bold text-sm resize-none"></textarea>
+                </div>
+                <div class="flex justify-end gap-2 pt-2">
+                    <button onclick="closePostModal()" class="px-4 py-2 rounded-xl font-bold text-sm border-2 border-slate-300">취소</button>
+                    <button onclick="submitDripPost()" class="bg-brand-green text-slate-900 font-bold px-5 py-2 rounded-xl border-2 border-slate-900 shadow-[2px_2px_0px_#000]">등록하기</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Alert Modal Substitute (No system alert) -->
+    <div id="alert-modal" class="fixed inset-0 bg-slate-900/50 z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white border-4 border-slate-900 rounded-2xl p-6 max-w-sm w-full text-center shadow-[6px_6px_0px_#000]">
+            <div id="alert-icon" class="text-4xl mb-2">🎉</div>
+            <div id="alert-message" class="font-bold text-slate-800 mb-4 text-base">메시지 내용</div>
+            <button onclick="closeAlertModal()" class="bg-brand-orange text-white font-bold px-6 py-2 rounded-xl border-2 border-slate-900 shadow-[2px_2px_0px_#000]">확인</button>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900 text-white border-t-2 border-slate-900 py-8 px-4 mt-12 text-center text-xs text-slate-400">
+        <div class="max-w-4xl mx-auto space-y-2">
+            <p class="font-gaegu text-xl text-amber-400">🎓 2030 직장인 드립대학 수다학과 🎓</p>
+            <p>본 사이트는 대한민국 모든 직장인들의 스트레스 해소와 웃음을 위한 유머 공간입니다.</p>
+            <p class="pt-2 text-slate-500">© 2026 드립대학 수다학과. All rights reserved. 마스코트 : 봉춸이</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Interactions -->
+    <script>
+        // Sample Initial Posts
+        let posts = [
+            {
+                id: 1,
+                author: "월급은거들뿐",
+                major: "월급루팡학",
+                content: "오늘 출근하자마자 퇴근하고 싶다고 생각한 사람 나밖에 없냐? 😂",
+                likes: 42,
+                comments: ["나도!!", "인정합니다 ㅋㅋㅋ", "출근길 버스 타자마자 느꼈음"],
+                time: "10분 전"
+            },
+            {
+                id: 2,
+                author: "탕비실파파라치",
+                major: "탕비실탐방학",
+                content: "탕비실 카누 믹스커피 마지막 하나 남은 거 제가 집었습니다. 오늘 승리자는 나다!! ☕🔥",
+                likes: 28,
+                comments: ["부럽다...", "카누 라이벌 등장"],
+                time: "30분 전"
+            },
+            {
+                id: 3,
+                author: "대리만5년째",
+                major: "야근회피학",
+                content: "부장님: '이거 금방 하지?'\n나: (속마음: 금방의 기준이 혹시 3일인가요?) '네! 금방 하겠습니다!' 🥲",
+                likes: 67,
+                comments: ["직장인 패시브 스킬 ㅋㅋㅋ", "눈물이 앞을 가림"],
+                time: "1시간 전"
+            }
+        ];
+
+        // Smooth scroll
+        function scrollToSection(id) {
+            const el = document.getElementById(id);
+            if (el) {
+                el.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+
+        // Student Card Update function
+        function updateStudentCard() {
+            const name = document.getElementById('input-name').value || '칼퇴요정 봉춸';
+            const major = document.getElementById('input-major').value;
+            const motto = document.getElementById('input-motto').value || '오늘 할 일은 내일로';
+
+            document.getElementById('card-name').innerText = name;
+            document.getElementById('card-major').innerText = major;
+            document.getElementById('card-motto').innerText = `"${motto}"`;
+        }
+
+        function shareStudentCard() {
+            const name = document.getElementById('input-name').value || '수다학우';
+            showAlert('🎓 발급 완료!', `[${name}] 학우님의 수다학과 학생증이 발급되었습니다! 직장인 드립대학에 오신 것을 환영합니다!`);
+        }
+
+        // Reaction Buttons Action
+        function triggerReaction(type, message) {
+            const toast = document.getElementById('reaction-toast');
+            toast.innerText = message;
+            toast.classList.remove('hidden');
+
+            // Quick Animation bounce
+            toast.classList.add('scale-105');
+            setTimeout(() => toast.classList.remove('scale-105'), 150);
+
+            // Auto hide
+            clearTimeout(window.toastTimer);
+            window.toastTimer = setTimeout(() => {
+                toast.classList.add('hidden');
+            }, 3500);
+        }
+
+        // Render Posts
+        function renderPosts() {
+            const container = document.getElementById('drip-posts-container');
+            container.innerHTML = '';
+
+            posts.forEach(post => {
+                const postEl = document.createElement('div');
+                postEl.className = 'bg-white p-5 rounded-2xl border-2 border-slate-900 shadow-[4px_4px_0px_#1e293b] transition hover:-translate-y-0.5';
+                
+                const commentsHtml = post.comments.map(c => 
+                    `<div class="bg-slate-100 text-xs font-bold text-slate-700 px-3 py-1.5 rounded-lg border border-slate-200 mt-1">💬 ${escapeHtml(c)}</div>`
+                ).join('');
+
+                postEl.innerHTML = `
+                    <div class="flex justify-between items-center mb-2">
+                        <div class="flex items-center gap-2">
+                            <span class="font-bold text-slate-900 text-sm">👤 ${escapeHtml(post.author)}</span>
+                            <span class="text-[11px] bg-amber-100 text-amber-800 px-2 py-0.5 rounded-md font-bold border border-amber-300">${escapeHtml(post.major)}</span>
+                        </div>
+                        <span class="text-xs text-slate-400 font-bold">${post.time}</span>
+                    </div>
+                    <p class="text-slate-800 font-bold text-sm md:text-base whitespace-pre-line my-3 leading-relaxed">${escapeHtml(post.content)}</p>
+                    
+                    <div class="flex items-center gap-4 pt-2 border-t border-slate-100">
+                        <button onclick="likePost(${post.id})" class="text-xs font-bold text-rose-500 bg-rose-50 hover:bg-rose-100 px-3 py-1.5 rounded-lg border border-rose-200 flex items-center gap-1 transition">
+                            ❤️ 좋아요 <span>${post.likes}</span>
+                        </button>
+                        <button onclick="toggleCommentInput(${post.id})" class="text-xs font-bold text-slate-600 bg-slate-100 hover:bg-slate-200 px-3 py-1.5 rounded-lg border border-slate-300 flex items-center gap-1">
+                            💬 댓글 <span>${post.comments.length}</span>
+                        </button>
+                    </div>
+
+                    <!-- Comments Box -->
+                    <div class="mt-3 space-y-1">
+                        ${commentsHtml}
+                    </div>
+
+                    <!-- Comment Input Box (Hidden by default) -->
+                    <div id="comment-box-${post.id}" class="hidden mt-3 flex gap-2">
+                        <input type="text" id="comment-input-${post.id}" placeholder="위트있는 댓글을 달아주세요" class="flex-grow px-3 py-1.5 text-xs font-bold border-2 border-slate-900 rounded-xl focus:outline-none">
+                        <button onclick="addComment(${post.id})" class="bg-slate-900 text-white font-bold text-xs px-3 py-1.5 rounded-xl">등록</button>
+                    </div>
+                `;
+                container.appendChild(postEl);
+            });
+        }
+
+        // Like Post
+        function likePost(id) {
+            const post = posts.find(p => p.id === id);
+            if (post) {
+                post.likes++;
+                renderPosts();
+            }
+        }
+
+        // Toggle Comment Box
+        function toggleCommentInput(id) {
+            const box = document.getElementById(`comment-box-${id}`);
+            if (box) {
+                box.classList.toggle('hidden');
+            }
+        }
+
+        // Add Comment
+        function addComment(id) {
+            const input = document.getElementById(`comment-input-${id}`);
+            if (input && input.value.trim() !== '') {
+                const post = posts.find(p => p.id === id);
+                if (post) {
+                    post.comments.push(input.value.trim());
+                    renderPosts();
+                }
+            }
+        }
+
+        // Modal Handlers
+        function openPostModal() {
+            document.getElementById('post-modal').classList.remove('hidden');
+        }
+
+        function closePostModal() {
+            document.getElementById('post-modal').classList.add('hidden');
+        }
+
+        function submitDripPost() {
+            const author = document.getElementById('post-author').value.trim() || '익명수다왕';
+            const content = document.getElementById('post-content').value.trim();
+            const major = document.getElementById('input-major').value || '수다학과';
+
+            if (!content) {
+                showAlert('⚠️ 내용 입력', '드립 게시물 내용을 입력해주세요!');
+                return;
+            }
+
+            const newPost = {
+                id: Date.now(),
+                author: author,
+                major: major,
+                content: content,
+                likes: 1,
+                comments: [],
+                time: '방금 전'
+            };
+
+            posts.unshift(newPost);
+            renderPosts();
+            closePostModal();
+
+            // Clear Form
+            document.getElementById('post-content').value = '';
+            showAlert('🎉 등록 완료', '드립이 게시판에 성공적으로 올라갔습니다!');
+        }
+
+        // Custom Alert Modal
+        function showAlert(title, message) {
+            document.getElementById('alert-message').innerText = message;
+            document.getElementById('alert-modal').classList.remove('hidden');
+        }
+
+        function closeAlertModal() {
+            document.getElementById('alert-modal').classList.add('hidden');
+        }
+
+        // Escape HTML to prevent XSS
+        function escapeHtml(str) {
+            return str.replace(/&/g, "&amp;")
+                      .replace(/</g, "&lt;")
+                      .replace(/>/g, "&gt;")
+                      .replace(/"/g, "&quot;")
+                      .replace(/'/g, "&#039;");
+        }
+
+        // Initial Load
+        window.onload = function() {
+            updateStudentCard();
+            renderPosts();
+        };
+    </script>
+</body>
+</html>
