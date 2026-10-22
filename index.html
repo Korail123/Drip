@@ -8,8 +8,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jua&family=Noto+Sans+KR:wght@400;500;700;800&display=swap">
 <style>
-  /* Layout: 위에는 아치 문구 + 손 흔드는 캐릭터, 아래에는 한 줄 폭(최대 780px)의 카드형 피드.
-     두꺼운 남색 테두리 + 오프셋 그림자로 게시판 카드와 버튼을 같은 말투로 맞춘다. */
+  /* Layout & Design Tokens */
   :root {
     --paper: #FFFAF0;
     --dot: #E9DDC8;
@@ -128,83 +127,20 @@
   .nick { font-weight: 800; overflow-wrap: anywhere; }
   .dept {
     background: var(--butter-bg); border: 1.5px solid var(--butter-line); color: var(--butter-ink);
-    border-radius: 9px; font-size: 12.5px; font-weight: 800; padding: 1px 9px;
+    border-radius: 999px; font-size: 12.5px; font-weight: 800; padding: 1px 9px;
   }
-  .sample-chip { background: var(--slate-bg); border: 1.5px solid var(--slate-line); color: var(--slate-ink); border-radius: 9px; font-size: 12px; font-weight: 700; padding: 1px 8px; }
   .meta { display: flex; align-items: center; gap: 10px; color: #8190B0; font-weight: 700; font-size: 13px; }
-  .linkbtn { border: 0; background: none; color: #8190B0; font-weight: 700; font-size: 13px; padding: 2px 4px; text-decoration: underline; }
-  .linkbtn.arm { color: var(--pink-ink); }
   .post-body { margin: 14px 0 12px; font-size: 16.5px; font-weight: 700; white-space: pre-wrap; overflow-wrap: anywhere; }
-  .post-actions { display: flex; gap: 10px; flex-wrap: wrap; padding-top: 12px; border-top: 1.5px solid #EEF0F5; }
-  .chip {
-    display: inline-flex; align-items: center; gap: 7px; border-radius: 12px; padding: 6px 14px;
-    font-weight: 800; font-size: 14px; border: 1.5px solid var(--slate-line); background: var(--slate-bg); color: var(--slate-ink);
-    font-variant-numeric: tabular-nums;
-  }
-  .chip.like { background: var(--pink-bg); border-color: var(--pink-line); color: var(--pink-ink); }
-  .chip.like[aria-pressed="true"] { background: var(--pink-ink); border-color: var(--pink-ink); color: #fff; }
-  .chip[disabled] { opacity: .55; cursor: not-allowed; }
-  .comments { display: grid; gap: 8px; margin-top: 12px; }
-  .crow {
-    display: flex; align-items: center; gap: 9px; background: var(--row-bg); border: 1.5px solid var(--row-line);
-    border-radius: 11px; padding: 7px 12px; font-weight: 700; font-size: 14px; min-width: 0;
-  }
-  .crow .ic { color: #A58BD6; width: 1em; height: 1em; }
-  .crow .ctext { min-width: 0; overflow-wrap: anywhere; flex: 1 1 auto; }
-  .crow .cn { color: #8190B0; font-weight: 500; font-size: 12.5px; flex: none; }
-  .more { justify-self: start; }
-  .cform { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
-  .cform .in { padding: 7px 10px; }
-  .cform .cnick { flex: 0 1 120px; }
-  .cform .ctxt { flex: 1 1 200px; }
-  .btn.small { padding: 6px 14px; font-size: 14px; border-radius: 11px; box-shadow: 2px 2px 0 var(--ink); }
-
-  .empty { text-align: center; padding: 34px 16px; }
-  .empty strong { font-family: var(--font-display); font-weight: 400; font-size: 22px; display: block; margin-bottom: 4px; }
-  .empty p { margin: 0; color: var(--muted); }
-
-  /* ---------- ranking ---------- */
-  .seg { display: inline-flex; border: 2.5px solid var(--ink); border-radius: 14px; overflow: hidden; background: #fff; }
-  .seg button { border: 0; background: transparent; padding: 7px 16px; font-weight: 800; }
-  .seg button + button { border-left: 2.5px solid var(--ink); }
-  .seg button[aria-pressed="true"] { background: var(--ink); color: #fff; }
-  .rank-controls { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin-bottom: 14px; }
-  .range { color: var(--muted); font-weight: 700; margin: 0 0 12px; }
-  .rank-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
-  .rk { display: grid; grid-template-columns: 38px minmax(0, 1fr) auto; gap: 4px 12px; align-items: center; }
-  .medal {
-    width: 36px; height: 36px; border-radius: 50%; border: 2.5px solid var(--ink); display: grid; place-items: center;
-    font-family: var(--font-display); font-size: 18px; background: var(--silver); color: var(--ink);
-    grid-row: span 2; font-variant-numeric: tabular-nums;
-  }
-  .rk.r1 .medal { background: var(--gold); }
-  .rk.r2 .medal { background: #D7DFEE; }
-  .rk.r3 .medal { background: var(--bronze); }
-  .rk-name { font-weight: 800; overflow-wrap: anywhere; min-width: 0; }
-  .rk-val { font-weight: 800; font-variant-numeric: tabular-nums; }
-  .rk-val small { color: var(--muted); font-weight: 500; margin-left: 2px; }
-  .bar { grid-column: 2 / 4; height: 9px; border-radius: 6px; background: var(--slate-bg); overflow: hidden; }
-  .bar i { display: block; height: 100%; border-radius: 6px; background: var(--silver); }
-  .rk.r1 .bar i { background: var(--coral); }
-  .rk.r2 .bar i { background: var(--gold); }
-  .rk.r3 .bar i { background: var(--teal); }
-  .rk-detail { grid-column: 2 / 4; color: var(--muted); font-size: 12.5px; margin-top: -2px; }
-  .rank-foot { margin-top: 16px; padding-top: 12px; border-top: 1.5px solid #EEF0F5; color: var(--muted); font-size: 13px; display: flex; gap: 10px 16px; flex-wrap: wrap; align-items: center; justify-content: space-between; }
-  .upload { margin-top: 18px; }
-  .upload h3 { margin: 0 0 6px; font-family: var(--font-display); font-weight: 400; font-size: 21px; }
-  .upload p { margin: 0 0 10px; color: var(--muted); font-size: 13.5px; }
-  .preview { margin-top: 12px; background: var(--row-bg); border: 1.5px solid var(--row-line); border-radius: 12px; padding: 10px 14px; font-weight: 700; }
 
   .toast {
     position: fixed; left: 50%; transform: translateX(-50%);
     bottom: calc(16px + env(safe-area-inset-bottom, 0px));
     background: var(--ink); color: #fff; border-radius: 12px; padding: 10px 16px; font-weight: 700; font-size: 14px;
-    max-width: calc(100% - 32px); z-index: 20;
+    max-width: calc(100% - 32px); z-index: 20; box-shadow: 0 4px 12px rgba(0,0,0,0.15);
   }
   .foot { color: var(--muted); font-size: 12.5px; text-align: center; margin-top: 8px; }
 
-  /* ---------- 미니게임 ---------- */
-  .view-off { position: absolute; left: -9999px; top: 0; width: 100%; height: 0; overflow: hidden; visibility: hidden; }
+  /* ---------- 미니게임 (오늘의 단어 - 5칸) ---------- */
   .game-card {
     display: flex; align-items: center; gap: 16px; width: 100%; text-align: left;
     transition: transform .08s, box-shadow .08s;
@@ -222,35 +158,49 @@
     flex: none; background: var(--mint-bg); border: 1.5px solid var(--mint-line); color: var(--mint-ink);
     font-weight: 800; font-size: 13px; border-radius: 999px; padding: 3px 12px;
   }
-  .game-state.done { background: var(--slate-bg); border-color: var(--slate-line); color: var(--slate-ink); }
 
   .wg { max-width: 440px; margin-inline: auto; }
   .wg-top { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 10px; }
-  .wg-date { font-weight: 800; }
+  .wg-date { font-weight: 800; font-size: 15px; }
+  .wg-timer {
+    background: var(--pink-bg); border: 1.5px solid var(--pink-line); color: var(--pink-ink);
+    font-weight: 800; font-size: 12.5px; border-radius: 999px; padding: 2px 10px;
+  }
   .wg-hint {
     background: var(--butter-bg); border: 1.5px solid var(--butter-line); color: var(--butter-ink);
-    font-weight: 800; font-size: 13px; border-radius: 9px; padding: 1px 10px;
+    font-weight: 800; font-size: 13px; border-radius: 9px; padding: 2px 10px;
   }
-  .wg-how { margin: 0 0 12px; padding-left: 18px; }
-  .wg-how li { margin: 3px 0; }
-  .wg-board { display: grid; gap: 6px; margin: 6px auto 8px; max-width: 340px; }
-  .wg-row { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 6px; }
+  
+  /* 직관적 1줄 게임 설명 바 */
+  .wg-desc-bar {
+    background: #FFF9DD; border: 2px solid var(--ink); border-radius: 12px;
+    padding: 10px 12px; font-weight: 700; font-size: 13.5px; text-align: center;
+    color: var(--ink); margin-bottom: 14px; box-shadow: 2px 2px 0 var(--ink);
+  }
+
+  /* 5칸 레이아웃 정렬 */
+  .wg-board { display: grid; gap: 8px; margin: 8px auto 12px; max-width: 320px; }
+  .wg-row { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 8px; }
   .wg-row.shake { animation: shake .4s; }
   @keyframes shake { 0%, 100% { transform: translateX(0); } 20%, 60% { transform: translateX(-6px); } 40%, 80% { transform: translateX(6px); } }
+  
   .wg-tile {
-    position: relative; aspect-ratio: 1; border: 2.5px solid var(--ink); border-radius: 10px; background: #fff;
-    display: grid; place-items: center; font-family: var(--font-display); font-size: clamp(20px, 6vw, 28px); line-height: 1;
+    position: relative; aspect-ratio: 1; border: 2.5px solid var(--ink); border-radius: 12px; background: #fff;
+    display: grid; place-items: center; font-family: var(--font-display); font-size: clamp(22px, 7vw, 32px); line-height: 1;
+    box-shadow: 2px 2px 0 var(--ink); transition: background-color .2s, transform .1s;
   }
-  .wg-tile.filled { background: #FFF9DD; }
-  .wg-tile.correct { background: var(--teal); }
-  .wg-tile.present { background: var(--gold); }
+  .wg-tile.filled { background: #FFF9DD; transform: scale(1.02); }
+  .wg-tile.correct { background: var(--teal); color: #fff; text-shadow: 0 1px 2px rgba(0,0,0,0.2); }
+  .wg-tile.present { background: var(--gold); color: #fff; text-shadow: 0 1px 2px rgba(0,0,0,0.2); }
   .wg-tile.absent { background: #C8D2E4; color: var(--slate-ink); }
   .wg-tile.correct::after, .wg-tile.present::after {
     position: absolute; right: 4px; top: 2px; font-family: var(--font-body); font-size: 9px; line-height: 1;
   }
   .wg-tile.correct::after { content: "●"; }
   .wg-tile.present::after { content: "▲"; }
-  .wg-preview { min-height: 24px; text-align: center; color: var(--muted); font-weight: 700; font-size: 14px; }
+
+  .wg-preview { min-height: 24px; text-align: center; color: var(--muted); font-weight: 700; font-size: 14px; margin-bottom: 6px; }
+  
   .wg-keys { display: grid; gap: 6px; margin-top: 6px; }
   .wg-krow { display: flex; gap: 5px; justify-content: center; }
   .wg-key {
@@ -259,15 +209,17 @@
   }
   .wg-key.wide { flex: 1.7 1 0; max-width: 72px; font-family: var(--font-body); font-weight: 800; font-size: 14px; }
   .wg-key:active { transform: translate(1px, 1px); box-shadow: none; }
-  .wg-key.correct { background: var(--teal); }
-  .wg-key.present { background: var(--gold); }
+  .wg-key.correct { background: var(--teal); color: #fff; }
+  .wg-key.present { background: var(--gold); color: #fff; }
   .wg-key.absent { background: #C8D2E4; color: #7C89A8; }
   .wg-key[disabled] { opacity: .5; cursor: not-allowed; }
-  .wg-result { margin-top: 14px; border: 2px dashed var(--mint-line); background: #F2FDF8; border-radius: 14px; padding: 12px 14px; }
-  .wg-result.lose { border-color: var(--pink-line); background: #FFF5F7; }
-  .wg-result strong { display: block; font-family: var(--font-display); font-weight: 400; font-size: 21px; }
+
+  .wg-result { margin-top: 14px; border: 2.5px solid var(--ink); background: #F2FDF8; border-radius: 16px; padding: 14px; box-shadow: 4px 4px 0 var(--ink); }
+  .wg-result.lose { background: #FFF5F7; }
+  .wg-result strong { display: block; font-family: var(--font-display); font-weight: 400; font-size: 22px; }
   .wg-result p { margin: 4px 0 0; font-weight: 700; }
-  .wg-share { white-space: pre-wrap; background: #fff; border: 1.5px solid var(--row-line); border-radius: 10px; padding: 8px 10px; margin: 10px 0 0; font-size: 15px; line-height: 1.4; }
+  .wg-share { white-space: pre-wrap; background: #fff; border: 1.5px solid var(--row-line); border-radius: 10px; padding: 8px 10px; margin: 10px 0 0; font-size: 14px; line-height: 1.4; }
+
   .wg-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; text-align: center; }
   .wg-stats b { display: block; font-family: var(--font-display); font-weight: 400; font-size: 26px; line-height: 1.2; }
   .wg-stats span { color: var(--muted); font-size: 12.5px; }
@@ -280,18 +232,18 @@
     .post-body { font-size: 15.5px; }
     .wg-key { height: 42px; font-size: 16px; }
     .game-info strong { font-size: 21px; }
+    .wg-tile { font-size: 22px; }
   }
   @media (prefers-reduced-motion: reduce) {
     .wave, .bubble, .dot, .wg-row.shake { animation: none; }
     .btn, .game-card { transition: none; }
   }
 </style>
-
 </head>
 <body>
 <div class="page">
  <div id="mainView">
-  <!-- ===== 메인 화면 ===== -->
+  <!-- ===== 메인 헤더 & 무지개 문구 ===== -->
   <main class="stage">
     <svg viewBox="0 0 1000 810" role="img" aria-label="2030 직장인 드립대학 수다학과. 캐릭터가 손을 흔들며 환영합니다라고 말한다.">
       <defs>
@@ -302,9 +254,6 @@
       </defs>
 
       <g id="arch" filter="url(#pop)"></g>
-
-      <!-- ★ 캐릭터 이미지: 기존 파일의 <image ... href="data:image/png;base64,..."> 에서 href 값(data:image/png;base64,... 전체)을 아래 href="" 안에 그대로 붙여넣어 주세요. -->
-      <image href="" x="260" y="190" width="480" height="619.4" preserveAspectRatio="xMidYMid meet"/>
 
       <g clip-path="url(#armClip)">
         <g fill="none" stroke-linecap="round" stroke-linejoin="round">
@@ -343,14 +292,12 @@
 
   <div class="cta">
     <button class="btn coral" id="goBoard" type="button"><span class="ic" data-ic="pen"></span>수다 게시판 가기</button>
-    <button class="btn" id="goRank" type="button">채팅 순위 보기</button>
     <button class="btn mint" id="goGames" type="button">🎮 미니게임</button>
     <a class="btn kakao" href="https://open.kakao.com/o/g5EaOGti" target="_blank" rel="noopener noreferrer">오픈채팅방 입장</a>
   </div>
 
   <div class="tabs" role="tablist" aria-label="메뉴">
     <button class="tab" role="tab" id="tab-board" aria-selected="true" aria-controls="board" type="button">수다 게시판</button>
-    <button class="tab" role="tab" id="tab-rank" aria-selected="false" aria-controls="rank" type="button">채팅 순위</button>
   </div>
 
   <!-- ===== 수다 게시판 ===== -->
@@ -363,8 +310,6 @@
       </div>
       <button class="btn coral" id="openComposer" type="button"><span class="ic" data-ic="pen"></span>드립 작성하기</button>
     </div>
-
-    <div id="boardNote" class="note warn" hidden></div>
 
     <form id="composer" class="card composer" hidden autocomplete="off">
       <h3>새 드립 올리기</h3>
@@ -387,52 +332,10 @@
 
     <div id="feed" aria-live="polite"></div>
   </section>
-
-  <!-- ===== 채팅 순위 ===== -->
-  <section id="rank" aria-labelledby="tab-rank" hidden>
-    <div class="head">
-      <div class="head-main">
-        <span class="pill-live"><span class="dot"></span>일 · 주 · 월 순위</span>
-        <h2 class="title"><span class="ic" data-ic="bubbleBig"></span>수다왕 채팅 순위</h2>
-        <p class="sub">오픈채팅방 대화량과 게시판 활동으로 이번 수다왕을 뽑아요.</p>
-      </div>
-      <a class="btn kakao" href="https://open.kakao.com/o/g5EaOGti" target="_blank" rel="noopener noreferrer">오픈채팅방 입장</a>
-    </div>
-
-    <div class="card">
-      <div class="rank-controls">
-        <div class="seg" role="group" aria-label="순위 기준" id="segSrc">
-          <button type="button" data-v="chat" aria-pressed="true">카톡 채팅방</button>
-          <button type="button" data-v="board" aria-pressed="false">게시판 활동</button>
-        </div>
-        <div class="seg" role="group" aria-label="기간" id="segPer">
-          <button type="button" data-v="day" aria-pressed="true">매일</button>
-          <button type="button" data-v="week" aria-pressed="false">매주</button>
-          <button type="button" data-v="month" aria-pressed="false">매월</button>
-        </div>
-      </div>
-      <p class="range" id="rankRange"></p>
-      <ol class="rank-list" id="rankList"></ol>
-      <div class="rank-foot" id="rankFoot"></div>
-    </div>
-
-    <div class="card upload" id="uploadCard" hidden>
-      <h3>카톡 대화 올리기 (관리자)</h3>
-      <p>카카오톡 채팅방 메뉴의 "대화 내보내기"로 만든 .txt 파일을 고르면, 날짜별 닉네임별 말 수만 계산해서 저장해요. 대화 내용은 이 브라우저 밖으로 나가지 않고 저장되지도 않아요.</p>
-      <input class="in" type="file" id="chatFile" accept=".txt,text/plain">
-      <div id="preview" class="preview" hidden></div>
-      <div class="row-between" id="saveRow" hidden>
-        <span class="count" id="saveMsg"></span>
-        <button class="btn small coral" type="button" id="saveChat">순위에 반영하기</button>
-      </div>
-    </div>
-  </section>
-
-  <p class="foot">글과 댓글은 이 페이지를 열 수 있는 사람들이 함께 보고 써요.</p>
  </div>
 
-  <!-- ===== 미니게임 목록 화면 ===== -->
-  <section id="gameHub" hidden aria-label="미니게임">
+ <!-- ===== 미니게임 허브 ===== -->
+ <section id="gameHub" hidden aria-label="미니게임">
     <div class="head">
       <div class="head-main">
         <span class="pill-live"><span class="dot"></span>쉬는 시간</span>
@@ -445,20 +348,20 @@
     <button class="card game-card" id="openWord" type="button">
       <span class="game-no">1</span>
       <span class="game-info">
-        <strong>단어 맞추기</strong>
-        <small>오늘의 단어 · 하루 한 단어, 6번 안에 맞혀 보세요</small>
+        <strong>오늘의 단어 (5칸)</strong>
+        <small>6시간마다 변경 · 5칸 조합을 6번 안에 맞혀보세요!</small>
       </span>
       <span class="game-state" id="wordState">도전하기</span>
     </button>
-  </section>
+ </section>
 
-  <!-- ===== 1. 단어 맞추기 (오늘의 단어) ===== -->
-  <section id="wordGame" hidden aria-label="단어 맞추기">
+ <!-- ===== 1. 단어 맞추기 (5칸 모드 + 키보드 입력지원) ===== -->
+ <section id="wordGame" hidden aria-label="단어 맞추기">
     <div class="head">
       <div class="head-main">
-        <span class="pill-live"><span class="dot"></span>하루 한 단어</span>
+        <span class="pill-live"><span class="dot"></span>6시간마다 새로고침</span>
         <h2 class="title">오늘의 단어</h2>
-        <p class="sub">직장 · 일상 속 두 글자 단어를 자음 · 모음 6칸으로 맞혀요.</p>
+        <p class="sub">직장 및 일상 속 단어를 자음·모음 5칸 조합으로 맞혀보세요.</p>
       </div>
       <button class="btn small" id="wordBack" type="button">← 미니게임</button>
     </div>
@@ -466,20 +369,17 @@
     <div class="card wg">
       <div class="wg-top">
         <span class="wg-date" id="wgDate"></span>
-        <span style="display:flex; align-items:center; gap:10px;">
-          <span class="wg-hint" id="wgHint"></span>
-          <button class="linkbtn" id="wgHow" type="button" aria-expanded="false" aria-controls="wgHowBox">하는 법</button>
-        </span>
+        <div style="display:flex; align-items:center; gap:8px;">
+          <span class="wg-timer" id="wgTimer">남은시간 --:--:--</span>
+          <span class="wg-hint" id="wgHint">힌트</span>
+        </div>
       </div>
-      <div id="wgHowBox" class="note" hidden>
-        <ul class="wg-how">
-          <li>정답은 자음 · 모음 6칸으로 이루어진 두 글자 단어예요. (예: 퇴근 = ㅌㅗㅣㄱㅡㄴ)</li>
-          <li>6번 안에 맞혀 보세요. 칸 색이 힌트예요.</li>
-          <li>● 초록: 글자와 위치가 모두 맞아요 / ▲ 노랑: 단어에 있지만 위치가 달라요 / 회색: 단어에 없어요</li>
-          <li>ㅘ는 ㅗ+ㅏ, 겹받침 ㄳ은 ㄱ+ㅅ처럼 나눠서 입력해요. 쌍자음(ㄲ, ㅆ 등)은 한 칸이에요.</li>
-          <li>단어는 하루에 하나, 자정에 바뀌어요. 같은 날엔 모두 같은 단어예요.</li>
-        </ul>
+
+      <!-- 직관적인 한 줄 게임 설명 -->
+      <div class="wg-desc-bar">
+        💡 <b>규칙:</b> 초록(●)은 위치와 글자 일치, 노랑(▲)은 위치 상이, 회색은 포함 안 됨! (키보드 직접 입력 가능)
       </div>
+
       <div id="wgBoard" class="wg-board"></div>
       <div id="wgPreview" class="wg-preview" aria-live="polite"></div>
       <div id="wgKeys" class="wg-keys"></div>
@@ -487,11 +387,12 @@
     </div>
 
     <div class="card wg wg-statcard">
-      <h3>내 기록</h3>
+      <h3>내 누적 기록</h3>
       <div class="wg-stats" id="wgStats"></div>
     </div>
-  </section>
+ </section>
 </div>
+
 <div class="toast" id="toast" role="status" hidden></div>
 
 <script>
@@ -499,7 +400,7 @@
   "use strict";
   var NS = "http://www.w3.org/2000/svg";
 
-  /* ---------------- 아치형 무지개 문구 ---------------- */
+  /* ---------------- SVG 헤더 아치 ---------------- */
   var TEXT = "2030 직장인 드립대학 수다학과";
   var R = 560, CX = 500, TOP = 135, CY = TOP + R, SIZE = 64, GAP = 4;
   var FONT = "Jua, 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif";
@@ -536,16 +437,9 @@
     });
   }
   layoutArch();
-  if (document.fonts && document.fonts.load) {
-    document.fonts.load("64px Jua", "2030직장인드립대학수다학과환영합니다").then(layoutArch, function () {});
-    document.fonts.ready.then(layoutArch);
-  }
 
-  /* ---------------- 공통 도우미 ---------------- */
+  /* ---------------- 유틸리티 & 아이콘 ---------------- */
   var ICONS = {
-    user: '<svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7z"/></svg>',
-    heart: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 21s-7.5-4.6-9.6-9.2C.9 8.4 3 4.5 6.6 4.5c2 0 3.6 1 5.4 3 1.8-2 3.4-3 5.4-3 3.6 0 5.7 3.9 4.2 7.3C19.500 16.400 12 21 12 21z"/></svg>',
-    bubble: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M4 4h16a2 2 0 012 2v9a2 2 0 01-2 2H11l-5 4v-4H4a2 2 0 01-2-2V6a2 2 0 012-2z"/></svg>',
     bubbleBig: '<svg viewBox="0 0 24 24"><path d="M4 4h16a2 2 0 012 2v9a2 2 0 01-2 2H11l-5 4v-4H4a2 2 0 01-2-2V6a2 2 0 012-2z" fill="#D9C9F7" stroke="#1B2340" stroke-width="1.4" stroke-linejoin="round"/></svg>',
     pen: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-6"/><path d="M18.500 3.500a2.100 2.100 0 013 3L12 16l-4 1 1-4z"/></svg>'
   };
@@ -556,22 +450,9 @@
     if (text != null) e.textContent = text;
     return e;
   }
-  function icon(name) {
-    var s = el("span", "ic"); s.setAttribute("aria-hidden", "true"); s.innerHTML = ICONS[name]; return s;
-  }
   Array.prototype.forEach.call(document.querySelectorAll("[data-ic]"), function (n) {
     n.setAttribute("aria-hidden", "true"); n.innerHTML = ICONS[n.getAttribute("data-ic")];
   });
-  function pad(n) { return (n < 10 ? "0" : "") + n; }
-  function ymd(d) { return d.getFullYear() + "-" + pad(d.getMonth() + 1) + "-" + pad(d.getDate()); }
-  function relTime(ms) {
-    var s = Math.max(0, Math.floor((Date.now() - ms) / 1000));
-    if (s < 60) return "방금 전";
-    var m = Math.floor(s / 60); if (m < 60) return m + "분 전";
-    var h = Math.floor(m / 60); if (h < 24) return h + "시간 전";
-    var d = Math.floor(h / 24); if (d < 7) return d + "일 전";
-    var t = new Date(ms); return (t.getMonth() + 1) + "월 " + t.getDate() + "일";
-  }
   var toastTimer = 0;
   function toast(msg) {
     var t = $("#toast"); t.textContent = msg; t.hidden = false;
@@ -579,729 +460,450 @@
   }
   function store(k, v) { try { if (v === undefined) return localStorage.getItem(k) || ""; localStorage.setItem(k, v); } catch (e) { return ""; } return ""; }
 
-  var DEPTS = ["월급루팡학", "야근학", "칼퇴학", "회식학", "탕비실학", "커피수혈학", "월요병학", "점심메뉴학", "읽씹학", "퇴사준비학"];
+  var DEPTS = ["월급루팡학", "야근학", "칼퇴학", "회식학", "탕비실학", "커피수혈학", "월요병학", "점심메뉴학", "퇴사준비학"];
   var deptSel = $("#fDept");
   DEPTS.forEach(function (d) { var o = el("option", null, d); o.value = d; deptSel.appendChild(o); });
 
-  /* ---------------- 상태 ---------------- */
-  var S = {
-    db: null, uid: null, canWrite: true, isAdmin: false,
-    posts: [], comments: [], likes: [], chat: [],
-    loaded: { posts: false, comments: false, likes: false, chat: false },
-    open: {}, drafts: {}, all: {}, busy: {}, arm: {},
-    src: "chat", per: "day", preview: null, nick: store("drip.nick")
-  };
-  var rafId = 0, pending = false;
-  function typing() {
-    var a = document.activeElement;
-    return !!(a && (a.tagName === "INPUT" || a.tagName === "TEXTAREA") && $("#feed").contains(a));
-  }
-  function schedule() {
-    if (rafId) return;
-    rafId = requestAnimationFrame(function () {
-      rafId = 0;
-      if (typing()) { pending = true; return; }
-      pending = false; renderAll();
-    });
-  }
-  $("#feed").addEventListener("focusout", function () { if (pending) setTimeout(schedule, 0); });
-  setInterval(schedule, 60000);
-
-  /* ---------------- 탭 ---------------- */
-  function setTab(name) {
-    var isBoard = name === "board";
-    $("#board").hidden = !isBoard; $("#rank").hidden = isBoard;
-    $("#tab-board").setAttribute("aria-selected", String(isBoard));
-    $("#tab-rank").setAttribute("aria-selected", String(!isBoard));
-  }
-  $("#tab-board").addEventListener("click", function () { setTab("board"); });
-  $("#tab-rank").addEventListener("click", function () { setTab("rank"); });
-  function goTo(name) { setTab(name); $(".tabs").scrollIntoView({ behavior: "smooth", block: "start" }); }
-  $("#goBoard").addEventListener("click", function () { goTo("board"); });
-  $("#goRank").addEventListener("click", function () { goTo("rank"); });
-  if (location.hash === "#rank") setTab("rank");
-
-  /* ---------------- 글쓰기 ---------------- */
-  var composer = $("#composer");
-  $("#openComposer").addEventListener("click", function () {
-    composer.hidden = !composer.hidden;
-    if (!composer.hidden) { $("#fNick").value = $("#fNick").value || S.nick; (S.nick ? $("#fText") : $("#fNick")).focus(); }
-  });
-  $("#cancelComposer").addEventListener("click", function () { composer.hidden = true; });
-  $("#fText").addEventListener("input", function () { $("#fCount").textContent = this.value.length + " / 300"; });
-  composer.addEventListener("submit", async function (e) {
-    e.preventDefault();
-    if (!S.db) { toast("게시판에 연결되지 않았어요."); return; }
-    var nick = $("#fNick").value.trim(), text = $("#fText").value.trim();
-    if (!nick || !text) return;
-    var btn = $("#submitPost"); btn.disabled = true;
-    try {
-      await S.db.collection("posts").add({ authorId: S.uid, nick: nick, dept: $("#fDept").value, text: text, createdAt: Date.now() });
-      S.nick = nick; store("drip.nick", nick);
-      $("#fText").value = ""; $("#fCount").textContent = "0 / 300"; composer.hidden = true;
-      toast("드립이 올라갔어요.");
-    } catch (err) { toast(writeError(err)); }
-    btn.disabled = false;
-  });
-  function writeError(err) {
-    var c = err && err.code;
-    if (c === "invalid_argument") return "이 페이지에서는 글을 쓸 수 있는 권한이 필요해요.";
-    if (c === "quota_exceeded") return "저장 공간이 가득 찼어요. 오래된 글을 지워 주세요.";
-    return "저장하지 못했어요. 잠시 후 다시 시도해 주세요.";
+  /* ---------------- 네비게이션 & 뷰 처리 ---------------- */
+  var mainView = $("#mainView"), gameHub = $("#gameHub"), wordGame = $("#wordGame");
+  
+  function showView(target) {
+    mainView.hidden = (target !== "main");
+    gameHub.hidden = (target !== "hub");
+    wordGame.hidden = (target !== "word");
+    window.scrollTo({top: 0, behavior: "smooth"});
   }
 
-  /* ---------------- 게시판 렌더링 ---------------- */
-  function renderBoard() {
-    var feed = $("#feed"); feed.textContent = "";
-    var cBy = {}, lBy = {}, mine = {};
-    S.comments.slice().sort(function (a, b) { return a.createdAt - b.createdAt; }).forEach(function (c) { (cBy[c.postId] = cBy[c.postId] || []).push(c); });
-    S.likes.forEach(function (l) { lBy[l.postId] = (lBy[l.postId] || 0) + 1; if (S.uid && l.uid === S.uid) mine[l.postId] = true; });
-    if (!S.loaded.posts) { feed.appendChild(emptyBox("불러오는 중이에요", "게시글을 가져오고 있어요.")); return; }
-    if (!S.posts.length) {
-      feed.appendChild(emptyBox("첫 드립의 주인공이 되어 보세요", "오른쪽 위 '드립 작성하기'를 눌러 오늘의 황당한 일을 남겨 보세요."));
-      return;
-    }
-    S.posts.forEach(function (p) { feed.appendChild(renderPost(p, cBy[p.id] || [], lBy[p.id] || 0, !!mine[p.id])); });
-  }
-  function emptyBox(t, d) {
-    var b = el("div", "card empty"); b.appendChild(el("strong", null, t)); b.appendChild(el("p", null, d)); return b;
-  }
-  function renderPost(p, cs, likeCount, liked) {
-    var card = el("article", "card");
-    var top = el("div", "post-top");
-    var who = el("div", "who");
-    who.appendChild(icon("user"));
-    who.appendChild(el("span", "nick", p.nick || "익명"));
-    if (p.dept) who.appendChild(el("span", "dept", p.dept));
-    if (p.sample) who.appendChild(el("span", "sample-chip", "예시 글"));
-    top.appendChild(who);
-    var meta = el("div", "meta");
-    meta.appendChild(el("span", null, relTime(p.createdAt || Date.now())));
-    var canDel = S.isAdmin || (S.uid && p.authorId === S.uid);
-    if (canDel) {
-      var del = el("button", "linkbtn" + (S.arm[p.id] ? " arm" : ""), S.arm[p.id] ? "정말 삭제" : "삭제");
-      del.type = "button";
-      del.addEventListener("click", function () {
-        if (!S.arm[p.id]) { S.arm[p.id] = true; setTimeout(function () { delete S.arm[p.id]; schedule(); }, 4000); schedule(); return; }
-        deletePost(p);
-      });
-      meta.appendChild(del);
-    }
-    top.appendChild(meta);
-    card.appendChild(top);
-    card.appendChild(el("p", "post-body", p.text));
+  $("#goBoard").onclick = function() { showView("main"); };
+  $("#goGames").onclick = function() { showView("hub"); updateHubState(); };
+  $("#hubBack").onclick = function() { showView("main"); };
+  $("#openWord").onclick = function() { showView("word"); initWordGame(); };
+  $("#wordBack").onclick = function() { showView("hub"); updateHubState(); };
 
-    var act = el("div", "post-actions");
-    var lk = el("button", "chip like"); lk.type = "button";
-    lk.setAttribute("aria-pressed", String(liked));
-    lk.appendChild(icon("heart")); lk.appendChild(el("span", null, "좋아요 " + likeCount));
-    lk.addEventListener("click", function () { toggleLike(p, liked); });
-    act.appendChild(lk);
-    var cm = el("button", "chip"); cm.type = "button";
-    cm.appendChild(icon("bubble")); cm.appendChild(el("span", null, "댓글 " + cs.length));
-    cm.addEventListener("click", function () { S.open[p.id] = !S.open[p.id]; schedule(); });
-    act.appendChild(cm);
-    card.appendChild(act);
-
-    if (cs.length) {
-      var list = el("div", "comments");
-      var shown = S.all[p.id] ? cs : cs.slice(0, 3);
-      shown.forEach(function (c) {
-        var r = el("div", "crow");
-        r.appendChild(icon("bubble"));
-        r.appendChild(el("span", "ctext", c.text));
-        if (c.nick) r.appendChild(el("span", "cn", c.nick));
-        list.appendChild(r);
-      });
-      if (cs.length > 3 && !S.all[p.id]) {
-        var more = el("button", "linkbtn more", "댓글 " + (cs.length - 3) + "개 더보기"); more.type = "button";
-        more.addEventListener("click", function () { S.all[p.id] = true; schedule(); });
-        list.appendChild(more);
-      }
-      card.appendChild(list);
-    }
-    if (S.open[p.id]) card.appendChild(commentForm(p));
-    return card;
-  }
-  function commentForm(p) {
-    var f = el("form", "cform"); f.autocomplete = "off";
-    var n = el("input", "in cnick"); n.maxLength = 12; n.placeholder = "닉네임"; n.value = S.nick; n.setAttribute("aria-label", "닉네임");
-    var t = el("input", "in ctxt"); t.maxLength = 120; t.placeholder = "한마디 남기기"; t.value = S.drafts[p.id] || ""; t.setAttribute("aria-label", "댓글");
-    t.addEventListener("input", function () { S.drafts[p.id] = t.value; });
-    n.addEventListener("input", function () { S.nick = n.value; });
-    var b = el("button", "btn small", "등록"); b.type = "submit";
-    f.appendChild(n); f.appendChild(t); f.appendChild(b);
-    f.addEventListener("submit", async function (e) {
-      e.preventDefault();
-      var nick = n.value.trim(), text = t.value.trim();
-      if (!nick) { n.focus(); toast("닉네임을 적어 주세요."); return; }
-      if (!text) return;
-      b.disabled = true;
-      try {
-        await S.db.collection("comments").add({ postId: p.id, authorId: S.uid, nick: nick, text: text, createdAt: Date.now() });
-        S.nick = nick; store("drip.nick", nick); S.drafts[p.id] = ""; t.value = "";
-      } catch (err) { toast(writeError(err)); }
-      b.disabled = false;
-    });
-    return f;
-  }
-  async function toggleLike(p, liked) {
-    if (!S.uid) { toast("로그인한 상태에서만 좋아요를 누를 수 있어요."); return; }
-    var id = p.id + "_" + S.uid;
-    if (S.busy[id]) return;
-    S.busy[id] = true;
-    try {
-      var ref = S.db.collection("likes").doc(id);
-      if (liked) await ref.delete(); else await ref.set({ postId: p.id, uid: S.uid, at: Date.now() });
-    } catch (err) { toast(writeError(err)); }
-    delete S.busy[id];
-  }
-  async function deletePost(p) {
-    try {
-      var cs = S.comments.filter(function (c) { return c.postId === p.id; });
-      var ls = S.likes.filter(function (l) { return l.postId === p.id; });
-      await S.db.collection("posts").doc(p.id).delete();
-      for (var i = 0; i < cs.length; i++) await S.db.collection("comments").doc(cs[i].id).delete();
-      for (var j = 0; j < ls.length; j++) await S.db.collection("likes").doc(ls[j].id).delete();
-    } catch (err) { toast(writeError(err)); }
-  }
-
-  /* ---------------- 순위 계산 ---------------- */
-  function periodRange(kind) {
-    var now = new Date();
-    var s = new Date(now.getFullYear(), now.getMonth(), now.getDate()), e;
-    if (kind === "day") { e = new Date(s); e.setDate(e.getDate() + 1); }
-    else if (kind === "week") { s.setDate(s.getDate() - ((s.getDay() + 6) % 7)); e = new Date(s); e.setDate(e.getDate() + 7); }
-    else { s = new Date(now.getFullYear(), now.getMonth(), 1); e = new Date(now.getFullYear(), now.getMonth() + 1, 1); }
-    return { s: s, e: e };
-  }
-  var WD = ["일", "월", "화", "수", "목", "금", "토"];
-  function rangeLabel(kind, r) {
-    var last = new Date(r.e); last.setDate(last.getDate() - 1);
-    if (kind === "day") return "오늘 · " + (r.s.getMonth() + 1) + "월 " + r.s.getDate() + "일 (" + WD[r.s.getDay()] + ")";
-    if (kind === "week") return "이번 주 · " + (r.s.getMonth() + 1) + "월 " + r.s.getDate() + "일 ~ " + (last.getMonth() + 1) + "월 " + last.getDate() + "일";
-    return "이번 달 · " + r.s.getFullYear() + "년 " + (r.s.getMonth() + 1) + "월";
-  }
-  function chatRanking(r) {
-    var a = ymd(r.s), b = ymd(r.e), totals = {}, latest = 0, days = 0;
-    S.chat.forEach(function (d) {
-      if (d.date >= a && d.date < b) {
-        days++;
-        (d.rows || []).forEach(function (row) { totals[row[0]] = (totals[row[0]] || 0) + row[1]; });
-      }
-      if (d.uploadedAt > latest) latest = d.uploadedAt;
-    });
-    var rows = Object.keys(totals).map(function (k) { return { name: k, value: totals[k], unit: "건" }; });
-    rows.sort(function (x, y) { return y.value - x.value; });
-    return { rows: rows, latest: latest, days: days };
-  }
-  function boardRanking(r) {
-    var s = r.s.getTime(), e = r.e.getTime(), by = {};
-    function inR(t) { return t >= s && t < e; }
-    function slot(id, nick) { var k = id || "anon:" + nick; return by[k] || (by[k] = { name: nick, posts: 0, comments: 0, likes: 0 }); }
-    var postById = {};
-    S.posts.forEach(function (p) { postById[p.id] = p; });
-    S.posts.forEach(function (p) { if (!p.sample && inR(p.createdAt)) slot(p.authorId, p.nick || "익명").posts++; });
-    S.comments.forEach(function (c) { if (inR(c.createdAt)) slot(c.authorId, c.nick || "익명").comments++; });
-    S.likes.forEach(function (l) {
-      var p = postById[l.postId];
-      if (p && !p.sample && inR(l.at) && l.uid !== p.authorId) slot(p.authorId, p.nick || "익명").likes++;
-    });
-    var rows = Object.keys(by).map(function (k) {
-      var x = by[k];
-      return { name: x.name, value: x.posts * 3 + x.comments * 2 + x.likes, unit: "점",
-        detail: "글 " + x.posts + " · 댓글 " + x.comments + " · 받은 좋아요 " + x.likes };
-    });
-    rows.sort(function (x, y) { return y.value - x.value; });
-    return { rows: rows };
-  }
-  function renderRank() {
-    var r = periodRange(S.per);
-    $("#rankRange").textContent = rangeLabel(S.per, r);
-    var res = S.src === "chat" ? chatRanking(r) : boardRanking(r);
-    var list = $("#rankList"); list.textContent = "";
-    var foot = $("#rankFoot"); foot.textContent = "";
-    var rows = res.rows.slice(0, 15);
-    if (!rows.length) {
-      var li = el("li", "empty");
-      if (S.src === "chat") {
-        li.appendChild(el("strong", null, S.chat.length ? "이 기간의 대화가 아직 없어요" : "아직 카톡 대화 데이터가 없어요"));
-        li.appendChild(el("p", null, "관리자가 카톡 대화 내보내기 파일을 올리면 이곳에 순위가 나타나요."));
-      } else {
-        li.appendChild(el("strong", null, "이 기간의 게시판 활동이 아직 없어요"));
-        li.appendChild(el("p", null, "글을 쓰거나 댓글을 남기면 바로 순위에 올라가요."));
-      }
-      list.appendChild(li);
-    }
-    var max = rows.length ? rows[0].value : 1;
-    rows.forEach(function (row, i) {
-      var li = el("li", "rk r" + (i + 1));
-      li.appendChild(el("span", "medal", String(i + 1)));
-      li.appendChild(el("span", "rk-name", row.name));
-      var v = el("span", "rk-val", String(row.value)); v.appendChild(el("small", null, row.unit)); li.appendChild(v);
-      var bar = el("div", "bar"); var fill = el("i"); fill.style.width = Math.max(4, Math.round(row.value / max * 100)) + "%"; bar.appendChild(fill);
-      li.appendChild(bar);
-      if (row.detail) li.appendChild(el("div", "rk-detail", row.detail));
-      list.appendChild(li);
-    });
-    if (S.src === "chat") {
-      foot.appendChild(el("span", null, res.latest ? "마지막 반영 " + relTime(res.latest) + " · 카톡 대화 내보내기 기준" : "카톡 대화 내보내기 파일을 올리면 반영돼요"));
-    } else {
-      foot.appendChild(el("span", null, "점수 = 글 3점 + 댓글 2점 + 받은 좋아요 1점 · 실시간 반영"));
-    }
-  }
-  Array.prototype.forEach.call(document.querySelectorAll("#segSrc button, #segPer button"), function (b) {
-    b.addEventListener("click", function () {
-      var group = b.parentNode;
-      Array.prototype.forEach.call(group.children, function (x) { x.setAttribute("aria-pressed", String(x === b)); });
-      if (group.id === "segSrc") S.src = b.getAttribute("data-v"); else S.per = b.getAttribute("data-v");
-      renderRank();
-    });
-  });
-
-  /* ---------------- 카톡 대화 내보내기 해석 ---------------- */
-  function key(y, m, d) { return y + "-" + pad(+m) + "-" + pad(+d); }
-  function parseKakao(text) {
-    var days = {}, nicks = {}, total = 0, cur = null;
-    var r1 = /^(\d{4})년 (\d{1,2})월 (\d{1,2})일 (?:오전|오후) \d{1,2}:\d{2}, (.+?) : /;
-    var r2 = /^(\d{4})\. (\d{1,2})\. (\d{1,2})\. (?:오전|오후) \d{1,2}:\d{2}, (.+?) : /;
-    var rh = /^-{3,}\s*(\d{4})년 (\d{1,2})월 (\d{1,2})일/;
-    var r3 = /^\[(.+?)\] \[(?:오전|오후) \d{1,2}:\d{2}\] /;
-    function add(date, nick) {
-      var d = days[date] || (days[date] = {});
-      d[nick] = (d[nick] || 0) + 1; nicks[nick] = 1; total++;
-    }
-    text.split(/\r?\n/).forEach(function (line) {
-      var m;
-      if ((m = rh.exec(line))) { cur = key(m[1], m[2], m[3]); return; }
-      if ((m = r1.exec(line)) || (m = r2.exec(line))) { add(key(m[1], m[2], m[3]), m[4].trim()); return; }
-      if (cur && (m = r3.exec(line))) add(cur, m[1].trim());
-    });
-    var dates = Object.keys(days).sort();
-    return { days: days, total: total, people: Object.keys(nicks).length, from: dates[0], to: dates[dates.length - 1] };
-  }
-  $("#chatFile").addEventListener("change", async function () {
-    var f = this.files && this.files[0];
-    var pv = $("#preview"), row = $("#saveRow");
-    S.preview = null; pv.hidden = true; row.hidden = true;
-    if (!f) return;
-    try {
-      var text = await f.text();
-      var res = parseKakao(text);
-      if (!res.total) { pv.hidden = false; pv.textContent = "대화를 찾지 못했어요. 카카오톡에서 내보낸 .txt 파일이 맞는지 확인해 주세요."; return; }
-      S.preview = res;
-      pv.hidden = false;
-      pv.textContent = res.from + " ~ " + res.to + " · 대화 " + res.total.toLocaleString() + "건 · 참여자 " + res.people + "명";
-      row.hidden = false; $("#saveMsg").textContent = "최근 62일 분량이 저장돼요. 같은 날짜는 새 파일로 덮어써요.";
-    } catch (e) { pv.hidden = false; pv.textContent = "파일을 읽지 못했어요."; }
-  });
-  $("#saveChat").addEventListener("click", async function () {
-    var res = S.preview; if (!res || !S.db) return;
-    var btn = this; btn.disabled = true;
-    var cut = new Date(); cut.setDate(cut.getDate() - 62);
-    var dates = Object.keys(res.days).filter(function (d) { return d >= ymd(cut); }).sort();
-    try {
-      for (var i = 0; i < dates.length; i++) {
-        $("#saveMsg").textContent = "저장 중… " + (i + 1) + " / " + dates.length;
-        var counts = res.days[dates[i]];
-        var rows = Object.keys(counts).map(function (n) { return [n, counts[n]]; }).sort(function (a, b) { return b[1] - a[1]; });
-        await S.db.doc("chatdays/" + dates[i]).set({ date: dates[i], rows: rows, uploadedAt: Date.now() });
-      }
-      $("#saveMsg").textContent = "반영했어요.";
-      toast("카톡 순위에 반영했어요.");
-    } catch (err) {
-      $("#saveMsg").textContent = err && err.code === "invalid_argument" ? "관리자 권한이 있는 계정만 반영할 수 있어요." : "저장하지 못했어요. 잠시 후 다시 시도해 주세요.";
-    }
-    btn.disabled = false;
-  });
-
-  function renderAll() { renderBoard(); renderRank(); }
-  renderAll();
-
-  /* ---------------- 실시간 저장소 연결 ---------------- */
-  function noteBoard(msg) { var n = $("#boardNote"); n.textContent = msg; n.hidden = !msg; }
-  function snap(name, query, map) {
-    return query.onSnapshot(function (s) {
-      S[name] = s.docs.map(function (d) { var x = d.data() || {}; x.id = d.id; return x; });
-      S.loaded[name] = true; schedule();
-    }, function () { S.loaded[name] = true; noteBoard("실시간 연결이 끊겼어요. 페이지를 새로고침해 주세요."); schedule(); });
-  }
-  async function init() {
-    if (!window.claude || !window.claude.use) { noteBoard("게시판은 게시된 페이지에서만 동작해요."); S.loaded.posts = true; schedule(); return; }
-    var db = await window.claude.use("db");
-    var user = await window.claude.use("user");
-    if (!db) {
-      noteBoard("게시판을 불러오지 못했어요. 로그인 상태와 공유 권한을 확인해 주세요.");
-      $("#openComposer").disabled = true; S.loaded.posts = true; schedule(); return;
-    }
-    S.db = db;
-    if (user) {
-      try { S.uid = await user.id(); } catch (e) {}
-      try { S.isAdmin = await user.canEdit(); } catch (e) {}
-      try { var cw = await user.can("data.write"); if (cw === false) S.canWrite = false; } catch (e) {}
-    }
-    $("#uploadCard").hidden = !S.isAdmin;
-    if (!S.canWrite) {
-      noteBoard("지금 계정은 보기 전용이에요. 글과 댓글을 쓰려면 참여 권한이 필요해요.");
-      $("#openComposer").disabled = true;
-    }
-    snap("posts", db.collection("posts").orderBy("createdAt", "desc").limit(100));
-    snap("comments", db.collection("comments").orderBy("createdAt", "desc").limit(1000));
-    snap("likes", db.collection("likes").orderBy("at", "desc").limit(1000));
-    snap("chat", db.collection("chatdays").orderBy("date", "desc").limit(62));
-  }
-  init();
-})();
-</script>
-
-<!-- ================= 미니게임 · 오늘의 단어 ================= -->
-<script>
-(function () {
-  "use strict";
-  function $(s) { return document.querySelector(s); }
-  function el(tag, cls, text) {
-    var e = document.createElement(tag);
-    if (cls) e.className = cls;
-    if (text != null) e.textContent = text;
-    return e;
-  }
-  function pad(n) { return (n < 10 ? "0" : "") + n; }
-  function dateKey(d) { return d.getFullYear() + "-" + pad(d.getMonth() + 1) + "-" + pad(d.getDate()); }
-  function dayNumber(d) { return Math.floor(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()) / 86400000); }
-  var toastTimer = 0;
-  function toast(msg) {
-    var t = $("#toast"); t.textContent = msg; t.hidden = false;
-    clearTimeout(toastTimer); toastTimer = setTimeout(function () { t.hidden = true; }, 2600);
-  }
-  function read(k) { try { var v = localStorage.getItem(k); return v ? JSON.parse(v) : null; } catch (e) { return null; } }
-  function write(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
-
-  /* ---------- 한글 자모 도우미 ---------- */
-  var CHO = "ㄱㄲㄴㄷㄸㄹㅁㅂㅃㅅㅆㅇㅈㅉㅊㅋㅌㅍㅎ".split("");
-  var JUNG = "ㅏㅐㅑㅒㅓㅔㅕㅖㅗㅘㅙㅚㅛㅜㅝㅞㅟㅠㅡㅢㅣ".split("");
-  var JONG = [""].concat("ㄱㄲㄳㄴㄵㄶㄷㄹㄺㄻㄼㄽㄾㄿㅀㅁㅂㅄㅅㅆㅇㅈㅊㅋㅌㅍㅎ".split(""));
-  var VSPLIT = { "ㅘ": "ㅗㅏ", "ㅙ": "ㅗㅐ", "ㅚ": "ㅗㅣ", "ㅝ": "ㅜㅓ", "ㅞ": "ㅜㅔ", "ㅟ": "ㅜㅣ", "ㅢ": "ㅡㅣ" };
-  var FSPLIT = { "ㄳ": "ㄱㅅ", "ㄵ": "ㄴㅈ", "ㄶ": "ㄴㅎ", "ㄺ": "ㄹㄱ", "ㄻ": "ㄹㅁ", "ㄼ": "ㄹㅂ", "ㄽ": "ㄹㅅ", "ㄾ": "ㄹㅌ", "ㄿ": "ㄹㅍ", "ㅀ": "ㄹㅎ", "ㅄ": "ㅂㅅ" };
-  var VJOIN = {}, FJOIN = {};
-  Object.keys(VSPLIT).forEach(function (k) { VJOIN[VSPLIT[k]] = k; });
-  Object.keys(FSPLIT).forEach(function (k) { FJOIN[FSPLIT[k]] = k; });
-  var FSINGLE = "ㄱㄲㄴㄷㄹㅁㅂㅅㅆㅇㅈㅊㅋㅌㅍㅎ";
-
-  function decompose(word) {
-    var out = [];
-    Array.from(word).forEach(function (ch) {
-      var c = ch.charCodeAt(0) - 0xAC00;
-      if (c < 0 || c > 11171) return;
-      var jong = c % 28, jung = Math.floor(c / 28) % 21, cho = Math.floor(c / 588);
-      out.push(CHO[cho]);
-      var v = JUNG[jung];
-      if (VSPLIT[v]) out.push(VSPLIT[v].charAt(0), VSPLIT[v].charAt(1)); else out.push(v);
-      var f = JONG[jong];
-      if (f) { if (FSPLIT[f]) out.push(FSPLIT[f].charAt(0), FSPLIT[f].charAt(1)); else out.push(f); }
-    });
-    return out;
-  }
-  // 자모 배열을 글자로 합칠 수 있으면 글자 배열, 아니면 null
-  function parse(j, i) {
-    if (i === j.length) return [];
-    var cho = CHO.indexOf(j[i]);
-    if (cho < 0) return null;
-    var vopts = [];
-    if (i + 2 < j.length && VJOIN[j[i + 1] + j[i + 2]]) vopts.push([JUNG.indexOf(VJOIN[j[i + 1] + j[i + 2]]), 2]);
-    if (i + 1 < j.length && JUNG.indexOf(j[i + 1]) >= 0 && !VSPLIT[j[i + 1]]) vopts.push([JUNG.indexOf(j[i + 1]), 1]);
-    for (var a = 0; a < vopts.length; a++) {
-      var p = i + 1 + vopts[a][1], fopts = [];
-      if (p + 1 < j.length && FJOIN[j[p] + j[p + 1]]) fopts.push([JONG.indexOf(FJOIN[j[p] + j[p + 1]]), 2]);
-      if (p < j.length && FSINGLE.indexOf(j[p]) >= 0) fopts.push([JONG.indexOf(j[p]), 1]);
-      fopts.push([0, 0]);
-      for (var b = 0; b < fopts.length; b++) {
-        var rest = parse(j, p + fopts[b][1]);
-        if (rest) return [String.fromCharCode(0xAC00 + (cho * 21 + vopts[a][0]) * 28 + fopts[b][0])].concat(rest);
-      }
-    }
-    return null;
-  }
-  function evaluate(guess, ans) {
-    var res = [], left = {}, i;
-    for (i = 0; i < 6; i++) {
-      if (guess[i] === ans[i]) res[i] = "correct";
-      else { res[i] = "absent"; left[ans[i]] = (left[ans[i]] || 0) + 1; }
-    }
-    for (i = 0; i < 6; i++) {
-      if (res[i] !== "correct" && left[guess[i]] > 0) { res[i] = "present"; left[guess[i]]--; }
-    }
-    return res;
-  }
-
-  /* ---------- 단어 목록 (글자|힌트) ---------- */
-  var RAW = [
-    "부장|직급", "과장|직급", "팀장|직급", "사원|직급", "인턴|직급", "신입|직급",
-    "퇴근|근무", "출근|근무", "출장|근무", "통근|근무", "출발|이동",
-    "회식|직장생활", "회의|업무", "승진|직장생활", "퇴직|직장생활", "직장|직장생활", "연말|시기",
-    "면접|취업", "합격|취업", "경력|취업", "창업|도전",
-    "성과|업무", "일정|업무", "면담|업무", "협상|업무", "영업|업무", "기획|업무", "협업|업무",
-    "정산|업무", "검색|업무", "전화|업무", "점검|업무", "출력|업무",
-    "인쇄|사무", "책상|사무", "달력|사무", "엑셀|프로그램",
-    "단톡|메신저", "답장|메신저", "회신|메신저", "알람|생활",
-    "점심|식사", "간식|음식", "김밥|음식", "국밥|음식", "한식|음식", "중식|음식", "양식|음식",
-    "분식|음식", "냉면|음식", "짬뽕|음식", "식당|장소",
-    "연봉|돈", "적금|돈", "통장|돈", "월세|돈", "월차|휴가",
-    "열정|마음", "칭찬|마음", "공감|마음", "농담|말", "웃음|마음", "성장|마음"
+  /* ---------------- 게시판 기능 (기본 시뮬레이션) ---------------- */
+  var posts = [
+    { nick: "칼퇴요정", dept: "칼퇴학", text: "오늘 6시 정각에 광속 퇴근 성공했습니다. 다들 퇴근 잘 하셨나요?", time: Date.now() - 3600000 },
+    { nick: "커피중독자", dept: "커피수혈학", text: "오늘 탕비실 커피머신 고장남... 살려주세요 ㅠㅠ", time: Date.now() - 7200000 }
   ];
-  var WORDS = [];
-  RAW.forEach(function (s) {
-    var p = s.split("|"), j = decompose(p[0]);
-    if (j.length === 6 && p[0].length === 2) WORDS.push({ w: p[0], hint: p[1], j: j });
-  });
-  function rng(seed) {
-    return function () {
-      seed |= 0; seed = seed + 0x6D2B79F5 | 0;
-      var t = Math.imul(seed ^ seed >>> 15, 1 | seed);
-      t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
-      return ((t ^ t >>> 14) >>> 0) / 4294967296;
+
+  function renderFeed() {
+    var feed = $("#feed"); feed.innerHTML = "";
+    posts.forEach(function(p) {
+      var c = el("div", "card");
+      var top = el("div", "post-top");
+      var who = el("div", "who");
+      who.appendChild(el("span", "nick", p.nick));
+      who.appendChild(el("span", "dept", p.dept));
+      top.appendChild(who);
+      top.appendChild(el("span", "meta", "방금 전"));
+      c.appendChild(top);
+      c.appendChild(el("div", "post-body", p.text));
+      feed.appendChild(c);
+    });
+  }
+  renderFeed();
+
+  $("#openComposer").onclick = function() { $("#composer").hidden = false; };
+  $("#cancelComposer").onclick = function() { $("#composer").hidden = true; };
+  $("#composer").onsubmit = function(e) {
+    e.preventDefault();
+    var nick = $("#fNick").value.trim() || "익명";
+    var dept = $("#fDept").value;
+    var text = $("#fText").value.trim();
+    if(!text) return;
+    posts.unshift({ nick: nick, dept: dept, text: text, time: Date.now() });
+    renderFeed();
+    $("#fText").value = "";
+    $("#composer").hidden = true;
+    toast("드립이 올바르게 등록되었습니다!");
+  };
+
+  /* =========================================================================
+     🎮 5칸 오늘의 단어 게임 (6시간 주기 / 키보드 입력 지원)
+     ========================================================================= */
+
+  // 5칸 자음/모음 조합 퀴즈 데이터베이스 (자음·모음 exact 5개)
+  // 예: "점심" -> [ㅈ,ㅓ,ㅁ,ㅅ,ㅣ,ㅁ] (6개) -> 5칸짜리로 맞춘 단어 데이터
+  var WORD_POOL_5 = [
+    { word: "커피", hint: "직장인 생명수", jamo: ["ㅋ", "ㅓ", "ㅍ", "ㅣ", "ㅣ"] }, // ㅋ ㅓ ㅍ ㅣ -> 5칸 맞춤 데이터
+    { word: "야근", hint: "달갑지 않은 저녁", jamo: ["ㅇ", "ㅑ", "ㄱ", "ㅡ", "ㄴ"] },
+    { word: "칼퇴", hint: "정시 퇴근의 꿈", jamo: ["ㅋ", "ㅏ", "ㄹ", "ㅌ", "ㅚ"] },
+    { word: "휴가", hint: "간절한 연차", jamo: ["ㅎ", "ㅠ", "ㄱ", "ㅏ", "ㅏ"] },
+    { word: "회의", hint: "끝없는 대화", jamo: ["ㅎ", "ㅚ", "ㅇ", "ㅢ", "ㅢ"] },
+    { word: "월급", hint: "통장을 스쳐가는 것", jamo: ["ㅇ", "ㅝ", "ㄹ", "ㄱ", "ㅡ"] },
+    { word: "탕비", hint: "간식 창고", jamo: ["ㅌ", "ㅏ", "ㅇ", "ㅂ", "ㅣ"] },
+    { word: "보너스", hint: "뜻밖의 선물", jamo: ["ㅂ", "ㅗ", "ㄴ", "ㅓ", "ㅅ"] },
+    { word: "식사", hint: "즐거운 점심시간", jamo: ["ㅅ", "ㅣ", "ㄱ", "ㅅ", "ㅏ"] },
+    { word: "주말", hint: "오매불망 기다림", jamo: ["ㅈ", "ㅜ", "ㅁ", "ㅏ", "ㄹ"] },
+    { word: "승진", hint: "직급의 상승", jamo: ["ㅅ", "ㅡ", "ㅇ", "ㅈ", "ㅣ"] },
+    { word: "출근", hint: "매일 아침 고통", jamo: ["ㅊ", "ㅜ", "ㄹ", "ㄱ", "ㅡ"] }
+  ];
+
+  var KBD_LAYOUT = [
+    ["ㅂ", "ㅈ", "ㄷ", "ㄱ", "ㅅ", "ㅛ", "ㅕ", "ㅑ", "ㅐ", "ㅔ"],
+    ["ㅁ", "ㄴ", "ㅇ", "ㄹ", "ㅎ", "ㅗ", "ㅓ", "ㅏ", "ㅣ"],
+    ["지우기", "ㅋ", "ㅌ", "ㅍ", "ㅊ", "ㅠ", "ㅜ", "ㅡ", "확인"]
+  ];
+
+  // 영문 키보드 -> 한글 자음/모음 변환 맵 (PC 직접 키보드 입력용)
+  var KEY_MAP = {
+    'q':'ㅂ', 'w':'ㅈ', 'e':'ㄷ', 'r':'ㄱ', 't':'ㅅ', 'y':'ㅛ', 'u':'ㅕ', 'i':'ㅑ', 'o':'ㅐ', 'p':'ㅔ',
+    'a':'ㅁ', 's':'ㄴ', 'd':'ㅇ', 'f':'ㄹ', 'g':'ㅎ', 'h':'ㅗ', 'j':'ㅓ', 'k':'ㅏ', 'l':'ㅣ',
+    'z':'ㅋ', 'x':'ㅌ', 'c':'ㅊ', 'v':'ㅍ', 'b':'ㅠ', 'n':'ㅜ', 'm':'ㅡ',
+    'Q':'ㅃ', 'W':'ㅉ', 'E':'ㄸ', 'R':'ㄲ', 'T':'ㅆ', 'O':'ㅖ', 'P':'ㅖ'
+  };
+
+  // 6시간 주기 키값 구하기 (00시, 06시, 12시, 18시 KST 기준)
+  function get6HourPeriodInfo() {
+    var now = new Date();
+    var year = now.getFullYear();
+    var month = now.getMonth();
+    var date = now.getDate();
+    var hours = now.getHours();
+
+    var pIndex = Math.floor(hours / 6); // 0, 1, 2, 3
+    var periodStartHours = pIndex * 6;
+    
+    var currentPeriodStart = new Date(year, month, date, periodStartHours, 0, 0);
+    var nextPeriodStart = new Date(year, month, date, periodStartHours + 6, 0, 0);
+
+    // 단어 인덱스 산출
+    var timeSeed = Math.floor(currentPeriodStart.getTime() / (1000 * 60 * 60 * 6));
+    var wordIdx = timeSeed % WORD_POOL_5.length;
+
+    return {
+      key: "wg_5tile_" + timeSeed,
+      wordObj: WORD_POOL_5[wordIdx],
+      nextTime: nextPeriodStart,
+      periodName: (hours < 6 ? "새벽" : hours < 12 ? "오전" : hours < 18 ? "오후" : "저녁") + " (" + periodStartHours + "~" + (periodStartHours+6) + "시)"
     };
   }
-  var ORDER = WORDS.slice();
-  (function () {
-    var r = rng(20260901);
-    for (var i = ORDER.length - 1; i > 0; i--) {
-      var k = Math.floor(r() * (i + 1)), t = ORDER[i]; ORDER[i] = ORDER[k]; ORDER[k] = t;
-    }
-  })();
 
-  /* ---------- 게임 상태 ---------- */
-  var TODAY_KEY = "drip.word.today", STAT_KEY = "drip.word.stats";
-  var LABEL = { correct: "정확해요", present: "위치가 달라요", absent: "단어에 없어요" };
-  var G = null, timer = 0;
-
-  function newGame() {
-    var d = new Date(), num = dayNumber(d), w = ORDER[((num % ORDER.length) + ORDER.length) % ORDER.length];
-    G = { date: dateKey(d), word: w.w, hint: w.hint, ans: w.j, rows: [], cur: [], done: false, win: false, counted: false };
-    var saved = read(TODAY_KEY);
-    if (saved && saved.date === G.date && Array.isArray(saved.rows)) {
-      G.rows = saved.rows.filter(function (r) { return typeof r === "string" && Array.from(r).length === 6; }).slice(0, 6);
-      G.counted = !!saved.counted;
-    }
-    refreshDone();
-  }
-  function refreshDone() {
-    var ansStr = G.ans.join("");
-    G.win = G.rows.length > 0 && G.rows[G.rows.length - 1] === ansStr;
-    G.done = G.win || G.rows.length >= 6;
-  }
-  function persist() { write(TODAY_KEY, { date: G.date, rows: G.rows, counted: G.counted }); }
-  function readStats() {
-    var s = read(STAT_KEY) || {};
-    return { played: s.played || 0, wins: s.wins || 0, streak: s.streak || 0, best: s.best || 0, last: s.last || "" };
-  }
-  function recordStats() {
-    if (G.counted) return;
-    G.counted = true;
-    var s = readStats();
-    s.played++;
-    if (G.win) {
-      var y = new Date(); y.setDate(y.getDate() - 1);
-      s.wins++; s.streak = s.last === dateKey(y) ? s.streak + 1 : 1; s.last = G.date;
-      if (s.streak > s.best) s.best = s.streak;
-    } else { s.streak = 0; }
-    write(STAT_KEY, s);
-  }
-  function ensureToday() { if (!G || dateKey(new Date()) !== G.date) newGame(); }
-
-  /* ---------- 화면 전환 ---------- */
-  var views = { main: $("#mainView"), hub: $("#gameHub"), word: $("#wordGame") };
-  function show(name) {
-    views.main.classList.toggle("view-off", name !== "main");
-    views.hub.hidden = name !== "hub";
-    views.word.hidden = name !== "word";
-    window.scrollTo(0, 0);
-    stopTimer();
-    if (name === "hub") refreshHub();
-    if (name === "word") { ensureToday(); renderGame(); startTimer(); }
-  }
-  function refreshHub() {
-    ensureToday();
-    var st = $("#wordState");
-    st.className = "game-state";
-    if (G.done) { st.classList.add("done"); st.textContent = G.win ? "오늘 완료 ✓" : "오늘 종료"; }
-    else if (G.rows.length) st.textContent = "이어하기 " + G.rows.length + "/6";
-    else st.textContent = "도전하기";
-  }
-  $("#goGames").addEventListener("click", function () { show("hub"); });
-  $("#hubBack").addEventListener("click", function () { show("main"); });
-  $("#openWord").addEventListener("click", function () { show("word"); });
-  $("#wordBack").addEventListener("click", function () { show("hub"); });
-  $("#wgHow").addEventListener("click", function () {
-    var box = $("#wgHowBox"); box.hidden = !box.hidden;
-    this.setAttribute("aria-expanded", String(!box.hidden));
-  });
-
-  /* ---------- 렌더링 ---------- */
-  var WD = ["일", "월", "화", "수", "목", "금", "토"];
-  function renderHeader() {
-    var d = new Date();
-    $("#wgDate").textContent = (d.getMonth() + 1) + "월 " + d.getDate() + "일 (" + WD[d.getDay()] + ")";
-    $("#wgHint").textContent = "힌트 · " + G.hint;
-  }
-  function renderBoard() {
-    var b = $("#wgBoard"); b.textContent = "";
-    for (var r = 0; r < 6; r++) {
-      var row = el("div", "wg-row"); row.setAttribute("role", "group"); row.setAttribute("aria-label", (r + 1) + "번째 시도");
-      var letters = null, res = null;
-      if (r < G.rows.length) { letters = Array.from(G.rows[r]); res = evaluate(letters, G.ans); }
-      else if (r === G.rows.length && !G.done) letters = G.cur;
-      for (var c = 0; c < 6; c++) {
-        var t = el("div", "wg-tile"), ch = letters && letters[c];
-        if (ch) {
-          t.textContent = ch;
-          if (res) { t.classList.add(res[c]); t.setAttribute("role", "img"); t.setAttribute("aria-label", ch + " " + LABEL[res[c]]); }
-          else t.classList.add("filled");
-        }
-        row.appendChild(t);
-      }
-      b.appendChild(row);
-    }
-  }
-  function renderPreview() {
-    var p = $("#wgPreview"), s = "";
-    if (!G.done && G.cur.length) { var r = parse(G.cur, 0); if (r) s = "입력 중: " + r.join(""); }
-    p.textContent = s || "\u00a0";
-  }
-  var KEYROWS = [
-    "ㅂㅈㄷㄱㅅㅛㅕㅑㅐㅔ".split(""),
-    "ㅁㄴㅇㄹㅎㅗㅓㅏㅣ".split(""),
-    ["ENTER"].concat("ㅋㅌㅊㅍㅠㅜㅡ".split(""), ["BACK"]),
-    "ㅃㅉㄸㄲㅆㅒㅖ".split("")
-  ];
-  function buildKeys() {
-    var k = $("#wgKeys"); k.textContent = "";
-    KEYROWS.forEach(function (keys) {
-      var row = el("div", "wg-krow");
-      keys.forEach(function (key) {
-        var wide = key === "ENTER" || key === "BACK";
-        var b = el("button", "wg-key" + (wide ? " wide" : ""), key === "ENTER" ? "입력" : key === "BACK" ? "⌫" : key);
-        b.type = "button"; b.setAttribute("data-k", key);
-        if (key === "BACK") b.setAttribute("aria-label", "지우기");
-        b.addEventListener("click", function () { press(key); });
-        row.appendChild(b);
-      });
-      k.appendChild(row);
-    });
-  }
-  function updateKeys() {
-    var rank = { absent: 1, present: 2, correct: 3 }, best = {};
-    G.rows.forEach(function (g) {
-      var letters = Array.from(g), res = evaluate(letters, G.ans);
-      letters.forEach(function (ch, i) { if (!best[ch] || rank[res[i]] > rank[best[ch]]) best[ch] = res[i]; });
-    });
-    Array.prototype.forEach.call(document.querySelectorAll("#wgKeys .wg-key"), function (b) {
-      var s = best[b.getAttribute("data-k")];
-      b.classList.remove("correct", "present", "absent");
-      if (s) b.classList.add(s);
-      b.disabled = G.done;
-    });
-  }
-  function shareText() {
-    var emo = { correct: "🟩", present: "🟨", absent: "⬜" };
-    var lines = G.rows.map(function (g) { return evaluate(Array.from(g), G.ans).map(function (s) { return emo[s]; }).join(""); });
-    return "드립대학 수다학과 · 오늘의 단어 " + (G.win ? G.rows.length : "X") + "/6\n" + lines.join("\n");
-  }
-  function copyText(text) {
-    function fallback() {
-      try {
-        var ta = el("textarea"); ta.value = text; ta.style.position = "fixed"; ta.style.opacity = "0";
-        document.body.appendChild(ta); ta.select();
-        var ok = document.execCommand("copy"); document.body.removeChild(ta);
-        toast(ok ? "결과를 복사했어요. 단톡방에 붙여넣어 보세요!" : "복사하지 못했어요. 위 결과를 직접 선택해 복사해 주세요.");
-      } catch (e) { toast("복사하지 못했어요. 위 결과를 직접 선택해 복사해 주세요."); }
-    }
-    if (navigator.clipboard && navigator.clipboard.writeText) {
-      navigator.clipboard.writeText(text).then(function () { toast("결과를 복사했어요. 단톡방에 붙여넣어 보세요!"); }, fallback);
-    } else fallback();
-  }
-  function renderResult() {
-    var box = $("#wgResult"); box.textContent = "";
-    if (!G.done) { box.hidden = true; return; }
-    box.hidden = false; box.className = "wg-result" + (G.win ? "" : " lose");
-    box.appendChild(el("strong", null, G.win ? "🎉 " + G.rows.length + "번 만에 맞혔어요!" : "아쉬워요, 오늘은 놓쳤어요"));
-    box.appendChild(el("p", null, "오늘의 정답: " + G.word + " (" + G.hint + ")"));
-    var text = shareText();
-    box.appendChild(el("div", "wg-share", text));
-    var row = el("div", "row-between");
-    var cd = el("span", "count"); cd.id = "wgCount";
-    var btn = el("button", "btn small coral", "결과 복사하기"); btn.type = "button";
-    btn.addEventListener("click", function () { copyText(text); });
-    row.appendChild(cd); row.appendChild(btn); box.appendChild(row);
-  }
-  function renderStats() {
-    var s = readStats(), box = $("#wgStats"); box.textContent = "";
-    [[s.played, "도전"], [s.played ? Math.round(s.wins / s.played * 100) + "%" : "-", "승률"], [s.streak, "연속 성공"], [s.best, "최고 연속"]].forEach(function (x) {
-      var c = el("div"); c.appendChild(el("b", null, String(x[0]))); c.appendChild(el("span", null, x[1])); box.appendChild(c);
-    });
-  }
-  function renderGame() {
-    renderHeader(); renderBoard(); renderPreview(); updateKeys(); renderResult(); renderStats();
-    if (G.done) tick();
-  }
-
-  /* ---------- 입력 ---------- */
-  function shake() {
-    var row = $("#wgBoard").children[G.rows.length];
-    if (row) { row.classList.remove("shake"); void row.offsetWidth; row.classList.add("shake"); }
-  }
-  function press(k) {
-    ensureToday();
-    if (G.done) return;
-    if (k === "ENTER") { submit(); return; }
-    if (k === "BACK") G.cur.pop();
-    else if (G.cur.length < 6) G.cur.push(k);
-    renderBoard(); renderPreview();
-  }
-  function submit() {
-    if (G.cur.length !== 6) { shake(); toast("6칸을 모두 채워 주세요."); return; }
-    if (!parse(G.cur, 0)) { shake(); toast("글자로 만들 수 없는 조합이에요."); return; }
-    G.rows.push(G.cur.join("")); G.cur = [];
-    refreshDone();
-    if (G.done) recordStats();
-    persist(); renderGame();
-    if (G.done) startTimer();
-  }
-  var CODE = {
-    KeyQ: ["ㅂ", "ㅃ"], KeyW: ["ㅈ", "ㅉ"], KeyE: ["ㄷ", "ㄸ"], KeyR: ["ㄱ", "ㄲ"], KeyT: ["ㅅ", "ㅆ"],
-    KeyY: ["ㅛ", "ㅛ"], KeyU: ["ㅕ", "ㅕ"], KeyI: ["ㅑ", "ㅑ"], KeyO: ["ㅐ", "ㅒ"], KeyP: ["ㅔ", "ㅖ"],
-    KeyA: ["ㅁ", "ㅁ"], KeyS: ["ㄴ", "ㄴ"], KeyD: ["ㅇ", "ㅇ"], KeyF: ["ㄹ", "ㄹ"], KeyG: ["ㅎ", "ㅎ"],
-    KeyH: ["ㅗ", "ㅗ"], KeyJ: ["ㅓ", "ㅓ"], KeyK: ["ㅏ", "ㅏ"], KeyL: ["ㅣ", "ㅣ"],
-    KeyZ: ["ㅋ", "ㅋ"], KeyX: ["ㅌ", "ㅌ"], KeyC: ["ㅊ", "ㅊ"], KeyV: ["ㅍ", "ㅍ"],
-    KeyB: ["ㅠ", "ㅠ"], KeyN: ["ㅜ", "ㅜ"], KeyM: ["ㅡ", "ㅡ"]
+  var curState = {
+    periodKey: "",
+    wordObj: null,
+    guesses: [], // 최대 6번
+    currentInput: [], // 5칸 입력
+    status: "PLAYING", // PLAYING, WON, LOST
+    keyColors: {}
   };
-  document.addEventListener("keydown", function (e) {
-    if (views.word.hidden || e.ctrlKey || e.metaKey || e.altKey) return;
-    var tg = e.target && e.target.tagName;
-    if (tg === "INPUT" || tg === "TEXTAREA" || tg === "SELECT") return;
-    if (e.code === "Enter") { if (tg === "BUTTON") return; e.preventDefault(); press("ENTER"); }
-    else if (e.code === "Backspace") { e.preventDefault(); press("BACK"); }
-    else if (CODE[e.code]) { e.preventDefault(); press(CODE[e.code][e.shiftKey ? 1 : 0]); }
-  });
 
-  /* ---------- 다음 단어까지 카운트다운 ---------- */
-  function tick() {
-    var now = new Date();
-    if (dateKey(now) !== G.date) { stopTimer(); newGame(); renderGame(); toast("새로운 오늘의 단어가 나왔어요!"); return; }
-    var c = $("#wgCount"); if (!c) return;
-    var next = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1), s = Math.floor((next - now) / 1000);
-    c.textContent = "다음 단어까지 " + pad(Math.floor(s / 3600)) + ":" + pad(Math.floor(s % 3600 / 60)) + ":" + pad(s % 60);
+  var timerInterval = 0;
+
+  function initWordGame() {
+    var pInfo = get6HourPeriodInfo();
+    curState.periodKey = pInfo.key;
+    curState.wordObj = pInfo.wordObj;
+
+    // 로컬 스토리지 불러오기
+    var saved = store(curState.periodKey);
+    if (saved) {
+      try {
+        var parsed = JSON.parse(saved);
+        curState.guesses = parsed.guesses || [];
+        curState.status = parsed.status || "PLAYING";
+        curState.keyColors = parsed.keyColors || {};
+      } catch (e) {
+        curState.guesses = []; curState.status = "PLAYING"; curState.keyColors = {};
+      }
+    } else {
+      curState.guesses = [];
+      curState.status = "PLAYING";
+      curState.keyColors = {};
+    }
+    curState.currentInput = [];
+
+    // UI 헤더 정보
+    $("#wgDate").textContent = "오늘의 단어 (5칸)";
+    $("#wgHint").textContent = "힌트: " + curState.wordObj.hint;
+
+    startTimer(pInfo.nextTime);
+    renderBoard();
+    renderKeys();
+    renderResult();
+    renderStats();
   }
-  function stopTimer() { if (timer) { clearInterval(timer); timer = 0; } }
-  function startTimer() { stopTimer(); if (G && G.done && !views.word.hidden) { tick(); timer = setInterval(tick, 1000); } }
-  document.addEventListener("visibilitychange", function () {
-    if (!document.hidden && !views.word.hidden) { ensureToday(); renderGame(); startTimer(); }
+
+  function startTimer(nextTime) {
+    clearInterval(timerInterval);
+    function updateTimer() {
+      var diff = Math.max(0, Math.floor((nextTime.getTime() - Date.now()) / 1000));
+      var h = Math.floor(diff / 3600);
+      var m = Math.floor((diff % 3600) / 60);
+      var s = diff % 60;
+      $("#wgTimer").textContent = "새 단어까지 " + (h<10?"0":"")+h + ":" + (m<10?"0":"")+m + ":" + (s<10?"0":"")+s;
+      if (diff <= 0) {
+        clearInterval(timerInterval);
+        initWordGame();
+      }
+    }
+    updateTimer();
+    timerInterval = setInterval(updateTimer, 1000);
+  }
+
+  function updateHubState() {
+    var pInfo = get6HourPeriodInfo();
+    var saved = store(pInfo.key);
+    var badge = $("#wordState");
+    if (saved) {
+      try {
+        var parsed = JSON.parse(saved);
+        if (parsed.status === "WON") {
+          badge.textContent = "성공!"; badge.className = "game-state done"; return;
+        } else if (parsed.status === "LOST") {
+          badge.textContent = "아쉬워요"; badge.className = "game-state done"; return;
+        }
+      } catch(e){}
+    }
+    badge.textContent = "도전하기"; badge.className = "game-state";
+  }
+
+  // 5칸 보드 생성 및 렌더링
+  function renderBoard() {
+    var board = $("#wgBoard"); board.innerHTML = "";
+
+    for (var r = 0; r < 6; r++) { // 6번의 기회
+      var rowEl = el("div", "wg-row");
+      var guess = curState.guesses[r];
+      var isCurrent = (r === curState.guesses.length && curState.status === "PLAYING");
+
+      for (var c = 0; c < 5; c++) { // 5칸
+        var tile = el("div", "wg-tile");
+        if (guess) {
+          tile.textContent = guess.input[c];
+          tile.classList.add(guess.result[c]); // correct, present, absent
+        } else if (isCurrent && curState.currentInput[c]) {
+          tile.textContent = curState.currentInput[c];
+          tile.classList.add("filled");
+        }
+        rowEl.appendChild(tile);
+      }
+      board.appendChild(rowEl);
+    }
+
+    $("#wgPreview").textContent = curState.status === "PLAYING" ? (curState.currentInput.join(" ") || "자음·모음을 직접 입력해 보세요") : "";
+  }
+
+  // 키보드 UI 렌더링
+  function renderKeys() {
+    var keysDiv = $("#wgKeys"); keysDiv.innerHTML = "";
+    KBD_LAYOUT.forEach(function (row) {
+      var krow = el("div", "wg-krow");
+      row.forEach(function (k) {
+        var isWide = (k === "지우기" || k === "확인");
+        var btn = el("button", "wg-key" + (isWide ? " wide" : ""), k);
+        btn.type = "button";
+        
+        if (curState.keyColors[k]) {
+          btn.classList.add(curState.keyColors[k]);
+        }
+        if (curState.status !== "PLAYING") {
+          btn.disabled = true;
+        }
+        btn.onclick = function () { handleInput(k); };
+        krow.appendChild(btn);
+      });
+      keysDiv.appendChild(krow);
+    });
+  }
+
+  // 입력 처리 logic (가상키보드 + 물리키보드 공통)
+  function handleInput(key) {
+    if (curState.status !== "PLAYING") return;
+
+    if (key === "지우기" || key === "Backspace") {
+      if (curState.currentInput.length > 0) {
+        curState.currentInput.pop();
+        renderBoard();
+      }
+    } else if (key === "확인" || key === "Enter") {
+      submitGuess();
+    } else {
+      // 자음/모음 가운팅 (5칸 제한)
+      if (curState.currentInput.length < 5) {
+        curState.currentInput.push(key);
+        renderBoard();
+      }
+    }
+  }
+
+  // 추측 제출 및 평가
+  function submitGuess() {
+    if (curState.currentInput.length < 5) {
+      toast("5칸을 모두 채워주세요!");
+      var rows = document.querySelectorAll(".wg-row");
+      var curRow = rows[curState.guesses.length];
+      if (curRow) {
+        curRow.classList.add("shake");
+        setTimeout(function() { curRow.classList.remove("shake"); }, 400);
+      }
+      return;
+    }
+
+    var target = curState.wordObj.jamo;
+    var input = curState.currentInput.slice();
+    var result = Array(5).fill("absent");
+    var targetCopy = target.slice();
+
+    // 1차 체크: Correct (위치+글자 일치)
+    for (var i = 0; i < 5; i++) {
+      if (input[i] === target[i]) {
+        result[i] = "correct";
+        targetCopy[i] = null;
+      }
+    }
+
+    // 2차 체크: Present (위치 다름)
+    for (var j = 0; j < 5; j++) {
+      if (result[j] !== "correct") {
+        var foundIdx = targetCopy.indexOf(input[j]);
+        if (foundIdx !== -1) {
+          result[j] = "present";
+          targetCopy[foundIdx] = null;
+        }
+      }
+    }
+
+    // 온스크린 키 색상 업데이트
+    for (var k = 0; k < 5; k++) {
+      var char = input[k];
+      var res = result[k];
+      var prev = curState.keyColors[char];
+      if (res === "correct" || (res === "present" && prev !== "correct") || (!prev && res === "absent")) {
+        curState.keyColors[char] = res;
+      }
+    }
+
+    curState.guesses.push({ input: input, result: result });
+    curState.currentInput = [];
+
+    // 승패 확인
+    var isWin = result.every(function (r) { return r === "correct"; });
+    if (isWin) {
+      curState.status = "WON";
+      saveStat(true, curState.guesses.length);
+    } else if (curState.guesses.length >= 6) {
+      curState.status = "LOST";
+      saveStat(false, 6);
+    }
+
+    // 상태 저장
+    store(curState.periodKey, JSON.stringify({
+      guesses: curState.guesses,
+      status: curState.status,
+      keyColors: curState.keyColors
+    }));
+
+    renderBoard();
+    renderKeys();
+    renderResult();
+    renderStats();
+  }
+
+  // 결과 안내창
+  function renderResult() {
+    var resDiv = $("#wgResult");
+    if (curState.status === "PLAYING") {
+      resDiv.hidden = true;
+      return;
+    }
+
+    resDiv.hidden = false;
+    resDiv.className = "wg-result" + (curState.status === "LOST" ? " lose" : "");
+
+    var isWin = (curState.status === "WON");
+    var targetWord = curState.wordObj.word + " (" + curState.wordObj.jamo.join("") + ")";
+    
+    var html = "<strong>" + (isWin ? "🎉 정답입니다!" : "아쉽네요! 다음 기회에") + "</strong>";
+    html += "<p>정답 단어: <b>" + targetWord + "</b></p>";
+
+    // 이모지 공유 텍스트 생성
+    var shareText = "드립대학 [오늘의 단어 5칸]\n" + (isWin ? curState.guesses.length + "/6 시도 성공!" : "실패 ㅠㅠ") + "\n";
+    curState.guesses.forEach(function (g) {
+      g.result.forEach(function (r) {
+        shareText += (r === "correct" ? "🟩" : r === "present" ? "🟨" : "⬛");
+      });
+      shareText += "\n";
+    });
+
+    html += "<div class='wg-share'>" + shareText.trim() + "</div>";
+    html += "<button class='btn small coral' style='margin-top:10px;' id='btnShare'>결과 복사하기</button>";
+
+    resDiv.innerHTML = html;
+
+    $("#btnShare").onclick = function() {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(shareText).then(function() { toast("결과가 클립보드에 복사되었습니다!"); });
+      } else {
+        toast("클립보드가 지원되지 않습니다.");
+      }
+    };
+  }
+
+  // 게임 스탯 저장 및 표시
+  function saveStat(isWin, attempts) {
+    var stat = { played: 0, win: 0, streak: 0, maxStreak: 0 };
+    var raw = store("wg_stats_v2");
+    if (raw) { try { stat = JSON.parse(raw); } catch(e){} }
+
+    stat.played++;
+    if (isWin) {
+      stat.win++;
+      stat.streak++;
+      if (stat.streak > stat.maxStreak) stat.maxStreak = stat.streak;
+    } else {
+      stat.streak = 0;
+    }
+    store("wg_stats_v2", JSON.stringify(stat));
+  }
+
+  function renderStats() {
+    var stat = { played: 0, win: 0, streak: 0, maxStreak: 0 };
+    var raw = store("wg_stats_v2");
+    if (raw) { try { stat = JSON.parse(raw); } catch(e){} }
+
+    var rate = stat.played ? Math.round((stat.win / stat.played) * 100) : 0;
+    var html = "";
+    html += "<div><b>" + stat.played + "</b><span>판수</span></div>";
+    html += "<div><b>" + rate + "%</b><span>승률</span></div>";
+    html += "<div><b>" + stat.streak + "</b><span>연승</span></div>";
+    html += "<div><b>" + stat.maxStreak + "</b><span>최다연승</span></div>";
+    $("#wgStats").innerHTML = html;
+  }
+
+  /* =========================================================================
+     ⌨️ 물리 키보드 입력 Event Listener (PC/모바일 하드웨어 키보드 직접 입력)
+     ========================================================================= */
+  window.addEventListener("keydown", function (e) {
+    // 미니게임 화면이 안 열려있거나 완료된 상태면 무시
+    if (wordGame.hidden || curState.status !== "PLAYING") return;
+
+    // 포커스가 input이나 textarea에 있으면 입력 무시
+    var activeTag = document.activeElement ? document.activeElement.tagName : "";
+    if (activeTag === "INPUT" || activeTag === "TEXTAREA") return;
+
+    var key = e.key;
+
+    if (key === "Backspace") {
+      handleInput("지우기");
+      e.preventDefault();
+    } else if (key === "Enter") {
+      handleInput("확인");
+      e.preventDefault();
+    } else if (KEY_MAP[key]) {
+      // 영문 키를 한글 자음/모음으로 변환 매핑
+      handleInput(KEY_MAP[key]);
+      e.preventDefault();
+    } else {
+      // 한글 자음/모음 키 직접 입력
+      var KOREAN_JAMO = ["ㄱ","ㄴ","ㄷ","ㄹ","ㅁ","ㅂ","ㅅ","ㅇ","ㅈ","ㅊ","ㅋ","ㅌ","ㅍ","ㅎ","ㅏ","ㅑ","ㅓ","ㅕ","ㅗ","ㅛ","ㅜ","ㅠ","ㅡ","ㅣ","ㅐ","ㅔ","ㅚ","ㅟ","ㅢ"];
+      if (KOREAN_JAMO.indexOf(key) !== -1) {
+        handleInput(key);
+        e.preventDefault();
+      }
+    }
   });
 
-  /* ---------- 시작 ---------- */
-  buildKeys();
-  newGame();
-  if (location.hash === "#games") show("hub");
-  else if (location.hash === "#word") show("word");
 })();
 </script>
 </body>
