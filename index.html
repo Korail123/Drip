@@ -149,6 +149,23 @@
   .notice-discord a { display:inline-block; margin-top:4px; padding:10px 14px; border:2px solid var(--ink); border-radius:11px; background:#fff; font-weight:900; text-decoration:none; color:var(--ink); box-shadow:2px 2px 0 var(--ink); }
   @media(max-width:600px){ .notice-rules{grid-template-columns:1fr} .notice-intro h3{font-size:22px} .notice-highlights{gap:6px} .notice-highlight{padding:10px 5px} .notice-highlight b{font-size:12px} .notice-highlight span:last-child{font-size:10px} .notice-rule{padding:13px} }
 
+  /* 공지사항 - 세로 한 줄 목록 */
+  .notice-banner { padding:12px 14px; text-align:center; background:linear-gradient(135deg,#fff0f5,#fff8e9); border:2px solid var(--ink); border-radius:14px; box-shadow:3px 3px 0 var(--ink); font-weight:800; font-size:clamp(12px,3.4vw,15px); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin:12px 0 14px; }
+  .notice-list { list-style:none; margin:0; padding:4px 0; background:#fff; border:2px solid var(--ink); border-radius:16px; box-shadow:4px 4px 0 var(--ink); }
+  .notice-row { display:flex; align-items:center; gap:10px; padding:12px 14px; border-bottom:1px dashed #d9dbe4; font-size:clamp(12px,3.5vw,15px); white-space:nowrap; }
+  .notice-row:last-child { border-bottom:none; }
+  .notice-ico { flex:none; width:30px; height:30px; display:grid; place-items:center; background:#f8eaf0; border-radius:10px; font-size:17px; }
+  .notice-text { flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; font-weight:700; }
+  .notice-text em { font-style:normal; font-weight:800; color:#cf3f70; }
+  .notice-foot { display:flex; align-items:center; justify-content:space-between; gap:8px; margin-top:12px; padding:11px 14px; background:#fff3f7; border:2px solid var(--ink); border-radius:14px; box-shadow:3px 3px 0 var(--ink); font-weight:800; font-size:clamp(11.5px,3.4vw,14.5px); white-space:nowrap; }
+  .notice-foot > span { min-width:0; overflow:hidden; text-overflow:ellipsis; }
+  .notice-foot.discord { background:#f7f7ff; }
+  .notice-foot a { flex:none; padding:6px 12px; border:2px solid var(--ink); border-radius:10px; background:#fff; color:var(--ink); text-decoration:none; box-shadow:2px 2px 0 var(--ink); }
+  .notice-more { margin-top:14px; }
+  .notice-more summary { cursor:pointer; font-weight:800; padding:11px 14px; border:2px solid var(--ink); border-radius:12px; background:#fff; box-shadow:2px 2px 0 var(--ink); }
+  .notice-more[open] summary { margin-bottom:12px; }
+  .notice-more p { font-size:13px; margin:10px 2px 0; color:#555; }
+
   /* 채팅 순위 */
   .rank-tabs { display:flex; gap:8px; margin-bottom:16px; }
   .rank-tab { border:2px solid var(--ink); border-radius:999px; background:#fff; padding:5px 14px; font-weight:800; font-size:13.5px; }
@@ -271,14 +288,23 @@
 
   <!-- ===== 공지사항 ===== -->
   <section id="noticeView" hidden class="community-panel"><div class="head"><div class="head-main"><h2 class="title">📢 공지사항</h2><p class="sub">2030 직장인 드립대학 수다학과 이용 규칙</p></div><button class="btn small" id="noticeBack" type="button">← 메인으로</button></div>
-    <div class="notice-intro"><span class="notice-kicker">WELCOME TO DRIP COLLEGE</span><h3>📢 공지사항을 확인해 주세요!</h3><p>모두가 편안하고 즐겁게 대화할 수 있도록<br><strong>아래 규칙을 읽고 함께 지켜주세요.</strong></p></div>
-    <div class="notice-highlights" aria-label="핵심 규칙">
-      <div class="notice-highlight"><span class="symbol">🔞</span><b>만 19세 이상</b><span>성인만 입장 가능</span></div>
-      <div class="notice-highlight"><span class="symbol">🤝</span><b>서로 존중하기</b><span>호칭은 꼭 ‘님’ 붙이기</span></div>
-      <div class="notice-highlight"><span class="symbol">♥️</span><b>공지 확인 완료</b><span>읽은 뒤 하단 ♥ 클릭</span></div>
-    </div>
-    <h3 class="notice-section-label">📝 이용 규칙 한눈에 보기</h3>
-    <div class="notice-rules">
+    <div class="notice-banner">📢 편안한 대화를 위해 아래 규칙을 지켜주세요</div>
+    <ul class="notice-list" aria-label="이용 규칙">
+      <li class="notice-row"><span class="notice-ico">🔞</span><span class="notice-text"><em>만 19세 이상</em>만 입장 · 읽고 <em>♥</em> 클릭</span></li>
+      <li class="notice-row"><span class="notice-ico">🤝</span><span class="notice-text">존댓말·음슴체, 닉네임 뒤 <em>‘님’</em></span></li>
+      <li class="notice-row"><span class="notice-ico">🪪</span><span class="notice-text">기본 닉네임 <em>금지</em> · 변경 월 1회</span></li>
+      <li class="notice-row"><span class="notice-ico">🔒</span><span class="notice-text">과한 신상 질문 자제 · SNS는 본인 책임</span></li>
+      <li class="notice-row"><span class="notice-ico">💬</span><span class="notice-text">종교·정치·19금도 갈등 없이 OK</span></li>
+      <li class="notice-row"><span class="notice-ico">🚫</span><span class="notice-text">메시지 <em>임의 삭제 금지</em> · 운영진 호출</span></li>
+      <li class="notice-row"><span class="notice-ico">📞</span><span class="notice-text">신고·문의는 운영진 개인 카톡으로</span></li>
+      <li class="notice-row"><span class="notice-ico">💗</span><span class="notice-text">따돌림·소외시키는 행동 <em>금지</em></span></li>
+      <li class="notice-row"><span class="notice-ico">⚖️</span><span class="notice-text"><em>사전 경고 없이 강퇴</em> 가능</span></li>
+    </ul>
+    <div class="notice-foot"><span>💗 다 읽었다면 하단 ♥ 클릭도 잊지 마세요!</span></div>
+    <div class="notice-foot discord"><span>🎮 게임 전용 디스코드방</span><a href="https://discord.gg/CPx3MfNuz5" target="_blank" rel="noopener noreferrer">입장 ↗</a></div>
+    <details class="notice-more">
+      <summary>📖 규칙 자세히 보기</summary>
+      <div class="notice-rules">
       <article class="notice-rule"><div class="notice-rule-icon">👥</div><div><h3>01. 기본 입장 규칙</h3><ul><li><strong>만 19세 이상</strong>만 입장할 수 있습니다.</li><li>공지사항을 모두 읽은 뒤 하단의 <strong>♥를 클릭</strong>해 주세요.</li></ul></div></article>
       <article class="notice-rule"><div class="notice-rule-icon">🤝</div><div><h3>02. 상호 존중</h3><ul><li>존댓말 또는 음슴체를 사용해 주세요.</li><li>상대방을 부를 때는 반드시 <strong>닉네임 뒤에 ‘님’</strong>을 붙여 주세요.</li></ul></div></article>
       <article class="notice-rule"><div class="notice-rule-icon">🪪</div><div><h3>03. 닉네임 및 프로필</h3><ul><li>‘홍길동’, ‘남자’, ‘여자’ 등 <strong>기본적인 닉네임은 사용 금지</strong>입니다.</li><li>닉네임 양식은 자유롭게 정해 주세요.</li><li>닉네임 변경은 <strong>한 달에 1회</strong> 가능합니다.</li><li>기존 닉네임에 내용을 덧붙이는 것은 가능합니다.</li><li>다른 사람과 비슷한 닉네임이나 프로필 사진은 피해 주세요.</li></ul></div></article>
@@ -289,8 +315,8 @@
       <article class="notice-rule"><div class="notice-rule-icon">💗</div><div><h3>08. 서로 배려하기</h3><ul><li>채팅방에는 다양한 성격과 생각을 가진 사람들이 함께합니다.</li><li>서로 맞지 않더라도 의도적으로 티 내거나 무시하지 말아 주세요.</li><li><strong>따돌림이나 소외시키는 행동은 삼가 주세요.</strong></li></ul></div></article>
       <article class="notice-rule"><div class="notice-rule-icon">⚖️</div><div><h3>09. 운영진 관리 방침</h3><ul><li>운영진 판단에 따라 <strong>사전 경고 없이 강퇴</strong>될 수 있습니다.</li><li>엄격한 관리보다는 느슨하고 편안한 분위기를 지향합니다.</li></ul></div></article>
     </div>
-    <div class="notice-closing"><h3>🎈 오래 함께하고 싶은 우리를 위해</h3><p>우리 모두 성인인 만큼, 서로 마음 상하지 않도록 조금씩 배려해 주세요.</p><p>매일 함께하고 싶은 <strong>2030 직장인 드립대학 수다학과</strong>가 될 수 있도록 함께 노력해 봅시다. 💗</p><p><strong>공지사항을 다 읽었다면 하단의 ♥ 클릭도 잊지 마세요!</strong></p></div>
-    <div class="notice-discord"><h3>🎮 게임 전용 디스코드방</h3><p>게임을 함께 즐기기 위한 전용 공간입니다.<br><strong>친목으로 인해 우리 채팅방 구성원이 소외되는 경우는 허용하지 않습니다.</strong></p><a href="https://discord.gg/CPx3MfNuz5" target="_blank" rel="noopener noreferrer">🎮 디스코드 입장하기 ↗</a></div>
+      <p>🎮 디스코드방은 게임을 함께 즐기기 위한 전용 공간입니다. 친목으로 인해 우리 채팅방 구성원이 소외되는 경우는 허용하지 않습니다.</p>
+    </details>
   </section>
 
   <!-- ===== 학생증 / 사주 ===== -->
@@ -364,32 +390,15 @@
     </div>
     <button class="card game-card" id="openWord" type="button">
       <span class="game-no">1</span>
-      <span class="game-info"><strong>오늘의 단어 (5칸)</strong><small>6시간마다 변경 · 자음/모음 5칸을 6번 안에 맞혀보세요!</small></span>
+      <span class="game-info"><strong>오늘의 단어 (5칸)</strong><small>6시간마다 변경 · 5칸을 6번 안에 맞히고 승률 랭킹에 도전!</small></span>
       <span class="game-state" id="wordState">도전하기</span>
     </button>
-    <button class="card game-card" id="openWordRank" type="button">
-      <span class="game-no">🏆</span>
-      <span class="game-info"><strong>오늘의 단어 랭킹</strong><small>회원별 승률 순위 · 3판 이상 참가자만 표시돼요</small></span>
-      <span class="game-state">보기</span>
-    </button>
-  </section>
-
-  <section id="wordRankView" hidden aria-labelledby="wordRankHead">
-    <div class="head">
-      <div class="head-main"><span class="pill-live"><span class="dot"></span>회원 승률 랭킹</span><h2 class="title" id="wordRankHead">🏆 오늘의 단어 랭킹</h2><p class="sub">승률이 같으면 승리 횟수, 그다음 참가 판수 순이에요. (3판 이상 참가자만 표시)</p></div>
-      <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn small" id="wordRankBack" type="button">← 미니게임</button><button class="btn small coral" id="wordRankRefresh" type="button">새로고침</button></div>
-    </div>
-    <div class="card">
-      <div id="wordRankMine" class="community-meta" style="font-size:14px;font-weight:700;margin-bottom:10px"></div>
-      <div id="wordRankList"></div>
-      <div id="wordRankStatus" class="community-status"></div>
-    </div>
   </section>
 
   <section id="wordGame" hidden aria-label="단어 맞추기">
     <div class="head">
       <div class="head-main"><span class="pill-live"><span class="dot"></span>6시간마다 새로고침</span><h2 class="title">오늘의 단어</h2><p class="sub">직장 및 일상 속 단어를 자음·모음 5칸 조합으로 맞혀보세요.</p></div>
-      <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn small" id="wordBack" type="button">← 미니게임</button><button class="btn small coral" id="wordToRank" type="button">🏆 랭킹</button></div>
+      <button class="btn small" id="wordBack" type="button">← 미니게임</button>
     </div>
     <div class="card wg">
       <div class="wg-top">
@@ -403,6 +412,13 @@
       <div id="wgResult" class="wg-result" hidden></div>
     </div>
     <div class="card wg wg-statcard"><h3>내 누적 기록</h3><div class="wg-stats" id="wgStats"></div></div>
+    <div class="card wg wg-statcard">
+      <div class="wg-top"><h3 style="margin:0">🏆 승률 랭킹</h3><button class="btn small" id="wordRankRefresh" type="button">새로고침</button></div>
+      <p class="community-meta">승률 → 승리 수 → 참가 판수 순 · 3판 이상 참가자만 표시</p>
+      <div id="wordRankMine" class="community-meta" style="font-size:14px;font-weight:700"></div>
+      <div id="wordRankList"></div>
+      <div id="wordRankStatus" class="community-status"></div>
+    </div>
   </section>
 </div>
 
@@ -437,7 +453,7 @@
   if (BONGCHUL_SRC) { $("bongchulImg").src = BONGCHUL_SRC; $("bongchulImg").hidden = false; $("bongchulFallback").hidden = true; }
 
   /* ---------------- 화면 전환 ---------------- */
-  var views = { main: $("mainView"), board: $("boardView"), rank: $("rankView"), hub: $("gameHub"), word: $("wordGame"), notice: $("noticeView"), studentId: $("studentIdView"), fortune: $("fortuneView"), places: $("placesView"), wordRank: $("wordRankView") };
+  var views = { main: $("mainView"), board: $("boardView"), rank: $("rankView"), hub: $("gameHub"), word: $("wordGame"), notice: $("noticeView"), studentId: $("studentIdView"), fortune: $("fortuneView"), places: $("placesView") };
   function showView(target) {
     Object.keys(views).forEach(function (k) { views[k].hidden = (k !== target); });
     $("signupView").hidden = true;
@@ -451,9 +467,6 @@
   $("hubBack").onclick = function () { showView("main"); };
   $("openWord").onclick = function () { showView("word"); initWordGame(); };
   $("wordBack").onclick = function () { showView("hub"); updateHubState(); };
-  $("openWordRank").onclick = function () { showView("wordRank"); renderWordRanking(); };
-  $("wordToRank").onclick = function () { showView("wordRank"); renderWordRanking(); };
-  $("wordRankBack").onclick = function () { showView("hub"); updateHubState(); };
   $("wordRankRefresh").onclick = function () { renderWordRanking(); };
   $("goNotice").onclick = function () { showView("notice"); };
   $("noticeBack").onclick = function () { showView("main"); };
@@ -536,7 +549,7 @@
     $("wgDate").textContent = "오늘의 단어 (5칸)";
     $("wgHint").textContent = "힌트: " + curState.wordObj.hint;
     startTimer(p.nextTime); renderBoard(); renderKeys(); renderResult(); renderStats();
-    if (curState.status !== "PLAYING") syncWordResult();
+    if (curState.status !== "PLAYING") syncWordResult(); else renderWordRanking();
   }
   function startTimer(nextTime) {
     clearInterval(timerInterval);
@@ -1013,6 +1026,7 @@
       var r = await supabase.rpc("record_word_result", { p_period_key: curState.periodKey, p_won: curState.status === "WON", p_attempts: curState.guesses.length });
       if (r.error) console.error("단어 랭킹 기록 실패", r.error);
     } catch (e) { console.error(e); }
+    renderWordRanking();
   }
 
   async function renderWordRanking() {
