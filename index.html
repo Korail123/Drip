@@ -289,7 +289,6 @@
           <div class="sid-aff">소속: 수다학과</div><div class="sid-major" id="homeSidMajor">칼퇴기원학 전공</div><div class="sid-name" id="homeSidName">회원</div><div class="sid-no" id="homeSidNo"></div>
         </div></div>
         <div class="sid-motto"><div class="sid-motto-label">슬기로운 직장생활 좌우명</div><div class="sid-motto-text" id="homeSidMotto"></div><div class="sid-stamp" aria-hidden="true">드립<br>인증</div></div>
-        <button class="btn small" id="homeEditStudentId" type="button" style="margin-top:12px">✏️ 학생증 수정하기</button>
       </div>
     </section>
 
@@ -404,7 +403,19 @@
       <div id="sidStatus" class="community-status"></div>
     </div>
   </section>
-  <section id="fortuneView" hidden class="community-panel"><div class="head"><h2 class="title">🔮 오늘의 사주</h2><button class="btn small" data-home type="button">← 메인으로</button></div><div class="community-post"><p>오늘의 운세를 가볍게 확인해 보세요.</p><button class="btn small" id="fortuneButton" type="button">오늘의 운세 보기</button><p id="fortuneResult"></p></div></section>
+  <section id="fortuneView" hidden class="community-panel">
+    <div class="head"><div><h2 class="title">🔮 오늘의 사주</h2><p class="sub">Gemini AI가 사주 관련 내용만 해석합니다.</p></div><button class="btn small" data-home type="button">← 메인으로</button></div>
+    <form id="fortuneForm" class="community-post" style="display:grid;gap:12px">
+      <p style="margin:0">생년월일과 태어난 시간을 입력해 주세요. 입력값은 사주 해석 요청에만 사용하며 이 웹페이지의 DB에 저장하지 않습니다.</p>
+      <small style="display:block">개인정보 안내: 입력값은 해석을 위해 Google Gemini API로 전송됩니다. 무료 API 이용 조건에서는 입력·응답이 서비스 개선이나 검토에 사용될 수 있으므로, 개인정보 전송에 동의하지 않으면 이용하지 마세요. 브라우저나 DB에 저장하지 않도록 구성했지만 외부 제공자의 처리·보관까지 보장할 수는 없습니다.</small>
+      <label for="fortuneBirthDate">생년월일</label><input id="fortuneBirthDate" type="date" required>
+      <label for="fortuneBirthHour">태어난 시간</label><select id="fortuneBirthHour"><option value="12">모름 (정오 기준)</option><option value="0">00시</option><option value="1">01시</option><option value="2">02시</option><option value="3">03시</option><option value="4">04시</option><option value="5">05시</option><option value="6">06시</option><option value="7">07시</option><option value="8">08시</option><option value="9">09시</option><option value="10">10시</option><option value="11">11시</option><option value="12">12시</option><option value="13">13시</option><option value="14">14시</option><option value="15">15시</option><option value="16">16시</option><option value="17">17시</option><option value="18">18시</option><option value="19">19시</option><option value="20">20시</option><option value="21">21시</option><option value="22">22시</option><option value="23">23시</option></select>
+      <label style="display:flex;align-items:center;gap:8px"><input id="fortuneIsLunar" type="checkbox" style="width:auto;min-height:0"> 음력 생일입니다</label>
+      <button class="btn coral" id="fortuneButton" type="submit">오늘의 사주 보기</button>
+      <div id="fortuneStatus" class="community-status" role="status" aria-live="polite"></div>
+      <div id="fortuneResult" aria-live="polite"></div>
+    </form>
+  </section>
 
   <!-- ===== 맛집 · 카페 · 명소 · 숙소 · 기타 (Kakao 지도) ===== -->
   <section id="placesView" hidden class="community-panel">
@@ -554,15 +565,53 @@
   $("goNotice").onclick = function () { showView("notice"); };
   $("noticeBack").onclick = function () { showView("main"); };
   $("goStudentId").onclick = function () { showView("studentId"); loadStudentCard(); };
-  $("homeEditStudentId").onclick = function () { showView("studentId"); loadStudentCard(); };
   $("goFortune").onclick = function () { showView("fortune"); };
   $("goPlaces").onclick = function () { showView("places"); initKakaoMap(); };
   Array.prototype.forEach.call(document.querySelectorAll("[data-home]"), function (b) { b.onclick = function () { showView("main"); }; });
 
-  $("fortuneButton").onclick = function () {
-    var f = ["작은 드립 하나가 분위기를 바꿉니다.", "오늘은 칼퇴를 향해 차근차근 전진하세요.", "뜻밖의 간식과 좋은 대화가 기다립니다.", "말은 짧게, 센스는 길게!", "커피 한 잔이 행운의 시작입니다."];
-    $("fortuneResult").textContent = f[Math.floor(Math.random() * f.length)];
-  };
+  // Gemini 사주 해석: 브라우저에서는 API 키를 보관하지 않고 Supabase Edge Function만 호출합니다.
+  // 생년월일/시간은 DB나 브라우저 저장소에 기록하지 않습니다.
+  $("fortuneForm").addEventListener("submit", async function (event) {
+    event.preventDefault();
+    var status = $("fortuneStatus"), result = $("fortuneResult");
+    status.textContent = "사주를 해석하는 중…"; status.className = "community-status";
+    result.replaceChildren();
+    var birthDate = $("fortuneBirthDate").value;
+    var birthHour = Number($("fortuneBirthHour").value);
+    var isLunar = $("fortuneIsLunar").checked;
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(birthDate) || !Number.isInteger(birthHour) || birthHour < 0 || birthHour > 23) {
+      status.textContent = "생년월일과 태어난 시간을 확인해 주세요."; status.className = "community-status error"; return;
+    }
+    var parts = birthDate.split("-").map(Number);
+    var birthObj = new Date(parts[0], parts[1] - 1, parts[2]);
+    var now = new Date();
+    if (birthObj.getFullYear() !== parts[0] || birthObj.getMonth() !== parts[1]-1 || birthObj.getDate() !== parts[2] || birthObj > new Date(now.getFullYear(), now.getMonth(), now.getDate())) {
+      status.textContent = "올바른 과거 생년월일을 입력해 주세요."; status.className = "community-status error"; return;
+    }
+    try {
+      var response = await fetch(SUPABASE_URL + "/functions/v1/saju-fortune", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "apikey": SUPABASE_ANON_KEY, "Authorization": "Bearer " + SUPABASE_ANON_KEY },
+        body: JSON.stringify({ birthDate: birthDate, birthHour: birthHour, isLunar: isLunar, today: [now.getFullYear(), String(now.getMonth()+1).padStart(2,"0"), String(now.getDate()).padStart(2,"0")].join("-") })
+      });
+      var payload = await response.json().catch(function () { return {}; });
+      if (!response.ok || !payload.success || typeof payload.fortune !== "string") throw new Error(payload.error || "사주 해석을 불러오지 못했습니다.");
+      var card = el("article", "community-post"); card.style.margin = "12px 0";
+      var heading = el("h3", "", "🔮 오늘의 사주 해석"); heading.style.marginTop = "0"; card.appendChild(heading);
+      payload.fortune.split(/\n{2,}/).map(function (line) { return line.trim(); }).filter(Boolean).forEach(function (line) { card.appendChild(el("p", "", line)); });
+      result.appendChild(card);
+      status.textContent = "사주 해석을 완료했습니다. 이 내용은 AI가 생성한 참고용 해석입니다."; status.className = "community-status ok";
+    } catch (error) {
+      status.textContent = "사주 조회 실패: " + (error && error.message ? error.message : "잠시 후 다시 시도해 주세요."); status.className = "community-status error";
+    } finally {
+      // 입력값은 화면에 남겨두되 저장하지 않습니다. 자동 저장/로그 기록 코드는 두지 않습니다.
+    }
+  });
+  // 오늘 날짜를 기본 생년월일로 채우지 않고 사용자가 직접 입력하도록 둡니다.
+  (function setFortuneDateLimit() {
+    var today = new Date();
+    $("fortuneBirthDate").max = [today.getFullYear(), String(today.getMonth()+1).padStart(2,"0"), String(today.getDate()).padStart(2,"0")].join("-");
+  })();
 
   /* ---------------- 채팅 순위 (샘플 데이터) ---------------- */
   var mockRanks = {
@@ -1289,9 +1338,17 @@
     sidNick = (u.user_metadata && u.user_metadata.nickname) || "회원";
     var local = null, data = null;
     try { local = JSON.parse(localStorage.getItem("dripcollege_sid_" + u.id) || "null"); } catch (e) {}
-    var r = await supabase.from("student_cards").select("major,motto,avatar").eq("user_id", u.id).maybeSingle();
-    if (r.error) { setText("sidStatus", "학생증 SQL(student_card.sql)을 아직 실행하지 않았어요. 지금은 이 기기에만 저장돼요."); data = local; }
-    else data = r.data || local;
+    var r;
+    try {
+      r = await supabase.from("student_cards").select("major,motto,avatar").eq("user_id", u.id).maybeSingle();
+    } catch (err) {
+      setText("sidStatus", "Supabase에서 학생증을 불러오지 못했어요. 연결 상태와 student_card.sql 실행 여부를 확인해 주세요.");
+      data = local;
+    }
+    if (r && r.error) {
+      setText("sidStatus", "Supabase 학생증 테이블 설정을 확인해 주세요: " + r.error.message + " (student_card.sql을 실행하면 다른 기기에서도 저장 정보를 불러올 수 있어요.)");
+      data = local;
+    } else if (r) data = r.data || local;
     sidState = {
       major: String((data && data.major) || SID_DEFAULT_MAJOR).slice(0, 14),
       motto: String((data && data.motto) || SID_DEFAULT_MOTTO).slice(0, 30),
@@ -1305,13 +1362,22 @@
     try { u = supabase ? await currentUser() : null; } catch (e) {}
     if (!u) { setText("sidStatus", "로그인이 필요합니다."); return; }
     var major = sidState.major.slice(0, 14), motto = sidState.motto.slice(0, 30);
-    try { localStorage.setItem("dripcollege_sid_" + u.id, JSON.stringify({ major: major, motto: motto, avatar: sidState.avatar })); } catch (e) {}
-    var r = await supabase.from("student_cards").upsert({
-      user_id: u.id, nickname: (u.user_metadata && u.user_metadata.nickname) || "회원",
+    var payload = {
+      user_id: u.id, nickname: (u.user_metadata && u.user_metadata.nickname) || sidNick || "회원",
       major: major, motto: motto, avatar: sidState.avatar, updated_at: new Date().toISOString()
-    }, { onConflict: "user_id" });
-    if (r.error) setText("sidStatus", "저장 실패: " + r.error.message + " (student_card.sql 실행 여부를 확인해 주세요. 이 기기에는 임시 저장됐어요.)");
-    else { setText("sidStatus", ""); toast("학생증이 저장되었어요! 🎓"); }
+    };
+    setText("sidStatus", "Supabase에 저장하는 중…");
+    try {
+      var r = await supabase.from("student_cards").upsert(payload, { onConflict: "user_id" }).select("user_id").single();
+      if (r.error) throw r.error;
+      try { localStorage.setItem("dripcollege_sid_" + u.id, JSON.stringify({ major: major, motto: motto, avatar: sidState.avatar })); } catch (e) {}
+      setText("sidStatus", "Supabase 저장 완료! 다른 기기에서도 로그인하면 불러올 수 있어요.");
+      toast("학생증이 Supabase에 저장되었어요! 🎓");
+      renderSidCard();
+    } catch (err) {
+      try { localStorage.setItem("dripcollege_sid_" + u.id, JSON.stringify({ major: major, motto: motto, avatar: sidState.avatar })); } catch (e) {}
+      setText("sidStatus", "Supabase 저장 실패: " + (err && err.message ? err.message : String(err)) + " — 아래 SQL을 Supabase SQL Editor에서 실행했는지, RLS 정책이 있는지 확인해 주세요. 현재 기기에는 임시 저장했습니다.");
+    }
   };
 
   buildSidControls(); fillSidInputs(); renderSidCard();
