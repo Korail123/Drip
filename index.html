@@ -890,19 +890,12 @@
   function renderBoard() {
     var board=$("wgBoard"); board.innerHTML="";
     var target=splitHangulWord(curState.wordObj.word), cols=target.length;
-    // 화면은 항상 5줄만 유지합니다. 시도 횟수가 5회를 넘어가면 최근 기록과 입력 줄만 표시합니다.
-    var overflow=curState.guesses.length>4;
-    var startGuess=overflow ? curState.guesses.length-4 : 0;
+    // 정답 도전은 총 5회입니다. 게임판은 고정 5줄이며, 입력이 많아져도 기록을 밀어내지 않습니다.
     for(var r=0;r<5;r++) {
       var rowEl=el("div","wg-row"), guess=null, isCurrent=false;
       rowEl.style.gridTemplateColumns="repeat("+cols+",minmax(0,1fr))";
-      if(overflow) {
-        if(r<4) guess=curState.guesses[startGuess+r];
-        else isCurrent=curState.status==="PLAYING";
-      } else {
-        if(r<curState.guesses.length) guess=curState.guesses[r];
-        else if(r===curState.guesses.length) isCurrent=curState.status==="PLAYING";
-      }
+      if(r<curState.guesses.length) guess=curState.guesses[r];
+      else if(r===curState.guesses.length && curState.guesses.length<5) isCurrent=curState.status==="PLAYING";
       for(var c=0;c<cols;c++) {
         var tile;
         if(isCurrent) {
@@ -955,6 +948,7 @@
     for(var j=0;j<target.length;j++) if(result[j]!=="correct"){var f=remaining.indexOf(input[j]);if(f!==-1){result[j]="present";remaining[f]=null;}}
     curState.guesses.push({input:input,result:result});
     if(result.every(function(r){return r==="correct";})){curState.status="WON";saveStat(true);}
+    else if(curState.guesses.length>=5){curState.status="LOST";saveStat(false);}
     store(curState.periodKey,JSON.stringify({guesses:curState.guesses,status:curState.status,keyColors:curState.keyColors}));
     curState.currentRaw=""; curState.currentInput=[];
     if(curState.status!=="PLAYING") syncWordResult(); renderBoard(); renderResult(); renderStats();
@@ -969,10 +963,10 @@
     var rd = $("wgResult");
     if (curState.status === "PLAYING") { rd.hidden = true; return; }
     rd.hidden = false; rd.className = "wg-result";
-    var win = curState.status === "WON";
-    var share = "드립대학 [오늘의 단어 5칸]\n" + (win ? curState.guesses.length + "회 시도 성공!" : "도전 중") + "\n";
+    var win = curState.status === "WON", lost = curState.status === "LOST";
+    var share = "드립대학 [오늘의 단어 5칸]\n" + (win ? curState.guesses.length + "회 시도 성공!" : lost ? "5회 도전 종료" : "도전 중") + "\n";
     curState.guesses.forEach(function (g) { g.result.forEach(function (r) { share += (r === "correct" ? "🟩" : r === "present" ? "🟨" : "⬛"); }); share += "\n"; });
-    rd.innerHTML = "<strong>🎉 정답입니다!</strong><p>정답 단어: <b>" + escapeHtml(curState.wordObj.word + " (" + curState.wordObj.jamo.join("") + ")") + "</b></p><div class='wg-share'>" + escapeHtml(share.trim()) + "</div><button class='btn small coral' style='margin-top:10px;' id='btnShare' type='button'>결과 복사하기</button>";
+    rd.innerHTML = "<strong>" + (win ? "🎉 정답입니다!" : "💪 5번의 기회를 모두 사용했어요.") + "</strong><p>정답 단어: <b>" + escapeHtml(curState.wordObj.word + " (" + curState.wordObj.jamo.join("") + ")") + "</b></p><div class='wg-share'>" + escapeHtml(share.trim()) + "</div><button class='btn small coral' style='margin-top:10px;' id='btnShare' type='button'>결과 복사하기</button>";
     $("btnShare").onclick = function () {
       if (navigator.clipboard && navigator.clipboard.writeText) { navigator.clipboard.writeText(share).then(function () { toast("결과가 클립보드에 복사되었습니다!"); }, function () { toast("복사에 실패했습니다."); }); return; }
       var ta = document.createElement("textarea"); ta.value = share; document.body.appendChild(ta); ta.select();
