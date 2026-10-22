@@ -48,7 +48,7 @@
   button, input, select, textarea { font: inherit; color: inherit; }
   button { cursor: pointer; }
   :focus-visible { outline: 3px solid #5B8CFF; outline-offset: 2px; }
-  .ic { display: inline-flex; width: 1.15em; height: 1.15em; flex: none; }
+  .ic { display: inline-flex; width: 1.15em; height: 1.15em; flex: none; align-items: center; justify-content: center; }
   .ic svg { width: 100%; height: 100%; display: block; }
 
   /* ---------- hero ---------- */
@@ -59,7 +59,37 @@
   .bubble { animation: float 3.2s ease-in-out infinite; }
   @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
 
-  .cta { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin: 8px 0 34px; }
+  /* ---------- main navigation buttons ---------- */
+  .nav-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 16px;
+    margin: 20px 0 34px;
+  }
+  .nav-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    border: 3px solid var(--ink);
+    border-radius: 18px;
+    padding: 16px 20px;
+    font-family: var(--font-display);
+    font-size: 20px;
+    box-shadow: 4px 4px 0 var(--ink);
+    background: var(--card);
+    text-decoration: none;
+    color: var(--ink);
+    transition: transform .08s, box-shadow .08s;
+    text-align: center;
+  }
+  .nav-btn:hover { transform: translate(-2px, -2px); box-shadow: 6px 6px 0 var(--ink); }
+  .nav-btn:active { transform: translate(2px, 2px); box-shadow: 2px 2px 0 var(--ink); }
+  .nav-btn.coral { background: var(--coral); color: #fff; }
+  .nav-btn.kakao { background: var(--kakao); color: #3C1E1E; }
+  .nav-btn.mint { background: var(--mint-bg); color: var(--mint-ink); }
+  .nav-btn.butter { background: var(--butter-bg); color: var(--butter-ink); }
+
   .btn {
     display: inline-flex; align-items: center; gap: 8px;
     border: 2.5px solid var(--ink); border-radius: 14px;
@@ -73,15 +103,7 @@
   .btn.coral { background: var(--coral); color: #fff; }
   .btn.kakao { background: var(--kakao); }
   .btn.mint { background: var(--mint-bg); }
-  .btn[disabled] { opacity: .5; cursor: not-allowed; transform: none; box-shadow: 3px 3px 0 var(--ink); }
-
-  /* ---------- tabs ---------- */
-  .tabs { display: flex; gap: 10px; margin-bottom: 22px; flex-wrap: wrap; }
-  .tab {
-    border: 2.5px solid var(--ink); border-radius: 999px; background: var(--card);
-    padding: 7px 18px; font-weight: 800;
-  }
-  .tab[aria-selected="true"] { background: var(--ink); color: #fff; }
+  .btn.small { padding: 6px 14px; font-size: 13.5px; border-radius: 10px; }
 
   /* ---------- section head ---------- */
   .head { display: flex; justify-content: space-between; align-items: flex-end; gap: 16px; flex-wrap: wrap; margin-bottom: 18px; }
@@ -96,13 +118,6 @@
   h2.title { margin: 0; font-family: var(--font-display); font-weight: 400; font-size: 32px; line-height: 1.2; display: flex; align-items: center; gap: 12px; }
   h2.title .ic { width: 38px; height: 38px; }
   .sub { margin: 4px 0 0; color: var(--muted); font-size: 14px; font-weight: 500; }
-
-  /* ---------- notices ---------- */
-  .note {
-    border: 2px dashed var(--slate-line); background: rgba(255,255,255,.75); border-radius: 14px;
-    padding: 10px 14px; color: var(--slate-ink); font-size: 13.5px; margin-bottom: 16px;
-  }
-  .note.warn { border-color: var(--butter-line); background: #FFF9DD; color: var(--butter-ink); }
 
   /* ---------- cards ---------- */
   .card {
@@ -123,7 +138,6 @@
   /* ---------- post ---------- */
   .post-top { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; }
   .who { display: flex; align-items: center; gap: 8px; min-width: 0; flex-wrap: wrap; }
-  .who .ic { color: #5A3E8F; }
   .nick { font-weight: 800; overflow-wrap: anywhere; }
   .dept {
     background: var(--butter-bg); border: 1.5px solid var(--butter-line); color: var(--butter-ink);
@@ -131,6 +145,35 @@
   }
   .meta { display: flex; align-items: center; gap: 10px; color: #8190B0; font-weight: 700; font-size: 13px; }
   .post-body { margin: 14px 0 12px; font-size: 16.5px; font-weight: 700; white-space: pre-wrap; overflow-wrap: anywhere; }
+  .post-actions { display: flex; gap: 12px; border-top: 1.5px dashed var(--row-line); padding-top: 10px; margin-top: 8px; }
+  .act-btn {
+    background: none; border: none; padding: 4px 8px; border-radius: 8px;
+    font-weight: 700; font-size: 13.5px; color: var(--muted); display: inline-flex; align-items: center; gap: 5px;
+  }
+  .act-btn:hover { background: var(--slate-bg); color: var(--ink); }
+  .act-btn.active { color: var(--coral); }
+
+  /* ---------- leaderboard ---------- */
+  .rank-tabs { display: flex; gap: 8px; margin-bottom: 16px; }
+  .rank-tab {
+    border: 2px solid var(--ink); border-radius: 999px; background: #fff;
+    padding: 5px 14px; font-weight: 800; font-size: 13.5px;
+  }
+  .rank-tab.active { background: var(--ink); color: #fff; }
+  .rank-item {
+    display: flex; align-items: center; gap: 12px; padding: 12px 14px;
+    border-bottom: 1.5px solid var(--row-line);
+  }
+  .rank-item:last-child { border-bottom: none; }
+  .rank-num {
+    width: 28px; height: 28px; border-radius: 50%; border: 2px solid var(--ink);
+    display: grid; place-items: center; font-family: var(--font-display); font-size: 16px; background: #fff;
+  }
+  .rank-num.gold { background: var(--gold); color: #fff; }
+  .rank-num.silver { background: var(--silver); color: #fff; }
+  .rank-num.bronze { background: var(--bronze); color: #fff; }
+  .rank-info { flex: 1; min-width: 0; }
+  .rank-score { font-family: var(--font-display); font-size: 18px; color: var(--coral); }
 
   .toast {
     position: fixed; left: 50%; transform: translateX(-50%);
@@ -138,7 +181,6 @@
     background: var(--ink); color: #fff; border-radius: 12px; padding: 10px 16px; font-weight: 700; font-size: 14px;
     max-width: calc(100% - 32px); z-index: 20; box-shadow: 0 4px 12px rgba(0,0,0,0.15);
   }
-  .foot { color: var(--muted); font-size: 12.5px; text-align: center; margin-top: 8px; }
 
   /* ---------- 미니게임 (오늘의 단어 - 5칸) ---------- */
   .game-card {
@@ -159,7 +201,7 @@
     font-weight: 800; font-size: 13px; border-radius: 999px; padding: 3px 12px;
   }
 
-  .wg { max-width: 440px; margin-inline: auto; }
+  .wg { max-width: 460px; margin-inline: auto; }
   .wg-top { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 10px; }
   .wg-date { font-weight: 800; font-size: 15px; }
   .wg-timer {
@@ -193,11 +235,6 @@
   .wg-tile.correct { background: var(--teal); color: #fff; text-shadow: 0 1px 2px rgba(0,0,0,0.2); }
   .wg-tile.present { background: var(--gold); color: #fff; text-shadow: 0 1px 2px rgba(0,0,0,0.2); }
   .wg-tile.absent { background: #C8D2E4; color: var(--slate-ink); }
-  .wg-tile.correct::after, .wg-tile.present::after {
-    position: absolute; right: 4px; top: 2px; font-family: var(--font-body); font-size: 9px; line-height: 1;
-  }
-  .wg-tile.correct::after { content: "●"; }
-  .wg-tile.present::after { content: "▲"; }
 
   .wg-preview { min-height: 24px; text-align: center; color: var(--muted); font-weight: 700; font-size: 14px; margin-bottom: 6px; }
   
@@ -233,18 +270,18 @@
     .wg-key { height: 42px; font-size: 16px; }
     .game-info strong { font-size: 21px; }
     .wg-tile { font-size: 22px; }
+    .nav-btn { font-size: 18px; padding: 14px; }
   }
   @media (prefers-reduced-motion: reduce) {
     .wave, .bubble, .dot, .wg-row.shake { animation: none; }
-    .btn, .game-card { transition: none; }
+    .btn, .game-card, .nav-btn { transition: none; }
   }
 </style>
 </head>
 <body>
 <div class="page">
- <div id="mainView">
-  <!-- ===== 메인 헤더 & 무지개 문구 ===== -->
-  <main class="stage">
+  <!-- ===== 메인 화면 (비주얼 + 메뉴 버튼만 노출) ===== -->
+  <main id="mainView" class="stage">
     <svg viewBox="0 0 1000 810" role="img" aria-label="2030 직장인 드립대학 수다학과. 캐릭터가 손을 흔들며 환영합니다라고 말한다.">
       <defs>
         <filter id="pop" x="-10%" y="-10%" width="125%" height="130%">
@@ -288,27 +325,28 @@
         <text x="845" y="486" text-anchor="middle" font-family="Jua, 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif" font-size="48" fill="var(--ink)">환영합니다</text>
       </g>
     </svg>
+
+    <!-- 메인 기능 버튼 4개 -->
+    <nav class="nav-grid" aria-label="메인 메뉴">
+      <button class="nav-btn coral" id="goBoard" type="button"><span class="ic" data-ic="pen"></span>수다 게시판 가기</button>
+      <button class="nav-btn butter" id="goRank" type="button">🏆 채팅 순위 보기</button>
+      <button class="nav-btn mint" id="goGames" type="button">🎮 미니게임</button>
+      <a class="nav-btn kakao" href="https://open.kakao.com/o/g5EaOGti" target="_blank" rel="noopener noreferrer">💬 오픈채팅방 입장</a>
+    </nav>
   </main>
 
-  <div class="cta">
-    <button class="btn coral" id="goBoard" type="button"><span class="ic" data-ic="pen"></span>수다 게시판 가기</button>
-    <button class="btn mint" id="goGames" type="button">🎮 미니게임</button>
-    <a class="btn kakao" href="https://open.kakao.com/o/g5EaOGti" target="_blank" rel="noopener noreferrer">오픈채팅방 입장</a>
-  </div>
-
-  <div class="tabs" role="tablist" aria-label="메뉴">
-    <button class="tab" role="tab" id="tab-board" aria-selected="true" aria-controls="board" type="button">수다 게시판</button>
-  </div>
-
-  <!-- ===== 수다 게시판 ===== -->
-  <section id="board" aria-labelledby="tab-board">
+  <!-- ===== 수다 게시판 뷰 ===== -->
+  <section id="boardView" hidden aria-labelledby="boardHead">
     <div class="head">
       <div class="head-main">
         <span class="pill-live"><span class="dot"></span>실시간 피드</span>
-        <h2 class="title"><span class="ic" data-ic="bubbleBig"></span>수다학과 드립 게시판</h2>
+        <h2 class="title" id="boardHead"><span class="ic" data-ic="bubbleBig"></span>수다학과 드립 게시판</h2>
         <p class="sub">오늘 직장에서 있었던 황당한 일, 재치있는 드립을 나누세요.</p>
       </div>
-      <button class="btn coral" id="openComposer" type="button"><span class="ic" data-ic="pen"></span>드립 작성하기</button>
+      <div style="display:flex; gap:8px;">
+        <button class="btn small" id="boardBack" type="button">← 메인으로</button>
+        <button class="btn small coral" id="openComposer" type="button"><span class="ic" data-ic="pen"></span>드립 작성</button>
+      </div>
     </div>
 
     <form id="composer" class="card composer" hidden autocomplete="off">
@@ -332,10 +370,30 @@
 
     <div id="feed" aria-live="polite"></div>
   </section>
- </div>
 
- <!-- ===== 미니게임 허브 ===== -->
- <section id="gameHub" hidden aria-label="미니게임">
+  <!-- ===== 채팅 순위 뷰 ===== -->
+  <section id="rankView" hidden aria-labelledby="rankHead">
+    <div class="head">
+      <div class="head-main">
+        <span class="pill-live"><span class="dot"></span>실시간 수다 랭킹</span>
+        <h2 class="title" id="rankHead">🏆 채팅 순위</h2>
+        <p class="sub">드립대학 최고의 입담꾼 왕좌에 도전해 보세요!</p>
+      </div>
+      <button class="btn small" id="rankBack" type="button">← 메인으로</button>
+    </div>
+
+    <div class="card">
+      <div class="rank-tabs">
+        <button class="rank-tab active" data-period="daily">일간</button>
+        <button class="rank-tab" data-period="weekly">주간</button>
+        <button class="rank-tab" data-period="monthly">월간</button>
+      </div>
+      <div id="rankList"></div>
+    </div>
+  </section>
+
+  <!-- ===== 미니게임 허브 뷰 ===== -->
+  <section id="gameHub" hidden aria-label="미니게임">
     <div class="head">
       <div class="head-main">
         <span class="pill-live"><span class="dot"></span>쉬는 시간</span>
@@ -349,14 +407,14 @@
       <span class="game-no">1</span>
       <span class="game-info">
         <strong>오늘의 단어 (5칸)</strong>
-        <small>6시간마다 변경 · 5칸 조합을 6번 안에 맞혀보세요!</small>
+        <small>6시간마다 변경 · 자음/모음 5칸을 6번 안에 맞혀보세요!</small>
       </span>
       <span class="game-state" id="wordState">도전하기</span>
     </button>
- </section>
+  </section>
 
- <!-- ===== 1. 단어 맞추기 (5칸 모드 + 키보드 입력지원) ===== -->
- <section id="wordGame" hidden aria-label="단어 맞추기">
+  <!-- ===== 단어 맞추기 게임 뷰 ===== -->
+  <section id="wordGame" hidden aria-label="단어 맞추기">
     <div class="head">
       <div class="head-main">
         <span class="pill-live"><span class="dot"></span>6시간마다 새로고침</span>
@@ -368,16 +426,16 @@
 
     <div class="card wg">
       <div class="wg-top">
-        <span class="wg-date" id="wgDate"></span>
+        <span class="wg-date" id="wgDate">오늘의 단어 (5칸)</span>
         <div style="display:flex; align-items:center; gap:8px;">
           <span class="wg-timer" id="wgTimer">남은시간 --:--:--</span>
           <span class="wg-hint" id="wgHint">힌트</span>
         </div>
       </div>
 
-      <!-- 직관적인 한 줄 게임 설명 -->
+      <!-- 정확한 1줄 설명 바 -->
       <div class="wg-desc-bar">
-        💡 <b>규칙:</b> 초록(●)은 위치와 글자 일치, 노랑(▲)은 위치 상이, 회색은 포함 안 됨! (키보드 직접 입력 가능)
+        💡 <b>규칙:</b> 직장·일상 속 두 글자 단어를 자음·모음 5칸(6회 시도)으로 맞혀보세요!
       </div>
 
       <div id="wgBoard" class="wg-board"></div>
@@ -390,7 +448,7 @@
       <h3>내 누적 기록</h3>
       <div class="wg-stats" id="wgStats"></div>
     </div>
- </section>
+  </section>
 </div>
 
 <div class="toast" id="toast" role="status" hidden></div>
@@ -464,26 +522,37 @@
   var deptSel = $("#fDept");
   DEPTS.forEach(function (d) { var o = el("option", null, d); o.value = d; deptSel.appendChild(o); });
 
-  /* ---------------- 네비게이션 & 뷰 처리 ---------------- */
-  var mainView = $("#mainView"), gameHub = $("#gameHub"), wordGame = $("#wordGame");
+  /* ---------------- 네비게이션 & 뷰 전환 ---------------- */
+  var views = {
+    main: $("#mainView"),
+    board: $("#boardView"),
+    rank: $("#rankView"),
+    hub: $("#gameHub"),
+    word: $("#wordGame")
+  };
   
   function showView(target) {
-    mainView.hidden = (target !== "main");
-    gameHub.hidden = (target !== "hub");
-    wordGame.hidden = (target !== "word");
+    for (var key in views) {
+      if (views.hasOwnProperty(key)) {
+        views[key].hidden = (key !== target);
+      }
+    }
     window.scrollTo({top: 0, behavior: "smooth"});
   }
 
-  $("#goBoard").onclick = function() { showView("main"); };
+  $("#goBoard").onclick = function() { showView("board"); };
+  $("#boardBack").onclick = function() { showView("main"); };
+  $("#goRank").onclick = function() { showView("rank"); renderRankings("daily"); };
+  $("#rankBack").onclick = function() { showView("main"); };
   $("#goGames").onclick = function() { showView("hub"); updateHubState(); };
   $("#hubBack").onclick = function() { showView("main"); };
   $("#openWord").onclick = function() { showView("word"); initWordGame(); };
   $("#wordBack").onclick = function() { showView("hub"); updateHubState(); };
 
-  /* ---------------- 게시판 기능 (기본 시뮬레이션) ---------------- */
+  /* ---------------- 게시판 기능 ---------------- */
   var posts = [
-    { nick: "칼퇴요정", dept: "칼퇴학", text: "오늘 6시 정각에 광속 퇴근 성공했습니다. 다들 퇴근 잘 하셨나요?", time: Date.now() - 3600000 },
-    { nick: "커피중독자", dept: "커피수혈학", text: "오늘 탕비실 커피머신 고장남... 살려주세요 ㅠㅠ", time: Date.now() - 7200000 }
+    { id: 1, nick: "칼퇴요정", dept: "칼퇴학", text: "오늘 6시 정각에 광속 퇴근 성공했습니다. 다들 무사 퇴근하셨나요?", time: Date.now() - 3600000, likes: 12, comments: 3 },
+    { id: 2, nick: "커피중독자", dept: "커피수혈학", text: "오늘 탕비실 커피머신 고장남... 전직원 긴급 상황 발생 ㅠㅠ", time: Date.now() - 7200000, likes: 25, comments: 8 }
   ];
 
   function renderFeed() {
@@ -498,6 +567,20 @@
       top.appendChild(el("span", "meta", "방금 전"));
       c.appendChild(top);
       c.appendChild(el("div", "post-body", p.text));
+
+      var acts = el("div", "post-actions");
+      var btnLike = el("button", "act-btn", "❤️ 공감 " + p.likes);
+      btnLike.onclick = function() {
+        p.likes++;
+        btnLike.textContent = "❤️ 공감 " + p.likes;
+        btnLike.classList.add("active");
+      };
+      var btnComment = el("button", "act-btn", "💬 댓글 " + p.comments);
+      btnComment.onclick = function() { toast("댓글 기능 준비 중입니다!"); };
+      acts.appendChild(btnLike);
+      acts.appendChild(btnComment);
+      c.appendChild(acts);
+
       feed.appendChild(c);
     });
   }
@@ -505,27 +588,85 @@
 
   $("#openComposer").onclick = function() { $("#composer").hidden = false; };
   $("#cancelComposer").onclick = function() { $("#composer").hidden = true; };
+  
+  $("#fText").oninput = function() {
+    $("#fCount").textContent = this.value.length + " / 300";
+  };
+
   $("#composer").onsubmit = function(e) {
     e.preventDefault();
     var nick = $("#fNick").value.trim() || "익명";
     var dept = $("#fDept").value;
     var text = $("#fText").value.trim();
     if(!text) return;
-    posts.unshift({ nick: nick, dept: dept, text: text, time: Date.now() });
+    posts.unshift({ id: Date.now(), nick: nick, dept: dept, text: text, time: Date.now(), likes: 0, comments: 0 });
     renderFeed();
     $("#fText").value = "";
+    $("#fCount").textContent = "0 / 300";
     $("#composer").hidden = true;
-    toast("드립이 올바르게 등록되었습니다!");
+    toast("드립이 성공적으로 올려졌습니다!");
   };
 
+  /* ---------------- 채팅 순위 (랭킹) ---------------- */
+  var mockRanks = {
+    daily: [
+      { nick: "월급루팡3세", dept: "월급루팡학", score: "1,240 드립" },
+      { nick: "부장님킬러", dept: "칼퇴학", score: "980 드립" },
+      { nick: "탕비실요정", dept: "탕비실학", score: "850 드립" },
+      { nick: "칼퇴마스터", dept: "칼퇴학", score: "720 드립" },
+      { nick: "아메리카노", dept: "커피수혈학", score: "610 드립" }
+    ],
+    weekly: [
+      { nick: "부장님킬러", dept: "칼퇴학", score: "5,420 드립" },
+      { nick: "월급루팡3세", dept: "월급루팡학", score: "4,890 드립" },
+      { nick: "퇴사희망자", dept: "퇴사준비학", score: "3,750 드립" },
+      { nick: "탕비실요정", dept: "탕비실학", score: "3,100 드립" },
+      { nick: "야근거부자", dept: "야근학", score: "2,840 드립" }
+    ],
+    monthly: [
+      { nick: "퇴사희망자", dept: "퇴사준비학", score: "18,400 드립" },
+      { nick: "부장님킬러", dept: "칼퇴학", score: "16,200 드립" },
+      { nick: "월급루팡3세", dept: "월급루팡학", score: "15,100 드립" },
+      { nick: "월요병백신", dept: "월요병학", score: "12,300 드립" },
+      { nick: "점심메뉴고민", dept: "점심메뉴학", score: "11,500 드립" }
+    ]
+  };
+
+  function renderRankings(period) {
+    var list = $("#rankList"); list.innerHTML = "";
+    var data = mockRanks[period] || [];
+    data.forEach(function(item, idx) {
+      var row = el("div", "rank-item");
+      var numCls = "rank-num" + (idx === 0 ? " gold" : idx === 1 ? " silver" : idx === 2 ? " bronze" : "");
+      row.appendChild(el("div", numCls, (idx + 1).toString()));
+      
+      var info = el("div", "rank-info");
+      var topRow = el("div", null);
+      topRow.appendChild(el("span", "nick", item.nick));
+      topRow.appendChild(el("span", "dept", item.dept));
+      info.appendChild(topRow);
+      
+      row.appendChild(info);
+      row.appendChild(el("div", "rank-score", item.score));
+      list.appendChild(row);
+    });
+  }
+
+  var rankTabs = document.querySelectorAll(".rank-tab");
+  rankTabs.forEach(function(tab) {
+    tab.onclick = function() {
+      rankTabs.forEach(function(t) { t.classList.remove("active"); });
+      tab.classList.add("active");
+      renderRankings(tab.getAttribute("data-period"));
+    };
+  });
+
   /* =========================================================================
-     🎮 5칸 오늘의 단어 게임 (6시간 주기 / 키보드 입력 지원)
+     🎮 5칸 오늘의 단어 게임 (6시간 주기 / 물리+가상 키보드 지원)
      ========================================================================= */
 
-  // 5칸 자음/모음 조합 퀴즈 데이터베이스 (자음·모음 exact 5개)
-  // 예: "점심" -> [ㅈ,ㅓ,ㅁ,ㅅ,ㅣ,ㅁ] (6개) -> 5칸짜리로 맞춘 단어 데이터
   var WORD_POOL_5 = [
-    { word: "커피", hint: "직장인 생명수", jamo: ["ㅋ", "ㅓ", "ㅍ", "ㅣ", "ㅣ"] }, // ㅋ ㅓ ㅍ ㅣ -> 5칸 맞춤 데이터
+    { word: "커피", hint: "직장인 생명수", jamo: ["ㅋ", "ㅓ", "ㅍ", "ㅣ", "ㅣ"] },
     { word: "야근", hint: "달갑지 않은 저녁", jamo: ["ㅇ", "ㅑ", "ㄱ", "ㅡ", "ㄴ"] },
     { word: "칼퇴", hint: "정시 퇴근의 꿈", jamo: ["ㅋ", "ㅏ", "ㄹ", "ㅌ", "ㅚ"] },
     { word: "휴가", hint: "간절한 연차", jamo: ["ㅎ", "ㅠ", "ㄱ", "ㅏ", "ㅏ"] },
@@ -545,7 +686,6 @@
     ["지우기", "ㅋ", "ㅌ", "ㅍ", "ㅊ", "ㅠ", "ㅜ", "ㅡ", "확인"]
   ];
 
-  // 영문 키보드 -> 한글 자음/모음 변환 맵 (PC 직접 키보드 입력용)
   var KEY_MAP = {
     'q':'ㅂ', 'w':'ㅈ', 'e':'ㄷ', 'r':'ㄱ', 't':'ㅅ', 'y':'ㅛ', 'u':'ㅕ', 'i':'ㅑ', 'o':'ㅐ', 'p':'ㅔ',
     'a':'ㅁ', 's':'ㄴ', 'd':'ㅇ', 'f':'ㄹ', 'g':'ㅎ', 'h':'ㅗ', 'j':'ㅓ', 'k':'ㅏ', 'l':'ㅣ',
@@ -553,7 +693,6 @@
     'Q':'ㅃ', 'W':'ㅉ', 'E':'ㄸ', 'R':'ㄲ', 'T':'ㅆ', 'O':'ㅖ', 'P':'ㅖ'
   };
 
-  // 6시간 주기 키값 구하기 (00시, 06시, 12시, 18시 KST 기준)
   function get6HourPeriodInfo() {
     var now = new Date();
     var year = now.getFullYear();
@@ -561,30 +700,28 @@
     var date = now.getDate();
     var hours = now.getHours();
 
-    var pIndex = Math.floor(hours / 6); // 0, 1, 2, 3
+    var pIndex = Math.floor(hours / 6);
     var periodStartHours = pIndex * 6;
     
     var currentPeriodStart = new Date(year, month, date, periodStartHours, 0, 0);
     var nextPeriodStart = new Date(year, month, date, periodStartHours + 6, 0, 0);
 
-    // 단어 인덱스 산출
     var timeSeed = Math.floor(currentPeriodStart.getTime() / (1000 * 60 * 60 * 6));
     var wordIdx = timeSeed % WORD_POOL_5.length;
 
     return {
       key: "wg_5tile_" + timeSeed,
       wordObj: WORD_POOL_5[wordIdx],
-      nextTime: nextPeriodStart,
-      periodName: (hours < 6 ? "새벽" : hours < 12 ? "오전" : hours < 18 ? "오후" : "저녁") + " (" + periodStartHours + "~" + (periodStartHours+6) + "시)"
+      nextTime: nextPeriodStart
     };
   }
 
   var curState = {
     periodKey: "",
     wordObj: null,
-    guesses: [], // 최대 6번
-    currentInput: [], // 5칸 입력
-    status: "PLAYING", // PLAYING, WON, LOST
+    guesses: [],
+    currentInput: [],
+    status: "PLAYING",
     keyColors: {}
   };
 
@@ -595,7 +732,6 @@
     curState.periodKey = pInfo.key;
     curState.wordObj = pInfo.wordObj;
 
-    // 로컬 스토리지 불러오기
     var saved = store(curState.periodKey);
     if (saved) {
       try {
@@ -613,7 +749,6 @@
     }
     curState.currentInput = [];
 
-    // UI 헤더 정보
     $("#wgDate").textContent = "오늘의 단어 (5칸)";
     $("#wgHint").textContent = "힌트: " + curState.wordObj.hint;
 
@@ -658,20 +793,19 @@
     badge.textContent = "도전하기"; badge.className = "game-state";
   }
 
-  // 5칸 보드 생성 및 렌더링
   function renderBoard() {
     var board = $("#wgBoard"); board.innerHTML = "";
 
-    for (var r = 0; r < 6; r++) { // 6번의 기회
+    for (var r = 0; r < 6; r++) {
       var rowEl = el("div", "wg-row");
       var guess = curState.guesses[r];
       var isCurrent = (r === curState.guesses.length && curState.status === "PLAYING");
 
-      for (var c = 0; c < 5; c++) { // 5칸
+      for (var c = 0; c < 5; c++) {
         var tile = el("div", "wg-tile");
         if (guess) {
           tile.textContent = guess.input[c];
-          tile.classList.add(guess.result[c]); // correct, present, absent
+          tile.classList.add(guess.result[c]);
         } else if (isCurrent && curState.currentInput[c]) {
           tile.textContent = curState.currentInput[c];
           tile.classList.add("filled");
@@ -681,10 +815,9 @@
       board.appendChild(rowEl);
     }
 
-    $("#wgPreview").textContent = curState.status === "PLAYING" ? (curState.currentInput.join(" ") || "자음·모음을 직접 입력해 보세요") : "";
+    $("#wgPreview").textContent = curState.status === "PLAYING" ? (curState.currentInput.join(" ") || "자음·모음을 조합하세요") : "";
   }
 
-  // 키보드 UI 렌더링
   function renderKeys() {
     var keysDiv = $("#wgKeys"); keysDiv.innerHTML = "";
     KBD_LAYOUT.forEach(function (row) {
@@ -707,7 +840,6 @@
     });
   }
 
-  // 입력 처리 logic (가상키보드 + 물리키보드 공통)
   function handleInput(key) {
     if (curState.status !== "PLAYING") return;
 
@@ -719,7 +851,6 @@
     } else if (key === "확인" || key === "Enter") {
       submitGuess();
     } else {
-      // 자음/모음 가운팅 (5칸 제한)
       if (curState.currentInput.length < 5) {
         curState.currentInput.push(key);
         renderBoard();
@@ -727,7 +858,6 @@
     }
   }
 
-  // 추측 제출 및 평가
   function submitGuess() {
     if (curState.currentInput.length < 5) {
       toast("5칸을 모두 채워주세요!");
@@ -745,7 +875,6 @@
     var result = Array(5).fill("absent");
     var targetCopy = target.slice();
 
-    // 1차 체크: Correct (위치+글자 일치)
     for (var i = 0; i < 5; i++) {
       if (input[i] === target[i]) {
         result[i] = "correct";
@@ -753,7 +882,6 @@
       }
     }
 
-    // 2차 체크: Present (위치 다름)
     for (var j = 0; j < 5; j++) {
       if (result[j] !== "correct") {
         var foundIdx = targetCopy.indexOf(input[j]);
@@ -764,7 +892,6 @@
       }
     }
 
-    // 온스크린 키 색상 업데이트
     for (var k = 0; k < 5; k++) {
       var char = input[k];
       var res = result[k];
@@ -777,7 +904,6 @@
     curState.guesses.push({ input: input, result: result });
     curState.currentInput = [];
 
-    // 승패 확인
     var isWin = result.every(function (r) { return r === "correct"; });
     if (isWin) {
       curState.status = "WON";
@@ -787,7 +913,6 @@
       saveStat(false, 6);
     }
 
-    // 상태 저장
     store(curState.periodKey, JSON.stringify({
       guesses: curState.guesses,
       status: curState.status,
@@ -800,7 +925,6 @@
     renderStats();
   }
 
-  // 결과 안내창
   function renderResult() {
     var resDiv = $("#wgResult");
     if (curState.status === "PLAYING") {
@@ -817,7 +941,6 @@
     var html = "<strong>" + (isWin ? "🎉 정답입니다!" : "아쉽네요! 다음 기회에") + "</strong>";
     html += "<p>정답 단어: <b>" + targetWord + "</b></p>";
 
-    // 이모지 공유 텍스트 생성
     var shareText = "드립대학 [오늘의 단어 5칸]\n" + (isWin ? curState.guesses.length + "/6 시도 성공!" : "실패 ㅠㅠ") + "\n";
     curState.guesses.forEach(function (g) {
       g.result.forEach(function (r) {
@@ -832,15 +955,20 @@
     resDiv.innerHTML = html;
 
     $("#btnShare").onclick = function() {
-      if (navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard.writeText(shareText).then(function() { toast("결과가 클립보드에 복사되었습니다!"); });
+      if (document.queryCommandSupported && document.queryCommandSupported('copy')) {
+        var textarea = document.createElement('textarea');
+        textarea.value = shareText;
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textarea);
+        toast("결과가 클립보드에 복사되었습니다!");
       } else {
-        toast("클립보드가 지원되지 않습니다.");
+        toast("복사 기능을 지원하지 않는 브라우저입니다.");
       }
     };
   }
 
-  // 게임 스탯 저장 및 표시
   function saveStat(isWin, attempts) {
     var stat = { played: 0, win: 0, streak: 0, maxStreak: 0 };
     var raw = store("wg_stats_v2");
@@ -871,14 +999,10 @@
     $("#wgStats").innerHTML = html;
   }
 
-  /* =========================================================================
-     ⌨️ 물리 키보드 입력 Event Listener (PC/모바일 하드웨어 키보드 직접 입력)
-     ========================================================================= */
+  /* ---------------- 물리 키보드 Event Listener ---------------- */
   window.addEventListener("keydown", function (e) {
-    // 미니게임 화면이 안 열려있거나 완료된 상태면 무시
-    if (wordGame.hidden || curState.status !== "PLAYING") return;
+    if (views.word.hidden || curState.status !== "PLAYING") return;
 
-    // 포커스가 input이나 textarea에 있으면 입력 무시
     var activeTag = document.activeElement ? document.activeElement.tagName : "";
     if (activeTag === "INPUT" || activeTag === "TEXTAREA") return;
 
@@ -891,11 +1015,9 @@
       handleInput("확인");
       e.preventDefault();
     } else if (KEY_MAP[key]) {
-      // 영문 키를 한글 자음/모음으로 변환 매핑
       handleInput(KEY_MAP[key]);
       e.preventDefault();
     } else {
-      // 한글 자음/모음 키 직접 입력
       var KOREAN_JAMO = ["ㄱ","ㄴ","ㄷ","ㄹ","ㅁ","ㅂ","ㅅ","ㅇ","ㅈ","ㅊ","ㅋ","ㅌ","ㅍ","ㅎ","ㅏ","ㅑ","ㅓ","ㅕ","ㅗ","ㅛ","ㅜ","ㅠ","ㅡ","ㅣ","ㅐ","ㅔ","ㅚ","ㅟ","ㅢ"];
       if (KOREAN_JAMO.indexOf(key) !== -1) {
         handleInput(key);
