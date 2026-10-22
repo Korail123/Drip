@@ -288,6 +288,24 @@
   @media(prefers-reduced-motion:reduce){ .dot, .wg-row.shake, .bongchul-hero img, .bongchul-hero .fallback { animation:none; } .btn, .game-card, .nav-btn { transition:none; } }
 
 
+  /* 사주 결과: 남은 시간 및 한눈에 보는 결과 카드 */
+  .fortune-progress { padding:14px; border:1px solid #d9e2f2; border-radius:14px; background:linear-gradient(135deg,#f5f3ff,#eef6ff); }
+  .fortune-progress-top { display:flex; justify-content:space-between; gap:10px; flex-wrap:wrap; color:#35316f; font-size:14px; }
+  .fortune-progress-track { height:8px; margin-top:10px; background:#dfe5f2; border-radius:99px; overflow:hidden; }
+  .fortune-progress-bar { height:100%; width:100%; border-radius:99px; background:linear-gradient(90deg,#8b5cf6,#38bdf8); transform-origin:left; animation:fortune-drain 60s linear forwards; }
+  @keyframes fortune-drain { from { transform:scaleX(1) } to { transform:scaleX(0) } }
+  .fortune-progress p { margin:8px 0 0; color:#596780; font-size:12px; }
+  .fortune-result-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; margin-top:12px; }
+  .fortune-result-card { min-width:0; padding:14px; border:1px solid #e0e6f2; border-radius:14px; background:#fff; }
+  .fortune-result-card h4 { margin:0 0 7px; font-size:15px; color:#303a59; }
+  .fortune-result-card p { margin:0; white-space:pre-wrap; line-height:1.65; overflow-wrap:anywhere; }
+  .fortune-result-card.fortune-featured { grid-column:1/-1; background:linear-gradient(135deg,#fff7ed,#fff); border-color:#fed7aa; }
+  .fortune-result-note { margin-top:12px; padding:10px 12px; border-radius:10px; background:#f5f7fb; color:#69758a; font-size:12px; }
+  .rank-period-note { margin:0 0 12px; color:#68758e; font-size:12px; }
+  .rank-item { display:flex; align-items:center; gap:12px; }
+  .rank-score { white-space:nowrap; }
+  @media(max-width:520px){ .fortune-result-grid { grid-template-columns:minmax(0,1fr); } .fortune-result-card.fortune-featured { grid-column:auto; } }
+
   /* ===== 공통 UI 정돈: 전체 화면 일관성 / 한눈에 읽히는 레이아웃 ===== */
   :root {
     --paper:#F6F8FC; --dot:#E9EDF5; --ink:#202B45; --muted:#68758E;
@@ -390,218 +408,6 @@
   #noticeView .notice-rule li { line-height:1.6; }
   @media(max-width:520px){ #noticeView .notice-list { grid-template-columns:1fr; } #noticeView .notice-row:nth-last-child(-n+2) { border-bottom:1px solid #EDF0F5; } #noticeView .notice-row:last-child { border-bottom:0; } }
 
-
-  /* ===== UI 리프레시: 차분한 대시보드 스타일 ===== */
-  :root {
-    --paper: #F7F8FC;
-    --dot: #F7F8FC;
-    --ink: #202B45;
-    --muted: #718096;
-    --card: #FFFFFF;
-    --coral: #E85B52;
-    --row-line: #E8ECF3;
-    --mint-bg: #EAF8F1;
-    --mint-line: #C8EBDD;
-    --mint-ink: #176747;
-    --butter-bg: #FFF7E5;
-    --butter-line: #F3E3B5;
-    --butter-ink: #78520B;
-    --pink-bg: #FFF0F2;
-    --pink-line: #F4D4D9;
-    --pink-ink: #A83A4B;
-  }
-
-  body {
-    background: var(--paper);
-    background-image: none;
-    color: var(--ink);
-    padding-top: 24px;
-    padding-bottom: 56px;
-    line-height: 1.6;
-  }
-  .page { max-width: 1040px; }
-  .stage { width: min(100%, 920px); }
-  .rainbow-title { max-width: 680px; margin-bottom: 2px; }
-  .bongchul-hero { margin: 0 auto 12px; }
-  .bongchul-hero img { max-height: 180px; }
-  .bongchul-hero .fallback { font-size: 72px; }
-
-  .auth-topline {
-    max-width: 920px;
-    padding: 10px 14px;
-    background: #fff;
-    border: 1px solid #E5E9F1;
-    border-radius: 14px;
-  }
-  .auth-card {
-    width: min(100%, 460px);
-    padding: 28px;
-    margin: 18px auto 26px;
-    border: 1px solid #E4E8F0;
-    border-radius: 20px;
-    box-shadow: 0 12px 32px rgba(32,43,69,.07);
-  }
-  .auth-card h2 {
-    font-family: var(--font-body);
-    font-size: 25px;
-    font-weight: 800;
-    letter-spacing: -.04em;
-  }
-  .auth-help { font-size: 13px; }
-  .auth-card label:not(.remember-row) { margin-top: 16px; }
-  .auth-card input { background: #FBFCFE; }
-  .auth-actions { gap: 9px; }
-  .auth-primary, .auth-secondary {
-    border-radius: 11px;
-    box-shadow: none;
-    font-family: var(--font-body);
-    font-weight: 800;
-  }
-  .auth-primary { background: var(--coral); border-color: var(--coral); }
-  .auth-secondary { background: #FFF4F2; color: #A33C35; border-color: #F0D8D5; }
-
-  .nav-grid {
-    max-width: 920px;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 14px;
-    margin: 24px auto 34px;
-  }
-  .nav-btn {
-    min-height: 76px;
-    justify-content: flex-start;
-    padding: 18px;
-    white-space: normal;
-    overflow: visible;
-    text-overflow: clip;
-    border: 1px solid #E5E9F1;
-    border-radius: 17px;
-    background: #fff;
-    box-shadow: 0 5px 16px rgba(32,43,69,.045);
-    font-family: var(--font-body);
-    font-size: 15px;
-    font-weight: 800;
-  }
-  .nav-btn.coral { background: #FFF5F3; color: #A64038; }
-  .nav-btn.mint { background: #F0FAF5; color: #176747; }
-  .nav-btn.butter { background: #FFFAEF; color: #78520B; }
-  .nav-btn:hover { transform: translateY(-2px); box-shadow: 0 9px 20px rgba(32,43,69,.08); }
-
-  .community-panel { max-width: 920px; }
-  .head { margin-bottom: 20px; }
-  .pill-live {
-    background: #EAF8F1;
-    border: 1px solid #C8EBDD;
-    color: #176747;
-    border-radius: 999px;
-  }
-  h2.title {
-    font-family: var(--font-body);
-    font-weight: 800;
-    letter-spacing: -.035em;
-    line-height: 1.3;
-  }
-  .sub { margin-top: 6px; color: #7B879B; }
-  .card, .community-post, .community-form, .community-row,
-  .community-detail, .notice-intro, .notice-highlight, .notice-rule,
-  .saved-place, .sid-card, .game-card {
-    border: 1px solid #E4E8F0;
-    border-radius: 16px;
-    box-shadow: 0 5px 18px rgba(32,43,69,.045);
-  }
-  .community-row { transition: border-color .15s, box-shadow .15s, transform .15s; }
-  .community-row:hover, .saved-place:hover {
-    border-color: #C8D3E6;
-    box-shadow: 0 7px 20px rgba(32,43,69,.07);
-  }
-  .community-form { gap: 12px; padding: 18px; }
-  .community-form input, .community-form textarea, .community-form select,
-  .sid-input, .auth-card input {
-    border-color: #DCE2EC;
-    border-radius: 10px;
-  }
-  .btn, .logout-btn, .community-actions button, .community-form button,
-  .places-tabs button, .rank-tab, .sid-opt {
-    border: 1px solid #DCE2EC;
-    border-radius: 10px;
-    box-shadow: none;
-    font-family: var(--font-body);
-    font-weight: 800;
-  }
-  .btn.coral { background: var(--coral); border-color: var(--coral); }
-  .btn:hover, .logout-btn:hover, .community-actions button:hover,
-  .community-form button:hover, .places-tabs button:hover, .rank-tab:hover,
-  .sid-opt:hover { transform: translateY(-1px); }
-  .toast { border-radius: 14px; }
-
-  #noticeView .notice-banner {
-    background: #F0F4FB;
-    border-color: #E0E7F2;
-    color: #3B4A67;
-  }
-  #noticeView .notice-list {
-    border-color: #E4E8F0;
-    box-shadow: 0 5px 18px rgba(32,43,69,.045);
-  }
-  #noticeView .notice-row { padding: 14px; }
-  #noticeView .notice-ico { background: #F3F5FA; }
-  #noticeView .notice-foot { box-shadow: none; }
-  #noticeView .notice-rule { box-shadow: none; }
-
-  .sid-card {
-    background: linear-gradient(180deg, #FFFFFF 0%, #F6F8FC 100%);
-    box-shadow: 0 10px 28px rgba(32,43,69,.08);
-  }
-  .sid-rule { height: 2px; }
-  .sid-motto { border-color: #E1E6F0; }
-  .sid-opt.on { background: #EAF8F1; box-shadow: none; border-color: #A8DCC5; }
-  .places-map { border-color: #DCE2EC; }
-  .saved-place { box-shadow: none; }
-  .rank-tab.active { background: var(--ink); color: #fff; }
-  .rank-item { padding: 14px 12px; }
-  .game-card { padding: 16px; }
-  .game-no { background: #FFF7E5; }
-  .wg-desc-bar { background: #F7F9FD; border-color: #E4E8F0; }
-  .wg-tile { border-color: #DCE2EC; border-radius: 10px; }
-
-  button, input, select, textarea { -webkit-tap-highlight-color: transparent; }
-  :focus-visible { outline: 3px solid rgba(91,140,255,.42); outline-offset: 2px; }
-  @media (max-width: 760px) {
-    body { padding-top: 12px; }
-    .page { max-width: 100%; }
-    .nav-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
-    .nav-btn { min-height: 64px; padding: 13px; font-size: 13px; }
-    .auth-card { padding: 21px; }
-    .head { align-items: flex-start; }
-  }
-  @media (max-width: 420px) {
-    .nav-grid { gap: 8px; }
-    .nav-btn { min-height: 58px; padding: 11px 10px; font-size: 12.5px; border-radius: 12px; }
-    .auth-card { padding: 18px; }
-    .head .btn.small { font-size: 12px; }
-  }
-
-
-  /* 장소 목록: 한 줄 요약 + 클릭 시 상세 정보 */
-  .places-list { gap: 7px !important; }
-  .saved-place { padding: 0 !important; overflow: hidden; border: 1px solid #e3e7ee !important; border-radius: 12px !important; box-shadow: none !important; background: #fff; }
-  .saved-place-summary { display:flex; align-items:center; gap:8px; width:100%; min-height:46px; padding:10px 12px; border:0; background:transparent; color:var(--ink); text-align:left; cursor:pointer; }
-  .saved-place-name { flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-size:13px; font-weight:750; }
-  .saved-place-summary .dept { flex:0 0 auto; font-size:10px; }
-  .saved-place-chevron { color:#7c8798; transition:transform .18s ease; }
-  .saved-place.is-expanded .saved-place-chevron { transform:rotate(180deg); }
-  .saved-place-details { padding:0 12px 12px; border-top:1px solid #eef0f4; }
-  .saved-place-details[hidden] { display:none !important; }
-  .saved-place-details .place-address { margin-top:10px; }
-  .saved-place-details .place-memo { white-space:pre-wrap; overflow-wrap:anywhere; }
-  .kakao-overlay-iw { max-width:270px; min-width:190px; white-space:normal !important; line-height:1.5; border:1px solid #dfe4ec !important; box-shadow:0 8px 24px rgba(25,35,55,.14) !important; font-weight:400 !important; }
-  .kakao-overlay-iw > div { margin-top:5px; overflow-wrap:anywhere; }
-  .kakao-overlay-iw .iw-title { margin:0 0 7px; font-weight:800; font-size:14px; }
-  .kakao-overlay-iw .iw-memo { padding-top:6px; border-top:1px solid #edf0f4; }
-
-
-  .endword-card{max-width:760px;margin:0 auto}.endword-top{display:flex;justify-content:space-between;gap:12px;font-weight:800}.endword-top span{padding:8px 12px;background:#F1F5FF;border:1px solid #DCE5F5;border-radius:10px}.endword-rule{line-height:1.65;color:var(--muted)}.endword-current{padding:18px 12px;margin:14px 0;text-align:center;font-size:20px;font-weight:800;border:1px dashed #CBD5E1;border-radius:12px;background:#F8FAFC}.endword-form{display:flex;gap:8px}.endword-form input{flex:1;min-width:0;border:1px solid #DCE2EC;border-radius:10px;padding:12px;font-size:18px;text-align:center}.endword-history{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:7px;padding-left:24px}.endword-history li{padding:7px 8px;background:#F8FAFC;border-radius:8px}.endword-actions{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
-  .main-logout{grid-column:1/-1;justify-self:end;margin-top:4px}
-  .ew-nickname-label{display:block;font-size:13px;font-weight:800;margin:8px 0 5px}.ew-nickname{width:100%;box-sizing:border-box;border:1px solid #DCE2EC;border-radius:10px;padding:10px 12px;margin-bottom:8px}
 </style>
 </head>
 <body>
@@ -617,7 +423,7 @@
       <text font-size="62" fill="url(#titleRainbow)" text-anchor="middle"><textPath href="#titleArc" startOffset="50%">2030 직장인 드립대학 수다학과</textPath></text>
     </svg>
 
-    <span id="signedInLabel" class="auth-user" hidden></span>
+    <div id="authTopline" class="auth-topline" hidden><span id="signedInLabel" class="auth-user"></span><button id="logoutBtn" class="logout-btn" type="button">로그아웃</button></div>
 
     <div class="bongchul-hero" role="img" aria-label="봉춸이가 손을 들고 반갑게 인사하는 그림">
       <img id="bongchulImg" alt="봉춸이가 손을 흔들며 인사해요!" hidden>
@@ -655,7 +461,6 @@
       <button class="nav-btn butter" id="goFortune" type="button">🔮 오늘의 사주</button>
       <button class="nav-btn mint" id="goRank" type="button">🏆 채팅순위 보기</button>
       <button class="nav-btn coral" id="goPlaces" type="button">☕ 맛집/카페 보기</button>
-      <button id="logoutBtn" class="logout-btn main-logout" type="button">로그아웃</button>
     </nav>
   </main>
 
@@ -744,7 +549,7 @@
       <h3 class="sid-h">🎨 프로필 캐릭터</h3>
       <p class="sid-swipe-hint">👈 손가락으로 좌우로 밀어 옵션 종류와 세부 항목을 넘겨보세요 👉</p>
       <div id="sidAvatarControls" aria-label="캐릭터 옵션, 좌우로 밀어 보기"></div>
-      <div class="sid-actions"><button class="btn small" id="sidRandom" type="button">🎲 랜덤</button><button class="btn small" id="sidReset" type="button">↺ 기본값</button><button class="btn small coral" id="sidSave" type="button">💾 저장하기</button><button class="btn small" id="sidDownloadPng" type="button">⬇️ PNG 다운로드</button></div>
+      <div class="sid-actions"><button class="btn small" id="sidRandom" type="button">🎲 랜덤</button><button class="btn small" id="sidReset" type="button">↺ 기본값</button><button class="btn small coral" id="sidSave" type="button">💾 저장하기</button></div>
       <div id="sidStatus" class="community-status"></div>
     </div>
   </section>
@@ -757,6 +562,7 @@
       <label for="fortuneBirthHour">태어난 시간</label><select id="fortuneBirthHour"><option value="12">모름 (정오 기준)</option><option value="0">00시</option><option value="1">01시</option><option value="2">02시</option><option value="3">03시</option><option value="4">04시</option><option value="5">05시</option><option value="6">06시</option><option value="7">07시</option><option value="8">08시</option><option value="9">09시</option><option value="10">10시</option><option value="11">11시</option><option value="12">12시</option><option value="13">13시</option><option value="14">14시</option><option value="15">15시</option><option value="16">16시</option><option value="17">17시</option><option value="18">18시</option><option value="19">19시</option><option value="20">20시</option><option value="21">21시</option><option value="22">22시</option><option value="23">23시</option></select>
       <label style="display:flex;align-items:center;gap:8px"><input id="fortuneIsLunar" type="checkbox" style="width:auto;min-height:0"> 음력 생일입니다</label>
       <button class="btn coral" id="fortuneButton" type="submit">오늘의 사주 보기</button>
+      <div id="fortuneProgress" class="fortune-progress" hidden><div class="fortune-progress-top"><strong>🔮 사주를 해석하고 있어요</strong><span id="fortuneCountdown">남은 시간 60초</span></div><div class="fortune-progress-track"><div class="fortune-progress-bar"></div></div><p id="fortuneProgressHint">입력한 정보를 바탕으로 오늘의 운세를 정리하고 있습니다.</p></div>
       <div id="fortuneStatus" class="community-status" role="status" aria-live="polite"></div>
       <div id="fortuneResult" aria-live="polite"></div>
     </form>
@@ -834,25 +640,6 @@
       <span class="game-info"><strong>오늘의 단어 (5칸)</strong><small>언제든 다시 도전 · 휴대폰 키보드로 단어를 입력하세요</small></span>
       <span class="game-state" id="wordState">도전하기</span>
     </button>
-    <button class="card game-card" id="openEndWord" type="button">
-      <span class="game-no">2</span>
-      <span class="game-info"><strong>끝말잇기 (3글자 명사)</strong><small>참가자 닉네임 표시 · 3글자 명사 · 중복 금지</small></span>
-      <span class="game-state">플레이</span>
-    </button>
-  </section>
-
-  <section id="endWordGame" hidden aria-label="끝말잇기 게임">
-    <div class="head"><div class="head-main"><span class="pill-live"><span class="dot"></span>함께 이어가기</span><h2 class="title">🔗 끝말잇기</h2><p class="sub">3글자 명사만 가능 · 중복 금지 · 두음법칙 적용</p></div><button class="btn small" id="endWordBack" type="button">← 미니게임</button></div>
-    <div class="card endword-card">
-      <div class="endword-top"><span id="ewTurn">닉네임을 입력하고 시작하세요</span></div>
-      <p class="endword-rule">이전 단어의 마지막 글자로 시작하는 <b>3글자 명사</b>를 입력하세요. 외래어·한방 단어는 기본 단어 목록에 포함된 경우에만 인정됩니다.</p>
-      <div id="ewCurrent" class="endword-current">첫 단어를 입력하세요!</div>
-      <label class="ew-nickname-label" for="ewNickname">내 닉네임</label><input id="ewNickname" class="ew-nickname" maxlength="24" autocomplete="nickname" placeholder="닉네임 입력" aria-label="참가자 닉네임"><form id="ewForm" class="endword-form"><input id="ewInput" maxlength="3" autocomplete="off" placeholder="3글자 명사" aria-label="끝말잇기 단어" required><button class="btn coral" type="submit">입력</button></form>
-      <div id="ewStatus" class="community-status" aria-live="polite">게임을 시작해 보세요.</div>
-      <ol id="ewHistory" class="endword-history"></ol>
-      <div class="endword-actions"><button class="btn small" id="ewStart" type="button">↻ 새 게임</button></div>
-      <p class="community-meta">참고: 이 파일은 외부 국어사전 API 키 없이 동작하도록 기본 단어 목록을 사용합니다. 목록에 없는 표준어도 오답 처리될 수 있어요.</p>
-    </div>
   </section>
 
   <section id="wordGame" hidden aria-label="단어 맞추기">
@@ -863,7 +650,7 @@
     <div class="card wg">
       <div class="wg-top">
         <span class="wg-date" id="wgDate">오늘의 단어 (5칸)</span>
-        
+        <div style="display:flex;align-items:center;gap:8px;"><span class="wg-hint" id="wgHint">힌트</span></div>
       </div>
       <div class="wg-desc-bar">💡 각 칸에는 자음 또는 모음 하나씩 들어갑니다. 키보드로 입력하고 Enter를 누르세요. 정답을 맞힐 때까지 횟수 제한 없이 도전할 수 있습니다.</div>
       <div id="wgBoard" class="wg-board"></div>
@@ -874,7 +661,7 @@
     <div class="card wg wg-statcard"><h3>내 누적 기록</h3><div class="wg-stats" id="wgStats"></div></div>
     <div class="card wg wg-statcard">
       <div class="wg-top"><h3 style="margin:0">🏆 승률 랭킹</h3><button class="btn small" id="wordRankRefresh" type="button">새로고침</button></div>
-      <p class="community-meta">승률 → 승리 수 → 참가 판수 순 · 1판 이상 참가자만 표시</p>
+      <p class="community-meta">승률 → 승리 수 → 참가 판수 순 · 3판 이상 참가자만 표시</p>
       <div id="wordRankMine" class="community-meta" style="font-size:14px;font-weight:700"></div>
       <div id="wordRankList"></div>
       <div id="wordRankStatus" class="community-status"></div>
@@ -913,7 +700,7 @@
   if (BONGCHUL_SRC) { $("bongchulImg").src = BONGCHUL_SRC; $("bongchulImg").hidden = false; $("bongchulFallback").hidden = true; }
 
   /* ---------------- 화면 전환 ---------------- */
-  var views = { main: $("mainView"), board: $("boardView"), rank: $("rankView"), hub: $("gameHub"), word: $("wordGame"), endword: $("endWordGame"), notice: $("noticeView"), studentId: $("studentIdView"), fortune: $("fortuneView"), places: $("placesView") };
+  var views = { main: $("mainView"), board: $("boardView"), rank: $("rankView"), hub: $("gameHub"), word: $("wordGame"), notice: $("noticeView"), studentId: $("studentIdView"), fortune: $("fortuneView"), places: $("placesView") };
   var currentAppView = "main";
   var handlingBrowserBack = false;
   try { history.replaceState({ dripcollegeApp: true, view: "main" }, "", location.href); } catch (_historyInitError) {}
@@ -970,8 +757,6 @@
   $("goGames").onclick = function () { showView("hub"); updateHubState(); };
   $("hubBack").onclick = function () { showView("main"); };
   $("openWord").onclick = function () { showView("word"); initWordGame(); };
-  $("openEndWord").onclick = function () { showView("endword"); startEndWordGame(); };
-  $("endWordBack").onclick = function () { showView("hub"); updateHubState(); };
   $("wordBack").onclick = function () { showView("hub"); updateHubState(); };
   $("wordRankRefresh").onclick = function () { renderWordRanking(); };
   $("goNotice").onclick = function () { showView("notice"); };
@@ -985,8 +770,8 @@
   // 생년월일/시간은 DB나 브라우저 저장소에 기록하지 않습니다.
   $("fortuneForm").addEventListener("submit", async function (event) {
     event.preventDefault();
-    var status = $("fortuneStatus"), result = $("fortuneResult");
-    status.textContent = "사주를 해석하는 중…"; status.className = "community-status";
+    var status = $("fortuneStatus"), result = $("fortuneResult"), progress = $("fortuneProgress");
+    var button = $("fortuneButton"), countdown = $("fortuneCountdown"), progressHint = $("fortuneProgressHint");
     result.replaceChildren();
     var birthDate = $("fortuneBirthDate").value;
     var birthHour = Number($("fortuneBirthHour").value);
@@ -1001,29 +786,50 @@
       status.textContent = "올바른 과거 생년월일을 입력해 주세요."; status.className = "community-status error"; return;
     }
     var fortuneAbortController = new AbortController();
+    var remaining = 60;
     var fortuneTimeoutId = setTimeout(function () { fortuneAbortController.abort(); }, 60000);
+    var countdownId = setInterval(function () {
+      remaining = Math.max(0, remaining - 1);
+      countdown.textContent = "남은 시간 " + remaining + "초";
+      if (remaining <= 40) progressHint.textContent = "해석 결과를 정리하고 있어요. 잠시만 기다려 주세요.";
+      if (remaining <= 15) progressHint.textContent = "거의 다 됐어요. 연결 상태에 따라 조금 더 걸릴 수 있어요.";
+    }, 1000);
+    progress.hidden = false; button.disabled = true; button.textContent = "해석 중…";
+    status.textContent = "요청을 보내고 있습니다."; status.className = "community-status";
     try {
       var response = await fetch(SUPABASE_URL + "/functions/v1/saju-fortune", {
-        method: "POST",
-        signal: fortuneAbortController.signal,
+        method: "POST", signal: fortuneAbortController.signal,
         headers: { "Content-Type": "application/json", "apikey": SUPABASE_ANON_KEY, "Authorization": "Bearer " + SUPABASE_ANON_KEY },
         body: JSON.stringify({ birthDate: birthDate, birthHour: birthHour, isLunar: isLunar, today: [now.getFullYear(), String(now.getMonth()+1).padStart(2,"0"), String(now.getDate()).padStart(2,"0")].join("-") })
       });
       var payload = await response.json().catch(function () { return {}; });
       if (!response.ok || !payload.success || typeof payload.fortune !== "string") throw new Error(payload.error || "사주 해석을 불러오지 못했습니다.");
       var card = el("article", "community-post"); card.style.margin = "12px 0";
-      var heading = el("h3", "", "🔮 오늘의 사주 해석"); heading.style.marginTop = "0"; card.appendChild(heading);
-      payload.fortune.split(/\n{2,}/).map(function (line) { return line.trim(); }).filter(Boolean).forEach(function (line) { card.appendChild(el("p", "", line)); });
-      result.appendChild(card);
-      status.textContent = "사주 해석을 완료했습니다. 이 내용은 AI가 생성한 참고용 해석입니다."; status.className = "community-status ok";
+      var heading = el("h3", "", "✨ 오늘의 사주 한눈에 보기"); heading.style.marginTop = "0"; card.appendChild(heading);
+      var intro = el("p", "fortune-result-note", "AI가 생성한 전통 명리학 관점의 참고용 해석입니다."); card.appendChild(intro);
+      var grid = el("div", "fortune-result-grid");
+      var blocks = payload.fortune.split(/\n{2,}/).map(function (line) { return line.trim(); }).filter(Boolean);
+      blocks.forEach(function (block, idx) {
+        var lines = block.split("\n").map(function (x) { return x.trim(); }).filter(Boolean);
+        var first = lines[0] || "오늘의 운세";
+        var headingText = first.replace(/^[#*\s🔮✨🌟📌💰❤️💼🍀⚠️-]+/, "").replace(/[：:]$/, "").trim();
+        var hasHeading = lines.length > 1 || /^(오늘|총평|종합|재물|연애|건강|학업|직장|대인관계|행운|주의|오행|기질|운세)/.test(headingText);
+        var section = el("section", "fortune-result-card" + (idx === 0 ? " fortune-featured" : ""));
+        section.appendChild(el("h4", "", hasHeading ? (headingText || "오늘의 운세") : (idx === 0 ? "오늘의 총평" : "운세 포인트")));
+        section.appendChild(el("p", "", hasHeading && lines.length > 1 ? lines.slice(1).join("\n") : block));
+        grid.appendChild(section);
+      });
+      card.appendChild(grid); result.appendChild(card);
+      status.textContent = "사주 해석을 완료했습니다."; status.className = "community-status ok";
     } catch (error) {
       status.textContent = error && error.name === "AbortError"
         ? "사주 조회 시간이 초과되었습니다. 잠시 후 다시 시도해 주세요."
         : "사주 조회 실패: " + (error && error.message ? error.message : "잠시 후 다시 시도해 주세요.");
       status.className = "community-status error";
     } finally {
-      clearTimeout(fortuneTimeoutId);
-      // 입력값은 화면에 남겨두되 저장하지 않습니다. 자동 저장/로그 기록 코드는 두지 않습니다.
+      clearTimeout(fortuneTimeoutId); clearInterval(countdownId);
+      progress.hidden = true; button.disabled = false; button.textContent = "오늘의 사주 보기";
+      // 입력값은 화면에 남겨두되 저장하지 않습니다.
     }
   });
   // 오늘 날짜를 기본 생년월일로 채우지 않고 사용자가 직접 입력하도록 둡니다.
@@ -1032,21 +838,40 @@
     $("fortuneBirthDate").max = [today.getFullYear(), String(today.getMonth()+1).padStart(2,"0"), String(today.getDate()).padStart(2,"0")].join("-");
   })();
 
-  /* ---------------- 채팅 순위 (샘플 데이터) ---------------- */
-  var mockRanks = {
-    daily: [{ nick: "월급루팡3세", dept: "월급루팡학", score: "1,240 드립" }, { nick: "부장님킬러", dept: "칼퇴학", score: "980 드립" }, { nick: "탕비실요정", dept: "탕비실학", score: "850 드립" }, { nick: "칼퇴마스터", dept: "칼퇴학", score: "720 드립" }, { nick: "아메리카노", dept: "커피수혈학", score: "610 드립" }],
-    weekly: [{ nick: "부장님킬러", dept: "칼퇴학", score: "5,420 드립" }, { nick: "월급루팡3세", dept: "월급루팡학", score: "4,890 드립" }, { nick: "퇴사희망자", dept: "퇴사준비학", score: "3,750 드립" }, { nick: "탕비실요정", dept: "탕비실학", score: "3,100 드립" }, { nick: "야근거부자", dept: "야근학", score: "2,840 드립" }],
-    monthly: [{ nick: "퇴사희망자", dept: "퇴사준비학", score: "18,400 드립" }, { nick: "부장님킬러", dept: "칼퇴학", score: "16,200 드립" }, { nick: "월급루팡3세", dept: "월급루팡학", score: "15,100 드립" }, { nick: "월요병백신", dept: "월요병학", score: "12,300 드립" }, { nick: "점심메뉴고민", dept: "점심메뉴학", score: "11,500 드립" }]
-  };
-  function renderRankings(period) {
+  /* ---------------- 채팅 순위: Supabase에 가져온 카카오톡 내보내기 집계 ---------------- */
+  function dateKey(d) { return [d.getFullYear(), String(d.getMonth()+1).padStart(2,"0"), String(d.getDate()).padStart(2,"0")].join("-"); }
+  function rankPeriodRange(period) {
+    var now = new Date(), start = new Date(now.getFullYear(), now.getMonth(), now.getDate()), end = new Date(start);
+    if (period === "weekly") { var day = (start.getDay() + 6) % 7; start.setDate(start.getDate() - day); end = new Date(start); end.setDate(start.getDate() + 6); }
+    else if (period === "monthly") { start = new Date(now.getFullYear(), now.getMonth(), 1); end = new Date(now.getFullYear(), now.getMonth()+1, 0); }
+    return { start: dateKey(start), end: dateKey(end) };
+  }
+  async function renderRankings(period) {
     var list = $("rankList"); list.innerHTML = "";
-    (mockRanks[period] || []).forEach(function (item, idx) {
-      var row = el("div", "rank-item");
-      row.appendChild(el("div", "rank-num" + (idx === 0 ? " gold" : idx === 1 ? " silver" : idx === 2 ? " bronze" : ""), String(idx + 1)));
-      var info = el("div", "rank-info"), top = el("div");
-      top.appendChild(el("span", "nick", item.nick)); top.appendChild(el("span", "dept", item.dept)); info.appendChild(top);
-      row.appendChild(info); row.appendChild(el("div", "rank-score", item.score)); list.appendChild(row);
-    });
+    var range = rankPeriodRange(period);
+    var note = el("p", "rank-period-note", (period === "daily" ? "오늘" : period === "weekly" ? "이번 주" : "이번 달") + " · " + range.start + " ~ " + range.end + " · 메시지 수 기준 TOP 50");
+    list.appendChild(note);
+    if (!supabase) { list.appendChild(el("p", "community-status error", "Supabase 연결을 확인해 주세요.")); return; }
+    list.appendChild(el("p", "community-status", "채팅 기록을 집계하는 중…"));
+    try {
+      var q = await supabase.from("chat_activity_daily").select("activity_date,nickname,message_count").gte("activity_date", range.start).lte("activity_date", range.end).limit(10000);
+      if (q.error) throw q.error;
+      var totals = Object.create(null);
+      (q.data || []).forEach(function (r) { totals[r.nickname] = (totals[r.nickname] || 0) + Number(r.message_count || 0); });
+      var ranked = Object.keys(totals).map(function (nick) { return { nick: nick, count: totals[nick] }; }).sort(function (a,b) { return b.count-a.count || a.nick.localeCompare(b.nick, "ko"); }).slice(0,50);
+      list.innerHTML = ""; list.appendChild(note);
+      if (!ranked.length) { list.appendChild(el("p", "community-status", "해당 기간의 채팅 집계가 없습니다. chat_activity_daily 테이블에 가져오기 SQL을 실행했는지 확인해 주세요.")); return; }
+      ranked.forEach(function (item, idx) {
+        var row = el("div", "rank-item");
+        row.appendChild(el("div", "rank-num" + (idx===0 ? " gold" : idx===1 ? " silver" : idx===2 ? " bronze" : ""), String(idx+1)));
+        var info = el("div", "rank-info"), top = el("div");
+        top.appendChild(el("span", "nick", item.nick)); info.appendChild(top);
+        row.appendChild(info); row.appendChild(el("div", "rank-score", item.count.toLocaleString("ko-KR") + "개 메시지")); list.appendChild(row);
+      });
+    } catch (err) {
+      list.innerHTML = ""; list.appendChild(note);
+      list.appendChild(el("p", "community-status error", "채팅 순위를 불러오지 못했습니다: " + (err && err.message ? err.message : String(err))));
+    }
   }
   var rankTabs = document.querySelectorAll(".rank-tab");
   Array.prototype.forEach.call(rankTabs, function (tab) {
@@ -1062,28 +887,43 @@
   // 국어사전에 등재된 일반 어휘 중심의 정답 후보. 모든 단어는 자모 확장 후 5칸인 경우만 사용합니다.
   var WORD_POOL_5 = [
     { word: "바람", hint: "공기의 움직임" },
-    { word: "사람", hint: "생각하고 말하며 살아가는 존재" },
+    { word: "사람", hint: "생각하고 말하는 존재" },
     { word: "학교", hint: "배우고 공부하는 곳" },
-    { word: "공부", hint: "학문이나 기술을 배우고 익히는 일" },
-    { word: "하늘", hint: "땅 위로 펼쳐져 보이는 공간" },
+    { word: "공부", hint: "배우고 익히는 일" },
+    { word: "하늘", hint: "머리 위로 펼쳐진 공간" },
     { word: "사랑", hint: "아끼고 소중히 여기는 마음" },
-    { word: "가방", hint: "물건을 넣어 들고 다니는 물건" },
+    { word: "가방", hint: "물건을 넣어 들고 다니는 것" },
     { word: "기분", hint: "마음의 상태" },
-    { word: "가족", hint: "한집에 살거나 친족 관계인 사람들" },
-    { word: "편지", hint: "안부나 소식을 적어 보내는 글" },
+    { word: "가족", hint: "함께 살아가거나 친족인 사람들" },
+    { word: "편지", hint: "글로 안부를 전하는 것" },
     { word: "감자", hint: "땅속에서 자라는 작물" },
-    { word: "김치", hint: "채소를 소금에 절여 양념한 음식" },
-    { word: "장미", hint: "가시가 있고 향기로운 꽃" },
-    { word: "거울", hint: "물체의 모습을 비추는 물건" },
+    { word: "김치", hint: "배추나 무로 담그는 음식" },
+    { word: "장미", hint: "가시가 있는 꽃" },
+    { word: "거울", hint: "모습을 비추는 물건" },
     { word: "까치", hint: "검고 흰 깃털을 가진 새" },
-    { word: "뿌리", hint: "식물을 땅에 고정하고 물을 흡수하는 부분" },
+    { word: "끄다", hint: "불이나 전원을 멈추다" },
+    { word: "빼다", hint: "속에 있는 것을 밖으로 꺼내다" },
+    { word: "쏘다", hint: "화살이나 총알을 날리다" },
+    { word: "짜다", hint: "소금기가 많거나 천을 만들다" },
+    { word: "찌다", hint: "김으로 익히다" },
+    { word: "쪼다", hint: "뾰족한 것으로 찍거나 파다" },
+    { word: "뿌리", hint: "식물을 땅에 붙들어 주는 부분" },
+    { word: "뛰다", hint: "달리거나 공중으로 솟다" },
+    { word: "싸다", hint: "물건을 종이 등으로 감싸다" },
+    { word: "쓰다", hint: "글자를 적다 또는 사용하다" },
+    { word: "따다", hint: "열매를 가지에서 떼다" },
+    { word: "떠다", hint: "물이나 공중에 떠서 움직이다" },
     { word: "찌개", hint: "국물을 적게 넣고 끓인 음식" },
-    { word: "꼬리", hint: "동물의 꽁무니에 붙은 부분" },
+    { word: "꼬리", hint: "동물의 꽁무니 부분" },
+    { word: "꾸다", hint: "꿈을 경험하거나 돈을 빌리다" },
+    { word: "깨다", hint: "잠에서 일어나다 또는 부수다" },
+    { word: "삐다", hint: "관절을 접질리다" },
     { word: "꼬마", hint: "몸집이 작은 아이" },
-    { word: "토끼", hint: "긴 귀와 짧은 꼬리를 가진 동물" },
-    { word: "여름", hint: "한 해 중 날씨가 더운 계절" },
-    { word: "겨울", hint: "한 해 중 날씨가 추운 계절" },
-    { word: "연구", hint: "어떤 대상을 깊이 조사하고 탐구하는 일" },
+    { word: "빼기", hint: "수를 덜어 내는 셈" },
+    { word: "토끼", hint: "긴 귀를 가진 동물" },
+    { word: "여름", hint: "한 해 중 더운 계절" },
+    { word: "겨울", hint: "한 해 중 추운 계절" },
+    { word: "연구", hint: "어떤 대상을 깊이 조사하고 공부함" },
     { word: "단어", hint: "일정한 뜻을 가진 말" },
     { word: "기억", hint: "지난 일을 마음에 간직함" },
     { word: "희망", hint: "앞으로 잘되기를 바라는 마음" },
@@ -1091,49 +931,7 @@
     { word: "퇴근", hint: "일터에서 일을 마치고 돌아감" },
     { word: "근무", hint: "직장에서 일함" },
     { word: "철도", hint: "열차가 다니는 길" },
-    { word: "앵두", hint: "작고 붉은 열매" },
-    { word: "사과", hint: "둥글고 단맛이 나는 과일" },
-    { word: "나무", hint: "줄기와 가지가 있는 식물" },
-    { word: "바다", hint: "넓고 큰 소금물의 공간" },
-    { word: "구름", hint: "하늘에 떠 있는 작은 물방울이나 얼음 알갱이의 모임" },
-    { word: "나라", hint: "일정한 영토와 국민이 있는 국가" },
-    { word: "얼굴", hint: "눈·코·입이 있는 머리의 앞부분" },
-    { word: "머리", hint: "사람의 목 위 부분" },
-    { word: "눈물", hint: "눈에서 나오는 물" },
-    { word: "강물", hint: "강에 흐르는 물" },
-    { word: "신발", hint: "발에 신는 물건" },
-    { word: "연필", hint: "흑연으로 글씨를 쓰는 도구" },
-    { word: "책상", hint: "글을 쓰거나 공부할 때 쓰는 가구" },
-    { word: "운동", hint: "몸을 움직여 건강을 지키는 활동" },
-    { word: "우유", hint: "소 등에서 얻는 흰색 음료" },
-    { word: "과자", hint: "곡물이나 밀가루 등으로 만든 간식" },
-    { word: "우산", hint: "비나 햇볕을 가리는 물건" },
-    { word: "풍선", hint: "공기나 기체를 넣어 부풀리는 물건" },
-    { word: "친구", hint: "가깝게 지내는 사람" },
-    { word: "동생", hint: "나이가 자기보다 어린 형제자매" },
-    { word: "국어", hint: "한 나라의 말과 글" },
-    { word: "역사", hint: "지난 시대에 일어난 일과 그 기록" },
-    { word: "음악", hint: "소리로 감정과 생각을 나타내는 예술" },
-    { word: "과학", hint: "자연 현상을 관찰하고 설명하는 학문" },
-    { word: "지구", hint: "우리가 살고 있는 행성" },
-    { word: "별빛", hint: "별에서 나오는 빛" },
-    { word: "달빛", hint: "달에서 비치는 빛" },
-    { word: "꽃밭", hint: "꽃을 심어 가꾸는 밭" },
-    { word: "새벽", hint: "날이 밝아 오기 전의 이른 시간" },
-    { word: "아침", hint: "하루가 시작되는 시간" },
-    { word: "저녁", hint: "해가 질 무렵부터 밤이 되기 전까지" },
-    { word: "고향", hint: "태어나거나 자라서 정든 곳" },
-    { word: "공원", hint: "사람들이 쉬거나 산책하도록 만든 곳" },
-    { word: "시장", hint: "물건을 사고파는 곳" },
-    { word: "병원", hint: "환자를 진찰하고 치료하는 곳" },
-    { word: "교실", hint: "수업을 하는 방" },
-    { word: "창문", hint: "빛과 공기가 드나들도록 낸 창" },
-    { word: "문장", hint: "생각이나 감정을 말과 글로 나타낸 단위" },
-    { word: "문법", hint: "말의 구성과 사용에 관한 규칙" },
-    { word: "소리", hint: "귀로 들을 수 있는 것" },
-    { word: "노래", hint: "가락에 맞추어 부르는 말" },
-    { word: "그림", hint: "선이나 색으로 나타낸 모양" },
-    { word: "사진", hint: "빛을 이용해 찍은 영상" }
+    { word: "앵두", hint: "작고 붉은 열매" }
   ];
   var KEY_MAP = {};
   function splitHangulWord(word) {
@@ -1156,17 +954,17 @@
     var candidates = WORD_POOL_5.filter(function(w) { return splitHangulWord(w.word).length === 5; });
     var idx = Math.floor(Math.random() * candidates.length), base = candidates[idx];
     var wordObj = { word: base.word, hint: base.hint, jamo: splitHangulWord(base.word) };
-    return { version: 3, key: "wg_round_" + Date.now() + "_" + Math.random().toString(36).slice(2,8), wordObj: wordObj };
+    return { version: 2, key: "wg_round_" + Date.now() + "_" + Math.random().toString(36).slice(2,8), wordObj: wordObj };
   }
   var curState = { periodKey: "", wordObj: null, guesses: [], currentInput: [], currentRaw: "", status: "PLAYING", keyColors: {} };
   function initWordGame(newRound) {
     var active = null;
     if (!newRound) { try { active = JSON.parse(store("wg_active_round") || "null"); } catch(e) {} }
-    if (!active || !active.key || !active.wordObj || active.version !== 3 || newRound) { active = getNewRound(); store("wg_active_round", JSON.stringify(active)); }
+    if (!active || !active.key || !active.wordObj || active.version !== 2 || newRound) { active = getNewRound(); store("wg_active_round", JSON.stringify(active)); }
     curState.periodKey = active.key; curState.wordObj = active.wordObj;
     var saved = store(active.key); curState.guesses=[]; curState.status="PLAYING"; curState.keyColors={};
     if (saved) { try { var o=JSON.parse(saved); curState.guesses=o.guesses||[]; curState.status=o.status||"PLAYING"; curState.keyColors=o.keyColors||{}; } catch(e) {} }
-    curState.currentInput=[]; $("wgDate").textContent="새 단어 도전";
+    curState.currentInput=[]; $("wgDate").textContent="새 단어 도전"; $("wgHint").textContent="힌트: "+curState.wordObj.hint;
     renderBoard(); renderResult(); renderStats();
     curState.currentRaw="";
     if (curState.status === "PLAYING") { var firstTile = $("wgBoard").querySelector(".wg-entry"); if (firstTile) setTimeout(function(){ firstTile.focus(); }, 0); }
@@ -1514,11 +1312,10 @@
 
       // 지도를 클릭해 위치 지정
       kakao.maps.event.addListener(kakaoMap, "click", function (e) {
-        if (kakaoInfoWindow) kakaoInfoWindow.close();
-        if (pickMarker) { pickMarker.setMap(null); pickMarker = null; }
         var ll = e.latLng;
         $("placeLat").value = ll.getLat(); $("placeLng").value = ll.getLng();
-        if (pickMarker) { pickMarker.setMap(null); pickMarker = null; }
+        if (pickMarker) pickMarker.setMap(null);
+        pickMarker = new kakao.maps.Marker({ position: ll, map: kakaoMap });
         if (geocoder) {
           geocoder.coord2Address(ll.getLng(), ll.getLat(), function (r, s) {
             if (s === kakao.maps.services.Status.OK && r[0]) {
@@ -1542,12 +1339,12 @@
     if (!mapReady || !ps) { placesStatus("지도가 아직 준비되지 않았습니다. 잠시 후 다시 시도해 주세요."); return; }
     placesStatus("Kakao 지도로 검색 중...");
     function pick(lat, lng, label) {
-      if (kakaoInfoWindow) kakaoInfoWindow.close();
-      if (pickMarker) { pickMarker.setMap(null); pickMarker = null; }
       $("placeLat").value = lat; $("placeLng").value = lng;
       var pos = new kakao.maps.LatLng(lat, lng);
       kakaoMap.setCenter(pos);
-      if (pickMarker) { pickMarker.setMap(null); pickMarker = null; }
+      if (pickMarker) pickMarker.setMap(null);
+      pickMarker = new kakao.maps.Marker({ position: pos, map: kakaoMap });
+      if (label) { kakaoInfoWindow.setContent('<div class="kakao-overlay-iw">' + escapeHtml(label) + '</div>'); kakaoInfoWindow.open(kakaoMap, pickMarker); }
     }
     ps.keywordSearch(addr, function (data, st) {
       if (st === kakao.maps.services.Status.OK) {
@@ -1593,10 +1390,8 @@
       var d = document.createElement("article"); d.className = "saved-place";
       var url = (p.lat != null && p.lon != null) ? "https://map.kakao.com/link/map/" + encodeURIComponent(p.name) + "," + p.lat + "," + p.lon : "https://map.kakao.com/link/search/" + encodeURIComponent(p.name);
       var canDelete = (window.__dripCurrentUser && window.__dripCurrentUser.id === p.author_id) || window.__dripIsAdmin;
-      d.innerHTML = '<button class="saved-place-summary" type="button" aria-expanded="false"><span class="saved-place-name">' + emoji + ' ' + escapeHtml(p.name) + '</span><span class="dept">' + escapeHtml(p.category) + '</span><span class="saved-place-chevron" aria-hidden="true">⌄</span></button><div class="saved-place-details" hidden><div class="place-address"><b>주소명</b> · ' + escapeHtml(p.address || "주소 미등록") + '</div><div class="place-author"><b>작성자</b> · ' + escapeHtml(p.author_nickname || "회원") + ' · ' + new Date(p.created_at).toLocaleDateString("ko-KR") + '</div><p class="place-memo"><b>작성자의 메모</b><br>' + escapeHtml(p.memo || "등록된 메모가 없습니다.") + '</p><div class="place-actions"><a href="' + url + '" target="_blank" rel="noopener">Kakao 지도에서 보기/길찾기 ↗</a>' + (canDelete ? ' <button data-place-delete type="button">삭제</button>' : '') + '</div></div>';
+      d.innerHTML = '<strong>' + emoji + ' ' + escapeHtml(p.name) + ' <span class="dept">' + escapeHtml(p.category) + '</span></strong><div class="place-address"><b>주소명</b> · ' + escapeHtml(p.address || "주소 미등록") + '</div><div class="place-author"><b>작성자</b> · ' + escapeHtml(p.author_nickname || "회원") + ' · ' + new Date(p.created_at).toLocaleDateString("ko-KR") + '</div><p class="place-memo"><b>작성자의 메모</b><br>' + escapeHtml(p.memo || "등록된 메모가 없습니다.") + '</p><div class="place-actions"><a href="' + url + '" target="_blank" rel="noopener">Kakao 지도에서 보기/길찾기 ↗</a>' + (canDelete ? ' <button data-place-delete type="button">삭제</button>' : '') + '</div>';
       box.appendChild(d);
-      var summary = d.querySelector('.saved-place-summary'), details = d.querySelector('.saved-place-details');
-      summary.onclick = function () { var open = summary.getAttribute('aria-expanded') !== 'true'; summary.setAttribute('aria-expanded', String(open)); details.hidden = !open; d.classList.toggle('is-expanded', open); };
 
       var del = d.querySelector("[data-place-delete]");
       if (del) del.onclick = async function (ev) {
@@ -1611,7 +1406,7 @@
         var marker = new kakao.maps.Marker({ position: pos, map: kakaoMap, title: p.name });
         kakaoMarkers.push(marker); hasCoords = true; if (bounds) bounds.extend(pos);
         var openInfo = function () {
-          kakaoInfoWindow.setContent('<div class="kakao-overlay-iw"><div class="iw-title">' + emoji + ' ' + escapeHtml(p.name) + '</div><div><b>주소명</b> · ' + escapeHtml(p.address || "주소 미등록") + '</div><div><b>작성자</b> · ' + escapeHtml(p.author_nickname || "회원") + '</div><div class="iw-memo"><b>작성자의 메모</b><br>' + escapeHtml(p.memo || "등록된 메모가 없습니다.") + '</div></div>');
+          kakaoInfoWindow.setContent('<div class="kakao-overlay-iw">' + emoji + ' <b>' + escapeHtml(p.name) + '</b><br><span style="font-size:11px;color:#666;">' + escapeHtml(p.address) + '</span></div>');
           kakaoInfoWindow.open(kakaoMap, marker);
         };
         kakao.maps.event.addListener(marker, "click", openInfo);
@@ -1817,40 +1612,6 @@
      학생증 만들기 — 화면 / 저장 (Supabase: student_cards)
      ===================================================================== */
   var SID_DEFAULT_MAJOR = "칼퇴기원학", SID_DEFAULT_MOTTO = "오늘도 칼퇴를 향해!";
-  /* =====================================================================
-     끝말잇기: 3글자 명사 · 두음법칙 · 중복 방지
-     ===================================================================== */
-  var ENDWORD_BANK = ("강아지 고양이 다람쥐 코끼리 기린 사자 호랑이 얼룩말 캥거루 하마 악어 거북이 비둘기 참새 독수리 앵무새 병아리 송아지 망아지 개구리 두꺼비 도마뱀 지렁이 잠자리 무당벌레 사슴벌레 나비벌레 장수풍뎅이 해바라기 민들레 개나리 진달래 목련 장미꽃 튤립꽃 국화꽃 소나무 참나무 은행나무 단풍나무 야자수 선인장 버섯구름 무지개 구름다리 바닷가 모래성 파도타기 바닷물 물고기 고등어 갈치 멸치 오징어 문어 낙지 새우조개 조개껍질 불가사리 해파리 바다표범 돌고래 상어고기 가재도구 냉장고 세탁기 청소기 선풍기 에어컨 컴퓨터 텔레비전 스마트폰 자전거 오토바이 자동차 비행기 기차역 지하철 버스표 택시비 신호등 횡단보도 운동장 놀이터 학교문 교실문 책가방 필통 공책 연필 지우개 색연필 크레파스 그림책 동화책 만화책 도서관 책상 의자 침대 이불 베개 수건 비누 치약 칫솔 샴푸 거울 창문 현관문 우산 장갑 목도리 운동화 양말 바지 치마 셔츠 모자 안경 시계 반지 목걸이 귀걸이 지갑 가방 열쇠 휴대폰 사진기 카메라 음악회 영화관 미술관 박물관 동물원 식물원 수족관 놀이공원 시장거리 편의점 약국 병원 은행 학교 회사 사무실 회의실 식당 음식점 카페거리 빵집 분식집 김밥집 떡볶이 라면밥 볶음밥 비빔밥 주먹밥 만두국 미역국 된장국 김치찌개 된장찌개 삼계탕 갈비탕 설렁탕 냉면국 잔치국수 칼국수 수제비 계란말이 계란찜 감자전 파전 김치전 호떡 붕어빵 호빵 만두피 식빵 바게트 도넛 쿠키 케이크 아이스크림 초콜릿 사탕 젤리 과일즙 사과즙 포도즙 딸기잼 수박씨 참외씨 복숭아 자두꽃 살구씨 바나나 파인애플 오렌지 레몬 라임 체리 블루베리 크랜베리 토마토 감자탕 고구마 옥수수 콩나물 숙주나물 시금치 배추김치 깍두기 오이무침 멸치볶음 김자반 달걀말이 소금물 설탕물 식용유 간장 식초 고춧가루 후춧가루 주방장 요리사 선생님 학생회 학급회 졸업식 입학식 운동회 소풍날 생일날 기념일 휴일날 주말날 월요일 화요일 수요일 목요일 금요일 토요일 일요일 봄바람 여름밤 가을날 겨울잠 햇빛 달빛 별빛 우주선 은하수 행성 지구본 화산섬 사막길 초원지대 산꼭대기 계곡물 폭포수 강물 호숫가 숲속길 오솔길 산책길 등산로 캠핑장 텐트촌 모닥불 장작불 불꽃놀이 생일상 선물상자 편지지 우표 도장 이름표 명찰 학생증 신분증 졸업장 상장 트로피 메달 운동화 축구공 농구공 야구공 배구공 탁구공 배드민턴 테니스공 골프채 스키장 수영장 체육관 헬스장 요가원 태권도 검도장 합기도 복싱장 음악실 미술실 과학실 컴퓨터실 방송실 교무실 교장실 보건실 급식실 화장실 복도 계단 엘리베이터 주차장 정류장 기차표 비행기표 여권 비자 여행지 관광객 안내판 표지판 지도책 나침반 손전등 배터리 충전기 이어폰 헤드폰 마이크 스피커 키보드 마우스 모니터 프린터 복사기 서랍장 옷장 신발장 책장 냄비 프라이팬 도마 칼날 가위 풀통 테이프 자석 종이컵 물병 도시락 반찬통 쓰레기통 재활용품 분리수거 환경미화원 소방관 경찰관 간호사 의사 약사 요리사 회사원 공무원 연구원 디자이너 개발자 프로그래머 작가 화가 가수 배우 감독 기자 아나운서 운동선수 심판 코치 감독관 건축가 변호사 판사 검사").split(/\s+/).filter(function(w){return w.length===3;});
-  var ENDWORD_SET = Object.create(null); ENDWORD_BANK.forEach(function(w){ ENDWORD_SET[w]=true; });
-  var ew = { last: "", used: [], history: [], active: false };
-  function ewNormalizeStart(ch) {
-    var map = { "라":"나","래":"내","로":"노","뢰":"뇌","루":"누","르":"느","랴":"야","려":"여","례":"예","료":"요","류":"유","리":"이","녀":"여","뇨":"요","뉴":"유","니":"이","냐":"야" };
-    return map[ch] || ch;
-  }
-  function stopEwTimer(){}
-  function renderEw(){
-    $("ewTurn").textContent = ew.active ? (( $("ewNickname").value.trim() || "참가자" ) + " 차례") : "새 게임을 시작해 주세요";
-    $("ewCurrent").textContent = ew.last ? "마지막 단어: " + ew.last : "첫 단어를 입력하세요!";
-    $("ewInput").disabled = !ew.active;
-    var h=$("ewHistory"); h.innerHTML="";
-    ew.history.forEach(function(entry){ var li=document.createElement("li"); li.textContent=entry.nickname+" · "+entry.word; h.appendChild(li); });
-  }
-  function ewLose(reason){ ew.active=false; $("ewStatus").textContent=reason+" · "+($("ewNickname").value.trim()||"참가자")+" 패배! 새 게임을 눌러 다시 시작하세요."; renderEw(); }
-  function startEndWordGame(){ ew={last:"",used:[],history:[],active:true}; $("ewStatus").textContent="닉네임을 입력하고 3글자 명사를 이어 주세요."; renderEw(); setTimeout(function(){ $("ewInput").focus(); },50); }
-  $("ewStart").addEventListener("click",startEndWordGame);
-  $("ewNickname").addEventListener("input",renderEw);
-  $("ewForm").addEventListener("submit",function(e){
-    e.preventDefault(); if(!ew.active)return;
-    var nickname=$("ewNickname").value.trim();
-    if(!nickname){ $("ewStatus").textContent="먼저 닉네임을 입력해 주세요."; $("ewNickname").focus(); return; }
-    var word=$("ewInput").value.trim().replace(/\s+/g,""); $("ewInput").value="";
-    if(word.length!==3){ $("ewStatus").textContent="정확히 3글자인 단어만 사용할 수 있어요."; return; }
-    if(!ENDWORD_SET[word]){ ewLose("기본 단어 목록에 없는 단어예요(사전 등재 여부를 확인할 수 없음)"); return; }
-    if(ew.used.indexOf(word)!==-1){ ewLose("이미 나온 단어예요"); return; }
-    if(ew.last && ewNormalizeStart(word.charAt(0))!==ewNormalizeStart(ew.last.charAt(2))){ ewLose("마지막 글자와 이어지지 않는 단어예요"); return; }
-    ew.last=word; ew.used.push(word); ew.history.push({word:word,nickname:nickname}); $("ewStatus").textContent="좋아요! 다음 참가자는 닉네임을 입력하고 이어 주세요."; renderEw(); $("ewInput").focus();
-  });
-
   var sidState = { major: SID_DEFAULT_MAJOR, motto: SID_DEFAULT_MOTTO, avatar: sanitizeAvatar(AV_DEFAULT) };
   var sidUser = null, sidNick = "", sidHasSavedCard = false, sidLoadSeq = 0;
 
@@ -1904,29 +1665,6 @@
     syncSidControls(); renderSidCard();
   };
   $("sidReset").onclick = function () { sidState.avatar = sanitizeAvatar(AV_DEFAULT); syncSidControls(); renderSidCard(); };
-  $("sidDownloadPng").onclick = async function () {
-    var button = this, card = $("sidCard");
-    if (!card) return;
-    button.disabled = true; button.textContent = "이미지 만드는 중…";
-    try {
-      if (typeof window.html2canvas !== "function") {
-        await new Promise(function(resolve, reject) {
-          var script = document.createElement("script");
-          script.src = "https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js";
-          script.onload = resolve; script.onerror = function(){ reject(new Error("이미지 변환 라이브러리를 불러오지 못했습니다.")); };
-          document.head.appendChild(script);
-        });
-      }
-      var canvas = await window.html2canvas(card, { backgroundColor: null, scale: 3, useCORS: true, logging: false });
-      var link = document.createElement("a");
-      var safeNick = (sidNick || "회원").replace(/[^가-힣a-zA-Z0-9_-]/g, "_");
-      link.download = "드립대학교_학생증_" + safeNick + ".png";
-      link.href = canvas.toDataURL("image/png"); link.click();
-      toast("학생증을 PNG로 저장했어요! 🎓");
-    } catch (err) {
-      setText("sidStatus", "PNG 다운로드에 실패했어요. 인터넷 연결을 확인한 뒤 다시 시도해 주세요. " + (err.message || ""));
-    } finally { button.disabled = false; button.textContent = "⬇️ PNG 다운로드"; }
-  };
 
   async function loadStudentCard() {
     setText("sidStatus", "");
@@ -1995,7 +1733,7 @@
   /* =====================================================================
      오늘의 단어 랭킹 (Supabase) — 회원별 승률
      ===================================================================== */
-  var WORD_RANK_MIN = 1;
+  var WORD_RANK_MIN = 3;
 
   // 한 판이 끝나면 서버에 기록 (같은 6시간 단어는 한 번만 반영되므로 여러 번 호출해도 안전)
   async function syncWordResult() {
@@ -2016,7 +1754,7 @@
     var r = await supabase.rpc("get_word_ranking", { p_min_played: WORD_RANK_MIN, p_limit: 50 });
     if (r.error) { st.textContent = "랭킹 SQL(word_game_ranking.sql)을 먼저 실행해 주세요: " + r.error.message; return; }
     var data = r.data || [];
-    st.textContent = data.length ? "" : "아직 순위에 오른 회원이 없어요. 오늘의 단어를 1판 이상 플레이하면 표시됩니다!";
+    st.textContent = data.length ? "" : "아직 순위에 오른 회원이 없어요. " + WORD_RANK_MIN + "판 이상 플레이하면 이름이 올라갑니다!";
     data.forEach(function (row, idx) {
       var item = el("div", "rank-item" + (row.is_me ? " me" : ""));
       item.appendChild(el("div", "rank-num" + (idx === 0 ? " gold" : idx === 1 ? " silver" : idx === 2 ? " bronze" : ""), String(row.ranking)));
