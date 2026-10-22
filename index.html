@@ -600,7 +600,7 @@
 
   <section id="wordGame" hidden aria-label="단어 맞추기">
     <div class="head">
-      <div class="head-main"><span class="pill-live"><span class="dot"></span>무제한 도전</span><h2 class="title">오늘의 단어</h2><p class="sub">아래 칸을 눌러 한글 단어를 입력하세요. 입력 후 키보드의 완료/Enter를 누르세요.</p></div>
+      <div class="head-main"><span class="pill-live"><span class="dot"></span>무제한 도전</span><h2 class="title">오늘의 단어</h2><p class="sub">칸마다 자음이나 모음 하나씩 입력하세요. 한글 음절은 자모로 나뉘어 들어갑니다.</p></div>
       <button class="btn small" id="wordBack" type="button">← 미니게임</button>
     </div>
     <div class="card wg">
@@ -608,7 +608,7 @@
         <span class="wg-date" id="wgDate">오늘의 단어 (5칸)</span>
         <div style="display:flex;align-items:center;gap:8px;"><span class="wg-hint" id="wgHint">힌트</span></div>
       </div>
-      <div class="wg-desc-bar">💡 칸을 눌러 단어를 입력하고 키보드의 완료/Enter로 제출하세요. (최대 6회)</div>
+      <div class="wg-desc-bar">💡 각 칸에는 자음 또는 모음 하나씩 들어갑니다. 한글로 입력하면 자모 단위로 채워집니다. (최대 6회)</div>
       <div id="wgBoard" class="wg-board"></div>
       <div id="wgPreview" class="wg-preview" aria-live="polite"></div>
       <button class="btn small" id="wgNewGame" type="button" style="margin-top:10px">↻ 새 단어로 다시 하기</button>
@@ -888,21 +888,40 @@
   function updateHubState() { var badge=$("wordState"); badge.textContent="언제든 도전"; badge.className="game-state"; }
   function renderBoard() {
     var board=$("wgBoard"); board.innerHTML=""; var target=splitHangulWord(curState.wordObj.word), cols=target.length;
-    for(var r=0;r<6;r++) { var rowEl=el("div","wg-row"), guess=curState.guesses[r]; rowEl.style.gridTemplateColumns="repeat("+cols+",minmax(0,1fr))";
-      for(var c=0;c<cols;c++){
+    for(var r=0;r<6;r++) {
+      var rowEl=el("div","wg-row"), guess=curState.guesses[r];
+      rowEl.style.gridTemplateColumns="repeat("+cols+",minmax(0,1fr))";
+      for(var c=0;c<cols;c++) {
         var tile;
         if(!guess && r===curState.guesses.length && curState.status==="PLAYING") {
-          tile=document.createElement("input"); tile.type="text"; tile.className="wg-tile wg-entry"; tile.inputMode="text"; tile.lang="ko"; tile.autocomplete="off"; tile.autocapitalize="off"; tile.enterKeyHint="done"; tile.maxLength=8; tile.setAttribute("aria-label", "단어 입력 칸 "+(c+1));
-          tile.value=(c===0 ? (curState.currentRaw||"") : "");
+          tile=document.createElement("input"); tile.type="text"; tile.className="wg-tile wg-entry";
+          tile.inputMode="text"; tile.lang="ko"; tile.autocomplete="off"; tile.autocapitalize="off";
+          tile.enterKeyHint="done"; tile.maxLength=8; tile.value=curState.currentInput[c]||"";
+          tile.setAttribute("aria-label", "자음 또는 모음 입력 칸 "+(c+1));
           tile.addEventListener("input",function(){
-            curState.currentRaw=this.value;
-            var j=splitHangulWord(curState.currentRaw), cells=board.querySelectorAll(".wg-entry"), activeIndex=Array.prototype.indexOf.call(cells,this);
-            cells.forEach(function(cell,i){cell.value=j[i]||"";});
-            this.value=j[activeIndex]||"";
+            var cells=Array.prototype.slice.call(board.querySelectorAll(".wg-entry"));
+            var at=cells.indexOf(this), entered=splitHangulWord(this.value);
+            if(!entered.length){ curState.currentInput[at]=""; }
+            else {
+              // 한글 음절로 입력해도 초성/중성/종성을 자모로 분리해 칸마다 하나씩 배치
+              for(var k=0;k<entered.length && at+k<cells.length;k++) curState.currentInput[at+k]=entered[k];
+            }
+            curState.currentInput=curState.currentInput.slice(0,cols);
+            cells.forEach(function(cell,i){cell.value=curState.currentInput[i]||"";});
+            curState.currentRaw=curState.currentInput.join("");
+            var next= Math.min(cols-1, at + Math.max(1,entered.length));
+            if(entered.length && next>at && cells[next]) cells[next].focus();
           });
-          tile.addEventListener("keydown",function(e){if(e.key==="Enter"){e.preventDefault();submitGuess();}});
+          tile.addEventListener("keydown",function(e){
+            var cells=Array.prototype.slice.call(board.querySelectorAll(".wg-entry")), at=cells.indexOf(this);
+            if(e.key==="Enter"){e.preventDefault();submitGuess();}
+            else if(e.key==="Backspace" && !this.value && at>0){e.preventDefault();curState.currentInput[at-1]="";curState.currentRaw=curState.currentInput.join("");cells[at-1].value="";cells[at-1].focus();}
+            else if(e.key==="ArrowLeft" && at>0){e.preventDefault();cells[at-1].focus();}
+            else if(e.key==="ArrowRight" && at<cells.length-1){e.preventDefault();cells[at+1].focus();}
+          });
         } else {
-          tile=el("div","wg-tile"); if(guess){tile.textContent=guess.input[c]||"";tile.classList.add(guess.result[c]||"absent");}
+          tile=el("div","wg-tile");
+          if(guess){tile.textContent=guess.input[c]||"";tile.classList.add(guess.result[c]||"absent");}
         }
         rowEl.appendChild(tile);
       }
@@ -917,7 +936,7 @@
   }
   function submitGuess() {
     if(curState.status!=="PLAYING") return;
-    var inputText=String(curState.currentRaw||"").trim().replace(/\s/g, ""), input=splitHangulWord(inputText), target=splitHangulWord(curState.wordObj.word);
+    var inputText=String(curState.currentRaw||"").trim().replace(/\s/g, ""), input=(curState.currentInput||[]).filter(Boolean), target=splitHangulWord(curState.wordObj.word);
     if(!inputText || input.length!==target.length){toast("정답과 같은 길이의 한글 단어를 입력해 주세요.");return;}
     var result=target.map(function(ch,i){return input[i]===ch?"correct":"absent";}), remaining=target.slice();
     for(var i=0;i<target.length;i++) if(result[i]==="correct") remaining[i]=null;
@@ -925,7 +944,7 @@
     curState.guesses.push({input:input,result:result});
     if(result.every(function(r){return r==="correct";})){curState.status="WON";saveStat(true);} else if(curState.guesses.length>=6){curState.status="LOST";saveStat(false);}
     store(curState.periodKey,JSON.stringify({guesses:curState.guesses,status:curState.status,keyColors:curState.keyColors}));
-    curState.currentRaw="";
+    curState.currentRaw=""; curState.currentInput=[];
     if(curState.status!=="PLAYING") syncWordResult(); renderBoard(); renderResult(); renderStats();
   }
   $("wgNewGame").addEventListener("click",function(){initWordGame(true);var first=$("wgBoard").querySelector(".wg-entry");if(first)first.focus();});
