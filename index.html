@@ -158,6 +158,8 @@
   .rank-num { width:28px; height:28px; border-radius:50%; border:2px solid var(--ink); display:grid; place-items:center; font-family:var(--font-display); font-size:16px; background:#fff; }
   .rank-num.gold { background:var(--gold); color:#fff; } .rank-num.silver { background:var(--silver); color:#fff; } .rank-num.bronze { background:var(--bronze); color:#fff; }
   .rank-info { flex:1; min-width:0; }
+  .rank-item.me { background:#FFF9DD; border-radius:12px; }
+  .rank-sub { display:block; color:var(--muted); font-size:12.5px; font-weight:500; }
   .rank-score { font-family:var(--font-display); font-size:18px; color:var(--coral); }
 
   /* 미니게임 */
@@ -365,12 +367,29 @@
       <span class="game-info"><strong>오늘의 단어 (5칸)</strong><small>6시간마다 변경 · 자음/모음 5칸을 6번 안에 맞혀보세요!</small></span>
       <span class="game-state" id="wordState">도전하기</span>
     </button>
+    <button class="card game-card" id="openWordRank" type="button">
+      <span class="game-no">🏆</span>
+      <span class="game-info"><strong>오늘의 단어 랭킹</strong><small>회원별 승률 순위 · 3판 이상 참가자만 표시돼요</small></span>
+      <span class="game-state">보기</span>
+    </button>
+  </section>
+
+  <section id="wordRankView" hidden aria-labelledby="wordRankHead">
+    <div class="head">
+      <div class="head-main"><span class="pill-live"><span class="dot"></span>회원 승률 랭킹</span><h2 class="title" id="wordRankHead">🏆 오늘의 단어 랭킹</h2><p class="sub">승률이 같으면 승리 횟수, 그다음 참가 판수 순이에요. (3판 이상 참가자만 표시)</p></div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn small" id="wordRankBack" type="button">← 미니게임</button><button class="btn small coral" id="wordRankRefresh" type="button">새로고침</button></div>
+    </div>
+    <div class="card">
+      <div id="wordRankMine" class="community-meta" style="font-size:14px;font-weight:700;margin-bottom:10px"></div>
+      <div id="wordRankList"></div>
+      <div id="wordRankStatus" class="community-status"></div>
+    </div>
   </section>
 
   <section id="wordGame" hidden aria-label="단어 맞추기">
     <div class="head">
       <div class="head-main"><span class="pill-live"><span class="dot"></span>6시간마다 새로고침</span><h2 class="title">오늘의 단어</h2><p class="sub">직장 및 일상 속 단어를 자음·모음 5칸 조합으로 맞혀보세요.</p></div>
-      <button class="btn small" id="wordBack" type="button">← 미니게임</button>
+      <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn small" id="wordBack" type="button">← 미니게임</button><button class="btn small coral" id="wordToRank" type="button">🏆 랭킹</button></div>
     </div>
     <div class="card wg">
       <div class="wg-top">
@@ -402,7 +421,7 @@
   var BONGCHUL_SRC = "";
 
   var SUPABASE_URL = "https://niuhmceiqxevuzmqsnhf.supabase.co";
-  var SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInRefiI6Im5pdWhtY2VpcXhldnV6bXFzbmhmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI2NTM0NzEsImV4cCI6MjEwODIyOTQ3MX0.dRNizWoOz5sy5F9Jgixd1m-NfH-CXiQ-vWQQlYeiGbU";
+  var SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5pdWhtY2VpcXhldnV6bXFzbmhmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI2NTM0NzEsImV4cCI6MjEwODIyOTQ3MX0.dRNizWoOz5sy5F9Jgixd1m-NfH-CXiQ-vWQQlYeiGbU";
   var ADMIN_EMAIL = "ua6c1b8b671ad1e8a319f43eebafaca40c5e672b2a095665333dcafac4081a302@login.dripcollege.example.com";
   var REMEMBER_KEY = "dripcollege_remember_login";
 
@@ -418,7 +437,7 @@
   if (BONGCHUL_SRC) { $("bongchulImg").src = BONGCHUL_SRC; $("bongchulImg").hidden = false; $("bongchulFallback").hidden = true; }
 
   /* ---------------- 화면 전환 ---------------- */
-  var views = { main: $("mainView"), board: $("boardView"), rank: $("rankView"), hub: $("gameHub"), word: $("wordGame"), notice: $("noticeView"), studentId: $("studentIdView"), fortune: $("fortuneView"), places: $("placesView") };
+  var views = { main: $("mainView"), board: $("boardView"), rank: $("rankView"), hub: $("gameHub"), word: $("wordGame"), notice: $("noticeView"), studentId: $("studentIdView"), fortune: $("fortuneView"), places: $("placesView"), wordRank: $("wordRankView") };
   function showView(target) {
     Object.keys(views).forEach(function (k) { views[k].hidden = (k !== target); });
     $("signupView").hidden = true;
@@ -432,6 +451,10 @@
   $("hubBack").onclick = function () { showView("main"); };
   $("openWord").onclick = function () { showView("word"); initWordGame(); };
   $("wordBack").onclick = function () { showView("hub"); updateHubState(); };
+  $("openWordRank").onclick = function () { showView("wordRank"); renderWordRanking(); };
+  $("wordToRank").onclick = function () { showView("wordRank"); renderWordRanking(); };
+  $("wordRankBack").onclick = function () { showView("hub"); updateHubState(); };
+  $("wordRankRefresh").onclick = function () { renderWordRanking(); };
   $("goNotice").onclick = function () { showView("notice"); };
   $("noticeBack").onclick = function () { showView("main"); };
   $("goStudentId").onclick = function () { showView("studentId"); };
@@ -513,6 +536,7 @@
     $("wgDate").textContent = "오늘의 단어 (5칸)";
     $("wgHint").textContent = "힌트: " + curState.wordObj.hint;
     startTimer(p.nextTime); renderBoard(); renderKeys(); renderResult(); renderStats();
+    if (curState.status !== "PLAYING") syncWordResult();
   }
   function startTimer(nextTime) {
     clearInterval(timerInterval);
@@ -583,6 +607,7 @@
     if (result.every(function (r) { return r === "correct"; })) { curState.status = "WON"; saveStat(true); }
     else if (curState.guesses.length >= 6) { curState.status = "LOST"; saveStat(false); }
     store(curState.periodKey, JSON.stringify({ guesses: curState.guesses, status: curState.status, keyColors: curState.keyColors }));
+    if (curState.status !== "PLAYING") syncWordResult();
     renderBoard(); renderKeys(); renderResult(); renderStats();
   }
   function renderResult() {
@@ -973,6 +998,52 @@
     toast("장소가 지도에 저장되었습니다!");
     loadSavedPlaces();
   };
+
+  /* =====================================================================
+     오늘의 단어 랭킹 (Supabase) — 회원별 승률
+     ===================================================================== */
+  var WORD_RANK_MIN = 3;
+
+  // 한 판이 끝나면 서버에 기록 (같은 6시간 단어는 한 번만 반영되므로 여러 번 호출해도 안전)
+  async function syncWordResult() {
+    if (!supabase || !curState.periodKey) return;
+    try {
+      var u = await currentUser();
+      if (!u) return;
+      var r = await supabase.rpc("record_word_result", { p_period_key: curState.periodKey, p_won: curState.status === "WON", p_attempts: curState.guesses.length });
+      if (r.error) console.error("단어 랭킹 기록 실패", r.error);
+    } catch (e) { console.error(e); }
+  }
+
+  async function renderWordRanking() {
+    var list = $("wordRankList"), st = $("wordRankStatus"), mine = $("wordRankMine");
+    list.innerHTML = ""; mine.textContent = ""; st.textContent = "불러오는 중…";
+    if (!supabase) { st.textContent = "Supabase 연결을 확인해 주세요."; return; }
+    var r = await supabase.rpc("get_word_ranking", { p_min_played: WORD_RANK_MIN, p_limit: 50 });
+    if (r.error) { st.textContent = "랭킹 SQL(word_game_ranking.sql)을 먼저 실행해 주세요: " + r.error.message; return; }
+    var data = r.data || [];
+    st.textContent = data.length ? "" : "아직 순위에 오른 회원이 없어요. " + WORD_RANK_MIN + "판 이상 플레이하면 이름이 올라갑니다!";
+    data.forEach(function (row, idx) {
+      var item = el("div", "rank-item" + (row.is_me ? " me" : ""));
+      item.appendChild(el("div", "rank-num" + (idx === 0 ? " gold" : idx === 1 ? " silver" : idx === 2 ? " bronze" : ""), String(row.ranking)));
+      var info = el("div", "rank-info");
+      var top = el("div"); top.appendChild(el("span", "nick", row.nickname + (row.is_me ? " (나)" : ""))); info.appendChild(top);
+      info.appendChild(el("span", "rank-sub", row.wins + "승 / " + row.played + "판 · 최다연승 " + row.max_streak));
+      item.appendChild(info);
+      item.appendChild(el("div", "rank-score", Number(row.win_rate).toFixed(1) + "%"));
+      list.appendChild(item);
+    });
+    try {
+      var me = await currentUser();
+      if (me) {
+        var m = await supabase.from("word_game_stats").select("played,wins").eq("user_id", me.id).maybeSingle();
+        if (m.data && m.data.played > 0) {
+          var rate = Math.round((m.data.wins / m.data.played) * 1000) / 10;
+          mine.textContent = "내 기록: " + m.data.played + "판 " + m.data.wins + "승 (" + rate + "%)" + (m.data.played < WORD_RANK_MIN ? " · " + (WORD_RANK_MIN - m.data.played) + "판 더 하면 순위에 표시돼요" : "");
+        } else mine.textContent = "아직 기록이 없어요. 오늘의 단어에 도전해 보세요!";
+      }
+    } catch (e) { console.error(e); }
+  }
 })();
 </script>
 </body>
