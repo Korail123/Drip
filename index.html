@@ -72,6 +72,8 @@
   .auth-card h2 { margin:0 0 5px; font-family:var(--font-display); font-size:28px; }
   .auth-help { margin:0 0 16px; color:var(--muted); font-size:13px; }
   .auth-card label { display:block; margin:12px 0 5px; font-weight:800; }
+  .remember-row { display:flex !important; align-items:center; gap:9px; margin:12px 0 2px !important; font-size:14px; cursor:pointer; }
+  .auth-card input.remember-checkbox { width:19px; min-height:19px; height:19px; margin:0; accent-color:#167a55; }
   .auth-card input { width:100%; min-height:48px; border:2px solid var(--ink); border-radius:12px; padding:10px 12px; background:#fffdf8; }
   .auth-actions { display:grid; gap:10px; margin-top:16px; }
   .auth-primary,.auth-secondary { min-height:48px; border:2.5px solid var(--ink); border-radius:13px; font-family:var(--font-display); font-size:18px; box-shadow:3px 3px 0 var(--ink); }
@@ -322,10 +324,11 @@
     </div>
 
     <section id="loginCard" class="auth-card" aria-labelledby="loginTitle">
-      <h2 id="loginTitle">로그인</h2><p class="auth-help">닉네임과 가입할 때 등록한 인증번호를 입력해 주세요.</p>
+      <h2 id="loginTitle">로그인</h2><p class="auth-help">카카오톡 오픈채팅에서 사용하는 닉네임과 인증번호를 입력해 주세요.</p>
       <form id="loginForm" autocomplete="on">
         <label for="loginNickname">닉네임</label><input id="loginNickname" name="nickname" maxlength="24" autocomplete="username" placeholder="등록한 닉네임" required>
-        <label for="loginCode">인증번호 (비밀번호)</label><input id="loginCode" name="code" type="password" minlength="6" autocomplete="current-password" placeholder="인증번호 입력" required>
+        <label for="loginCode">인증번호</label><input id="loginCode" name="code" type="password" autocomplete="current-password" placeholder="인증번호 입력" required>
+        <label class="remember-row" for="rememberLogin"><input class="remember-checkbox" id="rememberLogin" type="checkbox" checked> 자동 로그인 (캐시/사이트 데이터 삭제 전까지 유지)</label>
         <div class="auth-actions"><button class="auth-primary" type="submit">로그인</button><button class="auth-secondary" id="openSignup" type="button">회원가입</button></div>
         <div id="loginStatus" class="auth-status" role="status" aria-live="polite"></div>
       </form>
@@ -345,10 +348,10 @@
   <section id="signupView" hidden aria-labelledby="signupTitle">
     <div class="auth-card">
       <h2 id="signupTitle">회원가입</h2>
-      <p class="auth-help">관리자가 미리 등록한 닉네임과 인증번호를 입력하면 가입할 수 있어요.</p>
+      <p class="auth-help">관리자가 등록한 닉네임과 인증번호 2030을 입력하면 가입할 수 있어요.</p>
       <form id="signupForm" autocomplete="off">
         <label for="signupNickname">닉네임</label><input id="signupNickname" name="nickname" maxlength="24" autocomplete="username" placeholder="관리자에게 등록된 닉네임" required>
-        <label for="signupCode">인증번호 (로그인 비밀번호로 사용)</label><input id="signupCode" name="code" type="password" minlength="6" autocomplete="new-password" placeholder="등록된 인증번호" required>
+        <label for="signupCode">인증번호</label><input id="signupCode" name="code" type="password" autocomplete="new-password" placeholder="관리자에게 받은 인증번호" required>
         <div class="auth-actions"><button class="auth-primary" type="submit">가입하기</button><button class="auth-secondary" id="backToLogin" type="button">로그인으로 돌아가기</button></div>
         <div id="signupStatus" class="auth-status" role="status" aria-live="polite"></div>
       </form>
@@ -1057,21 +1060,34 @@
   // Supabase Dashboard > Project Settings > API에서 URL과 publishable/anon key를 입력하세요.
   const SUPABASE_URL = "https://niuhmceiqxevuzmqsnhf.supabase.co";
   const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5pdWhtY2VpcXhldnV6bXFzbmhmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI2NTM0NzEsImV4cCI6MjEwODIyOTQ3MX0.dRNizWoOz5sy5F9Jgixd1m-NfH-CXiQ-vWQQlYeiGbU";
+  const REMEMBER_KEY = "dripcollege_remember_login";
   const $ = (id) => document.getElementById(id);
+  function selectedStorage(){ try { return localStorage.getItem(REMEMBER_KEY) === "0" ? sessionStorage : localStorage; } catch(_e) { return sessionStorage; } }
+  const authStorage = {
+    getItem: (key) => { try { return selectedStorage().getItem(key); } catch(_e) { return null; } },
+    setItem: (key,value) => { try { selectedStorage().setItem(key,value); } catch(_e) {} },
+    removeItem: (key) => { try { localStorage.removeItem(key); sessionStorage.removeItem(key); } catch(_e) {} }
+  };
   const loginCard = $("loginCard"), signupView = $("signupView"), mainView = $("mainView"), mainNav = $("mainNav");
   const authTopline = $("authTopline");
   let supabase = null;
   if (window.supabase && SUPABASE_URL.includes("niuhmceiqxevuzmqsnhf") && SUPABASE_ANON_KEY.startsWith("eyJ")) {
-    supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, { auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: false, storage: authStorage } });
   }
   function status(id, message, kind){ const node=$(id); node.textContent=message||""; node.className="auth-status"+(kind?" "+kind:""); }
   function normalizeNick(n){ return String(n||"").trim().normalize("NFC"); }
-  async function nickEmail(nick){
-    const bytes = new TextEncoder().encode(normalizeNick(nick).toLowerCase());
-    const digest = await crypto.subtle.digest("SHA-256", bytes);
-    const hex = Array.from(new Uint8Array(digest)).map(b=>b.toString(16).padStart(2,"0")).join("");
-    return "u"+hex+"@login.dripcollege.example.com";
+  async function sha256Hex(value){
+    const digest = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(value));
+    return Array.from(new Uint8Array(digest)).map(b=>b.toString(16).padStart(2,"0")).join("");
   }
+  async function nickEmail(nick){ return "u"+await sha256Hex(normalizeNick(nick).toLowerCase())+"@login.dripcollege.example.com"; }
+  async function authPassword(nick,code){ return await sha256Hex("dripcollege-auth-v1|"+normalizeNick(nick).toLowerCase()+"|"+String(code)); }
+  function saveRememberChoice(){
+    const remember = $("rememberLogin").checked;
+    try { localStorage.setItem(REMEMBER_KEY, remember ? "1" : "0"); } catch(_e) {}
+    if(!remember){ try { const old=localStorage.getItem("sb-"+new URL(SUPABASE_URL).hostname.split(".")[0]+"-auth-token"); if(old) sessionStorage.setItem("sb-"+new URL(SUPABASE_URL).hostname.split(".")[0]+"-auth-token",old); } catch(_e) {} }
+  }
+  try { $("rememberLogin").checked = localStorage.getItem(REMEMBER_KEY) !== "0"; } catch(_e) {}
   function showLogin(){ signupView.hidden=true; mainView.hidden=false; loginCard.hidden=false; mainNav.hidden=true; authTopline.hidden=true; window.scrollTo({top:0,behavior:"smooth"}); }
   function showSignup(){ mainView.hidden=true; signupView.hidden=false; status("signupStatus", "", ""); window.scrollTo({top:0,behavior:"smooth"}); }
   function showSignedIn(nick){ signupView.hidden=true; mainView.hidden=false; loginCard.hidden=true; mainNav.hidden=false; authTopline.hidden=false; $("signedInLabel").textContent=nick+" 님, 환영합니다!"; window.scrollTo({top:0,behavior:"smooth"}); }
@@ -1081,10 +1097,12 @@
   $("loginForm").addEventListener("submit", async (e)=>{
     e.preventDefault(); if(!ready()) return;
     const nick=normalizeNick($("loginNickname").value), code=$("loginCode").value;
+    saveRememberChoice();
     status("loginStatus","로그인 중입니다…","");
     try{
       const email=await nickEmail(nick);
-      const {data,error}=await supabase.auth.signInWithPassword({email,password:code});
+      const password=await authPassword(nick,code);
+      const {data,error}=await supabase.auth.signInWithPassword({email,password});
       if(error) throw error;
       showSignedIn(nick); status("loginStatus","","");
       try{ sessionStorage.setItem("dripcollege_nickname",nick); }catch(_e){}
@@ -1094,14 +1112,16 @@
     e.preventDefault(); if(!ready()) return;
     const nick=normalizeNick($("signupNickname").value), code=$("signupCode").value;
     if(nick.length<2){status("signupStatus","닉네임은 2자 이상 입력해 주세요.","error");return;}
-    if(code.length<6){status("signupStatus","인증번호는 6자 이상이어야 합니다.","error");return;}
+    if(!code){status("signupStatus","인증번호를 입력해 주세요.","error");return;}
+    saveRememberChoice();
     status("signupStatus","등록된 닉네임과 인증번호를 확인하고 있습니다…","");
     try{
       const {data:valid,error:checkError}=await supabase.rpc("validate_member_invite",{p_nickname:nick,p_auth_code:code});
       if(checkError) throw checkError;
       if(valid!==true){status("signupStatus","등록 정보를 찾을 수 없거나 이미 사용된 인증번호입니다. 관리자에게 확인해 주세요.","error");return;}
       const email=await nickEmail(nick);
-      const {data,error}=await supabase.auth.signUp({email,password:code,options:{data:{nickname:nick}}});
+      const password=await authPassword(nick,code);
+      const {data,error}=await supabase.auth.signUp({email,password,options:{data:{nickname:nick}}});
       if(error) throw error;
       if(!data.session || !data.user){
         status("signupStatus","Supabase에서 이메일 확인을 비활성화해야 닉네임/인증번호만으로 가입할 수 있습니다. Auth 설정을 확인해 주세요.","error");return;
@@ -1112,6 +1132,7 @@
         status("signupStatus","계정은 생성됐지만 인증번호 등록 완료에 실패했습니다. 관리자에게 문의해 주세요.","error");
         console.error(claimError);return;
       }
+      saveRememberChoice();
       showSignedIn(nick); status("signupStatus","가입이 완료되었습니다!", "ok");
       try{ sessionStorage.setItem("dripcollege_nickname",nick); }catch(_e){}
     }catch(err){
