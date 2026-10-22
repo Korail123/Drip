@@ -390,6 +390,196 @@
   #noticeView .notice-rule li { line-height:1.6; }
   @media(max-width:520px){ #noticeView .notice-list { grid-template-columns:1fr; } #noticeView .notice-row:nth-last-child(-n+2) { border-bottom:1px solid #EDF0F5; } #noticeView .notice-row:last-child { border-bottom:0; } }
 
+
+  /* ===== UI 리프레시: 차분한 대시보드 스타일 ===== */
+  :root {
+    --paper: #F7F8FC;
+    --dot: #F7F8FC;
+    --ink: #202B45;
+    --muted: #718096;
+    --card: #FFFFFF;
+    --coral: #E85B52;
+    --row-line: #E8ECF3;
+    --mint-bg: #EAF8F1;
+    --mint-line: #C8EBDD;
+    --mint-ink: #176747;
+    --butter-bg: #FFF7E5;
+    --butter-line: #F3E3B5;
+    --butter-ink: #78520B;
+    --pink-bg: #FFF0F2;
+    --pink-line: #F4D4D9;
+    --pink-ink: #A83A4B;
+  }
+
+  body {
+    background: var(--paper);
+    background-image: none;
+    color: var(--ink);
+    padding-top: 24px;
+    padding-bottom: 56px;
+    line-height: 1.6;
+  }
+  .page { max-width: 1040px; }
+  .stage { width: min(100%, 920px); }
+  .rainbow-title { max-width: 680px; margin-bottom: 2px; }
+  .bongchul-hero { margin: 0 auto 12px; }
+  .bongchul-hero img { max-height: 180px; }
+  .bongchul-hero .fallback { font-size: 72px; }
+
+  .auth-topline {
+    max-width: 920px;
+    padding: 10px 14px;
+    background: #fff;
+    border: 1px solid #E5E9F1;
+    border-radius: 14px;
+  }
+  .auth-card {
+    width: min(100%, 460px);
+    padding: 28px;
+    margin: 18px auto 26px;
+    border: 1px solid #E4E8F0;
+    border-radius: 20px;
+    box-shadow: 0 12px 32px rgba(32,43,69,.07);
+  }
+  .auth-card h2 {
+    font-family: var(--font-body);
+    font-size: 25px;
+    font-weight: 800;
+    letter-spacing: -.04em;
+  }
+  .auth-help { font-size: 13px; }
+  .auth-card label:not(.remember-row) { margin-top: 16px; }
+  .auth-card input { background: #FBFCFE; }
+  .auth-actions { gap: 9px; }
+  .auth-primary, .auth-secondary {
+    border-radius: 11px;
+    box-shadow: none;
+    font-family: var(--font-body);
+    font-weight: 800;
+  }
+  .auth-primary { background: var(--coral); border-color: var(--coral); }
+  .auth-secondary { background: #FFF4F2; color: #A33C35; border-color: #F0D8D5; }
+
+  .nav-grid {
+    max-width: 920px;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 14px;
+    margin: 24px auto 34px;
+  }
+  .nav-btn {
+    min-height: 76px;
+    justify-content: flex-start;
+    padding: 18px;
+    white-space: normal;
+    overflow: visible;
+    text-overflow: clip;
+    border: 1px solid #E5E9F1;
+    border-radius: 17px;
+    background: #fff;
+    box-shadow: 0 5px 16px rgba(32,43,69,.045);
+    font-family: var(--font-body);
+    font-size: 15px;
+    font-weight: 800;
+  }
+  .nav-btn.coral { background: #FFF5F3; color: #A64038; }
+  .nav-btn.mint { background: #F0FAF5; color: #176747; }
+  .nav-btn.butter { background: #FFFAEF; color: #78520B; }
+  .nav-btn:hover { transform: translateY(-2px); box-shadow: 0 9px 20px rgba(32,43,69,.08); }
+
+  .community-panel { max-width: 920px; }
+  .head { margin-bottom: 20px; }
+  .pill-live {
+    background: #EAF8F1;
+    border: 1px solid #C8EBDD;
+    color: #176747;
+    border-radius: 999px;
+  }
+  h2.title {
+    font-family: var(--font-body);
+    font-weight: 800;
+    letter-spacing: -.035em;
+    line-height: 1.3;
+  }
+  .sub { margin-top: 6px; color: #7B879B; }
+  .card, .community-post, .community-form, .community-row,
+  .community-detail, .notice-intro, .notice-highlight, .notice-rule,
+  .saved-place, .sid-card, .game-card {
+    border: 1px solid #E4E8F0;
+    border-radius: 16px;
+    box-shadow: 0 5px 18px rgba(32,43,69,.045);
+  }
+  .community-row { transition: border-color .15s, box-shadow .15s, transform .15s; }
+  .community-row:hover, .saved-place:hover {
+    border-color: #C8D3E6;
+    box-shadow: 0 7px 20px rgba(32,43,69,.07);
+  }
+  .community-form { gap: 12px; padding: 18px; }
+  .community-form input, .community-form textarea, .community-form select,
+  .sid-input, .auth-card input {
+    border-color: #DCE2EC;
+    border-radius: 10px;
+  }
+  .btn, .logout-btn, .community-actions button, .community-form button,
+  .places-tabs button, .rank-tab, .sid-opt {
+    border: 1px solid #DCE2EC;
+    border-radius: 10px;
+    box-shadow: none;
+    font-family: var(--font-body);
+    font-weight: 800;
+  }
+  .btn.coral { background: var(--coral); border-color: var(--coral); }
+  .btn:hover, .logout-btn:hover, .community-actions button:hover,
+  .community-form button:hover, .places-tabs button:hover, .rank-tab:hover,
+  .sid-opt:hover { transform: translateY(-1px); }
+  .toast { border-radius: 14px; }
+
+  #noticeView .notice-banner {
+    background: #F0F4FB;
+    border-color: #E0E7F2;
+    color: #3B4A67;
+  }
+  #noticeView .notice-list {
+    border-color: #E4E8F0;
+    box-shadow: 0 5px 18px rgba(32,43,69,.045);
+  }
+  #noticeView .notice-row { padding: 14px; }
+  #noticeView .notice-ico { background: #F3F5FA; }
+  #noticeView .notice-foot { box-shadow: none; }
+  #noticeView .notice-rule { box-shadow: none; }
+
+  .sid-card {
+    background: linear-gradient(180deg, #FFFFFF 0%, #F6F8FC 100%);
+    box-shadow: 0 10px 28px rgba(32,43,69,.08);
+  }
+  .sid-rule { height: 2px; }
+  .sid-motto { border-color: #E1E6F0; }
+  .sid-opt.on { background: #EAF8F1; box-shadow: none; border-color: #A8DCC5; }
+  .places-map { border-color: #DCE2EC; }
+  .saved-place { box-shadow: none; }
+  .rank-tab.active { background: var(--ink); color: #fff; }
+  .rank-item { padding: 14px 12px; }
+  .game-card { padding: 16px; }
+  .game-no { background: #FFF7E5; }
+  .wg-desc-bar { background: #F7F9FD; border-color: #E4E8F0; }
+  .wg-tile { border-color: #DCE2EC; border-radius: 10px; }
+
+  button, input, select, textarea { -webkit-tap-highlight-color: transparent; }
+  :focus-visible { outline: 3px solid rgba(91,140,255,.42); outline-offset: 2px; }
+  @media (max-width: 760px) {
+    body { padding-top: 12px; }
+    .page { max-width: 100%; }
+    .nav-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+    .nav-btn { min-height: 64px; padding: 13px; font-size: 13px; }
+    .auth-card { padding: 21px; }
+    .head { align-items: flex-start; }
+  }
+  @media (max-width: 420px) {
+    .nav-grid { gap: 8px; }
+    .nav-btn { min-height: 58px; padding: 11px 10px; font-size: 12.5px; border-radius: 12px; }
+    .auth-card { padding: 18px; }
+    .head .btn.small { font-size: 12px; }
+  }
+
 </style>
 </head>
 <body>
