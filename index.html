@@ -1,8 +1,3 @@
-제공해주신 디자인과 스타일이 완벽하게 반영된 **수정된 전체 HTML 코드**입니다.
-
-아래 코드를 복사해서 기존 HTML 파일에 그대로 덮어씌워 주시면 됩니다! (공지사항 HTML 코드와 CSS 스타일이 깔끔하게 통합되었습니다.)
-
-```html
 <!doctype html>
 <html lang="ko">
 <head>
@@ -11,7 +6,7 @@
 <title>드립대학 수다학과</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jua&family=Noto+Sans+KR:wght@400;500;700;800;900&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jua&family=Noto+Sans+KR:wght@400;500;700;800&display=swap">
 <!-- Kakao 지도 JavaScript API (서비스 라이브러리 포함) -->
 <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=65cb25515f828d2dddc4f6be98970b3f&libraries=services"></script>
 <style>
@@ -62,6 +57,11 @@
   /* ---------- hero ---------- */
   .stage { width: min(100%, 720px); margin: 0 auto; }
   .stage svg { display: block; width: 100%; height: auto; overflow: visible; }
+  .wave { transform-origin: 215px 665px; animation: wave 0.62s ease-in-out infinite alternate; }
+  @keyframes wave { from { transform: rotate(-13deg); } to { transform: rotate(11deg); } }
+  .bubble { animation: float 3.2s ease-in-out infinite; }
+  @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+  /* 봉춸이 메인 캐릭터 */
   .bongchul-hero { width: min(100%, 280px); margin: 0 auto; text-align: center; }
   body.signed-in .bongchul-hero { display:none !important; }
   .bongchul-hero img { display: block; width: 100%; height: auto; max-height: 230px; object-fit: contain; margin: 0 auto; animation: bongchul-greet 1.8s ease-in-out infinite; transform-origin: 50% 85%; }
@@ -109,130 +109,20 @@
   .places-tabs{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}.places-tabs button{border:2px solid var(--ink);border-radius:18px;padding:8px 13px;background:white;font-weight:800}.places-tabs button.active{background:#c9f3df}.places-layout{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(250px,1fr);gap:14px}.places-map{height:420px;border:2px solid var(--ink);border-radius:14px;overflow:hidden;position:relative}.place-save-form{display:grid;gap:8px}.place-save-form input,.place-save-form textarea,.place-save-form select{width:100%;padding:10px;border:1px solid #bbb;border-radius:9px}.saved-place{padding:12px;border:1.5px solid var(--ink);border-radius:12px;margin:8px 0;background:#fff;box-shadow:2px 2px 0 var(--ink)}.saved-place a{overflow-wrap:anywhere}@media(max-width:650px){.places-layout{grid-template-columns:1fr}.places-map{height:320px}.community-row{align-items:flex-start;flex-wrap:wrap}.community-row-meta{margin-left:auto}}
   .kakao-overlay-iw { padding:10px 14px; border-radius:10px; background:#fff; border:2px solid var(--ink); font-size:13px; font-weight:700; box-shadow:2px 2px 0 var(--ink); }
   
-  /* ---------- 세련된 공지사항 스타일 (적용 완료) ---------- */
-  .notice-page {
-    max-width: 760px;
-    margin: 0 auto;
-    padding: 20px;
-    color: #292929;
-    font-family: var(--font-body);
-    line-height: 1.7;
-    word-break: keep-all;
-  }
-  .notice-page * { box-sizing: border-box; }
-  .notice-header {
-    padding: 26px 20px;
-    margin-bottom: 20px;
-    border-radius: 20px;
-    background: linear-gradient(135deg, #fff0f5, #fff8e9);
-    border: 2px solid var(--ink);
-    text-align: center;
-    box-shadow: 4px 4px 0 var(--ink);
-  }
-  .notice-header h1 {
-    margin: 0 0 8px;
-    font-size: 25px;
-    font-weight: 900;
-  }
-  .notice-header p {
-    margin: 0;
-    color: #777;
-    font-size: 14px;
-  }
-  .notice-card {
-    display: flex;
-    gap: 14px;
-    align-items: flex-start;
-    padding: 18px;
-    margin-bottom: 12px;
-    border: 2px solid var(--ink);
-    border-radius: 16px;
-    background: #fff;
-    box-shadow: 3px 3px 0 var(--ink);
-  }
-  .notice-icon {
-    display: flex;
-    flex: 0 0 42px;
-    width: 42px;
-    height: 42px;
-    align-items: center;
-    justify-content: center;
-    border-radius: 13px;
-    background: #f6f1ff;
-    border: 1.5px solid var(--ink);
-    font-size: 22px;
-  }
-  .notice-content {
-    flex: 1;
-    min-width: 0;
-  }
-  .notice-content h2 {
-    margin: 2px 0 9px;
-    font-size: 17px;
-    font-weight: 800;
-  }
-  .notice-content ul {
-    padding-left: 19px;
-    margin: 0;
-  }
-  .notice-content li {
-    margin: 4px 0;
-    font-size: 14px;
-  }
-  .notice-content strong {
-    color: #d84c78;
-    font-weight: 800;
-  }
-  .notice-footer {
-    padding: 22px 18px;
-    margin-top: 18px;
-    border-radius: 18px;
-    background: #fff3f7;
-    border: 2px solid var(--ink);
-    text-align: center;
-    box-shadow: 3px 3px 0 var(--ink);
-  }
-  .notice-footer h2 {
-    margin: 0 0 10px;
-    font-size: 19px;
-    font-family: var(--font-display);
-  }
-  .notice-footer p {
-    margin: 5px 0;
-    font-size: 14px;
-  }
-  .notice-discord {
-    padding: 18px;
-    margin-top: 14px;
-    border: 2px solid var(--ink);
-    border-radius: 16px;
-    background: #f7f7ff;
-    box-shadow: 3px 3px 0 var(--ink);
-  }
-  .notice-discord h2 {
-    margin: 0 0 8px;
-    font-size: 17px;
-  }
-  .notice-discord a {
-    display: inline-block;
-    margin-top: 8px;
-    color: #5865f2;
-    font-weight: 800;
-    text-decoration: none;
-    overflow-wrap: anywhere;
-  }
-  .notice-discord a:hover {
-    text-decoration: underline;
-  }
-  @media (max-width: 480px) {
-    .notice-page { padding: 12px; }
-    .notice-header h1 { font-size: 22px; }
-    .notice-card { gap: 11px; padding: 14px; }
-    .notice-icon { flex-basis: 36px; width: 36px; height: 36px; font-size: 19px; }
-    .notice-content h2 { font-size: 16px; }
-    .notice-content li { font-size: 13px; }
-  }
-
+  .notice-intro{padding:24px 20px;text-align:center;background:linear-gradient(135deg,#fff0f5,#fff8e9);border:2px solid var(--ink);border-radius:20px;margin:12px 0 14px;box-shadow:4px 4px 0 var(--ink)}
+  .notice-intro .notice-kicker{display:inline-block;padding:5px 10px;margin-bottom:8px;border-radius:999px;background:#fff;border:1px solid #f0c7d4;font-size:12px;font-weight:900;letter-spacing:.04em}
+  .notice-intro h3{font-size:26px;margin:0 0 7px}.notice-intro p{margin:5px 0;color:#666;line-height:1.6}
+  .notice-highlights{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;margin:0 0 20px}
+  .notice-highlight{padding:12px 10px;text-align:center;background:#fff;border:1.5px solid var(--ink);border-radius:13px;box-shadow:2px 2px 0 var(--ink)}
+  .notice-highlight .symbol{display:block;font-size:22px;margin-bottom:5px}.notice-highlight b{display:block;font-size:13px;margin-bottom:3px}.notice-highlight span:last-child{display:block;font-size:11px;line-height:1.5;color:#666}
+  .notice-section-label{display:flex;align-items:center;gap:8px;margin:0 0 10px;font-size:16px;font-weight:900}
+  .notice-rules{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px}
+  .notice-rule{display:flex;gap:12px;align-items:flex-start;background:#fff;border:1.5px solid #242424;border-radius:15px;padding:15px;box-shadow:3px 3px 0 var(--ink)}
+  .notice-rule-icon{flex:0 0 40px;width:40px;height:40px;display:grid;place-items:center;background:#f8eaf0;border-radius:12px;font-size:21px}
+  .notice-rule h3{font-size:15px;margin:3px 0 8px;line-height:1.4}.notice-rule ul{margin:0;padding-left:17px}.notice-rule li{font-size:13px;line-height:1.75;margin:3px 0}
+  .notice-rule strong{color:#cf3f70}.notice-closing{margin-top:16px;padding:22px 18px;text-align:center;background:#fff3f7;border:2px solid var(--ink);border-radius:17px;box-shadow:3px 3px 0 var(--ink)}
+  .notice-closing h3{margin:0 0 9px}.notice-closing p{line-height:1.75;margin:6px 0}.notice-discord{margin-top:13px;padding:18px;border:2px solid var(--ink);border-radius:15px;background:#f7f7ff}.notice-discord h3{margin:0 0 7px}.notice-discord p{font-size:13px;line-height:1.6}.notice-discord a{display:inline-block;margin-top:4px;padding:10px 14px;border:2px solid var(--ink);border-radius:11px;background:#fff;font-weight:900;text-decoration:none;box-shadow:2px 2px 0 var(--ink)}
+  @media(max-width:600px){.notice-rules{grid-template-columns:1fr}.notice-intro h3{font-size:22px}.notice-highlights{gap:6px}.notice-highlight{padding:10px 5px}.notice-highlight b{font-size:12px}.notice-highlight span:last-child{font-size:10px}.notice-rule{padding:13px}}
   body.signed-in #mainView .bongchul-hero{display:none}
   /* ---------- main navigation buttons ---------- */
   .nav-grid {
@@ -299,6 +189,34 @@
     background: var(--card); border: 2.5px solid var(--ink); border-radius: 22px;
     box-shadow: 6px 6px 0 var(--ink); padding: 18px 20px; margin-bottom: 26px;
   }
+  .composer h3 { margin: 0 0 12px; font-family: var(--font-display); font-weight: 400; font-size: 22px; }
+  .field-row { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 10px; }
+  .field-row > * { min-width: 0; }
+  .in, select.in, textarea.in {
+    width: 100%; border: 2px solid var(--ink); border-radius: 12px; background: #fff; padding: 9px 12px;
+  }
+  .grow { flex: 1 1 180px; }
+  textarea.in { min-height: 96px; resize: vertical; display: block; }
+  .row-between { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; margin-top: 10px; }
+  .count { color: var(--muted); font-size: 13px; font-variant-numeric: tabular-nums; }
+
+  /* ---------- post ---------- */
+  .post-top { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .who { display: flex; align-items: center; gap: 8px; min-width: 0; flex-wrap: wrap; }
+  .nick { font-weight: 800; overflow-wrap: anywhere; }
+  .dept {
+    background: var(--butter-bg); border: 1.5px solid var(--butter-line); color: var(--butter-ink);
+    border-radius: 999px; font-size: 12.5px; font-weight: 800; padding: 1px 9px;
+  }
+  .meta { display: flex; align-items: center; gap: 10px; color: #8190B0; font-weight: 700; font-size: 13px; }
+  .post-body { margin: 14px 0 12px; font-size: 16.5px; font-weight: 700; white-space: pre-wrap; overflow-wrap: anywhere; }
+  .post-actions { display: flex; gap: 12px; border-top: 1.5px dashed var(--row-line); padding-top: 10px; margin-top: 8px; }
+  .act-btn {
+    background: none; border: none; padding: 4px 8px; border-radius: 8px;
+    font-weight: 700; font-size: 13.5px; color: var(--muted); display: inline-flex; align-items: center; gap: 5px;
+  }
+  .act-btn:hover { background: var(--slate-bg); color: var(--ink); }
+  .act-btn.active { color: var(--coral); }
 
   /* ---------- leaderboard ---------- */
   .rank-tabs { display: flex; gap: 8px; margin-bottom: 16px; }
@@ -360,12 +278,14 @@
     font-weight: 800; font-size: 13px; border-radius: 9px; padding: 2px 10px;
   }
   
+  /* 직관적 1줄 게임 설명 바 */
   .wg-desc-bar {
     background: #FFF9DD; border: 2px solid var(--ink); border-radius: 12px;
     padding: 10px 12px; font-weight: 700; font-size: 13.5px; text-align: center;
     color: var(--ink); margin-bottom: 14px; box-shadow: 2px 2px 0 var(--ink);
   }
 
+  /* 5칸 레이아웃 정렬 */
   .wg-board { display: grid; gap: 8px; margin: 8px auto 12px; max-width: 320px; }
   .wg-row { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 8px; }
   .wg-row.shake { animation: shake .4s; }
@@ -411,13 +331,14 @@
     h2.title { font-size: 26px; }
     h2.title .ic { width: 30px; height: 30px; }
     .card { padding: 16px 14px; box-shadow: 4px 4px 0 var(--ink); }
+    .post-body { font-size: 15.5px; }
     .wg-key { height: 42px; font-size: 16px; }
     .game-info strong { font-size: 21px; }
     .wg-tile { font-size: 22px; }
     .nav-btn { font-size: 18px; padding: 14px; }
   }
   @media (prefers-reduced-motion: reduce) {
-    .dot, .wg-row.shake, .bongchul-hero img { animation: none; }
+    .wave, .bubble, .dot, .wg-row.shake, .bongchul-hero img { animation: none; }
     .btn, .game-card, .nav-btn { transition: none; }
   }
 </style>
@@ -431,26 +352,15 @@
       <path id="titleArc" d="M 65 218 Q 500 -80 935 218" fill="none"/></defs>
       <text font-size="62" fill="url(#titleRainbow)" text-anchor="middle"><textPath href="#titleArc" startOffset="50%">2030 직장인 드립대학 수다학과</textPath></text>
     </svg>
+    <!-- 기존 스크립트와의 호환용 숨김 SVG 그룹 -->
     <svg aria-hidden="true" style="display:none" viewBox="0 0 1000 810"><g id="arch"></g></svg>
     <div id="authTopline" class="auth-topline" hidden><span id="signedInLabel" class="auth-user"></span><button id="logoutBtn" class="logout-btn" type="button">로그아웃</button></div>
 
     <div class="bongchul-hero" role="img" aria-label="봉춸이가 손을 들고 반갑게 인사하는 그림">
-      <img src="data:image/jpeg;base64,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uQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQuQu`};
-  images = document.querySelectorAll('img');
-  images.forEach(image => {
-    image.src = image.src;
-  });
-  codeElements = document.querySelectorAll('code');
-  codeElements.forEach(codeElement => {
-    codeElement.innerText = codeElement.innerText;
-  });
-  canvasElements = document.querySelectorAll('canvas');
-  canvasElements.forEach(canvasElement => {
-    canvasElement.width = canvasElement.width;
-  });
-</script>
+      <img src="data:image/jpeg;base64,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" alt="봉춸이가 손을 흔들며 인사해요!" fetchpriority="high">
+    </div>
 
-<section id="loginCard" class="auth-card" aria-labelledby="loginTitle">
+    <section id="loginCard" class="auth-card" aria-labelledby="loginTitle">
       <h2 id="loginTitle">로그인</h2><p class="auth-help">카카오톡 오픈채팅에서 사용하는 닉네임과 인증번호를 입력해 주세요.</p>
       <form id="loginForm" autocomplete="on">
         <label for="loginNickname">닉네임</label><input id="loginNickname" name="nickname" maxlength="24" autocomplete="username" placeholder="등록한 닉네임" required>
@@ -462,142 +372,1136 @@
       <p class="auth-note">회원가입은 관리자가 Supabase에 미리 등록한 닉네임과 인증번호가 있어야 가능합니다.</p>
     </section>
 
-    <!-- 메인 기능 버튼 4개 등 필요한 네비게이션 요소 -->
+    <!-- 메인 기능 버튼 4개 -->
+    <nav id="mainNav" class="nav-grid" aria-label="메인 메뉴" hidden>
+      <button class="nav-btn coral" id="goNotice" type="button">📢 공지사항</button>
+      <button class="nav-btn butter" id="goBoard" type="button">💬 수다게시판</button>
+      <button class="nav-btn mint" id="goStudentId" type="button">🪪 학생증 만들기</button>
+      <button class="nav-btn coral" id="goGames" type="button">🎮 미니게임</button>
+      <button class="nav-btn butter" id="goFortune" type="button">🔮 오늘의 사주</button>
+      <button class="nav-btn mint" id="goRank" type="button">🏆 채팅순위 보기</button>
+      <button class="nav-btn coral" id="goPlaces" type="button">☕ 맛집/카페 보기</button>
+    </nav>
+  </main>
 
-  <!-- ===== 공지사항 뷰 (요청하신 UI 적용 완료) ===== -->
-  <section id="noticeView" hidden class="community-panel">
-    <div class="head">
-      <div class="head-main"><h2 class="title">📢 공지사항</h2><p class="sub">2030 직장인 드립대학 수다학과 이용 규칙</p></div>
-      <button class="btn small" id="noticeBack">← 메인으로</button>
-    </div>
-
-    <div class="notice-page">
-      <header class="notice-header">
-        <h1>📢 공지사항</h1>
-        <p>2030 직장인 드립대학 수다학과</p>
-        <p>입장 후 공지사항을 꼭 확인해 주세요!</p>
-      </header>
-
-      <article class="notice-card">
-        <div class="notice-icon">👥</div>
-        <div class="notice-content">
-          <h2>01. 기본 입장 규칙</h2>
-          <ul>
-            <li>만 19세 이상 입장 가능</li>
-            <li>공지 숙지 후 하단의 <strong>♥ 클릭</strong></li>
-          </ul>
-        </div>
-      </article>
-
-      <article class="notice-card">
-        <div class="notice-icon">🤝</div>
-        <div class="notice-content">
-          <h2>02. 상호 존중</h2>
-          <ul>
-            <li>존댓말 및 음슴체 사용</li>
-            <li>상대방을 부를 때는 반드시 <strong>닉네임 + 님</strong></li>
-            <li>서로 기분 상하지 않도록 배려하기</li>
-          </ul>
-        </div>
-      </article>
-
-      <article class="notice-card">
-        <div class="notice-icon">🪪</div>
-        <div class="notice-content">
-          <h2>03. 닉네임 및 프로필 규칙</h2>
-          <ul>
-            <li>기본적인 닉네임 사용 금지</li>
-            <li>닉네임 양식은 본인 자율</li>
-            <li>닉네임 변경은 <strong>월 1회 가능</strong></li>
-            <li>기존 닉네임에 내용을 덧붙이는 것은 가능</li>
-            <li>다른 사람과 비슷한 닉네임 및 프로필 사진 사용 금지</li>
-          </ul>
-        </div>
-      </article>
-
-      <article class="notice-card">
-        <div class="notice-icon">🔒</div>
-        <div class="notice-content">
-          <h2>04. 개인정보 보호</h2>
-          <ul>
-            <li>SNS 아이디 공유는 자율이며 본인 책임</li>
-            <li>상대방이 불쾌할 수 있는 과도한 신상 질문 자제</li>
-          </ul>
-        </div>
-      </article>
-
-      <article class="notice-card">
-        <div class="notice-icon">💬</div>
-        <div class="notice-content">
-          <h2>05. 대화 주제</h2>
-          <ul>
-            <li>종교·정치·19금 등 다양한 주제 가능</li>
-            <li>단, 갈등이 생기지 않는 선에서 대화하기</li>
-            <li><strong>어떠한 주제든 환영합니다!</strong></li>
-          </ul>
-        </div>
-      </article>
-
-      <article class="notice-card">
-        <div class="notice-icon">🚫</div>
-        <div class="notice-content">
-          <h2>06. 메시지 삭제 및 가리기 요청</h2>
-          <ul>
-            <li>본인이 작성한 메시지는 임의로 삭제하지 않기</li>
-            <li>메시지 가리기가 필요하면 운영진 호출 및 태그 요청</li>
-            <li><strong>본인이 삭제하면 방 인기도가 내려갑니다.</strong></li>
-          </ul>
-        </div>
-      </article>
-
-      <article class="notice-card">
-        <div class="notice-icon">📞</div>
-        <div class="notice-content">
-          <h2>07. 신고 · 제보 · 문의</h2>
-          <ul>
-            <li>신고, 제보 및 문의는 <strong>운영진 개인 프로필로 카카오톡 연락</strong></li>
-          </ul>
-        </div>
-      </article>
-
-      <article class="notice-card">
-        <div class="notice-icon">💗</div>
-        <div class="notice-content">
-          <h2>08. 친목 및 관계 관련 주의사항</h2>
-          <ul>
-            <li>다양한 성격의 사람들이 함께하는 공간입니다.</li>
-            <li>서로 잘 맞지 않더라도 의도적으로 티 내거나 무시하지 않기</li>
-            <li>따돌림 등 다른 사람에게 상처를 주는 행동 주의</li>
-          </ul>
-        </div>
-      </article>
-
-      <article class="notice-card">
-        <div class="notice-icon">⚖️</div>
-        <div class="notice-content">
-          <h2>09. 운영진 관리 방침</h2>
-          <ul>
-            <li>운영진 판단에 따라 <strong>경고 없이 강퇴 가능</strong></li>
-            <li>엄격한 관리보다는 느슨한 관리 지향</li>
-          </ul>
-        </div>
-      </article>
-
-      <section class="notice-footer">
-        <h2>🎈 마지막으로 부탁드립니다!</h2>
-        <p>우리 모두 성인인 만큼 서로 마음 상하지 않도록 배려해 주세요.</p>
-        <p>매일 함께하고 싶은</p>
-        <p><strong>2030 직장인 드립대학 수다학과</strong>를 함께 만들어 갑시다. 💗</p>
-      </section>
-
-      <section class="notice-discord">
-        <h2>🎮 게임 전용 디스코드</h2>
-        <p>친목으로 인해 기존 단체방 구성원이 소외되는 상황은 허용하지 않습니다.</p>
-        <a href="https://discord.gg/CPx3MfNuz5" target="_blank" rel="noopener noreferrer">
-          디스코드 입장하기 →
-        </a>
-      </section>
+  <!-- ===== 회원가입 화면 ===== -->
+  <section id="signupView" hidden aria-labelledby="signupTitle">
+    <div class="auth-card">
+      <h2 id="signupTitle">회원가입</h2>
+      <p class="auth-help">관리자가 등록한 닉네임과 인증번호 2030을 입력하면 가입할 수 있어요.</p>
+      <form id="signupForm" autocomplete="off">
+        <label for="signupNickname">닉네임</label><input id="signupNickname" name="nickname" maxlength="24" autocomplete="username" placeholder="관리자에게 등록된 닉네임" required>
+        <label for="signupCode">인증번호</label><input id="signupCode" name="code" type="password" autocomplete="new-password" placeholder="관리자에게 받은 인증번호" required>
+        <div class="auth-actions"><button class="auth-primary" type="submit">가입하기</button><button class="auth-secondary" id="backToLogin" type="button">로그인으로 돌아가기</button></div>
+        <div id="signupStatus" class="auth-status" role="status" aria-live="polite"></div>
+      </form>
+      <p class="auth-note">인증번호는 로그인할 때 비밀번호로 사용됩니다. 다른 사이트에서 사용하는 비밀번호와 다르게 설정해 주세요.</p>
     </div>
   </section>
 
-```
+  <!-- ===== Supabase 수다게시판 ===== -->
+  <section id="boardView" hidden aria-labelledby="boardHead" class="community-panel">
+    <div class="head"><div class="head-main"><span class="pill-live"><span class="dot"></span>실시간 게시판</span><h2 class="title" id="boardHead">💬 수다게시판</h2><p class="sub">게시물과 댓글은 Supabase에 저장됩니다.</p></div><div style="display:flex;gap:8px"><button class="btn small" id="boardBack" type="button">← 메인으로</button><button class="btn small coral" id="newCommunityPost" type="button">글 작성</button></div></div>
+    <form id="communityComposer" class="community-form" hidden><h3 id="communityFormTitle">새 글 작성</h3><input id="communityTitle" maxlength="120" placeholder="제목" required><textarea id="communityContent" maxlength="10000" placeholder="내용을 입력해 주세요." required></textarea><label>사진 첨부 (JPG, PNG, WEBP / 최대 5MB)<input id="communityPhoto" type="file" accept="image/jpeg,image/png,image/webp"></label><div id="communityPhotoPreview"></div><div class="community-actions"><button type="submit">저장</button><button type="button" id="cancelCommunityPost">취소</button></div><div id="communityPostStatus" class="community-status"></div></form>
+    <div id="communityFeed" aria-live="polite"></div><div id="communityStatus" class="community-status"></div>
+  </section>
+
+  <section id="noticeView" hidden class="community-panel"><div class="head"><div class="head-main"><h2 class="title">📢 공지사항</h2><p class="sub">2030 직장인 드립대학 수다학과 이용 규칙</p></div><button class="btn small" id="noticeBack">← 메인으로</button></div>
+    <div class="notice-intro"><span class="notice-kicker">WELCOME TO DRIP COLLEGE</span><h3>📢 공지사항을 확인해 주세요!</h3><p>모두가 편안하고 즐겁게 대화할 수 있도록<br><strong>아래 규칙을 읽고 함께 지켜주세요.</strong></p></div>
+    <div class="notice-highlights" aria-label="핵심 규칙">
+      <div class="notice-highlight"><span class="symbol">🔞</span><b>만 19세 이상</b><span>성인만 입장 가능</span></div>
+      <div class="notice-highlight"><span class="symbol">🤝</span><b>서로 존중하기</b><span>호칭은 꼭 ‘님’ 붙이기</span></div>
+      <div class="notice-highlight"><span class="symbol">♥️</span><b>공지 확인 완료</b><span>읽은 뒤 하단 ♥ 클릭</span></div>
+    </div>
+    <h3 class="notice-section-label">📝 이용 규칙 한눈에 보기</h3>
+    <div class="notice-rules">
+      <article class="notice-rule"><div class="notice-rule-icon">👥</div><div><h3>01. 기본 입장 규칙</h3><ul><li><strong>만 19세 이상</strong>만 입장할 수 있습니다.</li><li>공지사항을 모두 읽은 뒤 하단의 <strong>♥를 클릭</strong>해 주세요.</li></ul></div></article>
+      <article class="notice-rule"><div class="notice-rule-icon">🤝</div><div><h3>02. 상호 존중</h3><ul><li>존댓말 또는 음슴체를 사용해 주세요.</li><li>상대방을 부를 때는 반드시 <strong>닉네임 뒤에 ‘님’</strong>을 붙여 주세요.</li></ul></div></article>
+      <article class="notice-rule"><div class="notice-rule-icon">🪪</div><div><h3>03. 닉네임 및 프로필</h3><ul><li>‘홍길동’, ‘남자’, ‘여자’ 등 <strong>기본적인 닉네임은 사용 금지</strong>입니다.</li><li>닉네임 양식은 자유롭게 정해 주세요.</li><li>닉네임 변경은 <strong>한 달에 1회</strong> 가능합니다.</li><li>기존 닉네임에 내용을 덧붙이는 것은 가능합니다.</li><li>다른 사람과 비슷한 닉네임이나 프로필 사진은 피해 주세요.</li></ul></div></article>
+      <article class="notice-rule"><div class="notice-rule-icon">🔒</div><div><h3>04. 개인 신상 보호</h3><ul><li>SNS 아이디 공유는 자유이며, 공유에 따른 책임은 본인에게 있습니다.</li><li>상대방이 불쾌할 수 있는 과도한 신상 질문은 자제해 주세요.</li></ul></div></article>
+      <article class="notice-rule"><div class="notice-rule-icon">💬</div><div><h3>05. 대화 주제</h3><ul><li>종교·정치·19금 등 민감한 주제도 <strong>갈등이 생기지 않는 선에서</strong> 가능합니다.</li><li>어떠한 주제든 환영합니다. 서로 배려하며 이야기해 주세요!</li></ul></div></article>
+      <article class="notice-rule"><div class="notice-rule-icon">🚫</div><div><h3>06. 메시지 삭제 및 가리기</h3><ul><li>본인이 작성한 메시지는 임의로 삭제하지 말아 주세요.</li><li>메시지 가리기가 필요하면 운영진을 호출하고 태그해 주세요.</li><li><strong>메시지를 직접 삭제하면 방 인기도가 내려갑니다.</strong></li></ul></div></article>
+      <article class="notice-rule"><div class="notice-rule-icon">📞</div><div><h3>07. 신고 · 제보 · 문의</h3><ul><li>신고나 문의는 <strong>운영진 개인 카카오톡 프로필</strong>로 연락해 주세요.</li></ul></div></article>
+      <article class="notice-rule"><div class="notice-rule-icon">💗</div><div><h3>08. 서로 배려하기</h3><ul><li>채팅방에는 다양한 성격과 생각을 가진 사람들이 함께합니다.</li><li>서로 맞지 않더라도 의도적으로 티 내거나 무시하지 말아 주세요.</li><li><strong>따돌림이나 소외시키는 행동은 삼가 주세요.</strong></li></ul></div></article>
+      <article class="notice-rule"><div class="notice-rule-icon">⚖️</div><div><h3>09. 운영진 관리 방침</h3><ul><li>운영진 판단에 따라 <strong>사전 경고 없이 강퇴</strong>될 수 있습니다.</li><li>엄격한 관리보다는 느슨하고 편안한 분위기를 지향합니다.</li></ul></div></article>
+    </div>
+    <div class="notice-closing"><h3>🎈 오래 함께하고 싶은 우리를 위해</h3><p>우리 모두 성인인 만큼, 서로 마음 상하지 않도록 조금씩 배려해 주세요.</p><p>매일 함께하고 싶은 <strong>2030 직장인 드립대학 수다학과</strong>가 될 수 있도록 함께 노력해 봅시다. 💗</p><p><strong>공지사항을 다 읽었다면 하단의 ♥ 클릭도 잊지 마세요!</strong></p></div>
+    <div class="notice-discord"><h3>🎮 게임 전용 디스코드방</h3><p>게임을 함께 즐기기 위한 전용 공간입니다.<br><strong>친목으로 인해 우리 채팅방 구성원이 소외되는 경우는 허용하지 않습니다.</strong></p><a href="https://discord.gg/CPx3MfNuz5" target="_blank" rel="noopener noreferrer">🎮 디스코드 입장하기 ↗</a></div>
+  </section>
+  <section id="studentIdView" hidden class="community-panel"><div class="head"><h2 class="title">🪪 학생증 만들기</h2><button class="btn small" data-home>← 메인으로</button></div><div class="community-post"><label>학생 닉네임 <input id="studentIdNick" maxlength="24"></label><p id="studentIdPreview"></p><button class="btn small" id="makeStudentId">학생증 미리보기</button></div></section>
+  <section id="fortuneView" hidden class="community-panel"><div class="head"><h2 class="title">🔮 오늘의 사주</h2><button class="btn small" data-home>← 메인으로</button></div><div class="community-post"><p>오늘의 운세를 가볍게 확인해 보세요.</p><button class="btn small" id="fortuneButton">오늘의 운세 보기</button><p id="fortuneResult"></p></div></section>
+  
+  <!-- ===== Kakao 지도 기반 맛집/카페/명소/숙소 뷰 ===== -->
+  <section id="placesView" hidden class="community-panel"><div class="head"><div><h2 class="title">📍 맛집 · 카페 · 명소 · 숙소</h2><p class="sub">Kakao 지도 API 기반 · 저장한 장소는 다른 회원과 공유됩니다.</p></div><button class="btn small" data-home>← 메인으로</button></div>
+    <div class="places-tabs" id="placesTabs"><button class="active" data-category="맛집">🍜 맛집</button><button data-category="카페">☕ 카페</button><button data-category="명소">📸 명소</button><button data-category="숙소">🛏️ 숙소</button></div>
+    <div class="places-layout">
+      <div>
+        <div id="placesMap" class="places-map" aria-label="Kakao 지도"></div>
+        <p class="community-status" id="placesStatus"></p>
+      </div>
+      <div>
+        <form id="placeSaveForm" class="community-form place-save-form">
+          <h3>장소 공유하기</h3>
+          <label>분류
+            <select id="placeCategory">
+              <option>맛집</option>
+              <option>카페</option>
+              <option>명소</option>
+              <option>숙소</option>
+            </select>
+          </label>
+          <label>장소명
+            <input id="placeName" maxlength="120" placeholder="예: 카카오 판교 아지트" required>
+          </label>
+          <label>주소 또는 키워드 검색
+            <div style="display:flex;gap:6px;">
+              <input id="placeAddress" maxlength="300" placeholder="예: 판교역로 166 또는 주소 입력" required>
+              <button type="button" id="btnSearchKakao" style="white-space:nowrap;padding:6px 10px;">검색</button>
+            </div>
+          </label>
+          <input type="hidden" id="placeLat">
+          <input type="hidden" id="placeLng">
+          <label>추천 메모
+            <textarea id="placeMemo" maxlength="1000" placeholder="추천 메뉴, 분위기, 팁 등"></textarea>
+          </label>
+          <button type="submit">장소 저장 및 공유</button>
+        </form>
+        <h3>회원들이 저장한 장소</h3>
+        <div id="savedPlaces"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 구형 게시판 스크립트 호환용 숨김 요소 (실제 게시판 데이터는 Supabase 사용) -->
+  <div hidden aria-hidden="true"><button id="openComposer" type="button"></button><form id="composer"><input id="fNick"><select id="fDept"></select><textarea id="fText"></textarea><span id="fCount"></span><button id="cancelComposer" type="button"></button><button id="submitPost" type="submit"></button></form><div id="feed"></div></div>
+
+  <!-- ===== 채팅 순위 뷰 ===== -->
+  <section id="rankView" hidden aria-labelledby="rankHead">
+    <div class="head">
+      <div class="head-main">
+        <span class="pill-live"><span class="dot"></span>실시간 수다 랭킹</span>
+        <h2 class="title" id="rankHead">🏆 채팅 순위</h2>
+        <p class="sub">드립대학 최고의 입담꾼 왕좌에 도전해 보세요!</p>
+      </div>
+      <button class="btn small" id="rankBack" type="button">← 메인으로</button>
+    </div>
+
+    <div class="card">
+      <div class="rank-tabs">
+        <button class="rank-tab active" data-period="daily">일간</button>
+        <button class="rank-tab" data-period="weekly">주간</button>
+        <button class="rank-tab" data-period="monthly">월간</button>
+      </div>
+      <div id="rankList"></div>
+    </div>
+  </section>
+
+  <!-- ===== 미니게임 허브 뷰 ===== -->
+  <section id="gameHub" hidden aria-label="미니게임">
+    <div class="head">
+      <div class="head-main">
+        <span class="pill-live"><span class="dot"></span>쉬는 시간</span>
+        <h2 class="title">🎮 미니게임</h2>
+        <p class="sub">점심 먹고 남은 10분, 가볍게 한 판 해요.</p>
+      </div>
+      <button class="btn small" id="hubBack" type="button">← 메인으로</button>
+    </div>
+
+    <button class="card game-card" id="openWord" type="button">
+      <span class="game-no">1</span>
+      <span class="game-info">
+        <strong>오늘의 단어 (5칸)</strong>
+        <small>6시간마다 변경 · 자음/모음 5칸을 6번 안에 맞혀보세요!</small>
+      </span>
+      <span class="game-state" id="wordState">도전하기</span>
+    </button>
+  </section>
+
+  <!-- ===== 단어 맞추기 게임 뷰 ===== -->
+  <section id="wordGame" hidden aria-label="단어 맞추기">
+    <div class="head">
+      <div class="head-main">
+        <span class="pill-live"><span class="dot"></span>6시간마다 새로고침</span>
+        <h2 class="title">오늘의 단어</h2>
+        <p class="sub">직장 및 일상 속 단어를 자음·모음 5칸 조합으로 맞혀보세요.</p>
+      </div>
+      <button class="btn small" id="wordBack" type="button">← 미니게임</button>
+    </div>
+
+    <div class="card wg">
+      <div class="wg-top">
+        <span class="wg-date" id="wgDate">오늘의 단어 (5칸)</span>
+        <div style="display:flex; align-items:center; gap:8px;">
+          <span class="wg-timer" id="wgTimer">남은시간 --:--:--</span>
+          <span class="wg-hint" id="wgHint">힌트</span>
+        </div>
+      </div>
+
+      <!-- 정확한 1줄 설명 바 -->
+      <div class="wg-desc-bar">
+        💡 <b>규칙:</b> 직장·일상 속 두 글자 단어를 자음·모음 5칸(6회 시도)으로 맞혀보세요!
+      </div>
+
+      <div id="wgBoard" class="wg-board"></div>
+      <div id="wgPreview" class="wg-preview" aria-live="polite"></div>
+      <div id="wgKeys" class="wg-keys"></div>
+      <div id="wgResult" class="wg-result" hidden></div>
+    </div>
+
+    <div class="card wg wg-statcard">
+      <h3>내 누적 기록</h3>
+      <div class="wg-stats" id="wgStats"></div>
+    </div>
+  </section>
+</div>
+
+<div class="toast" id="toast" role="status" hidden></div>
+
+<script>
+(function () {
+  "use strict";
+  var NS = "http://www.w3.org/2000/svg";
+
+  /* ---------------- SVG 헤더 아치 ---------------- */
+  var TEXT = "2030 직장인 드립대학 수다학과";
+  var R = 560, CX = 500, TOP = 135, CY = TOP + R, SIZE = 64, GAP = 4;
+  var FONT = "Jua, 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif";
+  var arch = document.getElementById("arch");
+  function layoutArch() {
+    while (arch.firstChild) arch.removeChild(arch.firstChild);
+    var chars = Array.from(TEXT);
+    var visible = chars.filter(function (c) { return c !== " "; }).length;
+    var widths = chars.map(function (c) {
+      if (c === " ") return SIZE * 0.55;
+      var t = document.createElementNS(NS, "text");
+      t.setAttribute("font-family", FONT); t.setAttribute("font-size", SIZE);
+      t.textContent = c; arch.appendChild(t);
+      var w = t.getComputedTextLength() || SIZE * 0.9;
+      arch.removeChild(t);
+      return w + GAP;
+    });
+    var total = widths.reduce(function (a, b) { return a + b; }, 0);
+    var pos = -total / 2, idx = 0;
+    chars.forEach(function (c, i) {
+      var mid = pos + widths[i] / 2; pos += widths[i];
+      if (c === " ") return;
+      var th = mid / R;
+      var x = CX + R * Math.sin(th), y = CY - R * Math.cos(th);
+      var hue = 8 + (idx / (visible - 1)) * 255; idx++;
+      var t = document.createElementNS(NS, "text");
+      t.setAttribute("transform", "translate(" + x.toFixed(1) + " " + y.toFixed(1) + ") rotate(" + (th * 180 / Math.PI).toFixed(2) + ")");
+      t.setAttribute("text-anchor", "middle");
+      t.setAttribute("font-family", FONT); t.setAttribute("font-size", SIZE);
+      t.setAttribute("fill", "hsl(" + hue.toFixed(0) + " 92% 58%)");
+      t.setAttribute("stroke", "#1B2340"); t.setAttribute("stroke-width", "10");
+      t.setAttribute("stroke-linejoin", "round"); t.setAttribute("paint-order", "stroke fill");
+      t.textContent = c; arch.appendChild(t);
+    });
+  }
+  layoutArch();
+
+  /* ---------------- 유틸리티 & 아이콘 ---------------- */
+  var ICONS = {
+    bubbleBig: '<svg viewBox="0 0 24 24"><path d="M4 4h16a2 2 0 012 2v9a2 2 0 01-2 2H11l-5 4v-4H4a2 2 0 01-2-2V6a2 2 0 012-2z" fill="#D9C9F7" stroke="#1B2340" stroke-width="1.4" stroke-linejoin="round"/></svg>',
+    pen: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-6"/><path d="M18.500 3.500a2.100 2.100 0 013 3L12 16l-4 1 1-4z"/></svg>'
+  };
+  function $(s, r) { return (r || document).querySelector(s); }
+  function el(tag, cls, text) {
+    var e = document.createElement(tag);
+    if (cls) e.className = cls;
+    if (text != null) e.textContent = text;
+    return e;
+  }
+  Array.prototype.forEach.call(document.querySelectorAll("[data-ic]"), function (n) {
+    n.setAttribute("aria-hidden", "true"); n.innerHTML = ICONS[n.getAttribute("data-ic")];
+  });
+  var toastTimer = 0;
+  function toast(msg) {
+    var t = $("#toast"); t.textContent = msg; t.hidden = false;
+    clearTimeout(toastTimer); toastTimer = setTimeout(function () { t.hidden = true; }, 3200);
+  }
+  function store(k, v) { try { if (v === undefined) return localStorage.getItem(k) || ""; localStorage.setItem(k, v); } catch (e) { return ""; } return ""; }
+
+  var DEPTS = ["월급루팡학", "야근학", "칼퇴학", "회식학", "탕비실학", "커피수혈학", "월요병학", "점심메뉴학", "퇴사준비학"];
+  var deptSel = $("#fDept");
+  DEPTS.forEach(function (d) { var o = el("option", null, d); o.value = d; deptSel.appendChild(o); });
+
+  /* ---------------- 네비게이션 & 뷰 전환 ---------------- */
+  var views = {
+    main: $("#mainView"),
+    board: $("#boardView"),
+    rank: $("#rankView"),
+    hub: $("#gameHub"),
+    word: $("#wordGame"),
+    notice: $("#noticeView"),
+    studentId: $("#studentIdView"),
+    fortune: $("#fortuneView"),
+    places: $("#placesView")
+  };
+  
+  function showView(target) {
+    for (var key in views) {
+      if (views.hasOwnProperty(key)) {
+        views[key].hidden = (key !== target);
+      }
+    }
+    window.scrollTo({top: 0, behavior: "smooth"});
+  }
+
+  $("#goBoard").onclick = function() { showView("board"); };
+  $("#boardBack").onclick = function() { showView("main"); };
+  $("#goRank").onclick = function() { showView("rank"); renderRankings("daily"); };
+  $("#rankBack").onclick = function() { showView("main"); };
+  $("#goGames").onclick = function() { showView("hub"); updateHubState(); };
+  $("#hubBack").onclick = function() { showView("main"); };
+  $("#openWord").onclick = function() { showView("word"); initWordGame(); };
+  $("#wordBack").onclick = function() { showView("hub"); updateHubState(); };
+
+  /* ---------------- 게시판 기능 ---------------- */
+  var posts = [
+    { id: 1, nick: "칼퇴요정", dept: "칼퇴학", text: "오늘 6시 정각에 광속 퇴근 성공했습니다. 다들 무사 퇴근하셨나요?", time: Date.now() - 3600000, likes: 12, comments: 3 },
+    { id: 2, nick: "커피중독자", dept: "커피수혈학", text: "오늘 탕비실 커피머신 고장남... 전직원 긴급 상황 발생 ㅠㅠ", time: Date.now() - 7200000, likes: 25, comments: 8 }
+  ];
+
+  function renderFeed() {
+    var feed = $("#feed"); feed.innerHTML = "";
+    posts.forEach(function(p) {
+      var c = el("div", "card");
+      var top = el("div", "post-top");
+      var who = el("div", "who");
+      who.appendChild(el("span", "nick", p.nick));
+      who.appendChild(el("span", "dept", p.dept));
+      top.appendChild(who);
+      top.appendChild(el("span", "meta", "방금 전"));
+      c.appendChild(top);
+      c.appendChild(el("div", "post-body", p.text));
+
+      var acts = el("div", "post-actions");
+      var btnLike = el("button", "act-btn", "❤️ 공감 " + p.likes);
+      btnLike.onclick = function() {
+        p.likes++;
+        btnLike.textContent = "❤️ 공감 " + p.likes;
+        btnLike.classList.add("active");
+      };
+      var btnComment = el("button", "act-btn", "💬 댓글 " + p.comments);
+      btnComment.onclick = function() { toast("댓글 기능 준비 중입니다!"); };
+      acts.appendChild(btnLike);
+      acts.appendChild(btnComment);
+      c.appendChild(acts);
+
+      feed.appendChild(c);
+    });
+  }
+  renderFeed();
+
+  $("#openComposer").onclick = function() { $("#composer").hidden = false; };
+  $("#cancelComposer").onclick = function() { $("#composer").hidden = true; };
+  
+  $("#fText").oninput = function() {
+    $("#fCount").textContent = this.value.length + " / 300";
+  };
+
+  $("#composer").onsubmit = function(e) {
+    e.preventDefault();
+    var nick = $("#fNick").value.trim() || "익명";
+    var dept = $("#fDept").value;
+    var text = $("#fText").value.trim();
+    if(!text) return;
+    posts.unshift({ id: Date.now(), nick: nick, dept: dept, text: text, time: Date.now(), likes: 0, comments: 0 });
+    renderFeed();
+    $("#fText").value = "";
+    $("#fCount").textContent = "0 / 300";
+    $("#composer").hidden = true;
+    toast("드립이 성공적으로 올려졌습니다!");
+  };
+
+  /* ---------------- 채팅 순위 (랭킹) ---------------- */
+  var mockRanks = {
+    daily: [
+      { nick: "월급루팡3세", dept: "월급루팡학", score: "1,240 드립" },
+      { nick: "부장님킬러", dept: "칼퇴학", score: "980 드립" },
+      { nick: "탕비실요정", dept: "탕비실학", score: "850 드립" },
+      { nick: "칼퇴마스터", dept: "칼퇴학", score: "720 드립" },
+      { nick: "아메리카노", dept: "커피수혈학", score: "610 드립" }
+    ],
+    weekly: [
+      { nick: "부장님킬러", dept: "칼퇴학", score: "5,420 드립" },
+      { nick: "월급루팡3세", dept: "월급루팡학", score: "4,890 드립" },
+      { nick: "퇴사희망자", dept: "퇴사준비학", score: "3,750 드립" },
+      { nick: "탕비실요정", dept: "탕비실학", score: "3,100 드립" },
+      { nick: "야근거부자", dept: "야근학", score: "2,840 드립" }
+    ],
+    monthly: [
+      { nick: "퇴사희망자", dept: "퇴사준비학", score: "18,400 드립" },
+      { nick: "부장님킬러", dept: "칼퇴학", score: "16,200 드립" },
+      { nick: "월급루팡3세", dept: "월급루팡학", score: "15,100 드립" },
+      { nick: "월요병백신", dept: "월요병학", score: "12,300 드립" },
+      { nick: "점심메뉴고민", dept: "점심메뉴학", score: "11,500 드립" }
+    ]
+  };
+
+  function renderRankings(period) {
+    var list = $("#rankList"); list.innerHTML = "";
+    var data = mockRanks[period] || [];
+    data.forEach(function(item, idx) {
+      var row = el("div", "rank-item");
+      var numCls = "rank-num" + (idx === 0 ? " gold" : idx === 1 ? " silver" : idx === 2 ? " bronze" : "");
+      row.appendChild(el("div", numCls, (idx + 1).toString()));
+      
+      var info = el("div", "rank-info");
+      var topRow = el("div", null);
+      topRow.appendChild(el("span", "nick", item.nick));
+      topRow.appendChild(el("span", "dept", item.dept));
+      info.appendChild(topRow);
+      
+      row.appendChild(info);
+      row.appendChild(el("div", "rank-score", item.score));
+      list.appendChild(row);
+    });
+  }
+
+  var rankTabs = document.querySelectorAll(".rank-tab");
+  rankTabs.forEach(function(tab) {
+    tab.onclick = function() {
+      rankTabs.forEach(function(t) { t.classList.remove("active"); });
+      tab.classList.add("active");
+      renderRankings(tab.getAttribute("data-period"));
+    };
+  });
+
+  /* =========================================================================
+     🎮 5칸 오늘의 단어 게임 (6시간 주기 / 물리+가상 키보드 지원)
+     ========================================================================= */
+
+  var WORD_POOL_5 = [
+    { word: "커피", hint: "직장인 생명수", jamo: ["ㅋ", "ㅓ", "ㅍ", "ㅣ", "ㅣ"] },
+    { word: "야근", hint: "달갑지 않은 저녁", jamo: ["ㅇ", "ㅑ", "ㄱ", "ㅡ", "ㄴ"] },
+    { word: "칼퇴", hint: "정시 퇴근의 꿈", jamo: ["ㅋ", "ㅏ", "ㄹ", "ㅌ", "ㅚ"] },
+    { word: "휴가", hint: "간절한 연차", jamo: ["ㅎ", "ㅠ", "ㄱ", "ㅏ", "ㅏ"] },
+    { word: "회의", hint: "끝없는 대화", jamo: ["ㅎ", "ㅚ", "ㅇ", "ㅢ", "ㅢ"] },
+    { word: "월급", hint: "통장을 스쳐가는 것", jamo: ["ㅇ", "ㅝ", "ㄹ", "ㄱ", "ㅡ"] },
+    { word: "탕비", hint: "간식 창고", jamo: ["ㅌ", "ㅏ", "ㅇ", "ㅂ", "ㅣ"] },
+    { word: "보너스", hint: "뜻밖의 선물", jamo: ["ㅂ", "ㅗ", "ㄴ", "ㅓ", "ㅅ"] },
+    { word: "식사", hint: "즐거운 점심시간", jamo: ["ㅅ", "ㅣ", "ㄱ", "ㅅ", "ㅏ"] },
+    { word: "주말", hint: "오매불망 기다림", jamo: ["ㅈ", "ㅜ", "ㅁ", "ㅏ", "ㄹ"] },
+    { word: "승진", hint: "직급의 상승", jamo: ["ㅅ", "ㅡ", "ㅇ", "ㅈ", "ㅣ"] },
+    { word: "출근", hint: "매일 아침 고통", jamo: ["ㅊ", "ㅜ", "ㄹ", "ㄱ", "ㅡ"] }
+  ];
+
+  var KBD_LAYOUT = [
+    ["ㅂ", "ㅈ", "ㄷ", "ㄱ", "ㅅ", "ㅛ", "ㅕ", "ㅑ", "ㅐ", "ㅔ"],
+    ["ㅁ", "ㄴ", "ㅇ", "ㄹ", "ㅎ", "ㅗ", "ㅓ", "ㅏ", "ㅣ"],
+    ["지우기", "ㅋ", "ㅌ", "ㅍ", "ㅊ", "ㅠ", "ㅜ", "ㅡ", "확인"]
+  ];
+
+  var KEY_MAP = {
+    'q':'ㅂ', 'w':'ㅈ', 'e':'ㄷ', 'r':'ㄱ', 't':'ㅅ', 'y':'ㅛ', 'u':'ㅕ', 'i':'ㅑ', 'o':'ㅐ', 'p':'ㅔ',
+    'a':'ㅁ', 's':'ㄴ', 'd':'ㅇ', 'f':'ㄹ', 'g':'ㅎ', 'h':'ㅗ', 'j':'ㅓ', 'k':'ㅏ', 'l':'ㅣ',
+    'z':'ㅋ', 'x':'ㅌ', 'c':'ㅊ', 'v':'ㅍ', 'b':'ㅠ', 'n':'ㅜ', 'm':'ㅡ',
+    'Q':'ㅃ', 'W':'ㅉ', 'E':'ㄸ', 'R':'ㄲ', 'T':'ㅆ', 'O':'ㅖ', 'P':'ㅖ'
+  };
+
+  function get6HourPeriodInfo() {
+    var now = new Date();
+    var year = now.getFullYear();
+    var month = now.getMonth();
+    var date = now.getDate();
+    var hours = now.getHours();
+
+    var pIndex = Math.floor(hours / 6);
+    var periodStartHours = pIndex * 6;
+    
+    var currentPeriodStart = new Date(year, month, date, periodStartHours, 0, 0);
+    var nextPeriodStart = new Date(year, month, date, periodStartHours + 6, 0, 0);
+
+    var timeSeed = Math.floor(currentPeriodStart.getTime() / (1000 * 60 * 60 * 6));
+    var wordIdx = timeSeed % WORD_POOL_5.length;
+
+    return {
+      key: "wg_5tile_" + timeSeed,
+      wordObj: WORD_POOL_5[wordIdx],
+      nextTime: nextPeriodStart
+    };
+  }
+
+  var curState = {
+    periodKey: "",
+    wordObj: null,
+    guesses: [],
+    currentInput: [],
+    status: "PLAYING",
+    keyColors: {}
+  };
+
+  var timerInterval = 0;
+
+  function initWordGame() {
+    var pInfo = get6HourPeriodInfo();
+    curState.periodKey = pInfo.key;
+    curState.wordObj = pInfo.wordObj;
+
+    var saved = store(curState.periodKey);
+    if (saved) {
+      try {
+        var parsed = JSON.parse(saved);
+        curState.guesses = parsed.guesses || [];
+        curState.status = parsed.status || "PLAYING";
+        curState.keyColors = parsed.keyColors || {};
+      } catch (e) {
+        curState.guesses = []; curState.status = "PLAYING"; curState.keyColors = {};
+      }
+    } else {
+      curState.guesses = [];
+      curState.status = "PLAYING";
+      curState.keyColors = {};
+    }
+    curState.currentInput = [];
+
+    $("#wgDate").textContent = "오늘의 단어 (5칸)";
+    $("#wgHint").textContent = "힌트: " + curState.wordObj.hint;
+
+    startTimer(pInfo.nextTime);
+    renderBoard();
+    renderKeys();
+    renderResult();
+    renderStats();
+  }
+
+  function startTimer(nextTime) {
+    clearInterval(timerInterval);
+    function updateTimer() {
+      var diff = Math.max(0, Math.floor((nextTime.getTime() - Date.now()) / 1000));
+      var h = Math.floor(diff / 3600);
+      var m = Math.floor((diff % 3600) / 60);
+      var s = diff % 60;
+      $("#wgTimer").textContent = "새 단어까지 " + (h<10?"0":"")+h + ":" + (m<10?"0":"")+m + ":" + (s<10?"0":"")+s;
+      if (diff <= 0) {
+        clearInterval(timerInterval);
+        initWordGame();
+      }
+    }
+    updateTimer();
+    timerInterval = setInterval(updateTimer, 1000);
+  }
+
+  function updateHubState() {
+    var pInfo = get6HourPeriodInfo();
+    var saved = store(pInfo.key);
+    var badge = $("#wordState");
+    if (saved) {
+      try {
+        var parsed = JSON.parse(saved);
+        if (parsed.status === "WON") {
+          badge.textContent = "성공!"; badge.className = "game-state done"; return;
+        } else if (parsed.status === "LOST") {
+          badge.textContent = "아쉬워요"; badge.className = "game-state done"; return;
+        }
+      } catch(e){}
+    }
+    badge.textContent = "도전하기"; badge.className = "game-state";
+  }
+
+  function renderBoard() {
+    var board = $("#wgBoard"); board.innerHTML = "";
+
+    for (var r = 0; r < 6; r++) {
+      var rowEl = el("div", "wg-row");
+      var guess = curState.guesses[r];
+      var isCurrent = (r === curState.guesses.length && curState.status === "PLAYING");
+
+      for (var c = 0; c < 5; c++) {
+        var tile = el("div", "wg-tile");
+        if (guess) {
+          tile.textContent = guess.input[c];
+          tile.classList.add(guess.result[c]);
+        } else if (isCurrent && curState.currentInput[c]) {
+          tile.textContent = curState.currentInput[c];
+          tile.classList.add("filled");
+        }
+        rowEl.appendChild(tile);
+      }
+      board.appendChild(rowEl);
+    }
+
+    $("#wgPreview").textContent = curState.status === "PLAYING" ? (curState.currentInput.join(" ") || "자음·모음을 조합하세요") : "";
+  }
+
+  function renderKeys() {
+    var keysDiv = $("#wgKeys"); keysDiv.innerHTML = "";
+    KBD_LAYOUT.forEach(function (row) {
+      var krow = el("div", "wg-krow");
+      row.forEach(function (k) {
+        var isWide = (k === "지우기" || k === "확인");
+        var btn = el("button", "wg-key" + (isWide ? " wide" : ""), k);
+        btn.type = "button";
+        
+        if (curState.keyColors[k]) {
+          btn.classList.add(curState.keyColors[k]);
+        }
+        if (curState.status !== "PLAYING") {
+          btn.disabled = true;
+        }
+        btn.onclick = function () { handleInput(k); };
+        krow.appendChild(btn);
+      });
+      keysDiv.appendChild(krow);
+    });
+  }
+
+  function handleInput(key) {
+    if (curState.status !== "PLAYING") return;
+
+    if (key === "지우기" || key === "Backspace") {
+      if (curState.currentInput.length > 0) {
+        curState.currentInput.pop();
+        renderBoard();
+      }
+    } else if (key === "확인" || key === "Enter") {
+      submitGuess();
+    } else {
+      if (curState.currentInput.length < 5) {
+        curState.currentInput.push(key);
+        renderBoard();
+      }
+    }
+  }
+
+  function submitGuess() {
+    if (curState.currentInput.length < 5) {
+      toast("5칸을 모두 채워주세요!");
+      var rows = document.querySelectorAll(".wg-row");
+      var curRow = rows[curState.guesses.length];
+      if (curRow) {
+        curRow.classList.add("shake");
+        setTimeout(function() { curRow.classList.remove("shake"); }, 400);
+      }
+      return;
+    }
+
+    var target = curState.wordObj.jamo;
+    var input = curState.currentInput.slice();
+    var result = Array(5).fill("absent");
+    var targetCopy = target.slice();
+
+    for (var i = 0; i < 5; i++) {
+      if (input[i] === target[i]) {
+        result[i] = "correct";
+        targetCopy[i] = null;
+      }
+    }
+
+    for (var j = 0; j < 5; j++) {
+      if (result[j] !== "correct") {
+        var foundIdx = targetCopy.indexOf(input[j]);
+        if (foundIdx !== -1) {
+          result[j] = "present";
+          targetCopy[foundIdx] = null;
+        }
+      }
+    }
+
+    for (var k = 0; k < 5; k++) {
+      var char = input[k];
+      var res = result[k];
+      var prev = curState.keyColors[char];
+      if (res === "correct" || (res === "present" && prev !== "correct") || (!prev && res === "absent")) {
+        curState.keyColors[char] = res;
+      }
+    }
+
+    curState.guesses.push({ input: input, result: result });
+    curState.currentInput = [];
+
+    var isWin = result.every(function (r) { return r === "correct"; });
+    if (isWin) {
+      curState.status = "WON";
+      saveStat(true, curState.guesses.length);
+    } else if (curState.guesses.length >= 6) {
+      curState.status = "LOST";
+      saveStat(false, 6);
+    }
+
+    store(curState.periodKey, JSON.stringify({
+      guesses: curState.guesses,
+      status: curState.status,
+      keyColors: curState.keyColors
+    }));
+
+    renderBoard();
+    renderKeys();
+    renderResult();
+    renderStats();
+  }
+
+  function renderResult() {
+    var resDiv = $("#wgResult");
+    if (curState.status === "PLAYING") {
+      resDiv.hidden = true;
+      return;
+    }
+
+    resDiv.hidden = false;
+    resDiv.className = "wg-result" + (curState.status === "LOST" ? " lose" : "");
+
+    var isWin = (curState.status === "WON");
+    var targetWord = curState.wordObj.word + " (" + curState.wordObj.jamo.join("") + ")";
+    
+    var html = "<strong>" + (isWin ? "🎉 정답입니다!" : "아쉽네요! 다음 기회에") + "</strong>";
+    html += "<p>정답 단어: <b>" + targetWord + "</b></p>";
+
+    var shareText = "드립대학 [오늘의 단어 5칸]\n" + (isWin ? curState.guesses.length + "/6 시도 성공!" : "실패 ㅠㅠ") + "\n";
+    curState.guesses.forEach(function (g) {
+      g.result.forEach(function (r) {
+        shareText += (r === "correct" ? "🟩" : r === "present" ? "🟨" : "⬛");
+      });
+      shareText += "\n";
+    });
+
+    html += "<div class='wg-share'>" + shareText.trim() + "</div>";
+    html += "<button class='btn small coral' style='margin-top:10px;' id='btnShare'>결과 복사하기</button>";
+
+    resDiv.innerHTML = html;
+
+    $("#btnShare").onclick = function() {
+      if (document.queryCommandSupported && document.queryCommandSupported('copy')) {
+        var textarea = document.createElement('textarea');
+        textarea.value = shareText;
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textarea);
+        toast("결과가 클립보드에 복사되었습니다!");
+      } else {
+        toast("복사 기능을 지원하지 않는 브라우저입니다.");
+      }
+    };
+  }
+
+  function saveStat(isWin, attempts) {
+    var stat = { played: 0, win: 0, streak: 0, maxStreak: 0 };
+    var raw = store("wg_stats_v2");
+    if (raw) { try { stat = JSON.parse(raw); } catch(e){} }
+
+    stat.played++;
+    if (isWin) {
+      stat.win++;
+      stat.streak++;
+      if (stat.streak > stat.maxStreak) stat.maxStreak = stat.streak;
+    } else {
+      stat.streak = 0;
+    }
+    store("wg_stats_v2", JSON.stringify(stat));
+  }
+
+  function renderStats() {
+    var stat = { played: 0, win: 0, streak: 0, maxStreak: 0 };
+    var raw = store("wg_stats_v2");
+    if (raw) { try { stat = JSON.parse(raw); } catch(e){} }
+
+    var rate = stat.played ? Math.round((stat.win / stat.played) * 100) : 0;
+    var html = "";
+    html += "<div><b>" + stat.played + "</b><span>판수</span></div>";
+    html += "<div><b>" + rate + "%</b><span>승률</span></div>";
+    html += "<div><b>" + stat.streak + "</b><span>연승</span></div>";
+    html += "<div><b>" + stat.maxStreak + "</b><span>최다연승</span></div>";
+    $("#wgStats").innerHTML = html;
+  }
+
+  /* ---------------- 물리 키보드 Event Listener ---------------- */
+  window.addEventListener("keydown", function (e) {
+    if (views.word.hidden || curState.status !== "PLAYING") return;
+
+    var activeTag = document.activeElement ? document.activeElement.tagName : "";
+    if (activeTag === "INPUT" || activeTag === "TEXTAREA") return;
+
+    var key = e.key;
+
+    if (key === "Backspace") {
+      handleInput("지우기");
+      e.preventDefault();
+    } else if (key === "Enter") {
+      handleInput("확인");
+      e.preventDefault();
+    } else if (KEY_MAP[key]) {
+      handleInput(KEY_MAP[key]);
+      e.preventDefault();
+    } else {
+      var KOREAN_JAMO = ["ㄱ","ㄴ","ㄷ","ㄹ","ㅁ","ㅂ","ㅅ","ㅇ","ㅈ","ㅊ","ㅋ","ㅌ","ㅍ","ㅎ","ㅏ","ㅑ","ㅓ","ㅕ","ㅗ","ㅛ","ㅜ","ㅠ","ㅡ","ㅣ","ㅐ","ㅔ","ㅚ","ㅟ","ㅢ"];
+      if (KOREAN_JAMO.indexOf(key) !== -1) {
+        handleInput(key);
+        e.preventDefault();
+      }
+    }
+  });
+
+  $("#goNotice").onclick=function(){showView("notice");};
+  $("#noticeBack").onclick=function(){showView("main");};
+  $("#goStudentId").onclick=function(){showView("studentId");};
+  $("#goFortune").onclick=function(){showView("fortune");};
+  $("#goPlaces").onclick=function(){showView("places");};
+  document.querySelectorAll("[data-home]").forEach(function(b){b.onclick=function(){showView("main");};});
+  $("#makeStudentId").onclick=function(){var n=$("#studentIdNick").value.trim();$("#studentIdPreview").textContent=n?"🎓 2030 직장인 드립대학 | "+n+" 학생":"닉네임을 입력해 주세요.";};
+  $("#fortuneButton").onclick=function(){var fortunes=["작은 드립 하나가 분위기를 바꿉니다.","오늘은 칼퇴를 향해 차근차근 전진하세요.","뜻밖의 간식과 좋은 대화가 기다립니다.","말은 짧게, 센스는 길게!","커피 한 잔이 행운의 시작입니다."];$("#fortuneResult").textContent=fortunes[Math.floor(Math.random()*fortunes.length)];};
+
+})();
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+(function(){
+  "use strict";
+  // Supabase Dashboard > Project Settings > API에서 URL과 publishable/anon key를 입력하세요.
+  const SUPABASE_URL = "https://niuhmceiqxevuzmqsnhf.supabase.co";
+  const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInRefiI6Im5pdWhtY2VpcXhldnV6bXFzbmhmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI2NTM0NzEsImV4cCI6MjEwODIyOTQ3MX0.dRNizWoOz5sy5F9Jgixd1m-NfH-CXiQ-vWQQlYeiGbU";
+  const REMEMBER_KEY = "dripcollege_remember_login";
+  const $ = (id) => document.getElementById(id);
+  function selectedStorage(){ try { return localStorage.getItem(REMEMBER_KEY) === "0" ? sessionStorage : localStorage; } catch(_e) { return sessionStorage; } }
+  const authStorage = {
+    getItem: (key) => { try { return selectedStorage().getItem(key); } catch(_e) { return null; } },
+    setItem: (key,value) => { try { selectedStorage().setItem(key,value); } catch(_e) {} },
+    removeItem: (key) => { try { localStorage.removeItem(key); sessionStorage.removeItem(key); } catch(_e) {} }
+  };
+  const loginCard = $("loginCard"), signupView = $("signupView"), mainView = $("mainView"), mainNav = $("mainNav");
+  const authTopline = $("authTopline");
+  let supabase = null;
+  if (window.supabase && SUPABASE_URL.includes("niuhmceiqxevuzmqsnhf") && SUPABASE_ANON_KEY.startsWith("eyJ")) {
+    supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, { auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: false, storage: authStorage } });
+  }
+  function status(id, message, kind){ const node=$(id); node.textContent=message||""; node.className="auth-status"+(kind?" "+kind:""); }
+  function normalizeNick(n){ return String(n||"").trim().normalize("NFC"); }
+  async function sha256Hex(value){
+    const digest = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(value));
+    return Array.from(new Uint8Array(digest)).map(b=>b.toString(16).padStart(2,"0")).join("");
+  }
+  async function nickEmail(nick){ return "u"+await sha256Hex(normalizeNick(nick).toLowerCase())+"@login.dripcollege.example.com"; }
+  async function authPassword(nick,code){ return await sha256Hex("dripcollege-auth-v1|"+normalizeNick(nick).toLowerCase()+"|"+String(code)); }
+  function saveRememberChoice(){
+    const remember = $("rememberLogin").checked;
+    try { localStorage.setItem(REMEMBER_KEY, remember ? "1" : "0"); } catch(_e) {}
+    if(!remember){ try { const old=localStorage.getItem("sb-"+new URL(SUPABASE_URL).hostname.split(".")[0]+"-auth-token"); if(old) sessionStorage.setItem("sb-"+new URL(SUPABASE_URL).hostname.split(".")[0]+"-auth-token",old); } catch(_e) {} }
+  }
+  try { $("rememberLogin").checked = localStorage.getItem(REMEMBER_KEY) !== "0"; } catch(_e) {}
+  function showLogin(){ document.body.classList.remove("signed-in"); signupView.hidden=true; mainView.hidden=false; loginCard.hidden=false; mainNav.hidden=true; authTopline.hidden=true; window.scrollTo({top:0,behavior:"smooth"}); }
+  function showSignup(){ mainView.hidden=true; signupView.hidden=false; status("signupStatus", "", ""); window.scrollTo({top:0,behavior:"smooth"}); }
+  function showSignedIn(nick){ document.body.classList.add("signed-in"); signupView.hidden=true; mainView.hidden=false; loginCard.hidden=true; mainNav.hidden=false; authTopline.hidden=false; $("signedInLabel").textContent=nick+" 님, 환영합니다!"; window.scrollTo({top:0,behavior:"smooth"}); }
+  function ready(){ if(!supabase){ status("loginStatus","Supabase 초기화에 실패했습니다. CDN 로딩, 프로젝트 URL, 공개 API 키를 확인해 주세요.","error"); return false; } return true; }
+  $("openSignup").addEventListener("click", showSignup);
+  $("backToLogin").addEventListener("click", showLogin);
+  $("loginForm").addEventListener("submit", async (e)=>{
+    e.preventDefault(); if(!ready()) return;
+    const nick=normalizeNick($("loginNickname").value), code=$("loginCode").value;
+    saveRememberChoice();
+    status("loginStatus","로그인 중입니다…","");
+    try{
+      const email=await nickEmail(nick);
+      const password=await authPassword(nick,code);
+      const {data,error}=await supabase.auth.signInWithPassword({email,password});
+      if(error) throw error;
+      showSignedIn(nick); status("loginStatus","","");
+      try{ sessionStorage.setItem("dripcollege_nickname",nick); }catch(_e){}
+    }catch(err){ status("loginStatus","로그인에 실패했습니다. 닉네임과 인증번호를 확인해 주세요.","error"); console.error(err); }
+  });
+  $("signupForm").addEventListener("submit", async (e)=>{
+    e.preventDefault(); if(!ready()) return;
+    const nick=normalizeNick($("signupNickname").value), code=$("signupCode").value;
+    if(nick.length<2){status("signupStatus","닉네임은 2자 이상 입력해 주세요.","error");return;}
+    if(!code){status("signupStatus","인증번호를 입력해 주세요.","error");return;}
+    saveRememberChoice();
+    status("signupStatus","등록된 닉네임과 인증번호를 확인하고 있습니다…","");
+    try{
+      const {data:valid,error:checkError}=await supabase.rpc("validate_member_invite",{p_nickname:nick,p_auth_code:code});
+      if(checkError) throw checkError;
+      if(valid!==true){status("signupStatus","등록 정보를 찾을 수 없거나 이미 사용된 인증번호입니다. 관리자에게 확인해 주세요.","error");return;}
+      const email=await nickEmail(nick);
+      const password=await authPassword(nick,code);
+      const {data,error}=await supabase.auth.signUp({email,password,options:{data:{nickname:nick}}});
+      if(error) throw error;
+      if(!data.session || !data.user){
+        status("signupStatus","Supabase에서 이메일 확인을 비활성화해야 닉네임/인증번호만으로 가입할 수 있습니다. Auth 설정을 확인해 주세요.","error");return;
+      }
+      const {data:claimed,error:claimError}=await supabase.rpc("claim_member_invite",{p_nickname:nick,p_auth_code:code});
+      if(claimError || claimed!==true){
+        await supabase.auth.signOut();
+        status("signupStatus","계정은 생성됐지만 인증번호 등록 완료에 실패했습니다. 관리자에게 문의해 주세요.","error");
+        console.error(claimError);return;
+      }
+      saveRememberChoice();
+      showSignedIn(nick); status("signupStatus","가입이 완료되었습니다!", "ok");
+      try{ sessionStorage.setItem("dripcollege_nickname",nick); }catch(_e){}
+    }catch(err){
+      status("signupStatus","회원가입에 실패했습니다. 관리자에게 등록된 닉네임/인증번호인지 확인해 주세요.","error"); console.error(err);
+    }
+  });
+  $("logoutBtn").addEventListener("click", async ()=>{
+    if(supabase) await supabase.auth.signOut();
+    try{sessionStorage.removeItem("dripcollege_nickname");}catch(_e){}
+    $("loginCode").value=""; showLogin(); status("loginStatus","로그아웃되었습니다.","ok");
+  });
+  if(supabase){
+    supabase.auth.getSession().then(({data})=>{
+      if(data.session){ const nick=data.session.user.user_metadata?.nickname || "회원"; showSignedIn(nick); }
+    });
+    supabase.auth.onAuthStateChange((event,session)=>{
+      if(event==="SIGNED_OUT" || !session){ showLogin(); }
+    });
+  } else {
+    status("loginStatus","Supabase 클라이언트 초기화에 실패했습니다. 인터넷 연결과 Supabase 설정을 확인해 주세요.","");
+  }
+  // Supabase 기반 게시물/댓글/사진/좋아요
+  let editingPostId=null, selectedPostId=null, selectedCategory="맛집";
+  let kakaoMap=null, kakaoMarkers=[], kakaoInfoWindow=null, geocoder=null, ps=null;
+
+  const boardStatus=(id,msg)=>{const n=$(id);if(n)n.textContent=msg||"";};
+  function escapeHtml(v){return String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
+  function isAdmin(){return !!(window.__dripCurrentUser && window.__dripCurrentUser.email===window.__dripAdminEmail);}
+  async function currentUser(){const {data:{user}}=await supabase.auth.getUser();return user;}
+  async function loadCommunity(){
+    if(!supabase)return; const feed=$("communityFeed");feed.innerHTML="";boardStatus("communityStatus","게시글을 불러오는 중…");
+    const {data:posts,error}=await supabase.from("community_posts").select("id,title,content,author_id,author_nickname,created_at,updated_at,image_url,like_count,community_comments(id,content,author_id,author_nickname,created_at)").order("created_at",{ascending:false});
+    if(error){boardStatus("communityStatus","게시판 테이블 설정을 확인해 주세요: "+error.message);return;}
+    const user=await currentUser(); boardStatus("communityStatus",posts.length?"":"아직 게시물이 없습니다. 첫 글을 작성해 보세요.");
+    for(const p of posts){
+      const row=document.createElement("div");row.className="community-row";row.setAttribute("role","button");row.tabIndex=0;
+      row.innerHTML=`<div class="community-row-title">${escapeHtml(p.title)}</div><div class="community-row-meta"><span>♥ ${Number(p.like_count||0)}</span><span>💬 ${(p.community_comments||[]).length}</span></div>`;
+      const open=()=>{if(selectedPostId===p.id){selectedPostId=null;}else selectedPostId=p.id;loadCommunity();};row.onclick=open;row.onkeydown=e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();open();}};feed.appendChild(row);
+      if(selectedPostId!==p.id)continue;
+      const own=user&&user.id===p.author_id, admin=window.__dripIsAdmin===true;
+      const detail=document.createElement("article");detail.className="community-detail";
+      detail.innerHTML=`<h3>${escapeHtml(p.title)}</h3><div class="community-meta">${escapeHtml(p.author_nickname)} · ${new Date(p.created_at).toLocaleString("ko-KR")}</div><div class="community-body">${escapeHtml(p.content)}</div>${p.image_url?`<a href="${escapeHtml(p.image_url)}" target="_blank" rel="noopener"><img class="community-photo" src="${escapeHtml(p.image_url)}" alt="게시물 첨부 사진"></a>`:""}<div class="community-actions"><button class="like-btn" data-like>♥ 좋아요 ${Number(p.like_count||0)}</button>${own?'<button data-edit>수정</button>':''}${own||admin?'<button data-delete>삭제</button>':''}</div><div class="comment-list"><strong>댓글 ${(p.community_comments||[]).length}개</strong><div class="comments"></div><form class="community-form comment-form"><textarea maxlength="2000" placeholder="댓글을 입력해 주세요." required></textarea><button type="submit">댓글 작성</button><div class="community-status"></div></form></div>`;
+      const comments=detail.querySelector(".comments");(p.community_comments||[]).sort((a,b)=>new Date(a.created_at)-new Date(b.created_at)).forEach(c=>{const item=document.createElement("div");item.className="comment-item";item.innerHTML=`<strong>${escapeHtml(c.author_nickname)}</strong> · ${escapeHtml(c.content)} ${(user&&user.id===c.author_id)||admin?'<button data-comment-delete>삭제</button>':''}`;const del=item.querySelector("[data-comment-delete]");if(del)del.onclick=async()=>{const {error}=await supabase.from("community_comments").delete().eq("id",c.id);if(error)alert("댓글 삭제 실패: "+error.message);else loadCommunity();};comments.appendChild(item);});
+      detail.querySelector("[data-like]").onclick=async()=>{const {data,error}=await supabase.rpc("toggle_community_like",{p_post_id:p.id});if(error)alert("좋아요 기능 SQL을 먼저 실행해 주세요: "+error.message);else loadCommunity();};
+      const edit=detail.querySelector("[data-edit]");if(edit)edit.onclick=()=>{editingPostId=p.id;$("communityTitle").value=p.title;$("communityContent").value=p.content;$("communityFormTitle").textContent="게시물 수정";$("communityPhotoPreview").innerHTML=p.image_url?`<img class="community-photo" src="${escapeHtml(p.image_url)}" alt="현재 사진"><small>새 사진을 선택하면 교체됩니다.</small>`:"";$("communityComposer").hidden=false;window.scrollTo({top:0,behavior:"smooth"});};
+      const del=detail.querySelector("[data-delete]");if(del)del.onclick=async()=>{if(!confirm("이 게시물을 삭제할까요? 댓글도 함께 삭제됩니다."))return;const {error}=await supabase.from("community_posts").delete().eq("id",p.id);if(error)alert("게시물 삭제 실패: "+error.message);else{selectedPostId=null;loadCommunity();}};
+      detail.querySelector(".comment-form").onsubmit=async e=>{e.preventDefault();const content=e.currentTarget.querySelector("textarea").value.trim();const u=await currentUser();if(!u){alert("로그인이 필요합니다.");return;}const nick=u.user_metadata?.nickname||"회원";const {error}=await supabase.from("community_comments").insert({post_id:p.id,content,author_id:u.id,author_nickname:nick});if(error)alert("댓글 작성 실패: "+error.message);else loadCommunity();};
+      feed.appendChild(detail);
+    }
+  }
+  $("goBoard").addEventListener("click",()=>{selectedPostId=null;setTimeout(loadCommunity,0);});
+  $("newCommunityPost").onclick=()=>{editingPostId=null;$("communityTitle").value="";$("communityContent").value="";$("communityPhoto").value="";$("communityPhotoPreview").innerHTML="";$("communityFormTitle").textContent="새 글 작성";$("communityComposer").hidden=false;};
+  $("cancelCommunityPost").onclick=()=>{$("communityComposer").hidden=true;editingPostId=null;};
+  $("communityPhoto").onchange=()=>{const f=$("communityPhoto").files[0];if(!f){$("communityPhotoPreview").innerHTML="";return;}if(f.size>5*1024*1024){alert("사진은 5MB 이하만 첨부할 수 있습니다.");$("communityPhoto").value="";return;}if(!/^image\/(jpeg|png|webp)$/.test(f.type)){alert("JPG, PNG, WEBP 사진만 첨부할 수 있습니다.");$("communityPhoto").value="";return;}const url=URL.createObjectURL(f);$("communityPhotoPreview").innerHTML=`<img class="community-photo" src="${url}" alt="사진 미리보기">`;};
+  async function uploadCommunityPhoto(file){if(!file)return null;const ext=(file.name.split(".").pop()||"jpg").toLowerCase().replace(/[^a-z0-9]/g,"");const path=`${(await currentUser()).id}/${Date.now()}-${crypto.randomUUID()}.${ext}`;const {error}=await supabase.storage.from("community-photos").upload(path,file,{upsert:false,contentType:file.type});if(error)throw error;const {data}=supabase.storage.from("community-photos").getPublicUrl(path);return data.publicUrl;}
+  $("communityComposer").onsubmit=async e=>{e.preventDefault();if(!supabase)return;const u=await currentUser();if(!u){boardStatus("communityPostStatus","로그인이 필요합니다.");return;}const title=$("communityTitle").value.trim(),content=$("communityContent").value.trim(),nickname=u.user_metadata?.nickname||"회원";let imageUrl=null;try{const file=$("communityPhoto").files[0];if(file)imageUrl=await uploadCommunityPhoto(file);let result;if(editingPostId){const updates={title,content,updated_at:new Date().toISOString()};if(imageUrl)updates.image_url=imageUrl;result=await supabase.from("community_posts").update(updates).eq("id",editingPostId);}else result=await supabase.from("community_posts").insert({title,content,author_id:u.id,author_nickname:nickname,image_url:imageUrl});if(result.error)throw result.error;$("communityComposer").hidden=true;editingPostId=null;$("communityPhoto").value="";$("communityPhotoPreview").innerHTML="";loadCommunity();}catch(err){boardStatus("communityPostStatus","저장 실패: "+err.message+" (게시판 SQL 및 사진 저장소 설정을 확인해 주세요.)");}};
+
+  // ---------------- Kakao 지도 API 연동 ----------------
+  function placesStatus(msg){boardStatus("placesStatus",msg);}
+  
+  function initKakaoMap(){
+    if(kakaoMap) {
+      setTimeout(()=>kakaoMap.relayout(), 100);
+      return;
+    }
+    if(!window.kakao || !window.kakao.maps){
+      placesStatus("Kakao 지도 API를 불러올 수 없습니다. APP KEY 및 도메인 설정을 확인하세요.");
+      return;
+    }
+    kakao.maps.load(()=>{
+      const container = $("placesMap");
+      const options = {
+        center: new kakao.maps.LatLng(37.395297, 127.110449), // 기본 중심좌표: 판교
+        level: 4
+      };
+      kakaoMap = new kakao.maps.Map(container, options);
+      kakaoInfoWindow = new kakao.maps.InfoWindow({zIndex:1});
+      if(kakao.maps.services){
+        geocoder = new kakao.maps.services.Geocoder();
+        ps = new kakao.maps.services.Places();
+      }
+      setTimeout(()=>kakaoMap.relayout(), 100);
+      loadSavedPlaces();
+    });
+  }
+
+  function clearKakaoMarkers(){
+    kakaoMarkers.forEach(m => m.setMap(null));
+    kakaoMarkers = [];
+  }
+
+  // 주소 또는 키워드로 카카오 좌표 검색
+  function searchKakaoAddressOrKeyword(){
+    const addr = $("placeAddress").value.trim();
+    if(!addr){
+      placesStatus("주소 또는 검색할 장소명을 입력해주세요.");
+      return;
+    }
+    placesStatus("Kakao 지도로 검색 중...");
+    
+    // 1. 키워드 검색 시도
+    if(ps){
+      ps.keywordSearch(addr, (data, statusRes) => {
+        if(statusRes === kakao.maps.services.Status.OK) {
+          const first = data[0];
+          const lat = parseFloat(first.y);
+          const lng = parseFloat(first.x);
+          $("placeLat").value = lat;
+          $("placeLng").value = lng;
+          if(!$("placeName").value.trim()) $("placeName").value = first.place_name;
+          
+          const moveLatLon = new kakao.maps.LatLng(lat, lng);
+          kakaoMap.setCenter(moveLatLon);
+          
+          // 임시 마커 표시
+          clearKakaoMarkers();
+          const marker = new kakao.maps.Marker({ position: moveLatLon, map: kakaoMap });
+          kakaoMarkers.push(marker);
+          kakaoInfoWindow.setContent(`<div class="kakao-overlay-iw">${escapeHtml(first.place_name)}</div>`);
+          kakaoInfoWindow.open(kakaoMap, marker);
+
+          placesStatus(`위치를 찾았습니다: ${first.place_name} (${first.address_name || first.road_address_name})`);
+        } else if(geocoder) {
+          // 2. 주소 검색 시도
+          geocoder.addressSearch(addr, (result, statusGeo) => {
+            if (statusGeo === kakao.maps.services.Status.OK) {
+              const lat = parseFloat(result[0].y);
+              const lng = parseFloat(result[0].x);
+              $("placeLat").value = lat;
+              $("placeLng").value = lng;
+
+              const moveLatLon = new kakao.maps.LatLng(lat, lng);
+              kakaoMap.setCenter(moveLatLon);
+
+              clearKakaoMarkers();
+              const marker = new kakao.maps.Marker({ position: moveLatLon, map: kakaoMap });
+              kakaoMarkers.push(marker);
+
+              placesStatus("주소 위치를 찾았습니다.");
+            } else {
+              placesStatus("장소를 찾을 수 없습니다. 정확한 주소나 키워드로 다시 검색해 주세요.");
+            }
+          });
+        } else {
+          placesStatus("검색 서비스를 이용할 수 없습니다.");
+        }
+      });
+    }
+  }
+
+  async function loadSavedPlaces(){
+    if(!supabase) return;
+    const {data, error} = await supabase.from("shared_places").select("id,category,name,address,memo,author_id,author_nickname,created_at,lat,lon").eq("category", selectedCategory).order("created_at",{ascending:false});
+    const box = $("savedPlaces");
+    box.innerHTML = "";
+    
+    if(error){
+      placesStatus("장소 저장 DB 불러오기 실패: " + error.message);
+      return;
+    }
+    placesStatus(data.length ? "" : "아직 이 카테고리에 저장된 장소가 없습니다.");
+    
+    if(kakaoMap) clearKakaoMarkers();
+    const bounds = kakaoMap && kakao.maps ? new kakao.maps.LatLngBounds() : null;
+    let hasCoords = false;
+
+    data.forEach(p => {
+      const d = document.createElement("article");
+      d.className = "saved-place";
+      const kakaoMapUrl = (p.lat && p.lon) ? `https://map.kakao.com/link/map/${encodeURIComponent(p.name)},${p.lat},${p.lon}` : `https://map.kakao.com/link/search/${encodeURIComponent(p.name)}`;
+      
+      d.innerHTML = `<strong>${escapeHtml(p.name)}</strong><div class="community-meta">${escapeHtml(p.author_nickname)} · ${new Date(p.created_at).toLocaleDateString("ko-KR")}</div><div>${escapeHtml(p.address)}</div><p>${escapeHtml(p.memo||"")}</p><a href="${kakaoMapUrl}" target="_blank" rel="noopener">Kakao 지도로 길찾기/보기 ↗</a> ${(window.__dripCurrentUser?.id===p.author_id||window.__dripIsAdmin)?'<button data-place-delete style="margin-left:8px;">삭제</button>':''}`;
+      
+      const del = d.querySelector("[data-place-delete]");
+      if(del) del.onclick = async () => {
+        if(!confirm("이 장소 공유를 삭제할까요?")) return;
+        const {error} = await supabase.from("shared_places").delete().eq("id", p.id);
+        if(error) alert(error.message); else loadSavedPlaces();
+      };
+      box.appendChild(d);
+
+      // 카카오 지도 마커 표시
+      if(kakaoMap && p.lat != null && p.lon != null){
+        const pos = new kakao.maps.LatLng(p.lat, p.lon);
+        const marker = new kakao.maps.Marker({
+          position: pos,
+          map: kakaoMap,
+          title: p.name
+        });
+        kakaoMarkers.push(marker);
+        hasCoords = true;
+        if(bounds) bounds.extend(pos);
+
+        kakao.maps.event.addListener(marker, 'click', function() {
+          kakaoInfoWindow.setContent(`<div class="kakao-overlay-iw"><b>${escapeHtml(p.name)}</b><br><span style="font-size:11px;color:#666;">${escapeHtml(p.address)}</span></div>`);
+          kakaoInfoWindow.open(kakaoMap, marker);
+        });
+      }
+    });
+
+    if(kakaoMap && hasCoords && bounds){
+      kakaoMap.setBounds(bounds);
+    }
+  }
+
+  $("goPlaces").onclick = () => {
+    showView("places");
+    initKakaoMap();
+  };
+
+  $("btnSearchKakao").onclick = searchKakaoAddressOrKeyword;
+
+  $("placesTabs").querySelectorAll("button").forEach(b => b.onclick = () => {
+    $("placesTabs").querySelectorAll("button").forEach(x => x.classList.remove("active"));
+    b.classList.add("active");
+    selectedCategory = b.dataset.category;
+    $("placeCategory").value = selectedCategory;
+    loadSavedPlaces();
+  });
+
+  $("placeSaveForm").onsubmit = async e => {
+    e.preventDefault();
+    const u = await currentUser();
+    if(!u){ alert("로그인이 필요합니다."); return; }
+    
+    const category = $("placeCategory").value;
+    const name = $("placeName").value.trim();
+    const address = $("placeAddress").value.trim();
+    const memo = $("placeMemo").value.trim();
+    let lat = $("placeLat").value ? parseFloat($("placeLat").value) : null;
+    let lon = $("placeLng").value ? parseFloat($("placeLng").value) : null;
+
+    // 만약 좌표가 없는 경우 동기적 위치 검색 시도
+    if(!lat || !lon) {
+      if(ps){
+        await new Promise((resolve) => {
+          ps.keywordSearch(address, (data, statusRes) => {
+            if(statusRes === kakao.maps.services.Status.OK) {
+              lat = parseFloat(data[0].y);
+              lon = parseFloat(data[0].x);
+            }
+            resolve();
+          });
+        });
+      }
+    }
+
+    const {error} = await supabase.from("shared_places").insert({
+      category, name, address, memo,
+      author_id: u.id,
+      author_nickname: u.user_metadata?.nickname || "회원",
+      lat, lon
+    });
+
+    if(error){
+      placesStatus("장소 저장 실패: " + error.message);
+      return;
+    }
+
+    selectedCategory = category;
+    $("placesTabs").querySelectorAll("button").forEach(x => x.classList.toggle("active", x.dataset.category === category));
+    $("placeSaveForm").reset();
+    $("placeLat").value = "";
+    $("placeLng").value = "";
+    toast("장소가 카카오 지도에 저장되었습니다!");
+    loadSavedPlaces();
+  };
+
+  supabase?.auth.onAuthStateChange((_event,session)=>{
+    window.__dripCurrentUser=session?.user||null;
+    window.__dripAdminEmail="ua6c1b8b671ad1e8a319f43eebafaca40c5e672b2a095665333dcafac4081a302@login.dripcollege.example.com";
+    window.__dripIsAdmin=(session?.user?.email||"")===window.__dripAdminEmail;
+  });
+
+})();
+</script>
+
+</body>
+</html>
