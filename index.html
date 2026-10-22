@@ -588,9 +588,12 @@
     if (birthObj.getFullYear() !== parts[0] || birthObj.getMonth() !== parts[1]-1 || birthObj.getDate() !== parts[2] || birthObj > new Date(now.getFullYear(), now.getMonth(), now.getDate())) {
       status.textContent = "올바른 과거 생년월일을 입력해 주세요."; status.className = "community-status error"; return;
     }
+    var fortuneAbortController = new AbortController();
+    var fortuneTimeoutId = setTimeout(function () { fortuneAbortController.abort(); }, 60000);
     try {
       var response = await fetch(SUPABASE_URL + "/functions/v1/saju-fortune", {
         method: "POST",
+        signal: fortuneAbortController.signal,
         headers: { "Content-Type": "application/json", "apikey": SUPABASE_ANON_KEY, "Authorization": "Bearer " + SUPABASE_ANON_KEY },
         body: JSON.stringify({ birthDate: birthDate, birthHour: birthHour, isLunar: isLunar, today: [now.getFullYear(), String(now.getMonth()+1).padStart(2,"0"), String(now.getDate()).padStart(2,"0")].join("-") })
       });
@@ -602,8 +605,12 @@
       result.appendChild(card);
       status.textContent = "사주 해석을 완료했습니다. 이 내용은 AI가 생성한 참고용 해석입니다."; status.className = "community-status ok";
     } catch (error) {
-      status.textContent = "사주 조회 실패: " + (error && error.message ? error.message : "잠시 후 다시 시도해 주세요."); status.className = "community-status error";
+      status.textContent = error && error.name === "AbortError"
+        ? "사주 조회 시간이 초과되었습니다. 잠시 후 다시 시도해 주세요."
+        : "사주 조회 실패: " + (error && error.message ? error.message : "잠시 후 다시 시도해 주세요.");
+      status.className = "community-status error";
     } finally {
+      clearTimeout(fortuneTimeoutId);
       // 입력값은 화면에 남겨두되 저장하지 않습니다. 자동 저장/로그 기록 코드는 두지 않습니다.
     }
   });
