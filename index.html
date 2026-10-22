@@ -120,14 +120,27 @@
   .places-tabs { display:flex; gap:8px; flex-wrap:wrap; margin:12px 0; }
   .places-tabs button { border:2px solid var(--ink); border-radius:18px; padding:8px 13px; background:#fff; font-weight:800; }
   .places-tabs button.active { background:#c9f3df; }
-  .places-layout { display:grid; grid-template-columns:minmax(0,1.2fr) minmax(250px,1fr); gap:14px; }
-  .places-map { height:420px; border:2px solid var(--ink); border-radius:14px; overflow:hidden; position:relative; background:#eef2f8; }
+  .places-layout { display:grid; grid-template-columns:minmax(280px,.82fr) minmax(0,1.65fr); gap:18px; align-items:start; }
+  .places-left { min-width:0; }
+  .places-right { min-width:0; display:grid; gap:14px; }
+  .places-list-head { display:flex; align-items:center; justify-content:space-between; gap:8px; margin:0 0 10px; }
+  .places-list-head h3 { margin:0; }
+  .places-list { display:grid; gap:10px; max-height:760px; overflow:auto; padding:2px 5px 5px 2px; }
+  .places-map { height: min(72vh, 680px); min-height:520px; border:2px solid var(--ink); border-radius:14px; overflow:hidden; position:relative; background:#eef2f8; }
+  .saved-place { padding:14px; border:1.5px solid var(--ink); border-radius:12px; margin:0; background:#fff; box-shadow:2px 2px 0 var(--ink); cursor:pointer; }
+  .saved-place strong { display:block; font-size:16px; line-height:1.45; margin-bottom:7px; overflow-wrap:anywhere; }
+  .saved-place .place-address { font-size:13px; line-height:1.5; color:#333; overflow-wrap:anywhere; }
+  .saved-place .place-author { font-size:12px; color:#6b7280; margin:6px 0 9px; }
+  .saved-place .place-memo { border-top:1px dashed #ddd; padding-top:9px; margin:0 0 10px; white-space:pre-wrap; overflow-wrap:anywhere; line-height:1.55; }
+  .saved-place .place-actions { display:flex; align-items:center; flex-wrap:wrap; gap:8px; }
+  .saved-place .place-actions a { font-size:12px; }
   .place-save-form label { display:grid; gap:4px; font-weight:700; font-size:13px; }
   .saved-place { padding:12px; border:1.5px solid var(--ink); border-radius:12px; margin:8px 0; background:#fff; box-shadow:2px 2px 0 var(--ink); }
   .saved-place a { overflow-wrap:anywhere; }
   .saved-place p { margin:6px 0; white-space:pre-wrap; overflow-wrap:anywhere; }
   .kakao-overlay-iw { padding:10px 14px; border-radius:10px; background:#fff; border:2px solid var(--ink); font-size:13px; font-weight:700; box-shadow:2px 2px 0 var(--ink); white-space:nowrap; }
-  @media(max-width:650px){ .places-layout{grid-template-columns:1fr} .places-map{height:320px} .community-row{align-items:flex-start; flex-wrap:wrap} .community-row-meta{margin-left:auto} }
+  @media(max-width:850px){ .places-layout{grid-template-columns:minmax(0,1fr)} .places-left{order:2} .places-right{order:1} .places-map{height:58vh;min-height:390px} .places-list{max-height:none} }
+  @media(max-width:650px){ .places-map{height:420px;min-height:360px} .community-row{align-items:flex-start; flex-wrap:wrap} .community-row-meta{margin-left:auto} }
 
   /* 공지사항 */
   .notice-intro { padding:24px 20px; text-align:center; background:linear-gradient(135deg,#fff0f5,#fff8e9); border:2px solid var(--ink); border-radius:20px; margin:12px 0 14px; box-shadow:4px 4px 0 var(--ink); }
@@ -548,11 +561,15 @@
       <button data-category="기타" type="button">📌 기타</button>
     </div>
     <div class="places-layout">
-      <div>
-        <div id="placesMap" class="places-map" aria-label="Kakao 지도"></div>
-        <p class="community-status" id="placesStatus"></p>
+      <div class="places-left">
+        <div class="places-list-head"><h3>회원들이 저장한 장소</h3><span class="sub">최신순</span></div>
+        <div id="savedPlaces" class="places-list"></div>
       </div>
-      <div>
+      <div class="places-right">
+        <div>
+          <div id="placesMap" class="places-map" aria-label="Kakao 지도"></div>
+          <p class="community-status" id="placesStatus"></p>
+        </div>
         <form id="placeSaveForm" class="community-form place-save-form">
           <h3>장소 공유하기</h3>
           <label>분류
@@ -573,8 +590,6 @@
           </label>
           <button type="submit">장소 저장 및 공유</button>
         </form>
-        <h3>회원들이 저장한 장소</h3>
-        <div id="savedPlaces"></div>
       </div>
     </div>
   </section>
@@ -1316,7 +1331,7 @@
       var d = document.createElement("article"); d.className = "saved-place";
       var url = (p.lat != null && p.lon != null) ? "https://map.kakao.com/link/map/" + encodeURIComponent(p.name) + "," + p.lat + "," + p.lon : "https://map.kakao.com/link/search/" + encodeURIComponent(p.name);
       var canDelete = (window.__dripCurrentUser && window.__dripCurrentUser.id === p.author_id) || window.__dripIsAdmin;
-      d.innerHTML = '<strong>' + emoji + ' ' + escapeHtml(p.name) + '</strong><span class="dept">' + escapeHtml(p.category) + '</span><div class="community-meta">' + escapeHtml(p.author_nickname) + ' · ' + new Date(p.created_at).toLocaleDateString("ko-KR") + '</div><div>' + escapeHtml(p.address) + '</div><p>' + escapeHtml(p.memo || "") + '</p><a href="' + url + '" target="_blank" rel="noopener">Kakao 지도에서 보기/길찾기 ↗</a>' + (canDelete ? ' <button data-place-delete type="button" style="margin-left:8px;">삭제</button>' : '');
+      d.innerHTML = '<strong>' + emoji + ' ' + escapeHtml(p.name) + ' <span class="dept">' + escapeHtml(p.category) + '</span></strong><div class="place-address"><b>주소명</b> · ' + escapeHtml(p.address || "주소 미등록") + '</div><div class="place-author"><b>작성자</b> · ' + escapeHtml(p.author_nickname || "회원") + ' · ' + new Date(p.created_at).toLocaleDateString("ko-KR") + '</div><p class="place-memo"><b>작성자의 메모</b><br>' + escapeHtml(p.memo || "등록된 메모가 없습니다.") + '</p><div class="place-actions"><a href="' + url + '" target="_blank" rel="noopener">Kakao 지도에서 보기/길찾기 ↗</a>' + (canDelete ? ' <button data-place-delete type="button">삭제</button>' : '') + '</div>';
       box.appendChild(d);
 
       var del = d.querySelector("[data-place-delete]");
