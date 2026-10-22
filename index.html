@@ -580,6 +580,24 @@
     .head .btn.small { font-size: 12px; }
   }
 
+
+  /* 장소 목록: 한 줄 요약 + 클릭 시 상세 정보 */
+  .places-list { gap: 7px !important; }
+  .saved-place { padding: 0 !important; overflow: hidden; border: 1px solid #e3e7ee !important; border-radius: 12px !important; box-shadow: none !important; background: #fff; }
+  .saved-place-summary { display:flex; align-items:center; gap:8px; width:100%; min-height:46px; padding:10px 12px; border:0; background:transparent; color:var(--ink); text-align:left; cursor:pointer; }
+  .saved-place-name { flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-size:13px; font-weight:750; }
+  .saved-place-summary .dept { flex:0 0 auto; font-size:10px; }
+  .saved-place-chevron { color:#7c8798; transition:transform .18s ease; }
+  .saved-place.is-expanded .saved-place-chevron { transform:rotate(180deg); }
+  .saved-place-details { padding:0 12px 12px; border-top:1px solid #eef0f4; }
+  .saved-place-details[hidden] { display:none !important; }
+  .saved-place-details .place-address { margin-top:10px; }
+  .saved-place-details .place-memo { white-space:pre-wrap; overflow-wrap:anywhere; }
+  .kakao-overlay-iw { max-width:270px; min-width:190px; white-space:normal !important; line-height:1.5; border:1px solid #dfe4ec !important; box-shadow:0 8px 24px rgba(25,35,55,.14) !important; font-weight:400 !important; }
+  .kakao-overlay-iw > div { margin-top:5px; overflow-wrap:anywhere; }
+  .kakao-overlay-iw .iw-title { margin:0 0 7px; font-weight:800; font-size:14px; }
+  .kakao-overlay-iw .iw-memo { padding-top:6px; border-top:1px solid #edf0f4; }
+
 </style>
 </head>
 <body>
@@ -1018,43 +1036,28 @@
   // 국어사전에 등재된 일반 어휘 중심의 정답 후보. 모든 단어는 자모 확장 후 5칸인 경우만 사용합니다.
   var WORD_POOL_5 = [
     { word: "바람", hint: "공기의 움직임" },
-    { word: "사람", hint: "생각하고 말하는 존재" },
+    { word: "사람", hint: "생각하고 말하며 살아가는 존재" },
     { word: "학교", hint: "배우고 공부하는 곳" },
-    { word: "공부", hint: "배우고 익히는 일" },
-    { word: "하늘", hint: "머리 위로 펼쳐진 공간" },
+    { word: "공부", hint: "학문이나 기술을 배우고 익히는 일" },
+    { word: "하늘", hint: "땅 위로 펼쳐져 보이는 공간" },
     { word: "사랑", hint: "아끼고 소중히 여기는 마음" },
-    { word: "가방", hint: "물건을 넣어 들고 다니는 것" },
+    { word: "가방", hint: "물건을 넣어 들고 다니는 물건" },
     { word: "기분", hint: "마음의 상태" },
-    { word: "가족", hint: "함께 살아가거나 친족인 사람들" },
-    { word: "편지", hint: "글로 안부를 전하는 것" },
+    { word: "가족", hint: "한집에 살거나 친족 관계인 사람들" },
+    { word: "편지", hint: "안부나 소식을 적어 보내는 글" },
     { word: "감자", hint: "땅속에서 자라는 작물" },
-    { word: "김치", hint: "배추나 무로 담그는 음식" },
-    { word: "장미", hint: "가시가 있는 꽃" },
-    { word: "거울", hint: "모습을 비추는 물건" },
+    { word: "김치", hint: "채소를 소금에 절여 양념한 음식" },
+    { word: "장미", hint: "가시가 있고 향기로운 꽃" },
+    { word: "거울", hint: "물체의 모습을 비추는 물건" },
     { word: "까치", hint: "검고 흰 깃털을 가진 새" },
-    { word: "끄다", hint: "불이나 전원을 멈추다" },
-    { word: "빼다", hint: "속에 있는 것을 밖으로 꺼내다" },
-    { word: "쏘다", hint: "화살이나 총알을 날리다" },
-    { word: "짜다", hint: "소금기가 많거나 천을 만들다" },
-    { word: "찌다", hint: "김으로 익히다" },
-    { word: "쪼다", hint: "뾰족한 것으로 찍거나 파다" },
-    { word: "뿌리", hint: "식물을 땅에 붙들어 주는 부분" },
-    { word: "뛰다", hint: "달리거나 공중으로 솟다" },
-    { word: "싸다", hint: "물건을 종이 등으로 감싸다" },
-    { word: "쓰다", hint: "글자를 적다 또는 사용하다" },
-    { word: "따다", hint: "열매를 가지에서 떼다" },
-    { word: "떠다", hint: "물이나 공중에 떠서 움직이다" },
+    { word: "뿌리", hint: "식물을 땅에 고정하고 물을 흡수하는 부분" },
     { word: "찌개", hint: "국물을 적게 넣고 끓인 음식" },
-    { word: "꼬리", hint: "동물의 꽁무니 부분" },
-    { word: "꾸다", hint: "꿈을 경험하거나 돈을 빌리다" },
-    { word: "깨다", hint: "잠에서 일어나다 또는 부수다" },
-    { word: "삐다", hint: "관절을 접질리다" },
+    { word: "꼬리", hint: "동물의 꽁무니에 붙은 부분" },
     { word: "꼬마", hint: "몸집이 작은 아이" },
-    { word: "빼기", hint: "수를 덜어 내는 셈" },
-    { word: "토끼", hint: "긴 귀를 가진 동물" },
-    { word: "여름", hint: "한 해 중 더운 계절" },
-    { word: "겨울", hint: "한 해 중 추운 계절" },
-    { word: "연구", hint: "어떤 대상을 깊이 조사하고 공부함" },
+    { word: "토끼", hint: "긴 귀와 짧은 꼬리를 가진 동물" },
+    { word: "여름", hint: "한 해 중 날씨가 더운 계절" },
+    { word: "겨울", hint: "한 해 중 날씨가 추운 계절" },
+    { word: "연구", hint: "어떤 대상을 깊이 조사하고 탐구하는 일" },
     { word: "단어", hint: "일정한 뜻을 가진 말" },
     { word: "기억", hint: "지난 일을 마음에 간직함" },
     { word: "희망", hint: "앞으로 잘되기를 바라는 마음" },
@@ -1062,7 +1065,49 @@
     { word: "퇴근", hint: "일터에서 일을 마치고 돌아감" },
     { word: "근무", hint: "직장에서 일함" },
     { word: "철도", hint: "열차가 다니는 길" },
-    { word: "앵두", hint: "작고 붉은 열매" }
+    { word: "앵두", hint: "작고 붉은 열매" },
+    { word: "사과", hint: "둥글고 단맛이 나는 과일" },
+    { word: "나무", hint: "줄기와 가지가 있는 식물" },
+    { word: "바다", hint: "넓고 큰 소금물의 공간" },
+    { word: "구름", hint: "하늘에 떠 있는 작은 물방울이나 얼음 알갱이의 모임" },
+    { word: "나라", hint: "일정한 영토와 국민이 있는 국가" },
+    { word: "얼굴", hint: "눈·코·입이 있는 머리의 앞부분" },
+    { word: "머리", hint: "사람의 목 위 부분" },
+    { word: "눈물", hint: "눈에서 나오는 물" },
+    { word: "강물", hint: "강에 흐르는 물" },
+    { word: "신발", hint: "발에 신는 물건" },
+    { word: "연필", hint: "흑연으로 글씨를 쓰는 도구" },
+    { word: "책상", hint: "글을 쓰거나 공부할 때 쓰는 가구" },
+    { word: "운동", hint: "몸을 움직여 건강을 지키는 활동" },
+    { word: "우유", hint: "소 등에서 얻는 흰색 음료" },
+    { word: "과자", hint: "곡물이나 밀가루 등으로 만든 간식" },
+    { word: "우산", hint: "비나 햇볕을 가리는 물건" },
+    { word: "풍선", hint: "공기나 기체를 넣어 부풀리는 물건" },
+    { word: "친구", hint: "가깝게 지내는 사람" },
+    { word: "동생", hint: "나이가 자기보다 어린 형제자매" },
+    { word: "국어", hint: "한 나라의 말과 글" },
+    { word: "역사", hint: "지난 시대에 일어난 일과 그 기록" },
+    { word: "음악", hint: "소리로 감정과 생각을 나타내는 예술" },
+    { word: "과학", hint: "자연 현상을 관찰하고 설명하는 학문" },
+    { word: "지구", hint: "우리가 살고 있는 행성" },
+    { word: "별빛", hint: "별에서 나오는 빛" },
+    { word: "달빛", hint: "달에서 비치는 빛" },
+    { word: "꽃밭", hint: "꽃을 심어 가꾸는 밭" },
+    { word: "새벽", hint: "날이 밝아 오기 전의 이른 시간" },
+    { word: "아침", hint: "하루가 시작되는 시간" },
+    { word: "저녁", hint: "해가 질 무렵부터 밤이 되기 전까지" },
+    { word: "고향", hint: "태어나거나 자라서 정든 곳" },
+    { word: "공원", hint: "사람들이 쉬거나 산책하도록 만든 곳" },
+    { word: "시장", hint: "물건을 사고파는 곳" },
+    { word: "병원", hint: "환자를 진찰하고 치료하는 곳" },
+    { word: "교실", hint: "수업을 하는 방" },
+    { word: "창문", hint: "빛과 공기가 드나들도록 낸 창" },
+    { word: "문장", hint: "생각이나 감정을 말과 글로 나타낸 단위" },
+    { word: "문법", hint: "말의 구성과 사용에 관한 규칙" },
+    { word: "소리", hint: "귀로 들을 수 있는 것" },
+    { word: "노래", hint: "가락에 맞추어 부르는 말" },
+    { word: "그림", hint: "선이나 색으로 나타낸 모양" },
+    { word: "사진", hint: "빛을 이용해 찍은 영상" }
   ];
   var KEY_MAP = {};
   function splitHangulWord(word) {
@@ -1085,13 +1130,13 @@
     var candidates = WORD_POOL_5.filter(function(w) { return splitHangulWord(w.word).length === 5; });
     var idx = Math.floor(Math.random() * candidates.length), base = candidates[idx];
     var wordObj = { word: base.word, hint: base.hint, jamo: splitHangulWord(base.word) };
-    return { version: 2, key: "wg_round_" + Date.now() + "_" + Math.random().toString(36).slice(2,8), wordObj: wordObj };
+    return { version: 3, key: "wg_round_" + Date.now() + "_" + Math.random().toString(36).slice(2,8), wordObj: wordObj };
   }
   var curState = { periodKey: "", wordObj: null, guesses: [], currentInput: [], currentRaw: "", status: "PLAYING", keyColors: {} };
   function initWordGame(newRound) {
     var active = null;
     if (!newRound) { try { active = JSON.parse(store("wg_active_round") || "null"); } catch(e) {} }
-    if (!active || !active.key || !active.wordObj || active.version !== 2 || newRound) { active = getNewRound(); store("wg_active_round", JSON.stringify(active)); }
+    if (!active || !active.key || !active.wordObj || active.version !== 3 || newRound) { active = getNewRound(); store("wg_active_round", JSON.stringify(active)); }
     curState.periodKey = active.key; curState.wordObj = active.wordObj;
     var saved = store(active.key); curState.guesses=[]; curState.status="PLAYING"; curState.keyColors={};
     if (saved) { try { var o=JSON.parse(saved); curState.guesses=o.guesses||[]; curState.status=o.status||"PLAYING"; curState.keyColors=o.keyColors||{}; } catch(e) {} }
@@ -1445,8 +1490,7 @@
       kakao.maps.event.addListener(kakaoMap, "click", function (e) {
         var ll = e.latLng;
         $("placeLat").value = ll.getLat(); $("placeLng").value = ll.getLng();
-        if (pickMarker) pickMarker.setMap(null);
-        pickMarker = new kakao.maps.Marker({ position: ll, map: kakaoMap });
+        if (pickMarker) { pickMarker.setMap(null); pickMarker = null; }
         if (geocoder) {
           geocoder.coord2Address(ll.getLng(), ll.getLat(), function (r, s) {
             if (s === kakao.maps.services.Status.OK && r[0]) {
@@ -1473,9 +1517,7 @@
       $("placeLat").value = lat; $("placeLng").value = lng;
       var pos = new kakao.maps.LatLng(lat, lng);
       kakaoMap.setCenter(pos);
-      if (pickMarker) pickMarker.setMap(null);
-      pickMarker = new kakao.maps.Marker({ position: pos, map: kakaoMap });
-      if (label) { kakaoInfoWindow.setContent('<div class="kakao-overlay-iw">' + escapeHtml(label) + '</div>'); kakaoInfoWindow.open(kakaoMap, pickMarker); }
+      if (pickMarker) { pickMarker.setMap(null); pickMarker = null; }
     }
     ps.keywordSearch(addr, function (data, st) {
       if (st === kakao.maps.services.Status.OK) {
@@ -1521,8 +1563,10 @@
       var d = document.createElement("article"); d.className = "saved-place";
       var url = (p.lat != null && p.lon != null) ? "https://map.kakao.com/link/map/" + encodeURIComponent(p.name) + "," + p.lat + "," + p.lon : "https://map.kakao.com/link/search/" + encodeURIComponent(p.name);
       var canDelete = (window.__dripCurrentUser && window.__dripCurrentUser.id === p.author_id) || window.__dripIsAdmin;
-      d.innerHTML = '<strong>' + emoji + ' ' + escapeHtml(p.name) + ' <span class="dept">' + escapeHtml(p.category) + '</span></strong><div class="place-address"><b>주소명</b> · ' + escapeHtml(p.address || "주소 미등록") + '</div><div class="place-author"><b>작성자</b> · ' + escapeHtml(p.author_nickname || "회원") + ' · ' + new Date(p.created_at).toLocaleDateString("ko-KR") + '</div><p class="place-memo"><b>작성자의 메모</b><br>' + escapeHtml(p.memo || "등록된 메모가 없습니다.") + '</p><div class="place-actions"><a href="' + url + '" target="_blank" rel="noopener">Kakao 지도에서 보기/길찾기 ↗</a>' + (canDelete ? ' <button data-place-delete type="button">삭제</button>' : '') + '</div>';
+      d.innerHTML = '<button class="saved-place-summary" type="button" aria-expanded="false"><span class="saved-place-name">' + emoji + ' ' + escapeHtml(p.name) + '</span><span class="dept">' + escapeHtml(p.category) + '</span><span class="saved-place-chevron" aria-hidden="true">⌄</span></button><div class="saved-place-details" hidden><div class="place-address"><b>주소명</b> · ' + escapeHtml(p.address || "주소 미등록") + '</div><div class="place-author"><b>작성자</b> · ' + escapeHtml(p.author_nickname || "회원") + ' · ' + new Date(p.created_at).toLocaleDateString("ko-KR") + '</div><p class="place-memo"><b>작성자의 메모</b><br>' + escapeHtml(p.memo || "등록된 메모가 없습니다.") + '</p><div class="place-actions"><a href="' + url + '" target="_blank" rel="noopener">Kakao 지도에서 보기/길찾기 ↗</a>' + (canDelete ? ' <button data-place-delete type="button">삭제</button>' : '') + '</div></div>';
       box.appendChild(d);
+      var summary = d.querySelector('.saved-place-summary'), details = d.querySelector('.saved-place-details');
+      summary.onclick = function () { var open = summary.getAttribute('aria-expanded') !== 'true'; summary.setAttribute('aria-expanded', String(open)); details.hidden = !open; d.classList.toggle('is-expanded', open); };
 
       var del = d.querySelector("[data-place-delete]");
       if (del) del.onclick = async function (ev) {
@@ -1537,7 +1581,7 @@
         var marker = new kakao.maps.Marker({ position: pos, map: kakaoMap, title: p.name });
         kakaoMarkers.push(marker); hasCoords = true; if (bounds) bounds.extend(pos);
         var openInfo = function () {
-          kakaoInfoWindow.setContent('<div class="kakao-overlay-iw">' + emoji + ' <b>' + escapeHtml(p.name) + '</b><br><span style="font-size:11px;color:#666;">' + escapeHtml(p.address) + '</span></div>');
+          kakaoInfoWindow.setContent('<div class="kakao-overlay-iw"><div class="iw-title">' + emoji + ' ' + escapeHtml(p.name) + '</div><div><b>주소명</b> · ' + escapeHtml(p.address || "주소 미등록") + '</div><div><b>작성자</b> · ' + escapeHtml(p.author_nickname || "회원") + '</div><div class="iw-memo"><b>작성자의 메모</b><br>' + escapeHtml(p.memo || "등록된 메모가 없습니다.") + '</div></div>');
           kakaoInfoWindow.open(kakaoMap, marker);
         };
         kakao.maps.event.addListener(marker, "click", openInfo);
