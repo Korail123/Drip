@@ -104,15 +104,20 @@
   .community-row-title{flex:1;min-width:0;font-weight:850;overflow-wrap:anywhere}.community-row-meta{display:flex;gap:10px;white-space:nowrap;font-size:13px;color:#666}.community-detail{margin:12px 0;padding:16px;border:2px solid var(--ink);border-radius:16px;background:#fff}.community-detail[hidden]{display:none}
   .community-photo{max-width:100%;max-height:420px;display:block;border-radius:12px;margin:10px 0;object-fit:contain}.like-btn{border:1px solid #e7a3b6;border-radius:20px;background:#fff0f5;padding:6px 11px;font-weight:800;cursor:pointer}
   .places-tabs{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}.places-tabs button{border:2px solid var(--ink);border-radius:18px;padding:8px 13px;background:white;font-weight:800}.places-tabs button.active{background:#c9f3df}.places-layout{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(250px,1fr);gap:14px}.places-map{height:420px;border:2px solid var(--ink);border-radius:14px;overflow:hidden}.place-save-form{display:grid;gap:8px}.place-save-form input,.place-save-form textarea,.place-save-form select{width:100%;padding:10px;border:1px solid #bbb;border-radius:9px}.saved-place{padding:12px;border:1px solid #e5e5e5;border-radius:12px;margin:8px 0;background:#fff}.saved-place a{overflow-wrap:anywhere}@media(max-width:650px){.places-layout{grid-template-columns:1fr}.places-map{height:320px}.community-row{align-items:flex-start;flex-wrap:wrap}.community-row-meta{margin-left:auto}}
-  .notice-intro{padding:22px;text-align:center;background:linear-gradient(135deg,#fff0f5,#fff8e9);border:2px solid var(--ink);border-radius:18px;margin:12px 0 16px;box-shadow:3px 3px 0 var(--ink)}
-  .notice-intro h3{font-size:24px;margin:0 0 6px}.notice-intro p{margin:4px 0;color:#666}
-  .notice-rules{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:11px}
-  .notice-rule{display:flex;gap:12px;align-items:flex-start;background:#fff;border:2px solid var(--ink);border-radius:14px;padding:14px;box-shadow:3px 3px 0 var(--ink)}
-  .notice-rule-icon{flex:0 0 38px;width:38px;height:38px;display:grid;place-items:center;background:#f8eaf0;border-radius:11px;font-size:20px}
-  .notice-rule h3{font-size:16px;margin:3px 0 8px}.notice-rule ul{margin:0;padding-left:18px}.notice-rule li{font-size:13px;line-height:1.65;margin:3px 0}
-  .notice-rule strong{color:#cf3f70}.notice-closing{margin-top:14px;padding:20px;text-align:center;background:#fff3f7;border:2px solid var(--ink);border-radius:16px;box-shadow:3px 3px 0 var(--ink)}
-  .notice-closing h3{margin:0 0 8px}.notice-discord{margin-top:12px;padding:16px;border:2px solid var(--ink);border-radius:14px;background:#f7f7ff}.notice-discord a{font-weight:800;overflow-wrap:anywhere}
-  @media(max-width:600px){.notice-rules{grid-template-columns:1fr}.notice-intro h3{font-size:21px}}
+  .notice-intro{padding:24px 20px;text-align:center;background:linear-gradient(135deg,#fff0f5,#fff8e9);border:2px solid var(--ink);border-radius:20px;margin:12px 0 14px;box-shadow:4px 4px 0 var(--ink)}
+  .notice-intro .notice-kicker{display:inline-block;padding:5px 10px;margin-bottom:8px;border-radius:999px;background:#fff;border:1px solid #f0c7d4;font-size:12px;font-weight:900;letter-spacing:.04em}
+  .notice-intro h3{font-size:26px;margin:0 0 7px}.notice-intro p{margin:5px 0;color:#666;line-height:1.6}
+  .notice-highlights{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;margin:0 0 20px}
+  .notice-highlight{padding:12px 10px;text-align:center;background:#fff;border:1.5px solid var(--ink);border-radius:13px;box-shadow:2px 2px 0 var(--ink)}
+  .notice-highlight .symbol{display:block;font-size:22px;margin-bottom:5px}.notice-highlight b{display:block;font-size:13px;margin-bottom:3px}.notice-highlight span:last-child{display:block;font-size:11px;line-height:1.5;color:#666}
+  .notice-section-label{display:flex;align-items:center;gap:8px;margin:0 0 10px;font-size:16px;font-weight:900}
+  .notice-rules{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px}
+  .notice-rule{display:flex;gap:12px;align-items:flex-start;background:#fff;border:1.5px solid #242424;border-radius:15px;padding:15px;box-shadow:3px 3px 0 var(--ink)}
+  .notice-rule-icon{flex:0 0 40px;width:40px;height:40px;display:grid;place-items:center;background:#f8eaf0;border-radius:12px;font-size:21px}
+  .notice-rule h3{font-size:15px;margin:3px 0 8px;line-height:1.4}.notice-rule ul{margin:0;padding-left:17px}.notice-rule li{font-size:13px;line-height:1.75;margin:3px 0}
+  .notice-rule strong{color:#cf3f70}.notice-closing{margin-top:16px;padding:22px 18px;text-align:center;background:#fff3f7;border:2px solid var(--ink);border-radius:17px;box-shadow:3px 3px 0 var(--ink)}
+  .notice-closing h3{margin:0 0 9px}.notice-closing p{line-height:1.75;margin:6px 0}.notice-discord{margin-top:13px;padding:18px;border:2px solid var(--ink);border-radius:15px;background:#f7f7ff}.notice-discord h3{margin:0 0 7px}.notice-discord p{font-size:13px;line-height:1.6}.notice-discord a{display:inline-block;margin-top:4px;padding:10px 14px;border:2px solid var(--ink);border-radius:11px;background:#fff;font-weight:900;text-decoration:none;box-shadow:2px 2px 0 var(--ink)}
+  @media(max-width:600px){.notice-rules{grid-template-columns:1fr}.notice-intro h3{font-size:22px}.notice-highlights{gap:6px}.notice-highlight{padding:10px 5px}.notice-highlight b{font-size:12px}.notice-highlight span:last-child{font-size:10px}.notice-rule{padding:13px}}
   body.signed-in #mainView .bongchul-hero{display:none}
   /* ---------- main navigation buttons ---------- */
   .nav-grid {
@@ -397,20 +402,26 @@
   </section>
 
   <section id="noticeView" hidden class="community-panel"><div class="head"><div class="head-main"><h2 class="title">📢 공지사항</h2><p class="sub">2030 직장인 드립대학 수다학과 이용 규칙</p></div><button class="btn small" id="noticeBack">← 메인으로</button></div>
-    <div class="notice-intro"><h3>📢 공지사항</h3><p>입장 후 꼭 읽어주세요!</p><p><strong>서로 존중하고 즐겁게 함께하는 공간을 만들어요.</strong></p></div>
-    <div class="notice-rules">
-      <article class="notice-rule"><div class="notice-rule-icon">👥</div><div><h3>01. 기본 입장 규칙</h3><ul><li>만 19세 이상 입장 가능</li><li>공지 숙지 후 하단의 <strong>♥ 클릭</strong></li></ul></div></article>
-      <article class="notice-rule"><div class="notice-rule-icon">🤝</div><div><h3>02. 상호 존중</h3><ul><li>존댓말 및 음슴체 사용</li><li>상대방을 부를 때는 반드시 <strong>닉네임 + 님</strong></li></ul></div></article>
-      <article class="notice-rule"><div class="notice-rule-icon">🪪</div><div><h3>03. 닉네임 및 프로필</h3><ul><li>기본적인 닉네임 사용 금지</li><li>닉네임 양식은 본인 자율</li><li>닉네임 변경은 <strong>월 1회 가능</strong></li><li>기존 닉네임에 내용을 덧붙이는 것은 가능</li><li>다른 사람과 비슷한 닉네임·프로필 사진 사용 금지</li></ul></div></article>
-      <article class="notice-rule"><div class="notice-rule-icon">🔒</div><div><h3>04. 개인정보 유의</h3><ul><li>SNS 아이디 공유는 자율이며 본인 책임</li><li>상대방이 불쾌할 수 있는 과도한 신상 질문 자제</li></ul></div></article>
-      <article class="notice-rule"><div class="notice-rule-icon">💬</div><div><h3>05. 대화 주제</h3><ul><li>종교·정치·19금 등 갈등이 생기지 않는 선에서 가능</li><li><strong>어떠한 주제든 환영합니다!</strong></li></ul></div></article>
-      <article class="notice-rule"><div class="notice-rule-icon">🚫</div><div><h3>06. 메시지 삭제</h3><ul><li>본인이 쓴 글은 임의로 삭제하지 않기</li><li>가리기가 필요하면 운영진 호출 및 태그 요청</li><li><strong>본인이 삭제하면 방 인기도가 내려갑니다.</strong></li></ul></div></article>
-      <article class="notice-rule"><div class="notice-rule-icon">📞</div><div><h3>07. 신고·제보·문의</h3><ul><li>운영진 개인 프로필로 카카오톡 연락 요망</li></ul></div></article>
-      <article class="notice-rule"><div class="notice-rule-icon">💗</div><div><h3>08. 서로 배려하기</h3><ul><li>다양한 성격의 사람들이 공존하는 공간입니다.</li><li>서로 맞지 않더라도 의도적으로 티 내거나 무시하지 않기</li><li>따돌림 등 상대방에게 상처 주는 행동 주의</li></ul></div></article>
-      <article class="notice-rule"><div class="notice-rule-icon">⚖️</div><div><h3>09. 운영진 관리 방침</h3><ul><li>운영진 판단에 따라 <strong>경고 없이 강퇴 가능</strong></li><li>엄격한 관리보다 느슨한 관리 추구</li></ul></div></article>
+    <div class="notice-intro"><span class="notice-kicker">WELCOME TO DRIP COLLEGE</span><h3>📢 공지사항을 확인해 주세요!</h3><p>모두가 편안하고 즐겁게 대화할 수 있도록<br><strong>아래 규칙을 읽고 함께 지켜주세요.</strong></p></div>
+    <div class="notice-highlights" aria-label="핵심 규칙">
+      <div class="notice-highlight"><span class="symbol">🔞</span><b>만 19세 이상</b><span>성인만 입장 가능</span></div>
+      <div class="notice-highlight"><span class="symbol">🤝</span><b>서로 존중하기</b><span>호칭은 꼭 ‘님’ 붙이기</span></div>
+      <div class="notice-highlight"><span class="symbol">♥️</span><b>공지 확인 완료</b><span>읽은 뒤 하단 ♥ 클릭</span></div>
     </div>
-    <div class="notice-closing"><h3>🎈 마지막으로 부탁드립니다!</h3><p>우리 모두 성인인 만큼 서로 마음 상하지 않도록 조심해 주세요.</p><p>매일 함께하고 싶은 <strong>2030 직장인 드립대학 수다학과</strong>가 될 수 있도록 함께 노력해 봅시다. 💗</p></div>
-    <div class="notice-discord"><h3>🎮 게임 전용 디스코드방</h3><p>친목으로 인해 우리 방 구성원이 소외되는 경우는 허용하지 않습니다.</p><a href="https://discord.gg/CPx3MfNuz5" target="_blank" rel="noopener noreferrer">디스코드 입장하기 ↗</a></div>
+    <h3 class="notice-section-label">📝 이용 규칙 한눈에 보기</h3>
+    <div class="notice-rules">
+      <article class="notice-rule"><div class="notice-rule-icon">👥</div><div><h3>01. 기본 입장 규칙</h3><ul><li><strong>만 19세 이상</strong>만 입장할 수 있습니다.</li><li>공지사항을 모두 읽은 뒤 하단의 <strong>♥를 클릭</strong>해 주세요.</li></ul></div></article>
+      <article class="notice-rule"><div class="notice-rule-icon">🤝</div><div><h3>02. 상호 존중</h3><ul><li>존댓말 또는 음슴체를 사용해 주세요.</li><li>상대방을 부를 때는 반드시 <strong>닉네임 뒤에 ‘님’</strong>을 붙여 주세요.</li></ul></div></article>
+      <article class="notice-rule"><div class="notice-rule-icon">🪪</div><div><h3>03. 닉네임 및 프로필</h3><ul><li>‘홍길동’, ‘남자’, ‘여자’ 등 <strong>기본적인 닉네임은 사용 금지</strong>입니다.</li><li>닉네임 양식은 자유롭게 정해 주세요.</li><li>닉네임 변경은 <strong>한 달에 1회</strong> 가능합니다.</li><li>기존 닉네임에 내용을 덧붙이는 것은 가능합니다.</li><li>다른 사람과 비슷한 닉네임이나 프로필 사진은 피해 주세요.</li></ul></div></article>
+      <article class="notice-rule"><div class="notice-rule-icon">🔒</div><div><h3>04. 개인 신상 보호</h3><ul><li>SNS 아이디 공유는 자유이며, 공유에 따른 책임은 본인에게 있습니다.</li><li>상대방이 불쾌할 수 있는 과도한 신상 질문은 자제해 주세요.</li></ul></div></article>
+      <article class="notice-rule"><div class="notice-rule-icon">💬</div><div><h3>05. 대화 주제</h3><ul><li>종교·정치·19금 등 민감한 주제도 <strong>갈등이 생기지 않는 선에서</strong> 가능합니다.</li><li>어떠한 주제든 환영합니다. 서로 배려하며 이야기해 주세요!</li></ul></div></article>
+      <article class="notice-rule"><div class="notice-rule-icon">🚫</div><div><h3>06. 메시지 삭제 및 가리기</h3><ul><li>본인이 작성한 메시지는 임의로 삭제하지 말아 주세요.</li><li>메시지 가리기가 필요하면 운영진을 호출하고 태그해 주세요.</li><li><strong>메시지를 직접 삭제하면 방 인기도가 내려갑니다.</strong></li></ul></div></article>
+      <article class="notice-rule"><div class="notice-rule-icon">📞</div><div><h3>07. 신고 · 제보 · 문의</h3><ul><li>신고나 문의는 <strong>운영진 개인 카카오톡 프로필</strong>로 연락해 주세요.</li></ul></div></article>
+      <article class="notice-rule"><div class="notice-rule-icon">💗</div><div><h3>08. 서로 배려하기</h3><ul><li>채팅방에는 다양한 성격과 생각을 가진 사람들이 함께합니다.</li><li>서로 맞지 않더라도 의도적으로 티 내거나 무시하지 말아 주세요.</li><li><strong>따돌림이나 소외시키는 행동은 삼가 주세요.</strong></li></ul></div></article>
+      <article class="notice-rule"><div class="notice-rule-icon">⚖️</div><div><h3>09. 운영진 관리 방침</h3><ul><li>운영진 판단에 따라 <strong>사전 경고 없이 강퇴</strong>될 수 있습니다.</li><li>엄격한 관리보다는 느슨하고 편안한 분위기를 지향합니다.</li></ul></div></article>
+    </div>
+    <div class="notice-closing"><h3>🎈 오래 함께하고 싶은 우리를 위해</h3><p>우리 모두 성인인 만큼, 서로 마음 상하지 않도록 조금씩 배려해 주세요.</p><p>매일 함께하고 싶은 <strong>2030 직장인 드립대학 수다학과</strong>가 될 수 있도록 함께 노력해 봅시다. 💗</p><p><strong>공지사항을 다 읽었다면 하단의 ♥ 클릭도 잊지 마세요!</strong></p></div>
+    <div class="notice-discord"><h3>🎮 게임 전용 디스코드방</h3><p>게임을 함께 즐기기 위한 전용 공간입니다.<br><strong>친목으로 인해 우리 채팅방 구성원이 소외되는 경우는 허용하지 않습니다.</strong></p><a href="https://discord.gg/CPx3MfNuz5" target="_blank" rel="noopener noreferrer">🎮 디스코드 입장하기 ↗</a></div>
   </section>
   <section id="studentIdView" hidden class="community-panel"><div class="head"><h2 class="title">🪪 학생증 만들기</h2><button class="btn small" data-home>← 메인으로</button></div><div class="community-post"><label>학생 닉네임 <input id="studentIdNick" maxlength="24"></label><p id="studentIdPreview"></p><button class="btn small" id="makeStudentId">학생증 미리보기</button></div></section>
   <section id="fortuneView" hidden class="community-panel"><div class="head"><h2 class="title">🔮 오늘의 사주</h2><button class="btn small" data-home>← 메인으로</button></div><div class="community-post"><p>오늘의 운세를 가볍게 확인해 보세요.</p><button class="btn small" id="fortuneButton">오늘의 운세 보기</button><p id="fortuneResult"></p></div></section>
