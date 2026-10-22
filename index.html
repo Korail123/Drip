@@ -755,40 +755,83 @@
   /* =====================================================================
      오늘의 단어 (5칸) 게임
      ===================================================================== */
+  // 국어사전에 등재된 일반 어휘 중심의 정답 후보. 모든 단어는 자모 확장 후 5칸인 경우만 사용합니다.
   var WORD_POOL_5 = [
-    { word: "커피", hint: "직장인 생명수", jamo: ["ㅋ", "ㅓ", "ㅍ", "ㅣ", "ㅣ"] },
-    { word: "야근", hint: "달갑지 않은 저녁", jamo: ["ㅇ", "ㅑ", "ㄱ", "ㅡ", "ㄴ"] },
-    { word: "칼퇴", hint: "정시 퇴근의 꿈", jamo: ["ㅋ", "ㅏ", "ㄹ", "ㅌ", "ㅚ"] },
-    { word: "휴가", hint: "간절한 연차", jamo: ["ㅎ", "ㅠ", "ㄱ", "ㅏ", "ㅏ"] },
-    { word: "회의", hint: "끝없는 대화", jamo: ["ㅎ", "ㅚ", "ㅇ", "ㅢ", "ㅢ"] },
-    { word: "월급", hint: "통장을 스쳐가는 것", jamo: ["ㅇ", "ㅝ", "ㄹ", "ㄱ", "ㅡ"] },
-    { word: "탕비", hint: "간식 창고", jamo: ["ㅌ", "ㅏ", "ㅇ", "ㅂ", "ㅣ"] },
-    { word: "식사", hint: "즐거운 점심시간", jamo: ["ㅅ", "ㅣ", "ㄱ", "ㅅ", "ㅏ"] },
-    { word: "주말", hint: "오매불망 기다림", jamo: ["ㅈ", "ㅜ", "ㅁ", "ㅏ", "ㄹ"] },
-    { word: "승진", hint: "직급의 상승", jamo: ["ㅅ", "ㅡ", "ㅇ", "ㅈ", "ㅣ"] },
-    { word: "출근", hint: "매일 아침 고통", jamo: ["ㅊ", "ㅜ", "ㄹ", "ㄱ", "ㅡ"] }
+    { word: "바람", hint: "공기의 움직임" },
+    { word: "사람", hint: "생각하고 말하는 존재" },
+    { word: "학교", hint: "배우고 공부하는 곳" },
+    { word: "공부", hint: "배우고 익히는 일" },
+    { word: "하늘", hint: "머리 위로 펼쳐진 공간" },
+    { word: "사랑", hint: "아끼고 소중히 여기는 마음" },
+    { word: "가방", hint: "물건을 넣어 들고 다니는 것" },
+    { word: "기분", hint: "마음의 상태" },
+    { word: "가족", hint: "함께 살아가거나 친족인 사람들" },
+    { word: "편지", hint: "글로 안부를 전하는 것" },
+    { word: "감자", hint: "땅속에서 자라는 작물" },
+    { word: "김치", hint: "배추나 무로 담그는 음식" },
+    { word: "장미", hint: "가시가 있는 꽃" },
+    { word: "거울", hint: "모습을 비추는 물건" },
+    { word: "까치", hint: "검고 흰 깃털을 가진 새" },
+    { word: "끄다", hint: "불이나 전원을 멈추다" },
+    { word: "빼다", hint: "속에 있는 것을 밖으로 꺼내다" },
+    { word: "쏘다", hint: "화살이나 총알을 날리다" },
+    { word: "짜다", hint: "소금기가 많거나 천을 만들다" },
+    { word: "찌다", hint: "김으로 익히다" },
+    { word: "쪼다", hint: "뾰족한 것으로 찍거나 파다" },
+    { word: "뿌리", hint: "식물을 땅에 붙들어 주는 부분" },
+    { word: "뛰다", hint: "달리거나 공중으로 솟다" },
+    { word: "싸다", hint: "물건을 종이 등으로 감싸다" },
+    { word: "쓰다", hint: "글자를 적다 또는 사용하다" },
+    { word: "따다", hint: "열매를 가지에서 떼다" },
+    { word: "떠다", hint: "물이나 공중에 떠서 움직이다" },
+    { word: "찌개", hint: "국물을 적게 넣고 끓인 음식" },
+    { word: "꼬리", hint: "동물의 꽁무니 부분" },
+    { word: "꾸다", hint: "꿈을 경험하거나 돈을 빌리다" },
+    { word: "깨다", hint: "잠에서 일어나다 또는 부수다" },
+    { word: "삐다", hint: "관절을 접질리다" },
+    { word: "꼬마", hint: "몸집이 작은 아이" },
+    { word: "빼기", hint: "수를 덜어 내는 셈" },
+    { word: "토끼", hint: "긴 귀를 가진 동물" },
+    { word: "여름", hint: "한 해 중 더운 계절" },
+    { word: "겨울", hint: "한 해 중 추운 계절" },
+    { word: "연구", hint: "어떤 대상을 깊이 조사하고 공부함" },
+    { word: "단어", hint: "일정한 뜻을 가진 말" },
+    { word: "기억", hint: "지난 일을 마음에 간직함" },
+    { word: "희망", hint: "앞으로 잘되기를 바라는 마음" },
+    { word: "마음", hint: "생각과 감정이 일어나는 곳" },
+    { word: "퇴근", hint: "일터에서 일을 마치고 돌아감" },
+    { word: "근무", hint: "직장에서 일함" },
+    { word: "철도", hint: "열차가 다니는 길" },
+    { word: "앵두", hint: "작고 붉은 열매" }
   ];
   var KEY_MAP = {};
   function splitHangulWord(word) {
     var out = [], initial = ["ㄱ","ㄲ","ㄴ","ㄷ","ㄸ","ㄹ","ㅁ","ㅂ","ㅃ","ㅅ","ㅆ","ㅇ","ㅈ","ㅉ","ㅊ","ㅋ","ㅌ","ㅍ","ㅎ"],
         vowel = ["ㅏ","ㅐ","ㅑ","ㅒ","ㅓ","ㅔ","ㅕ","ㅖ","ㅗ","ㅘ","ㅙ","ㅚ","ㅛ","ㅜ","ㅝ","ㅞ","ㅟ","ㅠ","ㅡ","ㅢ","ㅣ"],
-        final = ["","ㄱ","ㄲ","ㄳ","ㄴ","ㄵ","ㄶ","ㄷ","ㄹ","ㄺ","ㄻ","ㄼ","ㄽ","ㄾ","ㄿ","ㅀ","ㅁ","ㅂ","ㅄ","ㅅ","ㅆ","ㅇ","ㅈ","ㅊ","ㅋ","ㅌ","ㅍ","ㅎ"];
+        final = ["","ㄱ","ㄲ","ㄳ","ㄴ","ㄵ","ㄶ","ㄷ","ㄹ","ㄺ","ㄻ","ㄼ","ㄽ","ㄾ","ㄿ","ㅀ","ㅁ","ㅂ","ㅄ","ㅅ","ㅆ","ㅇ","ㅈ","ㅊ","ㅋ","ㅌ","ㅍ","ㅎ"],
+        tense = {"ㄲ":["ㄱ","ㄱ"],"ㄸ":["ㄷ","ㄷ"],"ㅃ":["ㅂ","ㅂ"],"ㅆ":["ㅅ","ㅅ"],"ㅉ":["ㅈ","ㅈ"]};
+    function pushJamo(j) { if (tense[j]) out.push.apply(out, tense[j]); else out.push(j); }
     Array.from(String(word || "").normalize("NFC")).forEach(function(ch) {
       var code = ch.charCodeAt(0);
-      if (code >= 0xAC00 && code <= 0xD7A3) { var n=code-0xAC00, fi=n%28, vi=Math.floor(n/28)%21, ii=Math.floor(n/588); out.push(initial[ii],vowel[vi]); if(final[fi]) out.push(final[fi]); }
-      else if ("ㄱㄲㄴㄷㄸㄹㅁㅂㅃㅅㅆㅇㅈㅉㅊㅋㅌㅍㅎㅏㅐㅑㅒㅓㅔㅕㅖㅗㅘㅙㅚㅛㅜㅝㅞㅟㅠㅡㅢㅣ".indexOf(ch)>=0) out.push(ch);
+      if (code >= 0xAC00 && code <= 0xD7A3) {
+        var n=code-0xAC00, fi=n%28, vi=Math.floor(n/28)%21, ii=Math.floor(n/588);
+        pushJamo(initial[ii]); out.push(vowel[vi]); if(final[fi]) pushJamo(final[fi]);
+      } else if ("ㄱㄲㄴㄷㄸㄹㅁㅂㅃㅅㅆㅇㅈㅉㅊㅋㅌㅍㅎㅏㅐㅑㅒㅓㅔㅕㅖㅗㅘㅙㅚㅛㅜㅝㅞㅟㅠㅡㅢㅣ".indexOf(ch)>=0) pushJamo(ch);
     });
     return out;
   }
   function getNewRound() {
-    var idx = Math.floor(Math.random() * WORD_POOL_5.length), wordObj = WORD_POOL_5[idx];
-    return { key: "wg_round_" + Date.now() + "_" + Math.random().toString(36).slice(2,8), wordObj: wordObj };
+    // 자모 확장 규칙을 바꾸면 이전 라운드는 재사용하지 않습니다.
+    var candidates = WORD_POOL_5.filter(function(w) { return splitHangulWord(w.word).length === 5; });
+    var idx = Math.floor(Math.random() * candidates.length), base = candidates[idx];
+    var wordObj = { word: base.word, hint: base.hint, jamo: splitHangulWord(base.word) };
+    return { version: 2, key: "wg_round_" + Date.now() + "_" + Math.random().toString(36).slice(2,8), wordObj: wordObj };
   }
   var curState = { periodKey: "", wordObj: null, guesses: [], currentInput: [], status: "PLAYING", keyColors: {} };
   function initWordGame(newRound) {
     var active = null;
     if (!newRound) { try { active = JSON.parse(store("wg_active_round") || "null"); } catch(e) {} }
-    if (!active || !active.key || !active.wordObj || newRound) { active = getNewRound(); store("wg_active_round", JSON.stringify(active)); }
+    if (!active || !active.key || !active.wordObj || active.version !== 2 || newRound) { active = getNewRound(); store("wg_active_round", JSON.stringify(active)); }
     curState.periodKey = active.key; curState.wordObj = active.wordObj;
     var saved = store(active.key); curState.guesses=[]; curState.status="PLAYING"; curState.keyColors={};
     if (saved) { try { var o=JSON.parse(saved); curState.guesses=o.guesses||[]; curState.status=o.status||"PLAYING"; curState.keyColors=o.keyColors||{}; } catch(e) {} }
