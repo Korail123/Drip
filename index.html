@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jua&family=Noto+Sans+KR:wght@400;500;700;800&display=swap">
-<!-- Kakao 지도 JavaScript API (services 라이브러리 포함) -->
+<!-- Kakao 지도 JavaScript API (services 라이브러리 포함, autoload=false) -->
 <script src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=65cb25515f828d2dddc4f6be98970b3f&libraries=services&autoload=false"></script>
 <style>
   :root {
@@ -32,13 +32,25 @@
   button, input, select, textarea { font:inherit; color:inherit; }
   button { cursor:pointer; }
   :focus-visible { outline:3px solid #5B8CFF; outline-offset:2px; }
-  /* 헤더 & 타이틀 */
+
+  /* 헤더 & 카드 스타일 */
   .rainbow-title { width:min(100%,720px); display:block; margin:0 auto -4px; overflow:visible; }
   .rainbow-title text { font-family:var(--font-display); font-weight:900; paint-order:stroke fill; stroke:var(--ink); stroke-width:7px; stroke-linejoin:round; }
-  
+  .auth-card { width:min(100%,520px); margin:10px auto 22px; padding:24px; background:#fff; border:1px solid #E2E7F0; border-radius:16px; box-shadow:0 4px 16px rgba(32,43,69,.06); }
+  .auth-card h2 { margin:0 0 5px; font-family:var(--font-display); font-size:28px; }
+  .auth-help { margin:0 0 16px; color:var(--muted); font-size:13px; line-height:1.5; }
+  .auth-card label { display:block; margin:12px 0 5px; font-weight:800; font-size:13px; }
+  .remember-row { display:flex !important; align-items:center; gap:9px; margin:12px 0 2px !important; font-size:14px; cursor:pointer; }
+  .auth-card input.remember-checkbox { width:19px; min-height:19px; height:19px; margin:0; accent-color:#167a55; }
+  .auth-card input, .community-form input, .community-form textarea, .community-form select { width:100%; min-height:44px; border:1px solid #D8DFEA; border-radius:10px; padding:10px 12px; background:#fff; }
+  .auth-actions { display:grid; gap:10px; margin-top:16px; }
+  .auth-primary,.auth-secondary { min-height:46px; border-radius:10px; font-family:var(--font-body); font-size:15px; font-weight:800; border:1px solid #DCE2ED; }
+  .auth-primary { background:#E85B52; color:#fff; border-color:#E85B52; } 
+  .auth-secondary { background:#FFF1EF; color:#9F3732; border-color:#F2D0CC; }
   .auth-topline { display:flex; justify-content:space-between; align-items:center; gap:10px; margin:4px auto 12px; max-width:960px; }
-  .auth-user { font-weight:800; display:flex; align-items:center; gap:8px; }
+  .auth-user { font-weight:800; }
   .logout-btn { border:1px solid #DCE2ED; background:#fff; border-radius:10px; padding:6px 12px; font-weight:800; }
+
   /* 메인 네비게이션 버튼 */
   .nav-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:12px; margin:18px 0 30px; }
   .nav-btn { display:flex; align-items:center; justify-content:flex-start; gap:8px; border:1px solid rgba(32,43,69,.1); border-radius:15px; padding:14px 16px; font-family:var(--font-body); font-size:15px; font-weight:800; box-shadow:0 3px 10px rgba(32,43,69,.07); background:var(--card); color:var(--ink); transition:transform .15s, box-shadow .15s; text-align:left; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; min-height:58px; }
@@ -46,65 +58,63 @@
   .nav-btn.coral { background:#FFF1EF; color:#A9322D; }
   .nav-btn.mint { background:#EAF9F1; color:#176747; }
   .nav-btn.butter { background:#FFF7DF; color:#78520B; }
-  /* 버튼 및 공통 패널 */
+
+  /* 공통 버튼 & 레이아웃 */
   .btn { display:inline-flex; align-items:center; gap:8px; border:1px solid #DCE2ED; border-radius:10px; padding:9px 13px; font-weight:800; font-size:14px; background:var(--card); color:var(--ink); transition:background-color .15s, transform .15s; }
   .btn:hover { transform:translateY(-1px); }
   .btn.coral { background:#E85B52; color:#fff; border-color:#E85B52; }
-  .btn.small { padding:6px 11px; font-size:13px; border-radius:9px; }
+  .btn.small { padding:7px 11px; font-size:13px; border-radius:9px; }
   
   .head { display:flex; justify-content:space-between; align-items:center; gap:12px; margin-bottom:18px; flex-wrap:wrap; }
   h2.title { margin:0; font-family:var(--font-display); font-weight:400; font-size:clamp(23px,4vw,29px); line-height:1.2; letter-spacing:-.025em; }
   .sub { margin:4px 0 0; color:var(--muted); font-size:13px; line-height:1.45; }
   .community-panel { max-width:960px; margin:0 auto 28px; width:100%; }
+  .community-form { display:grid; gap:10px; background:#fff; border:1px solid #E2E7F0; border-radius:16px; padding:18px; box-shadow:0 4px 16px rgba(32,43,69,.06); }
+  .community-form h3 { margin:0 0 4px; font-size:18px; font-family:var(--font-display); }
+
+  /* ===== 맛집/카페 공유 수정 레이아웃 ===== */
+  .places-tabs { display:flex; gap:8px; flex-wrap:wrap; margin:12px 0 16px; }
+  .places-tabs button { border:1px solid #DCE2ED; border-radius:18px; padding:7px 14px; background:#fff; font-weight:800; font-size:13.5px; transition:all .15s; }
+  .places-tabs button.active { background:#202B45; color:#fff; border-color:#202B45; }
   
-  /* 아바타 캐릭터 피드 커스텀 */
-  .avatar-badge { width:38px; height:38px; border-radius:50%; background:#EEF2F8; border:1.5px solid #D8DFEA; flex-shrink:0; display:flex; align-items:center; justify-content:center; overflow:hidden; }
-  .avatar-badge.small { width:26px; height:26px; }
-  .avatar-badge svg { width:100%; height:100%; }
-  /* 수다게시판 카드 및 피드 */
-  .board-feed { display:grid; gap:14px; }
-  .post-card { background:#fff; border:1px solid #E2E7F0; border-radius:16px; padding:18px; box-shadow:0 3px 12px rgba(32,43,69,.04); transition:border-color .15s; cursor:pointer; }
-  .post-card:hover { border-color:#B3C5EA; }
-  .post-header { display:flex; align-items:center; gap:12px; margin-bottom:12px; }
-  .post-meta { display:flex; flex-direction:column; justify-content:center; }
-  .post-author { font-weight:800; font-size:14.5px; color:#202B45; line-height:1.2; }
-  .post-date { font-size:12px; color:#8894A8; margin-top:2px; }
-  .post-title { font-size:17px; font-weight:800; margin:0 0 8px; color:#111827; }
-  .post-content { font-size:14.5px; color:#4B5563; line-height:1.6; white-space:pre-wrap; overflow-wrap:anywhere; display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden; }
-  .post-footer { display:flex; align-items:center; gap:14px; margin-top:14px; pt-3; border-top:1px solid #F0F4F9; font-size:13px; color:#68758E; font-weight:700; }
-  /* 학생증 만들기 모달/영역 */
-  .student-card-preview { background:linear-gradient(135deg, #1f2937, #111827); color:#fff; border-radius:18px; padding:20px; box-shadow:0 8px 24px rgba(0,0,0,.2); max-width:340px; margin:0 auto; text-align:center; position:relative; }
-  .student-avatar-large { width:100px; height:100px; border-radius:50%; background:#fff; margin:0 auto 12px; border:3px solid #E85B52; overflow:hidden; }
-  /* 맛집/카페 공유 레이아웃 */
+  /* 반응형 레이아웃: 넓은 화면에서 왼쪽(저장목록) / 오른쪽(지도 & 공유 폼) */
   .places-layout { display:grid; grid-template-columns:320px 1fr; gap:20px; align-items:start; }
   .places-left { min-width:0; }
   .places-right { min-width:0; display:grid; gap:16px; }
-  .places-list { display:grid; gap:12px; max-height:780px; overflow-y:auto; padding-right:4px; }
-  .places-map { width:100%; height:520px; border:1px solid #DCE2ED; border-radius:16px; overflow:hidden; background:#eef2f8; box-shadow:0 4px 16px rgba(32,43,69,.06); }
-  .saved-place { padding:14px; border:1px solid #E2E7F0; border-radius:14px; background:#fff; box-shadow:0 2px 8px rgba(32,43,69,.04); cursor:pointer; }
+  .places-list-head { display:flex; align-items:center; justify-content:space-between; gap:8px; margin:0 0 12px; }
+  .places-list-head h3 { margin:0; font-size:17px; font-family:var(--font-display); }
+  .places-list { display:grid; gap:12px; max-height:800px; overflow-y:auto; padding-right:4px; }
   
-  .community-form { display:grid; gap:10px; background:#fff; border:1px solid #E2E7F0; border-radius:16px; padding:18px; box-shadow:0 4px 16px rgba(32,43,69,.06); }
-  .community-form h3 { margin:0 0 4px; font-size:18px; font-family:var(--font-display); }
-  .community-form input, .community-form textarea, .community-form select { width:100%; min-height:44px; border:1px solid #D8DFEA; border-radius:10px; padding:10px 12px; background:#fff; }
-  /* 댓글 리스트 */
-  .comment-item { display:flex; gap:10px; padding:12px 0; border-bottom:1px solid #E2E7F0; }
-  .comment-content { flex:1; }
-  .comment-head { display:flex; align-items:center; gap:8px; margin-bottom:4px; }
-  .comment-author { font-weight:800; font-size:13.5px; }
-  .comment-date { font-size:11.5px; color:#8894A8; }
-  .comment-text { font-size:13.5px; color:#374151; white-space:pre-wrap; }
+  /* 카카오맵 크게 확장 */
+  .places-map { width:100%; height:520px; border:1px solid #DCE2ED; border-radius:16px; overflow:hidden; position:relative; background:#eef2f8; box-shadow:0 4px 16px rgba(32,43,69,.06); }
+  
+  .saved-place { padding:14px; border:1px solid #E2E7F0; border-radius:14px; background:#fff; box-shadow:0 2px 8px rgba(32,43,69,.04); transition:border-color .15s; cursor:pointer; }
+  .saved-place:hover { border-color:#7396E8; }
+  .saved-place strong { display:block; font-size:15.5px; line-height:1.4; margin-bottom:5px; color:#202B45; }
+  .saved-place .place-address { font-size:12.5px; line-height:1.45; color:#555; margin-bottom:6px; }
+  .saved-place .place-author { font-size:12px; color:#888; margin-bottom:8px; }
+  .saved-place .place-memo { border-top:1px dashed #E2E7F0; padding-top:8px; margin:6px 0 8px; white-space:pre-wrap; overflow-wrap:anywhere; font-size:13px; line-height:1.5; color:#333; }
+  .saved-place .place-actions { display:flex; align-items:center; gap:8px; font-size:12px; }
+  .saved-place .place-actions a { color:#3a86ff; text-decoration:none; font-weight:700; }
+  
+  .place-save-form label { display:grid; gap:5px; font-weight:800; font-size:13px; }
+  .kakao-overlay-iw { padding:10px 14px; border-radius:12px; background:#fff; border:1px solid #202B45; font-size:13px; font-weight:700; box-shadow:0 4px 12px rgba(0,0,0,.15); white-space:nowrap; }
+
   .toast { position:fixed; left:50%; transform:translateX(-50%); bottom:calc(16px + env(safe-area-inset-bottom, 0px)); background:var(--ink); color:#fff; border-radius:12px; padding:10px 16px; font-weight:700; font-size:14px; max-width:calc(100% - 32px); z-index:99; box-shadow:0 4px 12px rgba(0,0,0,.15); }
+
   @media(max-width:860px){
     .places-layout { grid-template-columns:1fr; }
     .places-left { order:2; }
     .places-right { order:1; }
-    .places-map { height:380px; }
+    .places-map { height:400px; }
+    .places-list { max-height:none; }
   }
 </style>
 </head>
 <body>
 <div class="page">
-  <!-- 네비게이션 및 헤더 -->
+
+  <!-- 메인 화면 -->
   <main id="mainView">
     <svg class="rainbow-title" viewBox="0 0 1000 245" role="img" aria-label="2030 직장인 드립대학 수다학과 무지개 제목">
       <defs>
@@ -113,427 +123,343 @@
       </defs>
       <text font-size="62" fill="url(#titleRainbow)" text-anchor="middle"><textPath href="#titleArc" startOffset="50%">2030 직장인 드립대학 수다학과</textPath></text>
     </svg>
-    <div id="authTopline" class="auth-topline">
-      <div class="auth-user">
-        <div class="avatar-badge" id="myTopAvatar"></div>
-        <span id="signedInLabel">드립학생 (칼퇴전공)</span>
-      </div>
-      <button class="btn small" id="makeCardBtn" type="button">🪪 학생증 만들기</button>
-    </div>
-    <!-- 네비게이션 메뉴 -->
-    <nav class="nav-grid">
-      <button class="nav-btn coral" id="goPlacesNav" type="button">☕ 맛집/카페 등 공유</button>
-      <button class="nav-btn mint" id="goBoardNav" type="button">💬 수다게시판</button>
+
+    <div id="authTopline" class="auth-topline" hidden><span id="signedInLabel" class="auth-user"></span><button id="logoutBtn" class="logout-btn" type="button">로그아웃</button></div>
+
+    <section id="loginCard" class="auth-card">
+      <h2>로그인</h2><p class="auth-help">카카오톡 오픈채팅 닉네임과 인증번호를 입력해 주세요.</p>
+      <form id="loginForm">
+        <label for="loginNickname">닉네임</label><input id="loginNickname" maxlength="24" placeholder="등록한 닉네임" required>
+        <label for="loginCode">인증번호</label><input id="loginCode" type="password" placeholder="인증번호 입력" required>
+        <div class="auth-actions"><button class="auth-primary" type="submit">로그인</button></div>
+      </form>
+    </section>
+
+    <!-- 버튼 수정: 맛집/카페 등 공유 -->
+    <nav id="mainNav" class="nav-grid">
+      <button class="nav-btn coral" id="goPlaces" type="button">☕ 맛집/카페 등 공유</button>
     </nav>
   </main>
-  <!-- 1. 수다게시판 피드 뷰 -->
-  <section id="boardView" class="community-panel" hidden>
-    <div class="head">
-      <div>
-        <h2 class="title">💬 수다게시판</h2>
-        <p class="sub">직장생활 꿀팁부터 소소한 수다까지 다양한 이야기를 나눠보세요.</p>
-      </div>
-      <div style="display:flex; gap:8px;">
-        <button class="btn coral" id="btnOpenWrite" type="button">✏️ 글쓰기</button>
-        <button class="btn small" id="boardBack" type="button">← 메인</button>
-      </div>
-    </div>
-    <!-- 글쓰기 폼 -->
-    <form id="postWriteForm" class="community-form" style="margin-bottom:20px;" hidden>
-      <h3>새 수다글 작성</h3>
-      <input id="postTitle" maxlength="100" placeholder="제목을 입력하세요" required>
-      <textarea id="postContent" maxlength="2000" placeholder="내용을 작성하세요..." style="min-height:110px;" required></textarea>
-      <div style="display:flex; justify-content:flex-end; gap:8px;">
-        <button type="button" class="btn small" id="btnCancelWrite">취소</button>
-        <button type="submit" class="btn coral small">등록하기</button>
-      </div>
-    </form>
-    <!-- 게시글 피드 목록 -->
-    <div id="boardFeed" class="board-feed">
-      <!-- 동적 피드 카드가 이곳에 추가됨 -->
-    </div>
-  </section>
-  <!-- 게시글 상세 보기 뷰 -->
-  <section id="postDetailView" class="community-panel" hidden>
-    <div class="head">
-      <button class="btn small" id="btnDetailBack" type="button">← 목록으로</button>
-    </div>
-    <article class="community-form" style="gap:16px;">
-      <div class="post-header">
-        <div class="avatar-badge" id="detailAvatar"></div>
-        <div class="post-meta">
-          <span class="post-author" id="detailAuthor">작성자</span>
-          <span class="post-date" id="detailDate">2026. 10. 22. 오후 11:30</span>
-        </div>
-      </div>
-      <h2 id="detailTitle" style="margin:0; font-size:22px; font-weight:800;">제목</h2>
-      <div id="detailContent" style="font-size:15px; color:#374151; white-space:pre-wrap; line-height:1.6;">내용</div>
-      <hr style="border:none; border-top:1px solid #E2E7F0; margin:10px 0 0;">
-      <!-- 댓글 영역 -->
-      <div>
-        <h4 style="margin:0 0 12px; font-size:16px;">💬 댓글 목록</h4>
-        <div id="commentsList" style="margin-bottom:16px;"></div>
-        <form id="commentForm" style="display:flex; gap:8px;">
-          <input id="commentInput" placeholder="따뜻한 댓글을 남겨주세요" required style="flex:1;">
-          <button type="submit" class="btn coral small" style="white-space:nowrap;">작성</button>
-        </form>
-      </div>
-    </article>
-  </section>
-  <!-- 2. 맛집/카페 등 공유 뷰 -->
-  <section id="placesView" class="community-panel" hidden>
+
+  <!-- 맛집 · 카페 · 명소 · 숙소 · 기타 (Kakao 지도 공유) -->
+  <section id="placesView" class="community-panel">
     <div class="head">
       <div>
         <h2 class="title">📍 맛집 · 카페 · 명소 공유</h2>
         <p class="sub">지도를 크게 확인하고 나만의 추천 장소를 회원들과 실시간으로 공유해 보세요!</p>
       </div>
-      <button class="btn small" id="placesBack" type="button">← 메인</button>
+      <button class="btn small" id="placesBack" type="button">← 메인으로</button>
     </div>
+
+    <!-- 카테고리 탭 -->
+    <div class="places-tabs" id="placesTabs">
+      <button class="active" data-category="전체" type="button">🗺️ 전체</button>
+      <button data-category="맛집" type="button">🍜 맛집</button>
+      <button data-category="카페" type="button">☕ 카페</button>
+      <button data-category="명소" type="button">📸 명소</button>
+      <button data-category="숙소" type="button">🛏️ 숙소</button>
+      <button data-category="기타" type="button">📌 기타</button>
+    </div>
+
+    <!-- 신규 배치: 왼쪽 저장 장소 리스트 / 오른쪽 지도 및 장소 공유 폼 -->
     <div class="places-layout">
-      <!-- 왼쪽: 회원 저장 장소 목록 -->
+      <!-- 왼쪽: 회원들이 저장한 장소 리스트 -->
       <div class="places-left">
-        <h3 style="margin:0 0 12px; font-size:17px; font-family:var(--font-display);">회원 저장 장소</h3>
-        <div id="savedPlaces" class="places-list"></div>
+        <div class="places-list-head">
+          <h3>회원들이 저장한 장소</h3>
+          <span class="sub">최신순</span>
+        </div>
+        <div id="savedPlaces" class="places-list">
+          <!-- 스크립트로 렌더링 -->
+        </div>
       </div>
-      <!-- 오른쪽: 대형 지도 및 카카오 검색/저장 폼 -->
+
+      <!-- 오른쪽: 대형 지도 및 위치 검색 / 저장 폼 -->
       <div class="places-right">
         <div>
-          <div id="placesMap" class="places-map"></div>
-          <p id="placesStatus" style="font-size:12.5px; color:#666; margin:6px 0 0;"></p>
+          <div id="placesMap" class="places-map" aria-label="Kakao 지도"></div>
+          <p id="placesStatus" style="font-size:13px; color:#666; margin:8px 0 0; min-height:1.2em;"></p>
         </div>
-        <form id="placeSaveForm" class="community-form">
+
+        <form id="placeSaveForm" class="community-form place-save-form">
           <h3>장소 공유하기</h3>
-          <label style="font-size:13px; font-weight:800;">분류
+          <label>분류
             <select id="placeCategory">
-              <option>맛집</option><option>카페</option><option>명소</option><option>숙소</option><option>기타</option>
+              <option>맛집</option>
+              <option>카페</option>
+              <option>명소</option>
+              <option>숙소</option>
+              <option>기타</option>
             </select>
           </label>
-          <label style="font-size:13px; font-weight:800;">장소명
+          <label>장소명
             <input id="placeName" maxlength="120" placeholder="예: 카페 몬타나" required>
           </label>
-          <label style="font-size:13px; font-weight:800;">장소 위치 검색 (카카오맵 API)
-            <div style="display:flex; gap:6px; margin-top:4px;">
+          <label>장소 위치 찾기 (카카오맵 검색)
+            <div style="display:flex; gap:6px;">
               <input id="placeAddress" maxlength="300" placeholder="예: 덕산로312번길 124 또는 카페 이름" required>
-              <button type="button" id="btnSearchKakao" class="btn coral small" style="white-space:nowrap;">📍 위치 검색</button>
+              <button type="button" id="btnSearchKakao" class="btn coral small" style="white-space:nowrap; shrink:0;">📍 위치 검색</button>
             </div>
           </label>
           <input type="hidden" id="placeLat">
           <input type="hidden" id="placeLng">
-          <label style="font-size:13px; font-weight:800;">추천 메모
-            <textarea id="placeMemo" maxlength="1000" placeholder="추천 이유 및 팁을 적어주세요" style="min-height:70px;"></textarea>
+          <label>추천 메모
+            <textarea id="placeMemo" maxlength="1000" placeholder="추천 메뉴, 일산/파주 맛집 팁, 분위기 등" style="min-height:70px;"></textarea>
           </label>
-          <button type="submit" class="btn coral" style="justify-content:center;">장소 저장 및 회원 공유</button>
+          <button type="submit" class="btn coral" style="justify-content:center; padding:11px;">장소 저장 및 회원 공유</button>
         </form>
       </div>
     </div>
   </section>
-  <!-- 3. 학생증 만들기 모달/뷰 -->
-  <section id="studentCardModal" class="community-panel" hidden>
-    <div class="head">
-      <h2 class="title">🪪 나의 캐릭터 학생증</h2>
-      <button class="btn small" id="closeCardBtn" type="button">닫기</button>
-    </div>
-    <div style="display:grid; gap:20px; grid-template-columns:repeat(auto-fit,minmax(280px,1fr));">
-      <div class="student-card-preview">
-        <div class="student-avatar-large" id="cardAvatarPreview"></div>
-        <h3 id="cardNamePreview" style="margin:0 0 4px; font-family:var(--font-display); font-size:22px;">드립학생</h3>
-        <p id="cardMajorPreview" style="margin:0; font-size:13px; color:#F3F4F6;">전공: 칼퇴학</p>
-        <span style="display:inline-block; margin-top:12px; font-size:11px; background:rgba(255,255,255,.15); padding:4px 10px; border-radius:12px;">2030 드립대학교 수다학과</span>
-      </div>
-      <form id="avatarCustomForm" class="community-form">
-        <h3>프로필 캐릭터 지정</h3>
-        <label style="font-size:13px; font-weight:800;">캐릭터 테마
-          <select id="avatarColorSelect">
-            <option value="#E85B52">🔥 코랄 레드</option>
-            <option value="#3A86FF">⚡ 스마트 블루</option>
-            <option value="#10B981">🌿 힐링 그린</option>
-            <option value="#F59E0B">💛 럭키 옐로우</option>
-            <option value="#8B5CF6">🔮 미스틱 퍼플</option>
-          </select>
-        </label>
-        <label style="font-size:13px; font-weight:800;">표정 지정
-          <select id="avatarExpression">
-            <option value="smile">😊 방긋 웃음</option>
-            <option value="cool">sunglasses😎 칼퇴 모드</option>
-            <option value="wink">wink😜 드립 모드</option>
-          </select>
-        </label>
-        <button type="submit" class="btn coral" style="justify-content:center;">학생증 저장하기</button>
-      </form>
-    </div>
-  </section>
+
 </div>
+
 <div class="toast" id="toast" hidden></div>
+
 <script>
 (function () {
   "use strict";
+
   function $(id) { return document.getElementById(id); }
   function toast(msg) {
     var t = $("toast"); t.textContent = msg; t.hidden = false;
     setTimeout(function () { t.hidden = true; }, 3000);
   }
-  // 사용자별 학생증 프로필 캐시
-  var studentCardsMap = {
-    "user_1": { name: "일산드립왕", major: "야근회피학", color: "#E85B52", expr: "cool" },
-    "user_2": { name: "칼퇴요정", major: "칼퇴전문", color: "#10B981", expr: "smile" }
-  };
-  var currentUserId = "user_me";
-  studentCardsMap[currentUserId] = { name: "드립학생", major: "칼퇴전공", color: "#3A86FF", expr: "smile" };
-  // 아바타 SVG 생성 함수
-  function generateAvatarSvg(color, expr) {
-    var eyeSvg = '<circle cx="38" cy="45" r="5" fill="#222"/><circle cx="62" cy="45" r="5" fill="#222"/>';
-    if (expr === "cool") {
-      eyeSvg = '<rect x="28" y="40" width="22" height="10" rx="3" fill="#222"/><rect x="50" y="40" width="22" height="10" rx="3" fill="#222"/><line x1="48" y1="44" x2="52" y2="44" stroke="#222" stroke-width="2"/>';
-    } else if (expr === "wink") {
-      eyeSvg = '<path d="M 32 45 Q 38 38 44 45" stroke="#222" stroke-width="3" fill="none"/><circle cx="62" cy="45" r="5" fill="#222"/>';
-    }
-    return '<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="50" r="46" fill="' + (color || '#3A86FF') + '"/><circle cx="50" cy="50" r="38" fill="#FFF"/><g>' + eyeSvg + '</g><path d="M 38 65 Q 50 78 62 65" stroke="#222" stroke-width="4" stroke-linecap="round" fill="none"/></svg>';
-  }
-  // 게시글 sample 데이터
-  var postsData = [
-    {
-      id: 101,
-      user_id: "user_1",
-      author: "일산드립왕",
-      title: "오늘 칼퇴하고 고양시 밤가시마을 드립 카페 다녀왔습니다!",
-      content: "역시 퇴근 후 커피 한 잔이 최고네요. 분위기도 너무 좋고 힐링됩니다 ㅎㅎ 회원님들도 오늘 수고 많으셨어요!",
-      created_at: new Date(Date.now() - 3600000 * 2).toISOString(),
-      comments: [
-        { id: 1, user_id: "user_2", author: "칼퇴요정", text: "와 부럽습니다! 어디 카페인가요?", created_at: new Date(Date.now() - 3600000).toISOString() }
-      ]
-    },
-    {
-      id: 102,
-      user_id: "user_2",
-      author: "칼퇴요정",
-      title: "월요병 극복하는 나만의 드립 꿀팁 공유",
-      content: "1. 출근하자마자 퇴근시간 계산하기\n2. 점심 메뉴 미리 고르고 기대하기\n 다들 화이팅입니다!",
-      created_at: new Date(Date.now() - 3600000 * 24).toISOString(),
-      comments: []
-    }
-  ];
-  // 맛집 장소 데이터
+
+  // 초기 샘플 저장 장소
   var savedPlacesData = [
-    { id: 1, name: "카페 몬타나", category: "카페", address: "경기도 고양시 일산서구 덕산로312번길 124", lat: 37.6934, lng: 126.7451, author: "일산드립왕", memo: "넓은 정원과 뷰가 좋은 카페입니다!" }
+    { id: 1, name: "카페 몬타나", category: "카페", address: "경기도 고양시 일산서구 덕산로312번길 124", lat: 37.6934, lng: 126.7451, author: "일산드립왕", memo: "넓은 정원과 뷰가 좋은 카페입니다!" },
+    { id: 2, name: "피콕그린", category: "카페", address: "경기도 고양시 일산동구 성석로 111-45", lat: 37.6978, lng: 126.7923, author: "칼퇴요정", memo: "조용하고 분위기 넘치는 힐링 스팟이에요." }
   ];
+
   var map = null;
   var markers = [];
   var currentInfoWindow = null;
-  var activePostId = null;
-  // 화면 전환
-  function showView(viewId) {
-    ["mainView", "boardView", "postDetailView", "placesView", "studentCardModal"].forEach(function(id) {
-      if ($(id)) $(id).hidden = (id !== viewId);
-    });
-  }
-  // 상단 나의 프로필 업데이트
-  function updateMyProfileUI() {
-    var myCard = studentCardsMap[currentUserId];
-    $("myTopAvatar").innerHTML = generateAvatarSvg(myCard.color, myCard.expr);
-    $("signedInLabel").textContent = myCard.name + " (" + myCard.major + ")";
-    $("cardAvatarPreview").innerHTML = generateAvatarSvg(myCard.color, myCard.expr);
-    $("cardNamePreview").textContent = myCard.name;
-    $("cardMajorPreview").textContent = "전공: " + myCard.major;
-  }
-  // 수다게시판 피드 렌더링 (작성자 프로필 avatar + created_at)
-  function renderBoardFeed() {
-    var container = $("boardFeed");
-    container.innerHTML = "";
-    postsData.forEach(function (post) {
-      var authorCard = studentCardsMap[post.user_id] || { color: "#8894A8", expr: "smile" };
-      var avatarSvg = generateAvatarSvg(authorCard.color, authorCard.expr);
-      var formattedDate = new Date(post.created_at).toLocaleString('ko-KR');
-      var card = document.createElement("div");
-      card.className = "post-card";
-      card.innerHTML = 
-        '<div class="post-header">' +
-          '<div class="avatar-badge">' + avatarSvg + '</div>' +
-          '<div class="post-meta">' +
-            '<span class="post-author">' + post.author + '</span>' +
-            '<span class="post-date">' + formattedDate + '</span>' +
-          '</div>' +
-        '</div>' +
-        '<h3 class="post-title">' + post.title + '</h3>' +
-        '<div class="post-content">' + post.content + '</div>' +
-        '<div class="post-footer">' +
-          '<span>💬 댓글 ' + (post.comments ? post.comments.length : 0) + '</span>' +
-        '</div>';
-      card.onclick = function () {
-        openPostDetail(post.id);
-      };
-      container.appendChild(card);
-    });
-  }
-  // 게시글 상세 보기
-  function openPostDetail(postId) {
-    activePostId = postId;
-    var post = postsData.find(function(p) { return p.id === postId; });
-    if (!post) return;
-    var authorCard = studentCardsMap[post.user_id] || { color: "#8894A8", expr: "smile" };
-    $("detailAvatar").innerHTML = generateAvatarSvg(authorCard.color, authorCard.expr);
-    $("detailAuthor").textContent = post.author;
-    $("detailDate").textContent = new Date(post.created_at).toLocaleString('ko-KR');
-    $("detailTitle").textContent = post.title;
-    $("detailContent").textContent = post.content;
-    renderComments(post.comments || []);
-    showView("postDetailView");
-  }
-  // 댓글 목록 렌더링
-  function renderComments(comments) {
-    var container = $("commentsList");
-    container.innerHTML = "";
-    if (comments.length === 0) {
-      container.innerHTML = '<p style="font-size:13px; color:#888;">첫 댓글을 작성해보세요!</p>';
-      return;
-    }
-    comments.forEach(function (c) {
-      var cCard = studentCardsMap[c.user_id] || { color: "#ABC", expr: "smile" };
-      var div = document.createElement("div");
-      div.className = "comment-item";
-      div.innerHTML = 
-        '<div class="avatar-badge small">' + generateAvatarSvg(cCard.color, cCard.expr) + '</div>' +
-        '<div class="comment-content">' +
-          '<div class="comment-head">' +
-            '<span class="comment-author">' + c.author + '</span>' +
-            '<span class="comment-date">' + new Date(c.created_at).toLocaleString('ko-KR') + '</span>' +
-          '</div>' +
-          '<div class="comment-text">' + c.text + '</div>' +
-        '</div>';
-      container.appendChild(div);
-    });
-  }
+  var selectedCategory = "전체";
+
   // Kakao 지도 초기화
   function initKakaoMap() {
     if (typeof kakao === "undefined" || !kakao.maps) {
-      $("placesStatus").textContent = "카카오맵 API를 불러오는 중입니다.";
+      $("placesStatus").textContent = "카카오맵 API를 불러오는 중이거나 키 설정이 필요합니다.";
       renderPlacesList();
       return;
     }
+
     kakao.maps.load(function () {
       var container = $("placesMap");
-      var options = { center: new kakao.maps.LatLng(37.6934, 126.7451), level: 5 };
+      var options = {
+        center: new kakao.maps.LatLng(37.6934, 126.7451), // 일산/고양시 중심
+        level: 5
+      };
       map = new kakao.maps.Map(container, options);
+
+      // 지도 클릭 시 좌표 및 주소 추출
       kakao.maps.event.addListener(map, 'click', function(mouseEvent) {
         var latlng = mouseEvent.latLng;
         $("placeLat").value = latlng.getLat();
         $("placeLng").value = latlng.getLng();
         
+        // 역지오코딩
         var geocoder = new kakao.maps.services.Geocoder();
         geocoder.coord2Address(latlng.getLng(), latlng.getLat(), function(result, status) {
           if (status === kakao.maps.services.Status.OK) {
-            $("placeAddress").value = result[0].address ? result[0].address.address_name : '';
-            toast("지도의 좌표 주소가 입력되었습니다.");
+            var addr = result[0].address ? result[0].address.address_name : '';
+            $("placeAddress").value = addr;
+            toast("지도에서 선택한 위치의 주소가 입력되었습니다.");
           }
         });
       });
-      renderPlacesList();
+
+      renderMarkersAndList();
     });
   }
-  // 장소 검색
+
+  // 카카오맵 장소/주소 검색 구현
   function searchKakaoPlace() {
     var query = $("placeAddress").value.trim() || $("placeName").value.trim();
-    if (!query) { toast("검색할 장소명을 입력하세요."); return; }
-    if (!map) return;
+    if (!query) {
+      toast("검색할 장소명이나 주소를 입력해 주세요.");
+      return;
+    }
+
+    if (!map || typeof kakao === "undefined") {
+      toast("지도 서비스를 불러올 수 없습니다.");
+      return;
+    }
+
+    $("placesStatus").textContent = "'" + query + "' 위치를 검색 중입니다...";
+
     var ps = new kakao.maps.services.Places();
     ps.keywordSearch(query, function (data, status) {
       if (status === kakao.maps.services.Status.OK) {
         var first = data[0];
         var moveLatLon = new kakao.maps.LatLng(first.y, first.x);
+        
         map.setCenter(moveLatLon);
         map.setLevel(3);
+
         $("placeLat").value = first.y;
         $("placeLng").value = first.x;
         $("placeAddress").value = first.road_address_name || first.address_name;
-        if (!$("placeName").value.trim()) $("placeName").value = first.place_name;
+        if (!$("placeName").value.trim()) {
+          $("placeName").value = first.place_name;
+        }
+
         if (currentInfoWindow) currentInfoWindow.close();
         currentInfoWindow = new kakao.maps.InfoWindow({
-          content: '<div style="padding:6px 10px; font-size:12px; font-weight:700;">📍 ' + first.place_name + '</div>'
+          content: '<div class="kakao-overlay-iw">📍 ' + first.place_name + '</div>'
         });
         currentInfoWindow.open(map, new kakao.maps.Marker({ map: map, position: moveLatLon }));
-        toast("위치를 찾았습니다!");
+
+        $("placesStatus").textContent = "위치를 찾았습니다: " + first.place_name;
+        toast("장소 위치가 지도에 지정되었습니다.");
       } else {
-        toast("검색 결과가 없습니다.");
+        // 주소 검색 재시도
+        var geocoder = new kakao.maps.services.Geocoder();
+        geocoder.addressSearch(query, function (result, geoStatus) {
+          if (geoStatus === kakao.maps.services.Status.OK) {
+            var moveLatLon = new kakao.maps.LatLng(result[0].y, result[0].x);
+            map.setCenter(moveLatLon);
+            map.setLevel(3);
+            $("placeLat").value = result[0].y;
+            $("placeLng").value = result[0].x;
+            $("placesStatus").textContent = "주소 위치를 찾았습니다.";
+            toast("주소 위치가 지도에 지정되었습니다.");
+          } else {
+            $("placesStatus").textContent = "장소를 찾지 못했습니다. 정확한 명칭이나 주소를 입력해 주세요.";
+            toast("검색 결과가 없습니다.");
+          }
+        });
       }
     });
   }
-  function renderPlacesList() {
+
+  // 마커 및 좌측 장소 목록 렌더링
+  function renderMarkersAndList() {
+    // 기존 마커 제거
+    markers.forEach(function (m) { m.setMap(null); });
+    markers = [];
+
+    var filtered = savedPlacesData.filter(function (p) {
+      return selectedCategory === "전체" || p.category === selectedCategory;
+    });
+
+    renderPlacesList(filtered);
+
+    if (!map) return;
+
+    filtered.forEach(function (place) {
+      if (!place.lat || !place.lng) return;
+      var pos = new kakao.maps.LatLng(place.lat, place.lng);
+      var marker = new kakao.maps.Marker({
+        map: map,
+        position: pos,
+        title: place.name
+      });
+
+      kakao.maps.event.addListener(marker, 'click', function () {
+        if (currentInfoWindow) currentInfoWindow.close();
+        currentInfoWindow = new kakao.maps.InfoWindow({
+          content: '<div class="kakao-overlay-iw"><b>[' + place.category + ']</b> ' + place.name + '</div>'
+        });
+        currentInfoWindow.open(map, marker);
+      });
+
+      markers.push(marker);
+    });
+  }
+
+  // 왼쪽 영역 장소 목록 출력
+  function renderPlacesList(list) {
     var container = $("savedPlaces");
     container.innerHTML = "";
-    savedPlacesData.forEach(function (item) {
+
+    var targetList = list || savedPlacesData;
+
+    if (targetList.length === 0) {
+      container.innerHTML = '<p style="font-size:13px; color:#888; padding:12px;">등록된 장소가 없습니다.</p>';
+      return;
+    }
+
+    targetList.forEach(function (item) {
       var div = document.createElement("div");
       div.className = "saved-place";
       div.innerHTML = 
         '<strong>[' + item.category + '] ' + item.name + '</strong>' +
-        '<div style="font-size:12.5px; color:#555;">📍 ' + item.address + '</div>' +
-        (item.memo ? '<div style="font-size:12.5px; margin-top:4px;">' + item.memo + '</div>' : '');
+        '<div class="place-address">📍 ' + item.address + '</div>' +
+        '<div class="place-author">작성자: ' + (item.author || '익명') + '</div>' +
+        (item.memo ? '<div class="place-memo">' + item.memo + '</div>' : '') +
+        '<div class="place-actions">' +
+          '<a href="https://map.kakao.com/link/search/' + encodeURIComponent(item.name) + '" target="_blank">카카오맵 바로가기 ↗</a>' +
+        '</div>';
+
+      div.onclick = function () {
+        if (map && item.lat && item.lng) {
+          var moveLatLon = new kakao.maps.LatLng(item.lat, item.lng);
+          map.setCenter(moveLatLon);
+          map.setLevel(3);
+          toast(item.name + " 위치로 이동했습니다.");
+        }
+      };
+
       container.appendChild(div);
     });
   }
-  // 이벤트 연결
+
+  // 이벤트 바인딩
   window.onload = function () {
-    updateMyProfileUI();
-    // 메뉴 이동
-    $("goBoardNav").onclick = function() { renderBoardFeed(); showView("boardView"); };
-    $("boardBack").onclick = function() { showView("mainView"); };
-    $("btnDetailBack").onclick = function() { showView("boardView"); };
-    
-    $("goPlacesNav").onclick = function() { showView("placesView"); initKakaoMap(); };
-    $("placesBack").onclick = function() { showView("mainView"); };
-    $("makeCardBtn").onclick = function() { showView("studentCardModal"); };
-    $("closeCardBtn").onclick = function() { showView("mainView"); };
-    // 글쓰기 폼 제어
-    $("btnOpenWrite").onclick = function() { $("postWriteForm").hidden = false; };
-    $("btnCancelWrite").onclick = function() { $("postWriteForm").hidden = true; };
-    $("postWriteForm").onsubmit = function(e) {
-      e.preventDefault();
-      var title = $("postTitle").value.trim();
-      var content = $("postContent").value.trim();
-      var myCard = studentCardsMap[currentUserId];
-      var newPost = {
-        id: Date.now(),
-        user_id: currentUserId,
-        author: myCard.name,
-        title: title,
-        content: content,
-        created_at: new Date().toISOString(),
-        comments: []
-      };
-      postsData.unshift(newPost);
-      $("postTitle").value = "";
-      $("postContent").value = "";
-      $("postWriteForm").hidden = true;
-      renderBoardFeed();
-      toast("수다글이 작성되었습니다!");
+    $("goPlaces").onclick = function () {
+      initKakaoMap();
     };
-    // 댓글 등록
-    $("commentForm").onsubmit = function(e) {
-      e.preventDefault();
-      var text = $("commentInput").value.trim();
-      if (!text || !activePostId) return;
-      var post = postsData.find(function(p) { return p.id === activePostId; });
-      if (post) {
-        var myCard = studentCardsMap[currentUserId];
-        post.comments.push({
-          id: Date.now(),
-          user_id: currentUserId,
-          author: myCard.name,
-          text: text,
-          created_at: new Date().toISOString()
-        });
-        $("commentInput").value = "";
-        renderComments(post.comments);
-        toast("댓글이 작성되었습니다.");
-      }
-    };
-    // 학생증 아바타 저장
-    $("avatarCustomForm").onsubmit = function(e) {
-      e.preventDefault();
-      studentCardsMap[currentUserId].color = $("avatarColorSelect").value;
-      studentCardsMap[currentUserId].expr = $("avatarExpression").value;
-      updateMyProfileUI();
-      toast("학생증 캐릭터 프로필이 업데이트되었습니다!");
-    };
+
     $("btnSearchKakao").onclick = searchKakaoPlace;
+
+    // 카테고리 탭 변경
+    var tabs = document.querySelectorAll("#placesTabs button");
+    tabs.forEach(function (btn) {
+      btn.onclick = function () {
+        tabs.forEach(function (b) { b.classList.remove("active"); });
+        btn.classList.add("active");
+        selectedCategory = btn.getAttribute("data-category");
+        renderMarkersAndList();
+      };
+    });
+
+    // 장소 저장 폼
+    $("placeSaveForm").onsubmit = function (e) {
+      e.preventDefault();
+      var name = $("placeName").value.trim();
+      var category = $("placeCategory").value;
+      var address = $("placeAddress").value.trim();
+      var memo = $("placeMemo").value.trim();
+      var lat = parseFloat($("placeLat").value) || 37.6934;
+      var lng = parseFloat($("placeLng").value) || 126.7451;
+
+      var newPlace = {
+        id: Date.now(),
+        name: name,
+        category: category,
+        address: address,
+        memo: memo,
+        lat: lat,
+        lng: lng,
+        author: "드립회원"
+      };
+
+      savedPlacesData.unshift(newPlace);
+      renderMarkersAndList();
+      
+      $("placeName").value = "";
+      $("placeAddress").value = "";
+      $("placeMemo").value = "";
+      $("placeLat").value = "";
+      $("placeLng").value = "";
+
+      toast("장소가 정상적으로 공유 및 저장되었습니다!");
+    };
+
+    // 초기 실행
+    initKakaoMap();
   };
 })();
 </script>
