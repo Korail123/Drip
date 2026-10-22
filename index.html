@@ -239,6 +239,8 @@
   @keyframes shake { 0%,100%{transform:translateX(0)} 20%,60%{transform:translateX(-6px)} 40%,80%{transform:translateX(6px)} }
   .wg-tile { position:relative; aspect-ratio:1; border:2.5px solid var(--ink); border-radius:12px; background:#fff; display:grid; place-items:center; font-family:var(--font-display); font-size:clamp(22px,7vw,32px); line-height:1; box-shadow:2px 2px 0 var(--ink); transition:background-color .2s, transform .1s; }
   .wg-tile.filled { background:#FFF9DD; transform:scale(1.02); }
+  input.wg-tile { width:100%; min-width:0; padding:0; text-align:center; outline:none; color:var(--ink); font-family:var(--font-display); }
+  input.wg-tile:focus { border-color:var(--teal); box-shadow:0 0 0 3px var(--butter-bg),2px 2px 0 var(--ink); }
   .wg-tile.correct { background:var(--teal); color:#fff; } .wg-tile.present { background:var(--gold); color:#fff; } .wg-tile.absent { background:#C8D2E4; color:var(--slate-ink); }
   .wg-preview { min-height:24px; text-align:center; color:var(--muted); font-weight:700; font-size:14px; margin-bottom:6px; }
   .wg-input-form { display:flex; gap:8px; margin:10px 0; }
@@ -598,7 +600,7 @@
 
   <section id="wordGame" hidden aria-label="단어 맞추기">
     <div class="head">
-      <div class="head-main"><span class="pill-live"><span class="dot"></span>무제한 도전</span><h2 class="title">오늘의 단어</h2><p class="sub">휴대폰 키보드로 한글 단어를 입력해 맞혀보세요.</p></div>
+      <div class="head-main"><span class="pill-live"><span class="dot"></span>무제한 도전</span><h2 class="title">오늘의 단어</h2><p class="sub">아래 칸을 눌러 한글 단어를 입력하세요. 입력 후 키보드의 완료/Enter를 누르세요.</p></div>
       <button class="btn small" id="wordBack" type="button">← 미니게임</button>
     </div>
     <div class="card wg">
@@ -606,10 +608,9 @@
         <span class="wg-date" id="wgDate">오늘의 단어 (5칸)</span>
         <div style="display:flex;align-items:center;gap:8px;"><span class="wg-hint" id="wgHint">힌트</span></div>
       </div>
-      <div class="wg-desc-bar">💡 한글 단어를 입력하고 제출하세요. 한 판이 끝나도 바로 새 게임을 시작할 수 있어요. (최대 6회)</div>
+      <div class="wg-desc-bar">💡 칸을 눌러 단어를 입력하고 키보드의 완료/Enter로 제출하세요. (최대 6회)</div>
       <div id="wgBoard" class="wg-board"></div>
       <div id="wgPreview" class="wg-preview" aria-live="polite"></div>
-      <form id="wgInputForm" class="wg-input-form"><input id="wgWordInput" class="wg-word-input" type="text" inputmode="text" lang="ko" autocomplete="off" autocapitalize="off" enterkeyhint="done" maxlength="8" placeholder="한글 단어 입력" aria-label="맞힐 단어"><button class="btn coral" id="wgSubmit" type="submit">제출</button></form>
       <button class="btn small" id="wgNewGame" type="button" style="margin-top:10px">↻ 새 단어로 다시 하기</button>
       <div id="wgResult" class="wg-result" hidden></div>
     </div>
@@ -656,11 +657,55 @@
 
   /* ---------------- 화면 전환 ---------------- */
   var views = { main: $("mainView"), board: $("boardView"), rank: $("rankView"), hub: $("gameHub"), word: $("wordGame"), notice: $("noticeView"), studentId: $("studentIdView"), fortune: $("fortuneView"), places: $("placesView") };
-  function showView(target) {
+  var currentAppView = "main";
+  var handlingBrowserBack = false;
+  try { history.replaceState({ dripcollegeApp: true, view: "main" }, "", location.href); } catch (_historyInitError) {}
+  function renderView(target) {
+    if (!views[target]) target = "main";
+    currentAppView = target;
     Object.keys(views).forEach(function (k) { views[k].hidden = (k !== target); });
     $("signupView").hidden = true;
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
+  function showView(target, options) {
+    options = options || {};
+    if (!views[target]) target = "main";
+    if (!options.fromPop && !handlingBrowserBack) {
+      try { history.pushState({ dripcollegeApp: true, view: target }, "", location.href); } catch (_historyPushError) {}
+    }
+    renderView(target);
+  }
+  // 브라우저/안드로이드 뒤로가기는 앱 내부의 직전 화면으로 이동합니다.
+  // 메인 화면에서는 웹페이지가 휴대폰을 직접 최소화할 수 없으므로, 네이티브 앱 브리지가 있을 때만 요청합니다.
+  window.addEventListener("popstate", function (event) {
+    if (event.state && event.state.dripcollegeApp && event.state.screen === "signup") {
+      handlingBrowserBack = true; showSignup({ fromPop: true }); handlingBrowserBack = false;
+      return;
+    }
+    if (event.state && event.state.dripcollegeApp && event.state.screen === "login") {
+      handlingBrowserBack = true; showLogin({ fromPop: true }); handlingBrowserBack = false;
+      return;
+    }
+    var target = event.state && event.state.dripcollegeApp && views[event.state.view] ? event.state.view : "main";
+    if (currentAppView === "main" && target === "main") {
+      try {
+        if (window.Android && typeof window.Android.minimizeApp === "function") {
+          window.Android.minimizeApp();
+        } else if (window.NativeApp && typeof window.NativeApp.minimize === "function") {
+          window.NativeApp.minimize();
+        } else {
+          toast("메인 화면입니다. 휴대폰 홈 제스처 또는 홈 버튼으로 최소화해 주세요.");
+        }
+      } catch (_minimizeError) {
+        toast("메인 화면입니다. 휴대폰 홈 제스처 또는 홈 버튼으로 최소화해 주세요.");
+      }
+      try { history.pushState({ dripcollegeApp: true, view: "main" }, "", location.href); } catch (_historyRootError) {}
+      return;
+    }
+    handlingBrowserBack = true;
+    renderView(target);
+    handlingBrowserBack = false;
+  });
   $("goBoard").addEventListener("click", function () { showView("board"); selectedPostId = null; loadCommunity(); });
   $("boardBack").onclick = function () { showView("main"); };
   $("goRank").onclick = function () { showView("rank"); renderRankings("daily"); };
@@ -827,7 +872,7 @@
     var wordObj = { word: base.word, hint: base.hint, jamo: splitHangulWord(base.word) };
     return { version: 2, key: "wg_round_" + Date.now() + "_" + Math.random().toString(36).slice(2,8), wordObj: wordObj };
   }
-  var curState = { periodKey: "", wordObj: null, guesses: [], currentInput: [], status: "PLAYING", keyColors: {} };
+  var curState = { periodKey: "", wordObj: null, guesses: [], currentInput: [], currentRaw: "", status: "PLAYING", keyColors: {} };
   function initWordGame(newRound) {
     var active = null;
     if (!newRound) { try { active = JSON.parse(store("wg_active_round") || "null"); } catch(e) {} }
@@ -837,14 +882,31 @@
     if (saved) { try { var o=JSON.parse(saved); curState.guesses=o.guesses||[]; curState.status=o.status||"PLAYING"; curState.keyColors=o.keyColors||{}; } catch(e) {} }
     curState.currentInput=[]; $("wgDate").textContent="새 단어 도전"; $("wgHint").textContent="힌트: "+curState.wordObj.hint;
     renderBoard(); renderResult(); renderStats();
-    $("wgWordInput").value=""; $("wgWordInput").disabled=curState.status!=="PLAYING"; $("wgSubmit").disabled=curState.status!=="PLAYING";
+    curState.currentRaw="";
     if (curState.status !== "PLAYING") syncWordResult(); else renderWordRanking();
   }
   function updateHubState() { var badge=$("wordState"); badge.textContent="언제든 도전"; badge.className="game-state"; }
   function renderBoard() {
     var board=$("wgBoard"); board.innerHTML=""; var target=splitHangulWord(curState.wordObj.word), cols=target.length;
     for(var r=0;r<6;r++) { var rowEl=el("div","wg-row"), guess=curState.guesses[r]; rowEl.style.gridTemplateColumns="repeat("+cols+",minmax(0,1fr))";
-      for(var c=0;c<cols;c++){var tile=el("div","wg-tile"); if(guess){tile.textContent=guess.input[c]||"";tile.classList.add(guess.result[c]||"absent");} rowEl.appendChild(tile);} board.appendChild(rowEl);
+      for(var c=0;c<cols;c++){
+        var tile;
+        if(!guess && r===curState.guesses.length && curState.status==="PLAYING") {
+          tile=document.createElement("input"); tile.type="text"; tile.className="wg-tile wg-entry"; tile.inputMode="text"; tile.lang="ko"; tile.autocomplete="off"; tile.autocapitalize="off"; tile.enterKeyHint="done"; tile.maxLength=8; tile.setAttribute("aria-label", "단어 입력 칸 "+(c+1));
+          tile.value=(c===0 ? (curState.currentRaw||"") : "");
+          tile.addEventListener("input",function(){
+            curState.currentRaw=this.value;
+            var j=splitHangulWord(curState.currentRaw), cells=board.querySelectorAll(".wg-entry"), activeIndex=Array.prototype.indexOf.call(cells,this);
+            cells.forEach(function(cell,i){cell.value=j[i]||"";});
+            this.value=j[activeIndex]||"";
+          });
+          tile.addEventListener("keydown",function(e){if(e.key==="Enter"){e.preventDefault();submitGuess();}});
+        } else {
+          tile=el("div","wg-tile"); if(guess){tile.textContent=guess.input[c]||"";tile.classList.add(guess.result[c]||"absent");}
+        }
+        rowEl.appendChild(tile);
+      }
+      board.appendChild(rowEl);
     }
     $("wgPreview").textContent="";
   }
@@ -855,7 +917,7 @@
   }
   function submitGuess() {
     if(curState.status!=="PLAYING") return;
-    var inputText=$("wgWordInput").value.trim().replace(/\s/g, ""), input=splitHangulWord(inputText), target=splitHangulWord(curState.wordObj.word);
+    var inputText=String(curState.currentRaw||"").trim().replace(/\s/g, ""), input=splitHangulWord(inputText), target=splitHangulWord(curState.wordObj.word);
     if(!inputText || input.length!==target.length){toast("정답과 같은 길이의 한글 단어를 입력해 주세요.");return;}
     var result=target.map(function(ch,i){return input[i]===ch?"correct":"absent";}), remaining=target.slice();
     for(var i=0;i<target.length;i++) if(result[i]==="correct") remaining[i]=null;
@@ -863,14 +925,13 @@
     curState.guesses.push({input:input,result:result});
     if(result.every(function(r){return r==="correct";})){curState.status="WON";saveStat(true);} else if(curState.guesses.length>=6){curState.status="LOST";saveStat(false);}
     store(curState.periodKey,JSON.stringify({guesses:curState.guesses,status:curState.status,keyColors:curState.keyColors}));
-    $("wgWordInput").value=""; $("wgWordInput").disabled=curState.status!=="PLAYING"; $("wgSubmit").disabled=curState.status!=="PLAYING";
+    curState.currentRaw="";
     if(curState.status!=="PLAYING") syncWordResult(); renderBoard(); renderResult(); renderStats();
   }
-  $("wgInputForm").addEventListener("submit",function(e){e.preventDefault();submitGuess();});
-  $("wgNewGame").addEventListener("click",function(){initWordGame(true);$("wgWordInput").focus();});
+  $("wgNewGame").addEventListener("click",function(){initWordGame(true);var first=$("wgBoard").querySelector(".wg-entry");if(first)first.focus();});
   window.addEventListener("keydown", function(e) {
     if(views.word.hidden || curState.status!=="PLAYING") return;
-    if(e.key==="Enter" && document.activeElement!==$("wgWordInput")){e.preventDefault();submitGuess();}
+    if(e.key==="Enter"){e.preventDefault();submitGuess();}
   });
 
   function renderResult() {
@@ -940,13 +1001,15 @@
   }
   try { $("rememberLogin").checked = localStorage.getItem(REMEMBER_KEY) !== "0"; } catch (_e) {}
 
-  function showLogin() {
+  function showLogin(options) {
+    options = options || {};
+    if (!options.fromPop) { try { history.pushState({ dripcollegeApp: true, screen: "login", view: "main" }, "", location.href); } catch (_e) {} }
     document.body.classList.remove("signed-in");
     Object.keys(views).forEach(function (k) { views[k].hidden = (k !== "main"); });
     signupView.hidden = true; loginCard.hidden = false; mainNav.hidden = true; authTopline.hidden = true; $("homeStudentCard").hidden = true;
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
-  function showSignup() { mainView.hidden = true; signupView.hidden = false; status("signupStatus", "", ""); window.scrollTo({ top: 0, behavior: "smooth" }); }
+  function showSignup(options) { options = options || {}; if (!options.fromPop) { try { history.pushState({ dripcollegeApp: true, screen: "signup", view: "main" }, "", location.href); } catch (_e) {} } mainView.hidden = true; signupView.hidden = false; status("signupStatus", "", ""); window.scrollTo({ top: 0, behavior: "smooth" }); }
   function showSignedIn(nick) {
     document.body.classList.add("signed-in");
     signupView.hidden = true; mainView.hidden = false; loginCard.hidden = true; mainNav.hidden = false; authTopline.hidden = false; $("homeStudentCard").hidden = true;
