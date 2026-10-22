@@ -60,8 +60,9 @@
   .bubble { animation: float 3.2s ease-in-out infinite; }
   @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
   /* 봉춸이 메인 캐릭터 */
-  .bongchul-hero { width: min(100%, 720px); margin: 0 auto; text-align: center; }
-  .bongchul-hero img { display: block; width: 100%; height: auto; max-height: 650px; object-fit: contain; margin: 0 auto; animation: bongchul-greet 1.8s ease-in-out infinite; transform-origin: 50% 85%; }
+  .bongchul-hero { width: min(100%, 280px); margin: 0 auto; text-align: center; }
+  body.signed-in .bongchul-hero { display:none !important; }
+  .bongchul-hero img { display: block; width: 100%; height: auto; max-height: 230px; object-fit: contain; margin: 0 auto; animation: bongchul-greet 1.8s ease-in-out infinite; transform-origin: 50% 85%; }
   @keyframes bongchul-greet { 0%, 100% { transform: translateY(0) rotate(-0.5deg); } 50% { transform: translateY(-5px) rotate(0.5deg); } }
 
 
@@ -87,6 +88,19 @@
   #signupView { max-width:720px; margin:0 auto; }
   @media(max-width:520px){ .auth-card{padding:17px;border-radius:18px}.auth-card h2{font-size:25px}.rainbow-title text{stroke-width:9px} }
 
+  /* 드립대학 대시보드 및 Supabase 게시판 */
+  .dashboard-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px;margin:22px auto 34px;max-width:900px}
+  .dashboard-grid .nav-btn{min-height:88px;font-size:17px;border-radius:18px;box-shadow:4px 4px 0 var(--ink);}
+  .community-panel{max-width:900px;margin:0 auto 28px}
+  .community-post{background:#fff;border:2px solid var(--ink);border-radius:16px;padding:16px;margin:12px 0;box-shadow:3px 3px 0 var(--ink)}
+  .community-post h3{margin:0 0 8px;overflow-wrap:anywhere}.community-meta{font-size:12px;color:var(--muted);margin-bottom:10px}
+  .community-body{white-space:pre-wrap;overflow-wrap:anywhere;margin:10px 0 14px}
+  .community-actions{display:flex;flex-wrap:wrap;gap:8px}.community-actions button,.community-form button{border:2px solid var(--ink);border-radius:9px;padding:7px 11px;font-weight:800;background:#fff}
+  .community-form{display:grid;gap:9px;background:#fff;border:2px solid var(--ink);border-radius:14px;padding:14px;margin:12px 0}
+  .community-form input,.community-form textarea{width:100%;border:2px solid var(--ink);border-radius:9px;padding:10px;background:#fffdf8}
+  .community-form textarea{min-height:110px;resize:vertical}.comment-list{border-top:1px dashed #aaa;margin-top:12px;padding-top:10px}.comment-item{padding:8px 0;border-bottom:1px solid #eee;white-space:pre-wrap;overflow-wrap:anywhere}
+  .community-status{font-size:13px;color:#b4233a;font-weight:700;min-height:1.3em}
+  body.signed-in #mainView .bongchul-hero{display:none}
   /* ---------- main navigation buttons ---------- */
   .nav-grid {
     display: grid;
@@ -337,10 +351,13 @@
 
     <!-- 메인 기능 버튼 4개 -->
     <nav id="mainNav" class="nav-grid" aria-label="메인 메뉴" hidden>
-      <button class="nav-btn coral" id="goBoard" type="button"><span class="ic" data-ic="pen"></span>수다 게시판 가기</button>
-      <button class="nav-btn butter" id="goRank" type="button">🏆 채팅 순위 보기</button>
-      <button class="nav-btn mint" id="goGames" type="button">🎮 미니게임</button>
-      <a class="nav-btn kakao" href="https://open.kakao.com/o/g5EaOGti" target="_blank" rel="noopener noreferrer">💬 오픈채팅방 입장</a>
+      <button class="nav-btn coral" id="goNotice" type="button">📢 공지사항</button>
+      <button class="nav-btn butter" id="goBoard" type="button">💬 수다게시판</button>
+      <button class="nav-btn mint" id="goStudentId" type="button">🪪 학생증 만들기</button>
+      <button class="nav-btn coral" id="goGames" type="button">🎮 미니게임</button>
+      <button class="nav-btn butter" id="goFortune" type="button">🔮 오늘의 사주</button>
+      <button class="nav-btn mint" id="goRank" type="button">🏆 채팅순위 보기</button>
+      <button class="nav-btn coral" id="goPlaces" type="button">☕ 맛집/카페 보기</button>
     </nav>
   </main>
 
@@ -359,41 +376,20 @@
     </div>
   </section>
 
-  <!-- ===== 수다 게시판 뷰 ===== -->
-  <section id="boardView" hidden aria-labelledby="boardHead">
-    <div class="head">
-      <div class="head-main">
-        <span class="pill-live"><span class="dot"></span>실시간 피드</span>
-        <h2 class="title" id="boardHead"><span class="ic" data-ic="bubbleBig"></span>수다학과 드립 게시판</h2>
-        <p class="sub">오늘 직장에서 있었던 황당한 일, 재치있는 드립을 나누세요.</p>
-      </div>
-      <div style="display:flex; gap:8px;">
-        <button class="btn small" id="boardBack" type="button">← 메인으로</button>
-        <button class="btn small coral" id="openComposer" type="button"><span class="ic" data-ic="pen"></span>드립 작성</button>
-      </div>
-    </div>
-
-    <form id="composer" class="card composer" hidden autocomplete="off">
-      <h3>새 드립 올리기</h3>
-      <div class="field-row">
-        <div class="grow"><label for="fNick" class="count">닉네임</label>
-          <input class="in" id="fNick" maxlength="12" placeholder="예: 월급은거들뿐" required></div>
-        <div class="grow"><label for="fDept" class="count">학과</label>
-          <select class="in" id="fDept"></select></div>
-      </div>
-      <label for="fText" class="count">내용</label>
-      <textarea class="in" id="fText" maxlength="300" placeholder="오늘 직장에서 있었던 황당한 일이나 한 줄 드립을 적어 보세요." required></textarea>
-      <div class="row-between">
-        <span class="count" id="fCount">0 / 300</span>
-        <span style="display:flex; gap:10px;">
-          <button class="btn small" type="button" id="cancelComposer">취소</button>
-          <button class="btn small coral" type="submit" id="submitPost">올리기</button>
-        </span>
-      </div>
-    </form>
-
-    <div id="feed" aria-live="polite"></div>
+  <!-- ===== Supabase 수다게시판 ===== -->
+  <section id="boardView" hidden aria-labelledby="boardHead" class="community-panel">
+    <div class="head"><div class="head-main"><span class="pill-live"><span class="dot"></span>실시간 게시판</span><h2 class="title" id="boardHead">💬 수다게시판</h2><p class="sub">게시물과 댓글은 Supabase에 저장됩니다.</p></div><div style="display:flex;gap:8px"><button class="btn small" id="boardBack" type="button">← 메인으로</button><button class="btn small coral" id="newCommunityPost" type="button">글 작성</button></div></div>
+    <form id="communityComposer" class="community-form" hidden><h3 id="communityFormTitle">새 글 작성</h3><input id="communityTitle" maxlength="120" placeholder="제목" required><textarea id="communityContent" maxlength="10000" placeholder="내용을 입력해 주세요." required></textarea><div class="community-actions"><button type="submit">저장</button><button type="button" id="cancelCommunityPost">취소</button></div><div id="communityPostStatus" class="community-status"></div></form>
+    <div id="communityFeed" aria-live="polite"></div><div id="communityStatus" class="community-status"></div>
   </section>
+
+  <section id="noticeView" hidden class="community-panel"><div class="head"><div class="head-main"><h2 class="title">📢 공지사항</h2><p class="sub">관리자 공지사항</p></div><button class="btn small" id="noticeBack">← 메인으로</button></div><div class="community-post">공지사항 게시판은 Supabase 테이블 연결 후 이용할 수 있습니다.</div></section>
+  <section id="studentIdView" hidden class="community-panel"><div class="head"><h2 class="title">🪪 학생증 만들기</h2><button class="btn small" data-home>← 메인으로</button></div><div class="community-post"><label>학생 닉네임 <input id="studentIdNick" maxlength="24"></label><p id="studentIdPreview"></p><button class="btn small" id="makeStudentId">학생증 미리보기</button></div></section>
+  <section id="fortuneView" hidden class="community-panel"><div class="head"><h2 class="title">🔮 오늘의 사주</h2><button class="btn small" data-home>← 메인으로</button></div><div class="community-post"><p>오늘의 운세를 가볍게 확인해 보세요.</p><button class="btn small" id="fortuneButton">오늘의 운세 보기</button><p id="fortuneResult"></p></div></section>
+  <section id="placesView" hidden class="community-panel"><div class="head"><h2 class="title">☕ 맛집/카페 보기</h2><button class="btn small" data-home>← 메인으로</button></div><div class="community-post">지역별 맛집과 카페 기능은 지도/장소 검색 연동이 필요합니다. 추후 지역 검색을 연결할 수 있도록 메뉴를 마련했습니다.</div></section>
+
+  <!-- 구형 게시판 스크립트 호환용 숨김 요소 (실제 게시판 데이터는 Supabase 사용) -->
+  <div hidden aria-hidden="true"><button id="openComposer" type="button"></button><form id="composer"><input id="fNick"><select id="fDept"></select><textarea id="fText"></textarea><span id="fCount"></span><button id="cancelComposer" type="button"></button><button id="submitPost" type="submit"></button></form><div id="feed"></div></div>
 
   <!-- ===== 채팅 순위 뷰 ===== -->
   <section id="rankView" hidden aria-labelledby="rankHead">
@@ -552,7 +548,11 @@
     board: $("#boardView"),
     rank: $("#rankView"),
     hub: $("#gameHub"),
-    word: $("#wordGame")
+    word: $("#wordGame"),
+    notice: $("#noticeView"),
+    studentId: $("#studentIdView"),
+    fortune: $("#fortuneView"),
+    places: $("#placesView")
   };
   
   function showView(target) {
@@ -1051,6 +1051,15 @@
   });
 
 })();
+  $("#goNotice").onclick=function(){showView("notice");};
+  $("#noticeBack").onclick=function(){showView("main");};
+  $("#goStudentId").onclick=function(){showView("studentId");};
+  $("#goFortune").onclick=function(){showView("fortune");};
+  $("#goPlaces").onclick=function(){showView("places");};
+  document.querySelectorAll("[data-home]").forEach(function(b){b.onclick=function(){showView("main");};});
+  $("#makeStudentId").onclick=function(){var n=$("#studentIdNick").value.trim();$("#studentIdPreview").textContent=n?"🎓 2030 직장인 드립대학 | "+n+" 학생":"닉네임을 입력해 주세요.";};
+  $("#fortuneButton").onclick=function(){var fortunes=["작은 드립 하나가 분위기를 바꿉니다.","오늘은 칼퇴를 향해 차근차근 전진하세요.","뜻밖의 간식과 좋은 대화가 기다립니다.","말은 짧게, 센스는 길게!","커피 한 잔이 행운의 시작입니다."];$("#fortuneResult").textContent=fortunes[Math.floor(Math.random()*fortunes.length)];};
+
 </script>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -1088,9 +1097,9 @@
     if(!remember){ try { const old=localStorage.getItem("sb-"+new URL(SUPABASE_URL).hostname.split(".")[0]+"-auth-token"); if(old) sessionStorage.setItem("sb-"+new URL(SUPABASE_URL).hostname.split(".")[0]+"-auth-token",old); } catch(_e) {} }
   }
   try { $("rememberLogin").checked = localStorage.getItem(REMEMBER_KEY) !== "0"; } catch(_e) {}
-  function showLogin(){ signupView.hidden=true; mainView.hidden=false; loginCard.hidden=false; mainNav.hidden=true; authTopline.hidden=true; window.scrollTo({top:0,behavior:"smooth"}); }
+  function showLogin(){ document.body.classList.remove("signed-in"); signupView.hidden=true; mainView.hidden=false; loginCard.hidden=false; mainNav.hidden=true; authTopline.hidden=true; window.scrollTo({top:0,behavior:"smooth"}); }
   function showSignup(){ mainView.hidden=true; signupView.hidden=false; status("signupStatus", "", ""); window.scrollTo({top:0,behavior:"smooth"}); }
-  function showSignedIn(nick){ signupView.hidden=true; mainView.hidden=false; loginCard.hidden=true; mainNav.hidden=false; authTopline.hidden=false; $("signedInLabel").textContent=nick+" 님, 환영합니다!"; window.scrollTo({top:0,behavior:"smooth"}); }
+  function showSignedIn(nick){ document.body.classList.add("signed-in"); signupView.hidden=true; mainView.hidden=false; loginCard.hidden=true; mainNav.hidden=false; authTopline.hidden=false; $("signedInLabel").textContent=nick+" 님, 환영합니다!"; window.scrollTo({top:0,behavior:"smooth"}); }
   function ready(){ if(!supabase){ status("loginStatus","Supabase 초기화에 실패했습니다. CDN 로딩, 프로젝트 URL, 공개 API 키를 확인해 주세요.","error"); return false; } return true; }
   $("openSignup").addEventListener("click", showSignup);
   $("backToLogin").addEventListener("click", showLogin);
@@ -1152,9 +1161,37 @@
       if(event==="SIGNED_OUT" || !session){ showLogin(); }
     });
   } else {
-    // 설정 전에도 화면 디자인은 미리 확인할 수 있습니다.
     status("loginStatus","Supabase 클라이언트 초기화에 실패했습니다. 인터넷 연결과 Supabase 설정을 확인해 주세요.","");
   }
+  // Supabase 기반 게시물/댓글
+  let editingPostId=null;
+  const boardStatus=(id,msg)=>{const n=$(id);if(n)n.textContent=msg||"";};
+  function escapeHtml(v){return String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
+  function isAdmin(){return !!(supabase && window.__dripCurrentUser && window.__dripCurrentUser.email===window.__dripAdminEmail);}
+  async function loadCommunity(){
+    if(!supabase)return;
+    const feed=$("communityFeed");feed.innerHTML="";boardStatus("communityStatus","게시글을 불러오는 중…");
+    const {data:posts,error}=await supabase.from("community_posts").select("id,title,content,author_id,author_nickname,created_at,updated_at,community_comments(id,content,author_id,author_nickname,created_at)").order("created_at",{ascending:false});
+    if(error){boardStatus("communityStatus","게시판 테이블 또는 RLS 설정을 확인해 주세요: "+error.message);return;}
+    boardStatus("communityStatus",posts.length?"":"아직 게시물이 없습니다. 첫 글을 작성해 보세요.");
+    const {data:{user}}=await supabase.auth.getUser();
+    for(const p of posts){
+      const own=user&&user.id===p.author_id, admin=window.__dripIsAdmin===true;
+      const card=document.createElement("article");card.className="community-post";
+      card.innerHTML=`<h3>${escapeHtml(p.title)}</h3><div class="community-meta">${escapeHtml(p.author_nickname)} · ${new Date(p.created_at).toLocaleString("ko-KR")}</div><div class="community-body">${escapeHtml(p.content)}</div><div class="community-actions">${own?'<button data-edit>수정</button>':''}${own||admin?'<button data-delete>삭제</button>':''}</div><div class="comment-list"><strong>댓글 ${p.community_comments.length}개</strong><div class="comments"></div><form class="community-form comment-form"><textarea maxlength="2000" placeholder="댓글을 입력해 주세요." required></textarea><button type="submit">댓글 작성</button><div class="community-status"></div></form></div>`;
+      const comments=card.querySelector(".comments");
+      p.community_comments.sort((a,b)=>new Date(a.created_at)-new Date(b.created_at)).forEach(c=>{const row=document.createElement("div");row.className="comment-item";row.innerHTML=`<strong>${escapeHtml(c.author_nickname)}</strong> · ${escapeHtml(c.content)} ${(user&&user.id===c.author_id)||admin?'<button data-comment-delete>삭제</button>':''}`;const del=row.querySelector("[data-comment-delete]");if(del)del.onclick=async()=>{const {error}=await supabase.from("community_comments").delete().eq("id",c.id);if(error)alert("댓글 삭제 실패: "+error.message);else loadCommunity();};comments.appendChild(row);});
+      const edit=card.querySelector("[data-edit]");if(edit)edit.onclick=()=>{editingPostId=p.id;$("communityTitle").value=p.title;$("communityContent").value=p.content;$("communityFormTitle").textContent="게시물 수정";$("communityComposer").hidden=false;window.scrollTo({top:0,behavior:"smooth"});};
+      const del=card.querySelector("[data-delete]");if(del)del.onclick=async()=>{if(!confirm("이 게시물을 삭제할까요? 댓글도 함께 삭제됩니다."))return;const {error}=await supabase.from("community_posts").delete().eq("id",p.id);if(error)alert("게시물 삭제 실패: "+error.message);else loadCommunity();};
+      card.querySelector(".comment-form").onsubmit=async e=>{e.preventDefault();const content=e.currentTarget.querySelector("textarea").value.trim();const {data:{user}}=await supabase.auth.getUser();if(!user){alert("로그인이 필요합니다.");return;}const nick=user.user_metadata?.nickname||"회원";const {error}=await supabase.from("community_comments").insert({post_id:p.id,content,author_id:user.id,author_nickname:nick});if(error)alert("댓글 작성 실패: "+error.message);else loadCommunity();};
+      feed.appendChild(card);
+    }
+  }
+  $("goBoard").addEventListener("click",()=>{setTimeout(loadCommunity,0);});
+  $("newCommunityPost").onclick=()=>{editingPostId=null;$("communityTitle").value="";$("communityContent").value="";$("communityFormTitle").textContent="새 글 작성";$("communityComposer").hidden=false;};
+  $("cancelCommunityPost").onclick=()=>{$("communityComposer").hidden=true;editingPostId=null;};
+  $("communityComposer").onsubmit=async e=>{e.preventDefault();if(!supabase)return;const {data:{user}}=await supabase.auth.getUser();if(!user){boardStatus("communityPostStatus","로그인이 필요합니다.");return;}const title=$("communityTitle").value.trim(),content=$("communityContent").value.trim(),nickname=user.user_metadata?.nickname||"회원";let result;if(editingPostId)result=await supabase.from("community_posts").update({title,content,updated_at:new Date().toISOString()}).eq("id",editingPostId);else result=await supabase.from("community_posts").insert({title,content,author_id:user.id,author_nickname:nickname});if(result.error){boardStatus("communityPostStatus","저장 실패: "+result.error.message);return;}$("communityComposer").hidden=true;editingPostId=null;loadCommunity();};
+  supabase?.auth.onAuthStateChange((_event,session)=>{window.__dripCurrentUser=session?.user||null;window.__dripAdminEmail="u"+"";window.__dripIsAdmin=(session?.user?.user_metadata?.nickname||"").toLowerCase()==="딸버맨";});
 })();
 </script>
 
