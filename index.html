@@ -1055,13 +1055,13 @@
 (function(){
   "use strict";
   // Supabase Dashboard > Project Settings > API에서 URL과 publishable/anon key를 입력하세요.
-  const SUPABASE_URL = "https://qurksmjiifepecapyfky.supabase.co";
-  const SUPABASE_ANON_KEY = "2030";
+  const SUPABASE_URL = "https://niuhmceiqxevuzmqsnhf.supabase.co";
+  const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5pdWhtY2VpcXhldnV6bXFzbmhmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI2NTM0NzEsImV4cCI6MjEwODIyOTQ3MX0.dRNizWoOz5sy5F9Jgixd1m-NfH-CXiQ-vWQQlYeiGbU";
   const $ = (id) => document.getElementById(id);
   const loginCard = $("loginCard"), signupView = $("signupView"), mainView = $("mainView"), mainNav = $("mainNav");
   const authTopline = $("authTopline");
   let supabase = null;
-  if (window.supabase && SUPABASE_ANON_KEY !== "PASTE_YOUR_SUPABASE_ANON_KEY_HERE") {
+  if (window.supabase && SUPABASE_URL.includes("niuhmceiqxevuzmqsnhf") && SUPABASE_ANON_KEY.startsWith("eyJ")) {
     supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
   }
   function status(id, message, kind){ const node=$(id); node.textContent=message||""; node.className="auth-status"+(kind?" "+kind:""); }
@@ -1075,7 +1075,7 @@
   function showLogin(){ signupView.hidden=true; mainView.hidden=false; loginCard.hidden=false; mainNav.hidden=true; authTopline.hidden=true; window.scrollTo({top:0,behavior:"smooth"}); }
   function showSignup(){ mainView.hidden=true; signupView.hidden=false; status("signupStatus", "", ""); window.scrollTo({top:0,behavior:"smooth"}); }
   function showSignedIn(nick){ signupView.hidden=true; mainView.hidden=false; loginCard.hidden=true; mainNav.hidden=false; authTopline.hidden=false; $("signedInLabel").textContent=nick+" 님, 환영합니다!"; window.scrollTo({top:0,behavior:"smooth"}); }
-  function ready(){ if(!supabase){ status("loginStatus","Supabase 연결 설정이 아직 필요합니다. HTML의 SUPABASE_ANON_KEY를 입력한 뒤 다시 배포해 주세요.","error"); return false; } return true; }
+  function ready(){ if(!supabase){ status("loginStatus","Supabase 초기화에 실패했습니다. CDN 로딩, 프로젝트 URL, 공개 API 키를 확인해 주세요.","error"); return false; } return true; }
   $("openSignup").addEventListener("click", showSignup);
   $("backToLogin").addEventListener("click", showLogin);
   $("loginForm").addEventListener("submit", async (e)=>{
@@ -1132,7 +1132,7 @@
     });
   } else {
     // 설정 전에도 화면 디자인은 미리 확인할 수 있습니다.
-    status("loginStatus","Supabase 연결 전입니다. API 키와 SQL 설정을 완료하면 로그인/회원가입이 작동합니다.","");
+    status("loginStatus","Supabase 클라이언트 초기화에 실패했습니다. 인터넷 연결과 Supabase 설정을 확인해 주세요.","");
   }
 })();
 </script>
