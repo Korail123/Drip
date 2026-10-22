@@ -608,7 +608,7 @@
         <span class="wg-date" id="wgDate">오늘의 단어 (5칸)</span>
         <div style="display:flex;align-items:center;gap:8px;"><span class="wg-hint" id="wgHint">힌트</span></div>
       </div>
-      <div class="wg-desc-bar">💡 각 칸에는 자음 또는 모음 하나씩 들어갑니다. 한글로 입력하면 자모 단위로 채워집니다. (최대 6회)</div>
+      <div class="wg-desc-bar">💡 각 칸에는 자음 또는 모음 하나씩 들어갑니다. 키보드로 입력하고 Enter를 누르세요. 정답을 맞힐 때까지 횟수 제한 없이 도전할 수 있습니다.</div>
       <div id="wgBoard" class="wg-board"></div>
       <div id="wgPreview" class="wg-preview" aria-live="polite"></div>
       <button class="btn small" id="wgNewGame" type="button" style="margin-top:10px">↻ 새 단어로 다시 하기</button>
@@ -883,12 +883,14 @@
     curState.currentInput=[]; $("wgDate").textContent="새 단어 도전"; $("wgHint").textContent="힌트: "+curState.wordObj.hint;
     renderBoard(); renderResult(); renderStats();
     curState.currentRaw="";
+    if (curState.status === "PLAYING") { var firstTile = $("wgBoard").querySelector(".wg-entry"); if (firstTile) setTimeout(function(){ firstTile.focus(); }, 0); }
     if (curState.status !== "PLAYING") syncWordResult(); else renderWordRanking();
   }
   function updateHubState() { var badge=$("wordState"); badge.textContent="언제든 도전"; badge.className="game-state"; }
   function renderBoard() {
     var board=$("wgBoard"); board.innerHTML=""; var target=splitHangulWord(curState.wordObj.word), cols=target.length;
-    for(var r=0;r<6;r++) {
+    var rowCount = Math.max(6, curState.guesses.length + 1);
+    for(var r=0;r<rowCount;r++) {
       var rowEl=el("div","wg-row"), guess=curState.guesses[r];
       rowEl.style.gridTemplateColumns="repeat("+cols+",minmax(0,1fr))";
       for(var c=0;c<cols;c++) {
@@ -910,7 +912,8 @@
             cells.forEach(function(cell,i){cell.value=curState.currentInput[i]||"";});
             curState.currentRaw=curState.currentInput.join("");
             var next= Math.min(cols-1, at + Math.max(1,entered.length));
-            if(entered.length && next>at && cells[next]) cells[next].focus();
+            if(entered.length && cells[next] && next !== at) cells[next].focus();
+            else if(entered.length && at < cols-1 && cells[at+1]) cells[at+1].focus();
           });
           tile.addEventListener("keydown",function(e){
             var cells=Array.prototype.slice.call(board.querySelectorAll(".wg-entry")), at=cells.indexOf(this);
@@ -942,7 +945,7 @@
     for(var i=0;i<target.length;i++) if(result[i]==="correct") remaining[i]=null;
     for(var j=0;j<target.length;j++) if(result[j]!=="correct"){var f=remaining.indexOf(input[j]);if(f!==-1){result[j]="present";remaining[f]=null;}}
     curState.guesses.push({input:input,result:result});
-    if(result.every(function(r){return r==="correct";})){curState.status="WON";saveStat(true);} else if(curState.guesses.length>=6){curState.status="LOST";saveStat(false);}
+    if(result.every(function(r){return r==="correct";})){curState.status="WON";saveStat(true);}
     store(curState.periodKey,JSON.stringify({guesses:curState.guesses,status:curState.status,keyColors:curState.keyColors}));
     curState.currentRaw=""; curState.currentInput=[];
     if(curState.status!=="PLAYING") syncWordResult(); renderBoard(); renderResult(); renderStats();
@@ -956,11 +959,11 @@
   function renderResult() {
     var rd = $("wgResult");
     if (curState.status === "PLAYING") { rd.hidden = true; return; }
-    rd.hidden = false; rd.className = "wg-result" + (curState.status === "LOST" ? " lose" : "");
+    rd.hidden = false; rd.className = "wg-result";
     var win = curState.status === "WON";
-    var share = "드립대학 [오늘의 단어 5칸]\n" + (win ? curState.guesses.length + "/6 시도 성공!" : "실패 ㅠㅠ") + "\n";
+    var share = "드립대학 [오늘의 단어 5칸]\n" + (win ? curState.guesses.length + "회 시도 성공!" : "도전 중") + "\n";
     curState.guesses.forEach(function (g) { g.result.forEach(function (r) { share += (r === "correct" ? "🟩" : r === "present" ? "🟨" : "⬛"); }); share += "\n"; });
-    rd.innerHTML = "<strong>" + (win ? "🎉 정답입니다!" : "아쉽네요! 다음 기회에") + "</strong><p>정답 단어: <b>" + escapeHtml(curState.wordObj.word + " (" + curState.wordObj.jamo.join("") + ")") + "</b></p><div class='wg-share'>" + escapeHtml(share.trim()) + "</div><button class='btn small coral' style='margin-top:10px;' id='btnShare' type='button'>결과 복사하기</button>";
+    rd.innerHTML = "<strong>🎉 정답입니다!</strong><p>정답 단어: <b>" + escapeHtml(curState.wordObj.word + " (" + curState.wordObj.jamo.join("") + ")") + "</b></p><div class='wg-share'>" + escapeHtml(share.trim()) + "</div><button class='btn small coral' style='margin-top:10px;' id='btnShare' type='button'>결과 복사하기</button>";
     $("btnShare").onclick = function () {
       if (navigator.clipboard && navigator.clipboard.writeText) { navigator.clipboard.writeText(share).then(function () { toast("결과가 클립보드에 복사되었습니다!"); }, function () { toast("복사에 실패했습니다."); }); return; }
       var ta = document.createElement("textarea"); ta.value = share; document.body.appendChild(ta); ta.select();
