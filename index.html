@@ -183,8 +183,14 @@
   .sid-input { width:100%; border:2px solid var(--ink); border-radius:10px; padding:10px 12px; background:#fffdf8; }
   .sid-h { margin:18px 0 4px; font-family:var(--font-display); font-weight:400; font-size:20px; }
   .sid-group { margin:12px 0; }
-  .sid-glabel { font-weight:800; font-size:13px; margin-bottom:6px; }
-  .sid-opts { display:flex; flex-wrap:wrap; gap:6px; }
+  .sid-glabel { font-weight:800; font-size:13px; margin-bottom:8px; }
+  /* 학생증 캐릭터 옵션: 카테고리와 옵션을 가로로 밀어서 선택 */
+  #sidAvatarControls { display:flex; gap:12px; overflow-x:auto; padding:4px 3px 12px; scroll-snap-type:x mandatory; overscroll-behavior-x:contain; -webkit-overflow-scrolling:touch; touch-action:pan-x; }
+  #sidAvatarControls .sid-group { flex:0 0 min(86%, 340px); min-width:0; margin:0; padding:12px; border:1.5px solid #d8deeb; border-radius:14px; background:#f8faff; scroll-snap-align:start; }
+  .sid-opts { display:flex; flex-wrap:nowrap; gap:7px; overflow-x:auto; padding:3px 3px 9px; scroll-snap-type:x proximity; overscroll-behavior-x:contain; -webkit-overflow-scrolling:touch; touch-action:pan-x; }
+  .sid-opts > button { flex:0 0 auto; scroll-snap-align:start; }
+  .sid-opt { white-space:nowrap; }
+  .sid-swipe-hint { margin:3px 0 8px; color:var(--muted); font-size:12px; font-weight:700; }
   .sid-opt { border:2px solid var(--ink); border-radius:999px; background:#fff; padding:5px 11px; font-weight:700; font-size:13px; }
   .sid-opt.on { background:#c9f3df; box-shadow:2px 2px 0 var(--ink); }
   .sid-sw { width:30px; height:30px; border-radius:50%; border:2px solid var(--ink); padding:0; }
@@ -510,7 +516,8 @@
       <div class="sid-field"><label for="sidMajorInput">학과 (전공)</label><input id="sidMajorInput" class="sid-input" list="sidMajorList" maxlength="14" placeholder="예: 칼퇴기원학"><datalist id="sidMajorList"><option value="칼퇴기원학"><option value="월급루팡학"><option value="야근학"><option value="칼퇴학"><option value="회식학"><option value="탕비실학"><option value="커피수혈학"><option value="월요병학"><option value="점심메뉴학"><option value="퇴사준비학"></datalist></div>
       <div class="sid-field"><label for="sidMottoInput">슬기로운 직장생활 좌우명</label><input id="sidMottoInput" class="sid-input" maxlength="30" placeholder="예: 오늘 야근 진 자 가"></div>
       <h3 class="sid-h">🎨 프로필 캐릭터</h3>
-      <div id="sidAvatarControls"></div>
+      <p class="sid-swipe-hint">👈 손가락으로 좌우로 밀어 옵션 종류와 세부 항목을 넘겨보세요 👉</p>
+      <div id="sidAvatarControls" aria-label="캐릭터 옵션, 좌우로 밀어 보기"></div>
       <div class="sid-actions"><button class="btn small" id="sidRandom" type="button">🎲 랜덤</button><button class="btn small" id="sidReset" type="button">↺ 기본값</button><button class="btn small coral" id="sidSave" type="button">💾 저장하기</button></div>
       <div id="sidStatus" class="community-status"></div>
     </div>
@@ -1108,20 +1115,22 @@
     var feed = $("communityFeed"); feed.innerHTML = ""; setText("communityStatus", "게시글을 불러오는 중…");
     var q = await supabase.from("community_posts").select("id,title,content,author_id,author_nickname,created_at,updated_at,image_url,like_count,community_comments(id,content,author_id,author_nickname,created_at)").order("created_at", { ascending: false });
     if (q.error) { setText("communityStatus", "게시판 테이블 설정을 확인해 주세요: " + q.error.message); return; }
-    var posts = q.data, user = await currentUser(), avatarByUser = {};
-    // 게시글 작성자들의 학생증 아바타를 한 번에 조회합니다. 조회 권한이 없는 경우 기본 아바타로 표시합니다.
+    var posts = q.data, user = await currentUser(), avatarByUser = {}, avatarLookupFailed = false;
+    // 게시글 작성자별로 Supabase에 저장된 학생증 아바타를 조회합니다.
+    // 각 작성자의 author_id와 student_cards.user_id를 연결하므로 로그인한 사용자 본인의 프로필이 아니라 글쓴이의 프로필이 표시됩니다.
     try {
       var authorIds = Array.from(new Set(posts.map(function(p){ return p.author_id; }).filter(Boolean)));
       if (authorIds.length) {
         var cards = await supabase.from("student_cards").select("user_id,avatar").in("user_id", authorIds);
-        if (!cards.error) (cards.data || []).forEach(function(c){ avatarByUser[c.user_id] = c.avatar; });
+        if (cards.error) { avatarLookupFailed = true; console.warn("학생증 프로필 조회 권한을 확인해 주세요.", cards.error); }
+        else (cards.data || []).forEach(function(c){ avatarByUser[c.user_id] = c.avatar; });
       }
-    } catch (avatarErr) { console.warn("학생증 프로필 사진을 불러오지 못했습니다.", avatarErr); }
+    } catch (avatarErr) { avatarLookupFailed = true; console.warn("학생증 프로필 사진을 불러오지 못했습니다.", avatarErr); }
     function authorPhoto(authorId) {
       var avatar = sanitizeAvatar(avatarByUser[authorId] || AV_DEFAULT);
       return '<span class="community-author-photo" aria-label="작성자 프로필 사진">' + avatarSVG(avatar) + '</span>';
     }
-    setText("communityStatus", posts.length ? "" : "아직 게시물이 없습니다. 첫 글을 작성해 보세요.");
+    setText("communityStatus", avatarLookupFailed ? "작성자별 학생증 프로필을 불러오지 못했습니다. Supabase에서 student_cards 조회 정책을 확인해 주세요." : (posts.length ? "" : "아직 게시물이 없습니다. 첫 글을 작성해 보세요."));
     posts.forEach(function (p) {
       var row = document.createElement("div"); row.className = "community-row"; row.setAttribute("role", "button"); row.tabIndex = 0;
       row.innerHTML = authorPhoto(p.author_id) + '<div class="community-row-title">' + escapeHtml(p.title) + '</div><div class="community-row-meta"><span>♥ ' + Number(p.like_count || 0) + '</span><span>💬 ' + (p.community_comments || []).length + '</span></div>';
@@ -1280,11 +1289,16 @@
   }
 
   async function loadSavedPlaces() {
-    if (!supabase) return;
+    if (!supabase) { placesStatus("Supabase 연결 설정이 없어 공유 장소를 불러올 수 없습니다. 페이지의 Supabase URL/anon key 설정을 확인하세요."); return; }
     var q = supabase.from("shared_places").select("id,category,name,address,memo,author_id,author_nickname,created_at,lat,lon").order("created_at", { ascending: false });
     if (selectedCategory !== "전체") q = q.eq("category", selectedCategory);
-    var res = await q, box = $("savedPlaces"); box.innerHTML = "";
-    if (res.error) { placesStatus("장소 불러오기 실패: " + res.error.message); return; }
+    var res, box = $("savedPlaces"); box.innerHTML = "";
+    try { res = await q; } catch (err) { placesStatus("장소 불러오기 중 오류가 발생했습니다: " + (err && err.message ? err.message : String(err))); return; }
+    if (res.error) {
+      var msg = res.error.message || "알 수 없는 오류";
+      placesStatus("장소 불러오기 실패: " + msg + ( /shared_places|relation|does not exist/i.test(msg) ? " — Supabase에 shared_places 테이블이 있는지 확인하세요." : ""));
+      return;
+    }
     var data = res.data;
     placesStatus(data.length ? "" : "아직 저장된 장소가 없습니다. 첫 장소를 공유해 보세요!");
 
@@ -1340,7 +1354,7 @@
 
   $("placeSaveForm").onsubmit = async function (e) {
     e.preventDefault();
-    if (!supabase) return;
+    if (!supabase) { placesStatus("Supabase 연결 설정이 없어 장소를 저장할 수 없습니다."); return; }
     var u = await currentUser();
     if (!u) { alert("로그인이 필요합니다."); return; }
     var category = $("placeCategory").value, name = $("placeName").value.trim(), address = $("placeAddress").value.trim(), memo = $("placeMemo").value.trim();
