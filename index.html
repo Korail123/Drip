@@ -230,7 +230,7 @@
   .wg { max-width:460px; margin-inline:auto; }
   .wg-top { display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap; margin-bottom:10px; }
   .wg-date { font-weight:800; font-size:15px; }
-  .wg-timer { background:var(--pink-bg); border:1.5px solid var(--pink-line); color:var(--pink-ink); font-weight:800; font-size:12.5px; border-radius:999px; padding:2px 10px; }
+  .wg-timer { display:none;  background:var(--pink-bg); border:1.5px solid var(--pink-line); color:var(--pink-ink); font-weight:800; font-size:12.5px; border-radius:999px; padding:2px 10px; }
   .wg-hint { background:var(--butter-bg); border:1.5px solid var(--butter-line); color:var(--butter-ink); font-weight:800; font-size:13px; border-radius:9px; padding:2px 10px; }
   .wg-desc-bar { background:#FFF9DD; border:2px solid var(--ink); border-radius:12px; padding:10px 12px; font-weight:700; font-size:13.5px; text-align:center; margin-bottom:14px; box-shadow:2px 2px 0 var(--ink); }
   .wg-board { display:grid; gap:8px; margin:8px auto 12px; max-width:320px; }
@@ -241,7 +241,10 @@
   .wg-tile.filled { background:#FFF9DD; transform:scale(1.02); }
   .wg-tile.correct { background:var(--teal); color:#fff; } .wg-tile.present { background:var(--gold); color:#fff; } .wg-tile.absent { background:#C8D2E4; color:var(--slate-ink); }
   .wg-preview { min-height:24px; text-align:center; color:var(--muted); font-weight:700; font-size:14px; margin-bottom:6px; }
-  .wg-keys { display:grid; gap:6px; margin-top:6px; }
+  .wg-input-form { display:flex; gap:8px; margin:10px 0; }
+  .wg-word-input { flex:1; min-width:0; border:2px solid var(--ink); border-radius:12px; padding:12px 14px; font:600 17px var(--font-body); background:#fff; color:var(--ink); }
+  .wg-word-input:focus { outline:3px solid var(--butter-bg); outline-offset:1px; }
+  .wg-keys { display:none !important; }
   .wg-krow { display:flex; gap:5px; justify-content:center; }
   .wg-key { flex:1 1 0; min-width:0; max-width:44px; height:46px; border:2px solid var(--ink); border-radius:999px; background:#fff; font-family:var(--font-display); font-size:18px; padding:0; box-shadow:2px 2px 0 var(--ink); }
   .wg-key.wide { flex:1.7 1 0; max-width:72px; font-family:var(--font-body); font-weight:800; font-size:14px; }
@@ -588,25 +591,26 @@
     </div>
     <button class="card game-card" id="openWord" type="button">
       <span class="game-no">1</span>
-      <span class="game-info"><strong>오늘의 단어 (5칸)</strong><small>6시간마다 변경 · 5칸을 6번 안에 맞히고 승률 랭킹에 도전!</small></span>
+      <span class="game-info"><strong>오늘의 단어 (5칸)</strong><small>언제든 다시 도전 · 휴대폰 키보드로 단어를 입력하세요</small></span>
       <span class="game-state" id="wordState">도전하기</span>
     </button>
   </section>
 
   <section id="wordGame" hidden aria-label="단어 맞추기">
     <div class="head">
-      <div class="head-main"><span class="pill-live"><span class="dot"></span>6시간마다 새로고침</span><h2 class="title">오늘의 단어</h2><p class="sub">직장 및 일상 속 단어를 자음·모음 5칸 조합으로 맞혀보세요.</p></div>
+      <div class="head-main"><span class="pill-live"><span class="dot"></span>무제한 도전</span><h2 class="title">오늘의 단어</h2><p class="sub">휴대폰 키보드로 한글 단어를 입력해 맞혀보세요.</p></div>
       <button class="btn small" id="wordBack" type="button">← 미니게임</button>
     </div>
     <div class="card wg">
       <div class="wg-top">
         <span class="wg-date" id="wgDate">오늘의 단어 (5칸)</span>
-        <div style="display:flex;align-items:center;gap:8px;"><span class="wg-timer" id="wgTimer">남은시간 --:--:--</span><span class="wg-hint" id="wgHint">힌트</span></div>
+        <div style="display:flex;align-items:center;gap:8px;"><span class="wg-hint" id="wgHint">힌트</span></div>
       </div>
-      <div class="wg-desc-bar">💡 <b>규칙:</b> 직장·일상 속 두 글자 단어를 자음·모음 5칸(6회 시도)으로 맞혀보세요!</div>
+      <div class="wg-desc-bar">💡 한글 단어를 입력하고 제출하세요. 한 판이 끝나도 바로 새 게임을 시작할 수 있어요. (최대 6회)</div>
       <div id="wgBoard" class="wg-board"></div>
       <div id="wgPreview" class="wg-preview" aria-live="polite"></div>
-      <div id="wgKeys" class="wg-keys"></div>
+      <form id="wgInputForm" class="wg-input-form"><input id="wgWordInput" class="wg-word-input" type="text" inputmode="text" lang="ko" autocomplete="off" autocapitalize="off" enterkeyhint="done" maxlength="8" placeholder="한글 단어 입력" aria-label="맞힐 단어"><button class="btn coral" id="wgSubmit" type="submit">제출</button></form>
+      <button class="btn small" id="wgNewGame" type="button" style="margin-top:10px">↻ 새 단어로 다시 하기</button>
       <div id="wgResult" class="wg-result" hidden></div>
     </div>
     <div class="card wg wg-statcard"><h3>내 누적 기록</h3><div class="wg-stats" id="wgStats"></div></div>
@@ -759,113 +763,73 @@
     { word: "회의", hint: "끝없는 대화", jamo: ["ㅎ", "ㅚ", "ㅇ", "ㅢ", "ㅢ"] },
     { word: "월급", hint: "통장을 스쳐가는 것", jamo: ["ㅇ", "ㅝ", "ㄹ", "ㄱ", "ㅡ"] },
     { word: "탕비", hint: "간식 창고", jamo: ["ㅌ", "ㅏ", "ㅇ", "ㅂ", "ㅣ"] },
-    { word: "보너스", hint: "뜻밖의 선물", jamo: ["ㅂ", "ㅗ", "ㄴ", "ㅓ", "ㅅ"] },
     { word: "식사", hint: "즐거운 점심시간", jamo: ["ㅅ", "ㅣ", "ㄱ", "ㅅ", "ㅏ"] },
     { word: "주말", hint: "오매불망 기다림", jamo: ["ㅈ", "ㅜ", "ㅁ", "ㅏ", "ㄹ"] },
     { word: "승진", hint: "직급의 상승", jamo: ["ㅅ", "ㅡ", "ㅇ", "ㅈ", "ㅣ"] },
     { word: "출근", hint: "매일 아침 고통", jamo: ["ㅊ", "ㅜ", "ㄹ", "ㄱ", "ㅡ"] }
   ];
-  var KBD_LAYOUT = [
-    ["ㅂ", "ㅈ", "ㄷ", "ㄱ", "ㅅ", "ㅛ", "ㅕ", "ㅑ", "ㅐ", "ㅔ"],
-    ["ㅁ", "ㄴ", "ㅇ", "ㄹ", "ㅎ", "ㅗ", "ㅓ", "ㅏ", "ㅣ"],
-    ["지우기", "ㅋ", "ㅌ", "ㅍ", "ㅊ", "ㅠ", "ㅜ", "ㅡ", "확인"]
-  ];
-  var KEY_MAP = { q: "ㅂ", w: "ㅈ", e: "ㄷ", r: "ㄱ", t: "ㅅ", y: "ㅛ", u: "ㅕ", i: "ㅑ", o: "ㅐ", p: "ㅔ", a: "ㅁ", s: "ㄴ", d: "ㅇ", f: "ㄹ", g: "ㅎ", h: "ㅗ", j: "ㅓ", k: "ㅏ", l: "ㅣ", z: "ㅋ", x: "ㅌ", c: "ㅊ", v: "ㅍ", b: "ㅠ", n: "ㅜ", m: "ㅡ", Q: "ㅃ", W: "ㅉ", E: "ㄸ", R: "ㄲ", T: "ㅆ", O: "ㅖ", P: "ㅖ" };
-
-  function get6HourPeriodInfo() {
-    var now = new Date(), y = now.getFullYear(), mo = now.getMonth(), d = now.getDate();
-    var startH = Math.floor(now.getHours() / 6) * 6;
-    var cur = new Date(y, mo, d, startH, 0, 0), next = new Date(y, mo, d, startH + 6, 0, 0);
-    var seed = Math.floor(cur.getTime() / (1000 * 60 * 60 * 6));
-    return { key: "wg_5tile_" + seed, wordObj: WORD_POOL_5[seed % WORD_POOL_5.length], nextTime: next };
+  var KEY_MAP = {};
+  function splitHangulWord(word) {
+    var out = [], initial = ["ㄱ","ㄲ","ㄴ","ㄷ","ㄸ","ㄹ","ㅁ","ㅂ","ㅃ","ㅅ","ㅆ","ㅇ","ㅈ","ㅉ","ㅊ","ㅋ","ㅌ","ㅍ","ㅎ"],
+        vowel = ["ㅏ","ㅐ","ㅑ","ㅒ","ㅓ","ㅔ","ㅕ","ㅖ","ㅗ","ㅘ","ㅙ","ㅚ","ㅛ","ㅜ","ㅝ","ㅞ","ㅟ","ㅠ","ㅡ","ㅢ","ㅣ"],
+        final = ["","ㄱ","ㄲ","ㄳ","ㄴ","ㄵ","ㄶ","ㄷ","ㄹ","ㄺ","ㄻ","ㄼ","ㄽ","ㄾ","ㄿ","ㅀ","ㅁ","ㅂ","ㅄ","ㅅ","ㅆ","ㅇ","ㅈ","ㅊ","ㅋ","ㅌ","ㅍ","ㅎ"];
+    Array.from(String(word || "").normalize("NFC")).forEach(function(ch) {
+      var code = ch.charCodeAt(0);
+      if (code >= 0xAC00 && code <= 0xD7A3) { var n=code-0xAC00, fi=n%28, vi=Math.floor(n/28)%21, ii=Math.floor(n/588); out.push(initial[ii],vowel[vi]); if(final[fi]) out.push(final[fi]); }
+      else if ("ㄱㄲㄴㄷㄸㄹㅁㅂㅃㅅㅆㅇㅈㅉㅊㅋㅌㅍㅎㅏㅐㅑㅒㅓㅔㅕㅖㅗㅘㅙㅚㅛㅜㅝㅞㅟㅠㅡㅢㅣ".indexOf(ch)>=0) out.push(ch);
+    });
+    return out;
+  }
+  function getNewRound() {
+    var idx = Math.floor(Math.random() * WORD_POOL_5.length), wordObj = WORD_POOL_5[idx];
+    return { key: "wg_round_" + Date.now() + "_" + Math.random().toString(36).slice(2,8), wordObj: wordObj };
   }
   var curState = { periodKey: "", wordObj: null, guesses: [], currentInput: [], status: "PLAYING", keyColors: {} };
-  var timerInterval = 0;
-
-  function initWordGame() {
-    var p = get6HourPeriodInfo();
-    curState.periodKey = p.key; curState.wordObj = p.wordObj;
-    var saved = store(p.key);
-    curState.guesses = []; curState.status = "PLAYING"; curState.keyColors = {};
-    if (saved) { try { var o = JSON.parse(saved); curState.guesses = o.guesses || []; curState.status = o.status || "PLAYING"; curState.keyColors = o.keyColors || {}; } catch (e) {} }
-    curState.currentInput = [];
-    $("wgDate").textContent = "오늘의 단어 (5칸)";
-    $("wgHint").textContent = "힌트: " + curState.wordObj.hint;
-    startTimer(p.nextTime); renderBoard(); renderKeys(); renderResult(); renderStats();
+  function initWordGame(newRound) {
+    var active = null;
+    if (!newRound) { try { active = JSON.parse(store("wg_active_round") || "null"); } catch(e) {} }
+    if (!active || !active.key || !active.wordObj || newRound) { active = getNewRound(); store("wg_active_round", JSON.stringify(active)); }
+    curState.periodKey = active.key; curState.wordObj = active.wordObj;
+    var saved = store(active.key); curState.guesses=[]; curState.status="PLAYING"; curState.keyColors={};
+    if (saved) { try { var o=JSON.parse(saved); curState.guesses=o.guesses||[]; curState.status=o.status||"PLAYING"; curState.keyColors=o.keyColors||{}; } catch(e) {} }
+    curState.currentInput=[]; $("wgDate").textContent="새 단어 도전"; $("wgHint").textContent="힌트: "+curState.wordObj.hint;
+    renderBoard(); renderResult(); renderStats();
+    $("wgWordInput").value=""; $("wgWordInput").disabled=curState.status!=="PLAYING"; $("wgSubmit").disabled=curState.status!=="PLAYING";
     if (curState.status !== "PLAYING") syncWordResult(); else renderWordRanking();
   }
-  function startTimer(nextTime) {
-    clearInterval(timerInterval);
-    function pad(n) { return (n < 10 ? "0" : "") + n; }
-    function tick() {
-      var diff = Math.max(0, Math.floor((nextTime.getTime() - Date.now()) / 1000));
-      $("wgTimer").textContent = "새 단어까지 " + pad(Math.floor(diff / 3600)) + ":" + pad(Math.floor((diff % 3600) / 60)) + ":" + pad(diff % 60);
-      if (diff <= 0) { clearInterval(timerInterval); initWordGame(); }
-    }
-    tick(); timerInterval = setInterval(tick, 1000);
-  }
-  function updateHubState() {
-    var p = get6HourPeriodInfo(), saved = store(p.key), badge = $("wordState");
-    badge.textContent = "도전하기"; badge.className = "game-state";
-    if (saved) { try { var o = JSON.parse(saved); if (o.status === "WON") badge.textContent = "성공!"; else if (o.status === "LOST") badge.textContent = "아쉬워요"; } catch (e) {} }
-  }
+  function updateHubState() { var badge=$("wordState"); badge.textContent="언제든 도전"; badge.className="game-state"; }
   function renderBoard() {
-    var board = $("wgBoard"); board.innerHTML = "";
-    for (var r = 0; r < 6; r++) {
-      var rowEl = el("div", "wg-row"), guess = curState.guesses[r];
-      var isCur = (r === curState.guesses.length && curState.status === "PLAYING");
-      for (var c = 0; c < 5; c++) {
-        var tile = el("div", "wg-tile");
-        if (guess) { tile.textContent = guess.input[c]; tile.classList.add(guess.result[c]); }
-        else if (isCur && curState.currentInput[c]) { tile.textContent = curState.currentInput[c]; tile.classList.add("filled"); }
-        rowEl.appendChild(tile);
-      }
-      board.appendChild(rowEl);
+    var board=$("wgBoard"); board.innerHTML=""; var target=splitHangulWord(curState.wordObj.word), cols=target.length;
+    for(var r=0;r<6;r++) { var rowEl=el("div","wg-row"), guess=curState.guesses[r]; rowEl.style.gridTemplateColumns="repeat("+cols+",minmax(0,1fr))";
+      for(var c=0;c<cols;c++){var tile=el("div","wg-tile"); if(guess){tile.textContent=guess.input[c]||"";tile.classList.add(guess.result[c]||"absent");} rowEl.appendChild(tile);} board.appendChild(rowEl);
     }
-    $("wgPreview").textContent = curState.status === "PLAYING" ? (curState.currentInput.join(" ") || "자음·모음을 조합하세요") : "";
+    $("wgPreview").textContent="";
   }
-  function renderKeys() {
-    var kd = $("wgKeys"); kd.innerHTML = "";
-    KBD_LAYOUT.forEach(function (row) {
-      var kr = el("div", "wg-krow");
-      row.forEach(function (k) {
-        var btn = el("button", "wg-key" + ((k === "지우기" || k === "확인") ? " wide" : ""), k);
-        btn.type = "button";
-        if (curState.keyColors[k]) btn.classList.add(curState.keyColors[k]);
-        if (curState.status !== "PLAYING") btn.disabled = true;
-        btn.onclick = function () { handleInput(k); };
-        kr.appendChild(btn);
-      });
-      kd.appendChild(kr);
-    });
-  }
+  function renderKeys() { /* 사용자 키보드 사용: 화면 키보드 제거 */ }
   function handleInput(key) {
-    if (curState.status !== "PLAYING") return;
-    if (key === "지우기" || key === "Backspace") { if (curState.currentInput.length) { curState.currentInput.pop(); renderBoard(); } }
-    else if (key === "확인" || key === "Enter") submitGuess();
-    else if (curState.currentInput.length < 5) { curState.currentInput.push(key); renderBoard(); }
+    if(curState.status!=="PLAYING") return;
+    if(key==="Enter") submitGuess();
   }
   function submitGuess() {
-    if (curState.currentInput.length < 5) {
-      toast("5칸을 모두 채워주세요!");
-      var cr = document.querySelectorAll(".wg-row")[curState.guesses.length];
-      if (cr) { cr.classList.add("shake"); setTimeout(function () { cr.classList.remove("shake"); }, 400); }
-      return;
-    }
-    var target = curState.wordObj.jamo, input = curState.currentInput.slice(), result = ["absent", "absent", "absent", "absent", "absent"], tc = target.slice(), i;
-    for (i = 0; i < 5; i++) if (input[i] === target[i]) { result[i] = "correct"; tc[i] = null; }
-    for (i = 0; i < 5; i++) if (result[i] !== "correct") { var f = tc.indexOf(input[i]); if (f !== -1) { result[i] = "present"; tc[f] = null; } }
-    for (i = 0; i < 5; i++) {
-      var ch = input[i], res = result[i], prev = curState.keyColors[ch];
-      if (res === "correct" || (res === "present" && prev !== "correct") || (!prev && res === "absent")) curState.keyColors[ch] = res;
-    }
-    curState.guesses.push({ input: input, result: result }); curState.currentInput = [];
-    if (result.every(function (r) { return r === "correct"; })) { curState.status = "WON"; saveStat(true); }
-    else if (curState.guesses.length >= 6) { curState.status = "LOST"; saveStat(false); }
-    store(curState.periodKey, JSON.stringify({ guesses: curState.guesses, status: curState.status, keyColors: curState.keyColors }));
-    if (curState.status !== "PLAYING") syncWordResult();
-    renderBoard(); renderKeys(); renderResult(); renderStats();
+    if(curState.status!=="PLAYING") return;
+    var inputText=$("wgWordInput").value.trim().replace(/\s/g, ""), input=splitHangulWord(inputText), target=splitHangulWord(curState.wordObj.word);
+    if(!inputText || input.length!==target.length){toast("정답과 같은 길이의 한글 단어를 입력해 주세요.");return;}
+    var result=target.map(function(ch,i){return input[i]===ch?"correct":"absent";}), remaining=target.slice();
+    for(var i=0;i<target.length;i++) if(result[i]==="correct") remaining[i]=null;
+    for(var j=0;j<target.length;j++) if(result[j]!=="correct"){var f=remaining.indexOf(input[j]);if(f!==-1){result[j]="present";remaining[f]=null;}}
+    curState.guesses.push({input:input,result:result});
+    if(result.every(function(r){return r==="correct";})){curState.status="WON";saveStat(true);} else if(curState.guesses.length>=6){curState.status="LOST";saveStat(false);}
+    store(curState.periodKey,JSON.stringify({guesses:curState.guesses,status:curState.status,keyColors:curState.keyColors}));
+    $("wgWordInput").value=""; $("wgWordInput").disabled=curState.status!=="PLAYING"; $("wgSubmit").disabled=curState.status!=="PLAYING";
+    if(curState.status!=="PLAYING") syncWordResult(); renderBoard(); renderResult(); renderStats();
   }
+  $("wgInputForm").addEventListener("submit",function(e){e.preventDefault();submitGuess();});
+  $("wgNewGame").addEventListener("click",function(){initWordGame(true);$("wgWordInput").focus();});
+  window.addEventListener("keydown", function(e) {
+    if(views.word.hidden || curState.status!=="PLAYING") return;
+    if(e.key==="Enter" && document.activeElement!==$("wgWordInput")){e.preventDefault();submitGuess();}
+  });
+
   function renderResult() {
     var rd = $("wgResult");
     if (curState.status === "PLAYING") { rd.hidden = true; return; }
