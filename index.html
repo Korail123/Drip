@@ -32,7 +32,6 @@
   button, input, select, textarea { font:inherit; color:inherit; }
   button { cursor:pointer; }
   :focus-visible { outline:3px solid #5B8CFF; outline-offset:2px; }
-
   /* 헤더 & 타이틀 */
   .rainbow-title { width:min(100%,720px); display:block; margin:0 auto -4px; overflow:visible; }
   .rainbow-title text { font-family:var(--font-display); font-weight:900; paint-order:stroke fill; stroke:var(--ink); stroke-width:7px; stroke-linejoin:round; }
@@ -40,7 +39,6 @@
   .auth-topline { display:flex; justify-content:space-between; align-items:center; gap:10px; margin:4px auto 12px; max-width:960px; }
   .auth-user { font-weight:800; display:flex; align-items:center; gap:8px; }
   .logout-btn { border:1px solid #DCE2ED; background:#fff; border-radius:10px; padding:6px 12px; font-weight:800; }
-
   /* 메인 네비게이션 버튼 */
   .nav-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:12px; margin:18px 0 30px; }
   .nav-btn { display:flex; align-items:center; justify-content:flex-start; gap:8px; border:1px solid rgba(32,43,69,.1); border-radius:15px; padding:14px 16px; font-family:var(--font-body); font-size:15px; font-weight:800; box-shadow:0 3px 10px rgba(32,43,69,.07); background:var(--card); color:var(--ink); transition:transform .15s, box-shadow .15s; text-align:left; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; min-height:58px; }
@@ -48,7 +46,6 @@
   .nav-btn.coral { background:#FFF1EF; color:#A9322D; }
   .nav-btn.mint { background:#EAF9F1; color:#176747; }
   .nav-btn.butter { background:#FFF7DF; color:#78520B; }
-
   /* 버튼 및 공통 패널 */
   .btn { display:inline-flex; align-items:center; gap:8px; border:1px solid #DCE2ED; border-radius:10px; padding:9px 13px; font-weight:800; font-size:14px; background:var(--card); color:var(--ink); transition:background-color .15s, transform .15s; }
   .btn:hover { transform:translateY(-1px); }
@@ -64,7 +61,6 @@
   .avatar-badge { width:38px; height:38px; border-radius:50%; background:#EEF2F8; border:1.5px solid #D8DFEA; flex-shrink:0; display:flex; align-items:center; justify-content:center; overflow:hidden; }
   .avatar-badge.small { width:26px; height:26px; }
   .avatar-badge svg { width:100%; height:100%; }
-
   /* 수다게시판 카드 및 피드 */
   .board-feed { display:grid; gap:14px; }
   .post-card { background:#fff; border:1px solid #E2E7F0; border-radius:16px; padding:18px; box-shadow:0 3px 12px rgba(32,43,69,.04); transition:border-color .15s; cursor:pointer; }
@@ -75,12 +71,11 @@
   .post-date { font-size:12px; color:#8894A8; margin-top:2px; }
   .post-title { font-size:17px; font-weight:800; margin:0 0 8px; color:#111827; }
   .post-content { font-size:14.5px; color:#4B5563; line-height:1.6; white-space:pre-wrap; overflow-wrap:anywhere; display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden; }
-  .post-footer { display:flex; align-items:center; gap:14px; margin-top:14px; pt-3; border-top:1px solid #F0F4F9; font-size:13px; color:#68758E; font-weight:700; }
-
+  .post-footer { display:flex; align-items:center; gap:14px; margin-top:14px; border-top:1px solid #F0F4F9; font-size:13px; color:#68758E; font-weight:700; }
   /* 학생증 만들기 모달/영역 */
   .student-card-preview { background:linear-gradient(135deg, #1f2937, #111827); color:#fff; border-radius:18px; padding:20px; box-shadow:0 8px 24px rgba(0,0,0,.2); max-width:340px; margin:0 auto; text-align:center; position:relative; }
-  .student-avatar-large { width:100px; height:100px; border-radius:50%; background:#fff; margin:0 auto 12px; border:3px solid #E85B52; overflow:hidden; }
-
+  .student-avatar-large { width:110px; height:110px; border-radius:50%; background:#fff; margin:0 auto 12px; border:3px solid #E85B52; overflow:hidden; display:flex; align-items:center; justify-content:center; }
+  .student-avatar-large svg { width:100%; height:100%; }
   /* 맛집/카페 공유 레이아웃 */
   .places-layout { display:grid; grid-template-columns:320px 1fr; gap:20px; align-items:start; }
   .places-left { min-width:0; }
@@ -92,7 +87,6 @@
   .community-form { display:grid; gap:10px; background:#fff; border:1px solid #E2E7F0; border-radius:16px; padding:18px; box-shadow:0 4px 16px rgba(32,43,69,.06); }
   .community-form h3 { margin:0 0 4px; font-size:18px; font-family:var(--font-display); }
   .community-form input, .community-form textarea, .community-form select { width:100%; min-height:44px; border:1px solid #D8DFEA; border-radius:10px; padding:10px 12px; background:#fff; }
-
   /* 댓글 리스트 */
   .comment-item { display:flex; gap:10px; padding:12px 0; border-bottom:1px solid #E2E7F0; }
   .comment-content { flex:1; }
@@ -100,8 +94,60 @@
   .comment-author { font-weight:800; font-size:13.5px; }
   .comment-date { font-size:11.5px; color:#8894A8; }
   .comment-text { font-size:13.5px; color:#374151; white-space:pre-wrap; }
-
   .toast { position:fixed; left:50%; transform:translateX(-50%); bottom:calc(16px + env(safe-area-inset-bottom, 0px)); background:var(--ink); color:#fff; border-radius:12px; padding:10px 16px; font-weight:700; font-size:14px; max-width:calc(100% - 32px); z-index:99; box-shadow:0 4px 12px rgba(0,0,0,.15); }
+
+  /* ===== 가로 스와이프 옵션 ===== */
+  .swipe-section { margin-bottom:4px; }
+  .swipe-label { font-size:13px; font-weight:800; margin-bottom:8px; display:block; }
+  .swipe-track {
+    display:flex;
+    gap:10px;
+    overflow-x:auto;
+    scroll-snap-type:x mandatory;
+    -webkit-overflow-scrolling:touch;
+    padding:6px 2px 12px;
+    scrollbar-width:none;
+  }
+  .swipe-track::-webkit-scrollbar { display:none; }
+  .swipe-item {
+    flex:0 0 auto;
+    scroll-snap-align:center;
+    width:92px;
+    border:2px solid #E2E7F0;
+    border-radius:14px;
+    background:#fff;
+    padding:10px 6px 8px;
+    text-align:center;
+    cursor:pointer;
+    transition:border-color .15s, transform .15s, box-shadow .15s;
+    user-select:none;
+  }
+  .swipe-item:active { transform:scale(.96); }
+  .swipe-item.selected {
+    border-color:#E85B52;
+    box-shadow:0 0 0 3px rgba(232,91,82,.18);
+    background:#FFF8F7;
+  }
+  .swipe-item .preview-face {
+    width:54px; height:54px;
+    margin:0 auto 6px;
+    border-radius:50%;
+    overflow:hidden;
+  }
+  .swipe-item .preview-face svg { width:100%; height:100%; }
+  .swipe-item .item-name {
+    font-size:11.5px;
+    font-weight:700;
+    line-height:1.25;
+    color:#374151;
+  }
+  .swipe-hint {
+    font-size:11.5px;
+    color:#8894A8;
+    text-align:center;
+    margin-top:-4px;
+    margin-bottom:6px;
+  }
 
   @media(max-width:860px){
     .places-layout { grid-template-columns:1fr; }
@@ -113,7 +159,6 @@
 </head>
 <body>
 <div class="page">
-
   <!-- 네비게이션 및 헤더 -->
   <main id="mainView">
     <svg class="rainbow-title" viewBox="0 0 1000 245" role="img" aria-label="2030 직장인 드립대학 수다학과 무지개 제목">
@@ -123,7 +168,6 @@
       </defs>
       <text font-size="62" fill="url(#titleRainbow)" text-anchor="middle"><textPath href="#titleArc" startOffset="50%">2030 직장인 드립대학 수다학과</textPath></text>
     </svg>
-
     <div id="authTopline" class="auth-topline">
       <div class="auth-user">
         <div class="avatar-badge" id="myTopAvatar"></div>
@@ -131,14 +175,12 @@
       </div>
       <button class="btn small" id="makeCardBtn" type="button">🪪 학생증 만들기</button>
     </div>
-
     <!-- 네비게이션 메뉴 -->
     <nav class="nav-grid">
       <button class="nav-btn coral" id="goPlacesNav" type="button">☕ 맛집/카페 등 공유</button>
       <button class="nav-btn mint" id="goBoardNav" type="button">💬 수다게시판</button>
     </nav>
   </main>
-
   <!-- 1. 수다게시판 피드 뷰 -->
   <section id="boardView" class="community-panel" hidden>
     <div class="head">
@@ -151,7 +193,6 @@
         <button class="btn small" id="boardBack" type="button">← 메인</button>
       </div>
     </div>
-
     <!-- 글쓰기 폼 -->
     <form id="postWriteForm" class="community-form" style="margin-bottom:20px;" hidden>
       <h3>새 수다글 작성</h3>
@@ -162,19 +203,16 @@
         <button type="submit" class="btn coral small">등록하기</button>
       </div>
     </form>
-
     <!-- 게시글 피드 목록 -->
     <div id="boardFeed" class="board-feed">
       <!-- 동적 피드 카드가 이곳에 추가됨 -->
     </div>
   </section>
-
   <!-- 게시글 상세 보기 뷰 -->
   <section id="postDetailView" class="community-panel" hidden>
     <div class="head">
       <button class="btn small" id="btnDetailBack" type="button">← 목록으로</button>
     </div>
-
     <article class="community-form" style="gap:16px;">
       <div class="post-header">
         <div class="avatar-badge" id="detailAvatar"></div>
@@ -185,14 +223,11 @@
       </div>
       <h2 id="detailTitle" style="margin:0; font-size:22px; font-weight:800;">제목</h2>
       <div id="detailContent" style="font-size:15px; color:#374151; white-space:pre-wrap; line-height:1.6;">내용</div>
-
       <hr style="border:none; border-top:1px solid #E2E7F0; margin:10px 0 0;">
-
       <!-- 댓글 영역 -->
       <div>
         <h4 style="margin:0 0 12px; font-size:16px;">💬 댓글 목록</h4>
         <div id="commentsList" style="margin-bottom:16px;"></div>
-
         <form id="commentForm" style="display:flex; gap:8px;">
           <input id="commentInput" placeholder="따뜻한 댓글을 남겨주세요" required style="flex:1;">
           <button type="submit" class="btn coral small" style="white-space:nowrap;">작성</button>
@@ -200,7 +235,6 @@
       </div>
     </article>
   </section>
-
   <!-- 2. 맛집/카페 등 공유 뷰 -->
   <section id="placesView" class="community-panel" hidden>
     <div class="head">
@@ -210,21 +244,18 @@
       </div>
       <button class="btn small" id="placesBack" type="button">← 메인</button>
     </div>
-
     <div class="places-layout">
       <!-- 왼쪽: 회원 저장 장소 목록 -->
       <div class="places-left">
         <h3 style="margin:0 0 12px; font-size:17px; font-family:var(--font-display);">회원 저장 장소</h3>
         <div id="savedPlaces" class="places-list"></div>
       </div>
-
       <!-- 오른쪽: 대형 지도 및 카카오 검색/저장 폼 -->
       <div class="places-right">
         <div>
           <div id="placesMap" class="places-map"></div>
           <p id="placesStatus" style="font-size:12.5px; color:#666; margin:6px 0 0;"></p>
         </div>
-
         <form id="placeSaveForm" class="community-form">
           <h3>장소 공유하기</h3>
           <label style="font-size:13px; font-weight:800;">분류
@@ -251,14 +282,12 @@
       </div>
     </div>
   </section>
-
   <!-- 3. 학생증 만들기 모달/뷰 -->
   <section id="studentCardModal" class="community-panel" hidden>
     <div class="head">
       <h2 class="title">🪪 나의 캐릭터 학생증</h2>
       <button class="btn small" id="closeCardBtn" type="button">닫기</button>
     </div>
-
     <div style="display:grid; gap:20px; grid-template-columns:repeat(auto-fit,minmax(280px,1fr));">
       <div class="student-card-preview">
         <div class="student-avatar-large" id="cardAvatarPreview"></div>
@@ -266,62 +295,157 @@
         <p id="cardMajorPreview" style="margin:0; font-size:13px; color:#F3F4F6;">전공: 칼퇴학</p>
         <span style="display:inline-block; margin-top:12px; font-size:11px; background:rgba(255,255,255,.15); padding:4px 10px; border-radius:12px;">2030 드립대학교 수다학과</span>
       </div>
-
       <form id="avatarCustomForm" class="community-form">
         <h3>프로필 캐릭터 지정</h3>
-        <label style="font-size:13px; font-weight:800;">캐릭터 테마
-          <select id="avatarColorSelect">
-            <option value="#E85B52">🔥 코랄 레드</option>
-            <option value="#3A86FF">⚡ 스마트 블루</option>
-            <option value="#10B981">🌿 힐링 그린</option>
-            <option value="#F59E0B">💛 럭키 옐로우</option>
-            <option value="#8B5CF6">🔮 미스틱 퍼플</option>
-          </select>
-        </label>
-        <label style="font-size:13px; font-weight:800;">표정 지정
-          <select id="avatarExpression">
-            <option value="smile">😊 방긋 웃음</option>
-            <option value="cool">sunglasses😎 칼퇴 모드</option>
-            <option value="wink">wink😜 드립 모드</option>
-          </select>
-        </label>
+
+        <!-- 가로 스와이프: 색상 -->
+        <div class="swipe-section">
+          <span class="swipe-label">캐릭터 테마</span>
+          <div class="swipe-track" id="colorTrack">
+            <div class="swipe-item" data-color="#E85B52">
+              <div class="preview-face"></div>
+              <div class="item-name">🔥 코랄</div>
+            </div>
+            <div class="swipe-item" data-color="#3A86FF">
+              <div class="preview-face"></div>
+              <div class="item-name">⚡ 블루</div>
+            </div>
+            <div class="swipe-item" data-color="#10B981">
+              <div class="preview-face"></div>
+              <div class="item-name">🌿 그린</div>
+            </div>
+            <div class="swipe-item" data-color="#F59E0B">
+              <div class="preview-face"></div>
+              <div class="item-name">💛 옐로우</div>
+            </div>
+            <div class="swipe-item" data-color="#8B5CF6">
+              <div class="preview-face"></div>
+              <div class="item-name">🔮 퍼플</div>
+            </div>
+          </div>
+          <p class="swipe-hint">← 좌우로 스와이프 →</p>
+        </div>
+
+        <!-- 가로 스와이프: 표정 -->
+        <div class="swipe-section">
+          <span class="swipe-label">표정 지정</span>
+          <div class="swipe-track" id="exprTrack">
+            <div class="swipe-item" data-expr="smile">
+              <div class="preview-face"></div>
+              <div class="item-name">😊 방긋</div>
+            </div>
+            <div class="swipe-item" data-expr="cool">
+              <div class="preview-face"></div>
+              <div class="item-name">😎 칼퇴</div>
+            </div>
+            <div class="swipe-item" data-expr="wink">
+              <div class="preview-face"></div>
+              <div class="item-name">😜 드립</div>
+            </div>
+          </div>
+          <p class="swipe-hint">← 좌우로 스와이프 →</p>
+        </div>
+
         <button type="submit" class="btn coral" style="justify-content:center;">학생증 저장하기</button>
       </form>
     </div>
   </section>
-
 </div>
-
 <div class="toast" id="toast" hidden></div>
-
 <script>
 (function () {
   "use strict";
-
   function $(id) { return document.getElementById(id); }
   function toast(msg) {
     var t = $("toast"); t.textContent = msg; t.hidden = false;
     setTimeout(function () { t.hidden = true; }, 3000);
   }
-
   // 사용자별 학생증 프로필 캐시
   var studentCardsMap = {
     "user_1": { name: "일산드립왕", major: "야근회피학", color: "#E85B52", expr: "cool" },
     "user_2": { name: "칼퇴요정", major: "칼퇴전문", color: "#10B981", expr: "smile" }
   };
-
   var currentUserId = "user_me";
   studentCardsMap[currentUserId] = { name: "드립학생", major: "칼퇴전공", color: "#3A86FF", expr: "smile" };
 
-  // 아바타 SVG 생성 함수
+  // ===== 병맛 + 자연스러운 아바타 SVG =====
   function generateAvatarSvg(color, expr) {
-    var eyeSvg = '<circle cx="38" cy="45" r="5" fill="#222"/><circle cx="62" cy="45" r="5" fill="#222"/>';
+    color = color || "#3A86FF";
+    expr = expr || "smile";
+
+    // 피부색 (살짝 따뜻한 톤)
+    var skin = "#FFE8D6";
+    // 볼터치
+    var blush = "rgba(255,140,140,0.45)";
+
+    // 머리카락 (테마 색 기반, 약간 어둡게)
+    var hairDark = color;
+
+    // 눈/입/액세서리
+    var eyes = "";
+    var mouth = "";
+    var extra = "";
+
     if (expr === "cool") {
-      eyeSvg = '<rect x="28" y="40" width="22" height="10" rx="3" fill="#222"/><rect x="50" y="40" width="22" height="10" rx="3" fill="#222"/><line x1="48" y1="44" x2="52" y2="44" stroke="#222" stroke-width="2"/>';
+      // 선글라스 + 무표정 미소
+      eyes = `
+        <rect x="28" y="42" width="20" height="12" rx="3.5" fill="#1a1a1a"/>
+        <rect x="52" y="42" width="20" height="12" rx="3.5" fill="#1a1a1a"/>
+        <rect x="47" y="46" width="6" height="3" rx="1" fill="#1a1a1a"/>
+        <circle cx="34" cy="47" r="2.2" fill="#88c0ff" opacity="0.7"/>
+        <circle cx="58" cy="47" r="2.2" fill="#88c0ff" opacity="0.7"/>
+      `;
+      mouth = `<path d="M40 68 Q50 74 60 68" stroke="#5c4030" stroke-width="2.8" stroke-linecap="round" fill="none"/>`;
+      extra = `<path d="M22 38 Q30 28 40 32" stroke="${hairDark}" stroke-width="5" fill="none" stroke-linecap="round"/>
+               <path d="M78 38 Q70 28 60 32" stroke="${hairDark}" stroke-width="5" fill="none" stroke-linecap="round"/>`;
     } else if (expr === "wink") {
-      eyeSvg = '<path d="M 32 45 Q 38 38 44 45" stroke="#222" stroke-width="3" fill="none"/><circle cx="62" cy="45" r="5" fill="#222"/>';
+      // 한쪽 윙크 + 혀 살짝
+      eyes = `
+        <path d="M30 48 Q38 40 46 48" stroke="#333" stroke-width="3.2" fill="none" stroke-linecap="round"/>
+        <circle cx="62" cy="47" r="5.5" fill="#333"/>
+        <circle cx="63.5" cy="45.5" r="2" fill="#fff"/>
+      `;
+      mouth = `
+        <path d="M40 66 Q50 78 62 66" stroke="#5c4030" stroke-width="2.6" fill="none" stroke-linecap="round"/>
+        <ellipse cx="55" cy="72" rx="5" ry="3.5" fill="#ff6b6b"/>
+      `;
+      extra = `<circle cx="34" cy="58" r="4.5" fill="${blush}"/>
+               <circle cx="66" cy="58" r="4.5" fill="${blush}"/>`;
+    } else {
+      // smile (기본 방긋)
+      eyes = `
+        <circle cx="37" cy="47" r="5.5" fill="#333"/>
+        <circle cx="63" cy="47" r="5.5" fill="#333"/>
+        <circle cx="38.8" cy="45.2" r="2.1" fill="#fff"/>
+        <circle cx="64.8" cy="45.2" r="2.1" fill="#fff"/>
+        <path d="M31 40 Q37 36 43 40" stroke="#5c4030" stroke-width="2" fill="none" stroke-linecap="round"/>
+        <path d="M57 40 Q63 36 69 40" stroke="#5c4030" stroke-width="2" fill="none" stroke-linecap="round"/>
+      `;
+      mouth = `<path d="M38 65 Q50 78 62 65" stroke="#5c4030" stroke-width="3" stroke-linecap="round" fill="none"/>`;
+      extra = `<circle cx="32" cy="58" r="5" fill="${blush}"/>
+               <circle cx="68" cy="58" r="5" fill="${blush}"/>`;
     }
-    return '<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="50" r="46" fill="' + (color || '#3A86FF') + '"/><circle cx="50" cy="50" r="38" fill="#FFF"/><g>' + eyeSvg + '</g><path d="M 38 65 Q 50 78 62 65" stroke="#222" stroke-width="4" stroke-linecap="round" fill="none"/></svg>';
+
+    // 전체 조합
+    return `
+      <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+        <!-- 머리 배경 (테마 색) -->
+        <circle cx="50" cy="50" r="46" fill="${color}"/>
+        <!-- 얼굴 -->
+        <circle cx="50" cy="52" r="34" fill="${skin}"/>
+        <!-- 옆머리 / 앞머리 느낌 -->
+        <path d="M18 48 Q22 22 50 18 Q78 22 82 48" fill="${hairDark}"/>
+        <path d="M28 28 Q40 18 50 22 Q60 18 72 28" fill="${hairDark}" opacity="0.85"/>
+        <!-- 귀 -->
+        <ellipse cx="18" cy="52" rx="7" ry="9" fill="${skin}"/>
+        <ellipse cx="82" cy="52" rx="7" ry="9" fill="${skin}"/>
+        <!-- 볼 -->
+        ${extra}
+        <!-- 눈 + 입 -->
+        ${eyes}
+        ${mouth}
+      </svg>
+    `;
   }
 
   // 게시글 sample 데이터
@@ -347,16 +471,18 @@
       comments: []
     }
   ];
-
   // 맛집 장소 데이터
   var savedPlacesData = [
     { id: 1, name: "카페 몬타나", category: "카페", address: "경기도 고양시 일산서구 덕산로312번길 124", lat: 37.6934, lng: 126.7451, author: "일산드립왕", memo: "넓은 정원과 뷰가 좋은 카페입니다!" }
   ];
-
   var map = null;
   var markers = [];
   var currentInfoWindow = null;
   var activePostId = null;
+
+  // 현재 선택 중인 색/표정 (임시)
+  var tempColor = studentCardsMap[currentUserId].color;
+  var tempExpr = studentCardsMap[currentUserId].expr;
 
   // 화면 전환
   function showView(viewId) {
@@ -375,16 +501,51 @@
     $("cardMajorPreview").textContent = "전공: " + myCard.major;
   }
 
-  // 수다게시판 피드 렌더링 (작성자 프로필 avatar + created_at)
+  // 미리보기 + 스와이프 아이템 얼굴 갱신
+  function refreshAvatarPreview() {
+    $("cardAvatarPreview").innerHTML = generateAvatarSvg(tempColor, tempExpr);
+
+    // 색상 트랙 미리보기
+    var colorItems = document.querySelectorAll("#colorTrack .swipe-item");
+    colorItems.forEach(function(item) {
+      var c = item.getAttribute("data-color");
+      item.querySelector(".preview-face").innerHTML = generateAvatarSvg(c, tempExpr);
+      item.classList.toggle("selected", c === tempColor);
+    });
+
+    // 표정 트랙 미리보기
+    var exprItems = document.querySelectorAll("#exprTrack .swipe-item");
+    exprItems.forEach(function(item) {
+      var e = item.getAttribute("data-expr");
+      item.querySelector(".preview-face").innerHTML = generateAvatarSvg(tempColor, e);
+      item.classList.toggle("selected", e === tempExpr);
+    });
+  }
+
+  // 스와이프 아이템 클릭 이벤트
+  function bindSwipeSelectors() {
+    document.querySelectorAll("#colorTrack .swipe-item").forEach(function(item) {
+      item.onclick = function() {
+        tempColor = item.getAttribute("data-color");
+        refreshAvatarPreview();
+      };
+    });
+    document.querySelectorAll("#exprTrack .swipe-item").forEach(function(item) {
+      item.onclick = function() {
+        tempExpr = item.getAttribute("data-expr");
+        refreshAvatarPreview();
+      };
+    });
+  }
+
+  // 수다게시판 피드 렌더링
   function renderBoardFeed() {
     var container = $("boardFeed");
     container.innerHTML = "";
-
     postsData.forEach(function (post) {
       var authorCard = studentCardsMap[post.user_id] || { color: "#8894A8", expr: "smile" };
       var avatarSvg = generateAvatarSvg(authorCard.color, authorCard.expr);
       var formattedDate = new Date(post.created_at).toLocaleString('ko-KR');
-
       var card = document.createElement("div");
       card.className = "post-card";
       card.innerHTML = 
@@ -400,11 +561,9 @@
         '<div class="post-footer">' +
           '<span>💬 댓글 ' + (post.comments ? post.comments.length : 0) + '</span>' +
         '</div>';
-
       card.onclick = function () {
         openPostDetail(post.id);
       };
-
       container.appendChild(card);
     });
   }
@@ -414,14 +573,12 @@
     activePostId = postId;
     var post = postsData.find(function(p) { return p.id === postId; });
     if (!post) return;
-
     var authorCard = studentCardsMap[post.user_id] || { color: "#8894A8", expr: "smile" };
     $("detailAvatar").innerHTML = generateAvatarSvg(authorCard.color, authorCard.expr);
     $("detailAuthor").textContent = post.author;
     $("detailDate").textContent = new Date(post.created_at).toLocaleString('ko-KR');
     $("detailTitle").textContent = post.title;
     $("detailContent").textContent = post.content;
-
     renderComments(post.comments || []);
     showView("postDetailView");
   }
@@ -430,12 +587,10 @@
   function renderComments(comments) {
     var container = $("commentsList");
     container.innerHTML = "";
-
     if (comments.length === 0) {
       container.innerHTML = '<p style="font-size:13px; color:#888;">첫 댓글을 작성해보세요!</p>';
       return;
     }
-
     comments.forEach(function (c) {
       var cCard = studentCardsMap[c.user_id] || { color: "#ABC", expr: "smile" };
       var div = document.createElement("div");
@@ -460,12 +615,10 @@
       renderPlacesList();
       return;
     }
-
     kakao.maps.load(function () {
       var container = $("placesMap");
       var options = { center: new kakao.maps.LatLng(37.6934, 126.7451), level: 5 };
       map = new kakao.maps.Map(container, options);
-
       kakao.maps.event.addListener(map, 'click', function(mouseEvent) {
         var latlng = mouseEvent.latLng;
         $("placeLat").value = latlng.getLat();
@@ -479,7 +632,6 @@
           }
         });
       });
-
       renderPlacesList();
     });
   }
@@ -489,7 +641,6 @@
     var query = $("placeAddress").value.trim() || $("placeName").value.trim();
     if (!query) { toast("검색할 장소명을 입력하세요."); return; }
     if (!map) return;
-
     var ps = new kakao.maps.services.Places();
     ps.keywordSearch(query, function (data, status) {
       if (status === kakao.maps.services.Status.OK) {
@@ -501,7 +652,6 @@
         $("placeLng").value = first.x;
         $("placeAddress").value = first.road_address_name || first.address_name;
         if (!$("placeName").value.trim()) $("placeName").value = first.place_name;
-
         if (currentInfoWindow) currentInfoWindow.close();
         currentInfoWindow = new kakao.maps.InfoWindow({
           content: '<div style="padding:6px 10px; font-size:12px; font-weight:700;">📍 ' + first.place_name + '</div>'
@@ -531,6 +681,8 @@
   // 이벤트 연결
   window.onload = function () {
     updateMyProfileUI();
+    bindSwipeSelectors();
+    refreshAvatarPreview();
 
     // 메뉴 이동
     $("goBoardNav").onclick = function() { renderBoardFeed(); showView("boardView"); };
@@ -539,20 +691,23 @@
     
     $("goPlacesNav").onclick = function() { showView("placesView"); initKakaoMap(); };
     $("placesBack").onclick = function() { showView("mainView"); };
-
-    $("makeCardBtn").onclick = function() { showView("studentCardModal"); };
+    $("makeCardBtn").onclick = function() {
+      // 열 때 현재 저장된 값으로 임시 값 초기화
+      tempColor = studentCardsMap[currentUserId].color;
+      tempExpr = studentCardsMap[currentUserId].expr;
+      refreshAvatarPreview();
+      showView("studentCardModal");
+    };
     $("closeCardBtn").onclick = function() { showView("mainView"); };
 
     // 글쓰기 폼 제어
     $("btnOpenWrite").onclick = function() { $("postWriteForm").hidden = false; };
     $("btnCancelWrite").onclick = function() { $("postWriteForm").hidden = true; };
-
     $("postWriteForm").onsubmit = function(e) {
       e.preventDefault();
       var title = $("postTitle").value.trim();
       var content = $("postContent").value.trim();
       var myCard = studentCardsMap[currentUserId];
-
       var newPost = {
         id: Date.now(),
         user_id: currentUserId,
@@ -562,7 +717,6 @@
         created_at: new Date().toISOString(),
         comments: []
       };
-
       postsData.unshift(newPost);
       $("postTitle").value = "";
       $("postContent").value = "";
@@ -576,7 +730,6 @@
       e.preventDefault();
       var text = $("commentInput").value.trim();
       if (!text || !activePostId) return;
-
       var post = postsData.find(function(p) { return p.id === activePostId; });
       if (post) {
         var myCard = studentCardsMap[currentUserId];
@@ -596,8 +749,8 @@
     // 학생증 아바타 저장
     $("avatarCustomForm").onsubmit = function(e) {
       e.preventDefault();
-      studentCardsMap[currentUserId].color = $("avatarColorSelect").value;
-      studentCardsMap[currentUserId].expr = $("avatarExpression").value;
+      studentCardsMap[currentUserId].color = tempColor;
+      studentCardsMap[currentUserId].expr = tempExpr;
       updateMyProfileUI();
       toast("학생증 캐릭터 프로필이 업데이트되었습니다!");
     };
