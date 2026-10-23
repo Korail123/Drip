@@ -115,6 +115,7 @@
   .community-detail { margin:12px 0; padding:16px; border:2px solid var(--ink); border-radius:16px; background:#fff; }
   .community-photo { max-width:100%; max-height:420px; display:block; border-radius:12px; margin:10px 0; object-fit:contain; }
   .like-btn { border:1px solid #e7a3b6 !important; border-radius:20px !important; background:#fff0f5 !important; }
+  .comment-item .community-author-photo { width:26px; height:26px; display:inline-grid; vertical-align:middle; margin-right:6px; border-width:1.5px; }
 
   /* 맛집/카페 지도 */
   .places-tabs { display:flex; gap:8px; flex-wrap:wrap; margin:12px 0; }
@@ -209,6 +210,9 @@
   .sid-sw { width:30px; height:30px; border-radius:50%; border:2px solid var(--ink); padding:0; }
   .sid-sw.on { outline:3px solid #5B8CFF; outline-offset:2px; }
   .sid-actions { display:flex; flex-wrap:wrap; gap:8px; margin-top:16px; }
+  #sidPngPreview { margin-top:12px; text-align:center; }
+  #sidPngPreview img { max-width:100%; border-radius:12px; border:1px solid #DCE2ED; }
+  #sidPngPreview p { margin:8px 0 0; font-size:12.5px; color:var(--muted); font-weight:700; }
   @media(max-width:420px){ .sid-card { padding:16px 14px; box-shadow:6px 6px 0 var(--ink); } .sid-body { gap:12px; } .sid-photo { width:84px; height:98px; } .sid-title { font-size:17px; } .sid-name { font-size:24px; } }
 
   /* 공지사항 - 세로 한 줄 목록 */
@@ -240,6 +244,8 @@
   .rank-item.me { background:#FFF9DD; border-radius:12px; }
   .rank-sub { display:block; color:var(--muted); font-size:12.5px; font-weight:500; }
   .rank-score { font-family:var(--font-display); font-size:18px; color:var(--coral); }
+  .rank-avatar { width:36px; height:36px; flex:none; border:2px solid var(--ink); border-radius:50%; overflow:hidden; background:#FFF0C2; display:grid; place-items:center; }
+  .rank-avatar svg { width:100%; height:100%; display:block; }
 
   /* 미니게임 */
   .game-card { display:flex; align-items:center; gap:16px; width:100%; text-align:left; transition:transform .08s, box-shadow .08s; }
@@ -580,8 +586,9 @@
       <h3 class="sid-h">🎨 프로필 캐릭터</h3>
       <p class="sid-swipe-hint">👈 손가락으로 좌우로 밀어 옵션 종류와 세부 항목을 넘겨보세요 👉</p>
       <div id="sidAvatarControls" aria-label="캐릭터 옵션, 좌우로 밀어 보기"></div>
-      <div class="sid-actions"><button class="btn small" id="sidRandom" type="button">🎲 랜덤</button><button class="btn small" id="sidReset" type="button">↺ 기본값</button><button class="btn small coral" id="sidSave" type="button">💾 저장하기</button></div>
+      <div class="sid-actions"><button class="btn small" id="sidRandom" type="button">🎲 랜덤</button><button class="btn small" id="sidReset" type="button">↺ 기본값</button><button class="btn small coral" id="sidSave" type="button">💾 저장하기</button><button class="btn small" id="sidDownload" type="button">📥 PNG 다운로드</button></div>
       <div id="sidStatus" class="community-status"></div>
+      <div id="sidPngPreview"></div>
     </div>
   </section>
   <section id="fortuneView" hidden class="community-panel">
@@ -1223,10 +1230,15 @@
     var q = await supabase.from("community_posts").select("id,title,content,author_id,author_nickname,created_at,updated_at,image_url,like_count,community_comments(id,content,author_id,author_nickname,created_at)").order("created_at", { ascending: false });
     if (q.error) { setText("communityStatus", "게시판 테이블 설정을 확인해 주세요: " + q.error.message); return; }
     var posts = q.data, user = await currentUser(), avatarByUser = {}, avatarLookupFailed = false;
-    // 게시글 작성자별로 Supabase에 저장된 학생증 아바타를 조회합니다.
+    // 게시글·댓글 작성자별로 Supabase에 저장된 학생증 아바타를 조회합니다.
     // 각 작성자의 author_id와 student_cards.user_id를 연결하므로 로그인한 사용자 본인의 프로필이 아니라 글쓴이의 프로필이 표시됩니다.
     try {
-      var authorIds = Array.from(new Set(posts.map(function(p){ return p.author_id; }).filter(Boolean)));
+      var idSet = {};
+      posts.forEach(function (p) {
+        if (p.author_id) idSet[p.author_id] = true;
+        (p.community_comments || []).forEach(function (c) { if (c.author_id) idSet[c.author_id] = true; });
+      });
+      var authorIds = Object.keys(idSet);
       if (authorIds.length) {
         var cards = await supabase.from("student_cards").select("user_id,avatar").in("user_id", authorIds);
         if (cards.error) { avatarLookupFailed = true; console.warn("학생증 프로필 조회 권한을 확인해 주세요.", cards.error); }
@@ -1255,7 +1267,7 @@
       var comments = detail.querySelector(".comments");
       (p.community_comments || []).sort(function (a, b) { return new Date(a.created_at) - new Date(b.created_at); }).forEach(function (c) {
         var item = document.createElement("div"); item.className = "comment-item";
-        item.innerHTML = '<strong>' + escapeHtml(c.author_nickname) + '</strong> · ' + escapeHtml(c.content) + ' ' + (((user && user.id === c.author_id) || admin) ? '<button data-comment-delete type="button">삭제</button>' : '');
+        item.innerHTML = authorPhoto(c.author_id) + '<strong>' + escapeHtml(c.author_nickname) + '</strong> · ' + escapeHtml(c.content) + ' ' + (((user && user.id === c.author_id) || admin) ? '<button data-comment-delete type="button">삭제</button>' : '');
         var d = item.querySelector("[data-comment-delete]");
         if (d) d.onclick = async function () { var r = await supabase.from("community_comments").delete().eq("id", c.id); if (r.error) alert("댓글 삭제 실패: " + r.error.message); else loadCommunity(); };
         comments.appendChild(item);
@@ -1529,28 +1541,33 @@
 
   /* =====================================================================
      학생증 만들기 — 캐릭터 데이터 / SVG 생성
+     (기본 캐릭터: 검은 물결머리 · 점눈 · 긴 콧대 · 작은 분홍 입술 · 온화한 표정 · 갈색 민소매 · 남성)
      ===================================================================== */
   var AV_GROUPS = [
     { key: "gender", label: "성별", type: "seg", opts: [["m", "남성"], ["f", "여성"]] },
-    { key: "hair", label: "헤어스타일", type: "seg", opts: [["slick", "빗어넘김"], ["buzz", "스포츠"], ["part", "가르마"], ["bob", "단발"], ["long", "긴머리"], ["curly", "곱슬"], ["bun", "똥머리"], ["bald", "민머리"]] },
+    { key: "hair", label: "헤어스타일", type: "seg", opts: [["wavy", "물결머리"], ["slick", "빗어넘김"], ["buzz", "스포츠"], ["part", "가르마"], ["bob", "단발"], ["long", "긴머리"], ["curly", "곱슬"], ["bun", "똥머리"], ["bald", "민머리"]] },
     { key: "hairColor", label: "머리색", type: "color", opts: [["#1b1b1b", "검정"], ["#6b3f1d", "갈색"], ["#e6b94a", "금발"], ["#9aa3b2", "회색"], ["#c0392b", "빨강"], ["#f08bb4", "분홍"]] },
     { key: "face", label: "얼굴형", type: "seg", opts: [["long", "길쭉"], ["round", "둥근"], ["square", "각진"]] },
     { key: "skin", label: "피부색", type: "color", opts: [["#FFDEBF", "밝은"], ["#F6C9A5", "보통"], ["#E0A97D", "황갈"], ["#B97A56", "갈색"], ["#8D5A3B", "짙은"]] },
-    { key: "expr", label: "표정", type: "seg", opts: [["neutral", "기본"], ["smile", "웃음"], ["wow", "놀람"], ["sleepy", "졸림"], ["tired", "야근"], ["angry", "화남"], ["sad", "울상"]] },
+    { key: "expr", label: "표정", type: "seg", opts: [["gentle", "온화"], ["neutral", "기본"], ["smile", "웃음"], ["wow", "놀람"], ["sleepy", "졸림"], ["tired", "야근"], ["angry", "화남"], ["sad", "울상"]] },
     { key: "eyes", label: "눈", type: "seg", opts: [["dot", "점눈"], ["round", "동그란눈"], ["thin", "가는눈"], ["sparkle", "반짝눈"], ["arch", "웃는눈"]] },
-    { key: "nose", label: "코", type: "seg", opts: [["long", "긴코"], ["dot", "점코"], ["L", "L자코"], ["big", "동그란코"]] },
+    { key: "nose", label: "코", type: "seg", opts: [["tall", "긴 콧대"], ["long", "긴코"], ["dot", "점코"], ["L", "L자코"], ["big", "동그란코"]] },
+    { key: "mouth", label: "입", type: "seg", opts: [["lips", "작은입술"], ["smile", "미소선"], ["auto", "표정에 맞춤"]] },
     { key: "glasses", label: "안경", type: "seg", opts: [["no", "없음"], ["yes", "안경"]] },
-    { key: "clothes", label: "옷", type: "seg", opts: [["shirt", "셔츠"], ["hoodie", "후드"], ["tee", "티셔츠"], ["suit", "정장"], ["turtle", "목폴라"]] },
-    { key: "clothesColor", label: "옷 색", type: "color", opts: [["#E8763A", "주황"], ["#4A7BD0", "파랑"], ["#3FA878", "초록"], ["#8A63C7", "보라"], ["#2B2F3A", "검정"], ["#EE7FA5", "분홍"], ["#F5F5F5", "흰색"]] },
+    { key: "clothes", label: "옷", type: "seg", opts: [["tank", "민소매"], ["shirt", "셔츠"], ["hoodie", "후드"], ["tee", "티셔츠"], ["suit", "정장"], ["turtle", "목폴라"]] },
+    { key: "clothesColor", label: "옷 색", type: "color", opts: [["#C8703F", "갈색"], ["#E8763A", "주황"], ["#4A7BD0", "파랑"], ["#3FA878", "초록"], ["#8A63C7", "보라"], ["#2B2F3A", "검정"], ["#EE7FA5", "분홍"], ["#F5F5F5", "흰색"]] },
     { key: "bg", label: "배경색", type: "color", opts: [["#FFF0C2", "노랑"], ["#D8F7E8", "민트"], ["#FFE8EE", "분홍"], ["#DDEBFF", "하늘"], ["#E8DFFF", "라벤더"], ["#E9EDF3", "회색"], ["#FFD9CC", "코랄"], ["#FFFFFF", "흰색"]] }
   ];
-  var AV_DEFAULT = { gender: "m", hair: "slick", hairColor: "#1b1b1b", face: "long", skin: "#FFDEBF", expr: "neutral", eyes: "dot", nose: "long", glasses: "no", clothes: "shirt", clothesColor: "#E8763A", bg: "#FFF0C2" };
+  var AV_DEFAULT = { gender: "m", hair: "wavy", hairColor: "#1b1b1b", face: "long", skin: "#FFDEBF", expr: "gentle", eyes: "dot", nose: "tall", mouth: "lips", glasses: "no", clothes: "tank", clothesColor: "#C8703F", bg: "#FFF0C2" };
   var AV_INK = "#141414";
 
   // 서버/로컬에서 불러온 값은 허용 목록에 있는 값만 통과시킨다 (SVG에 그대로 들어가므로 중요)
   function sanitizeAvatar(o) {
-    var out = {}; o = (o && typeof o === "object") ? o : {};
+    var out = {}, empty = !o || typeof o !== "object" || !Object.keys(o).length;
+    o = empty ? AV_DEFAULT : o;
     AV_GROUPS.forEach(function (g) {
+      // 예전에 저장된 학생증에는 '입' 항목이 없으므로 기존 모습 그대로 '표정에 맞춤'으로 보여줍니다.
+      if (g.key === "mouth" && o.mouth == null) { out.mouth = "auto"; return; }
       var v = String(o[g.key] == null ? "" : o[g.key]);
       out[g.key] = g.opts.some(function (x) { return String(x[0]) === v; }) ? v : AV_DEFAULT[g.key];
     });
@@ -1568,6 +1585,7 @@
     return svgL("M" + (x - 4.6) + " 54 Q" + x + " 47.5 " + (x + 4.6) + " 54", 2.4);
   }
   var AV_BROWS = {
+    gentle: ["M36 46.5 Q40.5 41.5 45 45.5", "M55 45.5 Q59.5 41.5 64 46.5"],
     neutral: ["M35 45 L46 45", "M54 45 L65 45"],
     smile: ["M35 46 Q40.5 41.5 46 44.5", "M54 44.5 Q59.5 41.5 65 46"],
     wow: ["M35 41 Q40.5 36.5 46 40.5", "M54 40.5 Q59.5 36.5 65 41"],
@@ -1585,7 +1603,8 @@
       else if (h === "curly") s = [[27, 36, 10], [32, 23, 10], [43, 15, 10], [57, 15, 10], [68, 23, 10], [73, 36, 10], [24, 50, 7], [76, 50, 7]].map(function (c) { return svgC(c[0], c[1], c[2], hc, 2.4); }).join("");
       else if (h === "bun") s = svgC(50, 11, 9, hc, 2.4);
     } else {
-      if (h === "slick") s = svgP("M29 37 Q29 14 50 14 Q71 14 71 37 Q66 25 50 27 Q34 25 29 37 Z", hc) + svgL("M39 21 Q50 17 61 21", 1.4);
+      if (h === "wavy") s = svgP("M28 37 Q25 11 50 10 Q75 11 72 37 Q69 32 65 35 Q61 29 57 34 Q53 28 49 34 Q45 29 41 34 Q36 32 28 37 Z", hc);
+      else if (h === "slick") s = svgP("M29 37 Q29 14 50 14 Q71 14 71 37 Q66 25 50 27 Q34 25 29 37 Z", hc) + svgL("M39 21 Q50 17 61 21", 1.4);
       else if (h === "buzz") s = svgP("M30 35 Q31 18 50 18 Q69 18 70 35 Q62 28 50 28 Q38 28 30 35 Z", hc);
       else if (h === "part") s = svgP("M27 42 Q24 12 52 12 Q76 12 73 42 Q72 27 60 24 Q46 31 33 30 Q28 33 27 42 Z", hc);
       else if (h === "bob") s = svgP("M28 38 Q30 18 50 18 Q70 18 72 38 Q62 27 50 31 Q38 27 28 38 Z", hc);
@@ -1604,9 +1623,10 @@
     o += '<rect width="100" height="112" fill="' + a.bg + '"/>';
     o += '<rect x="43" y="74" width="14" height="16" fill="' + skin + '" stroke="' + AV_INK + '" stroke-width="2.4"/>';
 
-    // 몸 / 옷
-    o += svgP(f ? "M16 112 Q18 93 35 88 L65 88 Q82 93 84 112 Z" : "M10 112 Q12 92 34 88 L66 88 Q88 92 90 112 Z", cc);
-    if (a.clothes === "shirt") o += svgP("M37 88 L50 103 L33 97 Z", "#fff", 2) + svgP("M63 88 L50 103 L67 97 Z", "#fff", 2) + svgP("M50 102 L46.5 108 L50 112 L53.5 108 Z", "#2B2F3A", 1.6);
+    // 몸 / 옷 (민소매는 팔이 드러나므로 몸통을 피부색으로 먼저 그림)
+    o += svgP(f ? "M16 112 Q18 93 35 88 L65 88 Q82 93 84 112 Z" : "M10 112 Q12 92 34 88 L66 88 Q88 92 90 112 Z", a.clothes === "tank" ? skin : cc);
+    if (a.clothes === "tank") o += svgP("M30 112 L32.5 94 Q35 88 41 87.5 L59 87.5 Q65 88 67.5 94 L70 112 Z", cc) + svgP("M39.5 87.5 Q50 102 60.5 87.5 Z", skin, 2.2);
+    else if (a.clothes === "shirt") o += svgP("M37 88 L50 103 L33 97 Z", "#fff", 2) + svgP("M63 88 L50 103 L67 97 Z", "#fff", 2) + svgP("M50 102 L46.5 108 L50 112 L53.5 108 Z", "#2B2F3A", 1.6);
     else if (a.clothes === "hoodie") o += svgP("M32 90 Q50 110 68 90 Q62 83 50 83 Q38 83 32 90 Z", cc) + svgP("M32 90 Q50 110 68 90 Q62 83 50 83 Q38 83 32 90 Z", "rgba(0,0,0,.16)") + svgL("M44 98 L44 108", 2.2) + svgL("M56 98 L56 108", 2.2);
     else if (a.clothes === "tee") o += svgP("M39 88 Q50 101 61 88 Z", skin, 2.2);
     else if (a.clothes === "suit") o += svgP("M41 88 L50 107 L59 88 Z", "#fff", 2) + svgL("M41 88 L32 108", 2) + svgL("M59 88 L68 108", 2) + svgP("M50 99 L47 105 L50 112 L53 105 Z", "#c0392b", 1.6);
@@ -1620,11 +1640,12 @@
     else o += '<ellipse cx="50" cy="52" rx="' + fw + '" ry="' + (a.face === "round" ? 26 : 28) + '" fill="' + skin + '" stroke="' + AV_INK + '" stroke-width="2.4"/>';
     if (f) o += svgC(50 - fw, 61, 1.8, "#ffd34d", 1) + svgC(50 + fw, 61, 1.8, "#ffd34d", 1);
 
-    // 표정: 볼 / 눈썹 / 입
-    var e = a.expr, lip = f ? "#c0405f" : AV_INK, browW = f ? 1.7 : 2.8;
+    // 표정: 볼 / 눈썹
+    var e = a.expr, m = a.mouth || "auto", lip = f ? "#c0405f" : AV_INK, browW = f ? 1.7 : 2.8;
+    if (e === "gentle") browW = f ? 1.7 : 2.2;
     if (e === "smile" || e === "angry") o += '<circle cx="35" cy="62" r="4.2" fill="#ff8a8a" opacity=".5"/><circle cx="65" cy="62" r="4.2" fill="#ff8a8a" opacity=".5"/>';
     if (e === "tired") o += svgL("M37 57.5 Q41 60 45 57.5", 1.3, "#7a6a8a") + svgL("M55 57.5 Q59 60 63 57.5", 1.3, "#7a6a8a");
-    var b = AV_BROWS[e] || AV_BROWS.neutral;
+    var b = AV_BROWS[e] || AV_BROWS.gentle;
     o += svgL(b[0], browW) + svgL(b[1], browW);
 
     // 눈
@@ -1632,19 +1653,30 @@
     if (f) o += svgL("M36.2 50 L34 47.8", 1.6) + svgL("M63.8 50 L66 47.8", 1.6);
 
     // 코
-    if (a.nose === "dot") o += svgC(50, 60, 1.5, AV_INK);
+    if (a.nose === "tall") o += svgL("M51.5 45 Q49.2 56 52 65.5", 2) + svgL("M44.8 66.5 Q45 62.8 49 62.4 L50.6 63.8 L52.4 62.6", 1.5);
+    else if (a.nose === "dot") o += svgC(50, 60, 1.5, AV_INK);
     else if (a.nose === "L") o += svgL("M51 54 L51 61.5 L47.5 61.5", 2);
     else if (a.nose === "big") o += '<ellipse cx="50" cy="60" rx="3.4" ry="2.6" fill="rgba(0,0,0,.08)" stroke="' + AV_INK + '" stroke-width="1.8"/>';
     else o += svgL("M49.5 53 Q46.5 61 50.5 62.5", 2);
 
     // 입
-    if (e === "smile") o += svgP("M41.5 66 Q50 77 58.5 66 Z", "#fff", 2);
-    else if (e === "wow") o += '<ellipse cx="50" cy="69" rx="3.8" ry="5" fill="#5a2a2a" stroke="' + AV_INK + '" stroke-width="1.8"/>';
-    else if (e === "sleepy") o += svgL("M46 69 Q50 71.5 54 69", 2.2, lip) + '<text x="68" y="36" font-size="9" font-weight="800" fill="#6b7aa8" font-family="sans-serif">z</text><text x="74" y="27" font-size="12" font-weight="800" fill="#6b7aa8" font-family="sans-serif">Z</text>';
-    else if (e === "tired") o += svgL("M43 69.5 Q46.5 66 50 69.5 Q53.5 73 57 69.5", 2.2, lip) + svgP("M71 38 Q67.5 44 71 46.5 Q74.5 44 71 38 Z", "#8fd3ff", 1.2);
-    else if (e === "angry") o += svgL("M43 71 Q50 65.5 57 71", 2.4, lip) + svgL("M68 30 L73 35 M73 30 L68 35", 2.2, "#e11d48");
-    else if (e === "sad") o += svgL("M44 71.5 Q50 66 56 71.5", 2.4, lip) + svgP("M35 58 Q32 63 35 65.5 Q38 63 35 58 Z", "#8fd3ff", 1.2);
-    else o += '<ellipse cx="50" cy="68.5" rx="2.6" ry="3.2" fill="' + (f ? "#c0405f" : "#5a2a2a") + '" stroke="' + AV_INK + '" stroke-width="1.6"/>';
+    var mouthSvg = "";
+    if (m === "lips") mouthSvg = svgP("M45.5 68 Q48 66.2 50 67.6 Q52 66.2 54.5 68 Q52 72.6 50 72.8 Q48 72.6 45.5 68 Z", "#F4A3A8", 1.6) + svgL("M42.5 76 Q50 80.5 57.5 75.5", 2.2);
+    else if (m === "smile") mouthSvg = svgL("M43 69 Q50 75 57 69", 2.4, lip);
+    else if (e === "smile") mouthSvg = svgP("M41.5 66 Q50 77 58.5 66 Z", "#fff", 2);
+    else if (e === "wow") mouthSvg = '<ellipse cx="50" cy="69" rx="3.8" ry="5" fill="#5a2a2a" stroke="' + AV_INK + '" stroke-width="1.8"/>';
+    else if (e === "sleepy") mouthSvg = svgL("M46 69 Q50 71.5 54 69", 2.2, lip);
+    else if (e === "tired") mouthSvg = svgL("M43 69.5 Q46.5 66 50 69.5 Q53.5 73 57 69.5", 2.2, lip);
+    else if (e === "angry") mouthSvg = svgL("M43 71 Q50 65.5 57 71", 2.4, lip);
+    else if (e === "sad") mouthSvg = svgL("M44 71.5 Q50 66 56 71.5", 2.4, lip);
+    else mouthSvg = '<ellipse cx="50" cy="68.5" rx="2.6" ry="3.2" fill="' + (f ? "#c0405f" : "#5a2a2a") + '" stroke="' + AV_INK + '" stroke-width="1.6"/>';
+    o += mouthSvg;
+
+    // 표정 장식 (졸림 z, 땀방울, 화남 표시, 눈물)
+    if (e === "sleepy") o += '<text x="68" y="36" font-size="9" font-weight="800" fill="#6b7aa8" font-family="sans-serif">z</text><text x="74" y="27" font-size="12" font-weight="800" fill="#6b7aa8" font-family="sans-serif">Z</text>';
+    else if (e === "tired") o += svgP("M71 38 Q67.5 44 71 46.5 Q74.5 44 71 38 Z", "#8fd3ff", 1.2);
+    else if (e === "angry") o += svgL("M68 30 L73 35 M73 30 L68 35", 2.2, "#e11d48");
+    else if (e === "sad") o += svgP("M35 58 Q32 63 35 65.5 Q38 63 35 58 Z", "#8fd3ff", 1.2);
 
     o += avHair(a, "front");
 
@@ -1711,6 +1743,77 @@
   };
   $("sidReset").onclick = function () { sidState.avatar = sanitizeAvatar(AV_DEFAULT); syncSidControls(); renderSidCard(); };
 
+  /* ---------------- 학생증 PNG 다운로드 (캔버스로 직접 그림) ---------------- */
+  function canvasRoundRect(ctx, x, y, w, h, r) {
+    ctx.beginPath(); ctx.moveTo(x + r, y);
+    ctx.arcTo(x + w, y, x + w, y + h, r); ctx.arcTo(x + w, y + h, x, y + h, r);
+    ctx.arcTo(x, y + h, x, y, r); ctx.arcTo(x, y, x + w, y, r); ctx.closePath();
+  }
+  function fitCanvasText(ctx, text, maxW) {
+    text = String(text);
+    if (ctx.measureText(text).width <= maxW) return text;
+    while (text.length > 1 && ctx.measureText(text + "…").width > maxW) text = text.slice(0, -1);
+    return text + "…";
+  }
+  async function downloadStudentCardPng() {
+    setText("sidStatus", "PNG 이미지를 만드는 중…");
+    try {
+      try { await Promise.all([document.fonts.load('28px "Jua"'), document.fonts.load('800 14px "Noto Sans KR"')]); } catch (_f) {}
+      var S = 3, W = 420, H = 300, cv = document.createElement("canvas"); cv.width = W * S; cv.height = H * S;
+      var c = cv.getContext("2d"); c.scale(S, S);
+      var INK = "#202B45", disp = '"Jua","Apple SD Gothic Neo","Malgun Gothic","Noto Sans KR",sans-serif', body = '"Noto Sans KR","Apple SD Gothic Neo","Malgun Gothic",sans-serif';
+      function spacing(px) { try { c.letterSpacing = px + "px"; } catch (_e) {} }
+      c.fillStyle = "#FFFFFF"; c.fillRect(0, 0, W, H);
+
+      // 카드 그림자 + 카드
+      canvasRoundRect(c, 22, 22, 384, 266, 24); c.fillStyle = INK; c.fill();
+      var grad = c.createLinearGradient(0, 14, 0, 280); grad.addColorStop(0, "#FFFFFF"); grad.addColorStop(1, "#EEF1F8");
+      canvasRoundRect(c, 14, 14, 384, 266, 24); c.fillStyle = grad; c.fill(); c.lineWidth = 3; c.strokeStyle = INK; c.stroke();
+
+      // 상단: 신호등 점 + 제목 + 구분선
+      [["#ef4444", 43], ["#facc15", 61], ["#22c55e", 79]].forEach(function (d) { c.beginPath(); c.arc(d[1], 40, 7, 0, Math.PI * 2); c.fillStyle = d[0]; c.fill(); c.lineWidth = 2; c.strokeStyle = INK; c.stroke(); });
+      c.textAlign = "right"; c.textBaseline = "alphabetic"; c.fillStyle = INK; c.font = "20px " + disp; spacing(1.6); c.fillText("드립대학교 학생증", 376, 47); spacing(0); c.textAlign = "left";
+      canvasRoundRect(c, 36, 58, 340, 3, 1.5); c.fillStyle = INK; c.fill();
+
+      // 프로필 사진
+      var svg = avatarSVG(sidState.avatar).replace('width="100%" height="100%"', 'width="288" height="336"');
+      var url = URL.createObjectURL(new Blob([svg], { type: "image/svg+xml;charset=utf-8" }));
+      var img = new Image();
+      await new Promise(function (res, rej) { img.onload = res; img.onerror = rej; img.src = url; });
+      URL.revokeObjectURL(url);
+      c.save(); canvasRoundRect(c, 36, 76, 96, 112, 14); c.clip(); c.fillStyle = sidState.avatar.bg; c.fillRect(36, 76, 96, 112); c.drawImage(img, 36, 76, 96, 112); c.restore();
+      canvasRoundRect(c, 36, 76, 96, 112, 14); c.lineWidth = 3; c.strokeStyle = INK; c.stroke();
+
+      // 소속 / 전공 / 이름 / 학번
+      var nick = sidNick || "회원", fs = nick.length > 9 ? 18 : nick.length > 6 ? 22 : 28, maxW = 226;
+      c.fillStyle = "#5c6684"; c.font = "800 12px " + body; c.fillText("소속: 수다학과", 148, 96);
+      c.fillStyle = "#6d28d9"; c.font = "800 14px " + body; c.fillText(fitCanvasText(c, (sidState.major || "미정") + " 전공", maxW), 148, 118);
+      c.fillStyle = INK; c.font = fs + "px " + disp; spacing(nick.length > 6 ? fs * 0.1 : fs * 0.3); c.fillText(fitCanvasText(c, nick, maxW), 148, 154); spacing(0);
+      c.fillStyle = "#8a96b0"; c.font = "800 12px " + body; c.fillText("학번: " + (sidUser ? studentNo(sidUser) : "----"), 148, 176);
+
+      // 좌우명 박스
+      canvasRoundRect(c, 36, 206, 340, 60, 14); c.fillStyle = "rgba(255,255,255,.65)"; c.fill(); c.lineWidth = 1.5; c.strokeStyle = "#c8d2e4"; c.stroke();
+      c.fillStyle = "#8190b0"; c.font = "800 11.5px " + body; c.fillText("슬기로운 직장생활 좌우명", 50, 226);
+      c.fillStyle = INK; c.font = "italic 800 14.5px " + body; c.fillText(fitCanvasText(c, "“" + (sidState.motto || "좌우명을 적어 주세요") + "”", 252), 50, 249);
+
+      // 도장
+      c.save(); c.translate(339, 236); c.rotate(-14 * Math.PI / 180);
+      c.beginPath(); c.arc(0, 0, 27, 0, Math.PI * 2); c.lineWidth = 3; c.strokeStyle = "rgba(214,38,74,.38)"; c.stroke();
+      c.fillStyle = "rgba(214,38,74,.55)"; c.font = "12px " + disp; c.textAlign = "center"; c.fillText("드립", 0, -2); c.fillText("인증", 0, 12); c.restore();
+
+      var dataUrl = cv.toDataURL("image/png"), safeNick = nick.replace(/[\\/:*?"<>|]/g, "").trim() || "회원";
+      var a = document.createElement("a"); a.href = dataUrl; a.download = "드립대학교_학생증_" + safeNick + ".png";
+      document.body.appendChild(a); a.click(); document.body.removeChild(a);
+      $("sidPngPreview").innerHTML = '<img alt="학생증 PNG 미리보기" src="' + dataUrl + '"><p>다운로드가 시작되지 않으면 위 이미지를 길게 눌러 저장해 주세요.</p>';
+      setText("sidStatus", "PNG 이미지를 만들었어요!");
+      toast("학생증 PNG를 만들었어요 📥");
+    } catch (err) {
+      console.error(err);
+      setText("sidStatus", "PNG 만들기에 실패했어요: " + (err && err.message ? err.message : String(err)));
+    }
+  }
+  $("sidDownload").onclick = downloadStudentCardPng;
+
   async function loadStudentCard() {
     setText("sidStatus", "");
     var u = null;
@@ -1761,7 +1864,7 @@
       try { localStorage.setItem("dripcollege_sid_" + u.id, JSON.stringify({ major: major, motto: motto, avatar: sidState.avatar })); } catch (e) {}
       sidHasSavedCard = true;
       if ($("homeStudentCard")) $("homeStudentCard").hidden = false;
-      setText("sidStatus", "Supabase 저장 완료! 다른 기기에서도 로그인하면 불러올 수 있어요.");
+      setText("sidStatus", "Supabase 저장 완료! 수다게시판과 미니게임 랭킹에도 이 프로필이 표시돼요.");
       toast("학생증이 Supabase에 저장되었어요! 🎓");
       renderSidCard();
     } catch (err) {
@@ -1800,9 +1903,24 @@
     if (r.error) { st.textContent = "랭킹 SQL(word_game_ranking.sql)을 먼저 실행해 주세요: " + r.error.message; return; }
     var data = r.data || [];
     st.textContent = data.length ? "" : "아직 순위에 오른 회원이 없어요. " + WORD_RANK_MIN + "판 이상 플레이하면 이름이 올라갑니다!";
+
+    // 랭킹에 오른 회원들의 학생증 프로필을 닉네임으로 찾아 함께 보여줍니다.
+    var avatarByNick = {};
+    try {
+      var nicks = data.map(function (row) { return row.nickname; }).filter(Boolean);
+      if (nicks.length) {
+        var ac = await supabase.from("student_cards").select("nickname,avatar").in("nickname", nicks);
+        if (ac.error) console.warn("랭킹 프로필 조회 권한을 확인해 주세요.", ac.error);
+        else (ac.data || []).forEach(function (c) { avatarByNick[c.nickname] = c.avatar; });
+      }
+    } catch (avErr) { console.warn("랭킹 프로필을 불러오지 못했습니다.", avErr); }
+
     data.forEach(function (row, idx) {
       var item = el("div", "rank-item" + (row.is_me ? " me" : ""));
       item.appendChild(el("div", "rank-num" + (idx === 0 ? " gold" : idx === 1 ? " silver" : idx === 2 ? " bronze" : ""), String(row.ranking)));
+      var av = el("span", "rank-avatar"); av.setAttribute("aria-label", "프로필 사진");
+      av.innerHTML = avatarSVG(sanitizeAvatar(avatarByNick[row.nickname] || AV_DEFAULT));
+      item.appendChild(av);
       var info = el("div", "rank-info");
       var top = el("div"); top.appendChild(el("span", "nick", row.nickname + (row.is_me ? " (나)" : ""))); info.appendChild(top);
       info.appendChild(el("span", "rank-sub", row.wins + "승 / " + row.played + "판 · 최다연승 " + row.max_streak));
