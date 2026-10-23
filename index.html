@@ -480,6 +480,7 @@
 
 
   /* 검색 모달 hidden 상태가 뒤쪽 스타일에 의해 무시되지 않도록 고정 */
+  body.kakao-search-open { overflow:hidden; }
   #kakaoSearchModal[hidden] { display:none !important; }
   #kakaoSearchModal:not([hidden]) { display:flex !important; }
   #sidAvatarControls { display:flex !important; gap:10px; overflow-x:auto; padding:4px 2px 12px; align-items:stretch; visibility:visible !important; }
@@ -1295,11 +1296,24 @@
      ===================================================================== */
   var editingPostId = null, selectedPostId = null;
   async function loadCommunity() {
-    if (!supabase) return;
-    var feed = $("communityFeed"); feed.innerHTML = ""; setText("communityStatus", "게시글을 불러오는 중…");
-    var q = await supabase.from("community_posts").select("id,title,content,author_id,author_nickname,created_at,updated_at,image_url,like_count,community_comments(id,content,author_id,author_nickname,created_at)").order("created_at", { ascending: false });
-    if (q.error) { setText("communityStatus", "게시판 테이블 설정을 확인해 주세요: " + q.error.message); return; }
-    var posts = q.data, user = await currentUser(), avatarByUser = {}, avatarLookupFailed = false;
+    var feed = $("communityFeed");
+    if (!supabase) { setText("communityStatus", "Supabase 연결이 없어 게시글을 불러올 수 없습니다. 기존 게시글 데이터가 삭제된 것은 아닐 수 있습니다."); return; }
+    setText("communityStatus", "게시글을 불러오는 중…");
+    var q;
+    try {
+      q = await supabase.from("community_posts").select("id,title,content,author_id,author_nickname,created_at,updated_at,image_url,like_count,community_comments(id,content,author_id,author_nickname,created_at)").order("created_at", { ascending: false });
+    } catch (loadErr) {
+      console.error("수다게시판 불러오기 실패", loadErr);
+      setText("communityStatus", "게시글을 불러오지 못했습니다. 네트워크와 Supabase 연결을 확인해 주세요. 게시글 삭제 여부와는 별개입니다.");
+      return;
+    }
+    if (q.error) {
+      console.error("수다게시판 조회 오류", q.error);
+      setText("communityStatus", "게시글 조회 오류: " + q.error.message + " (데이터를 삭제하지 않았습니다.)");
+      return;
+    }
+    var posts = q.data || [], user = await currentUser(), avatarByUser = {}, avatarLookupFailed = false;
+    feed.innerHTML = "";
     // 게시글·댓글 작성자별로 Supabase에 저장된 학생증 아바타를 조회합니다.
     // 각 작성자의 author_id와 student_cards.user_id를 연결하므로 로그인한 사용자 본인의 프로필이 아니라 글쓴이의 프로필이 표시됩니다.
     try {
@@ -1480,16 +1494,25 @@
   function openKakaoSearchModal() {
     var modal = $("kakaoSearchModal");
     modal.hidden = false;
+    document.body.classList.add("kakao-search-open");
     $("kakaoSearchQuery").value = $("placeName").value || "";
     $("kakaoPlaceResults").innerHTML = "";
     $("kakaoSearchStatus").textContent = "상호명을 입력하고 검색하세요.";
     setTimeout(function(){ $("kakaoSearchQuery").focus(); }, 0);
   }
-  function closeKakaoSearchModal() { $("kakaoSearchModal").hidden = true; }
+  function closeKakaoSearchModal() {
+    var modal = $("kakaoSearchModal");
+    if (!modal) return;
+    modal.hidden = true;
+    document.body.classList.remove("kakao-search-open");
+    var opener = $("placeName"); if (opener) opener.blur();
+  }
   function searchKakaoAddressOrKeyword() {
     var query = $("kakaoSearchQuery").value.trim(), resultBox = $("kakaoPlaceResults"), statusBox = $("kakaoSearchStatus");
     if (!query) { statusBox.textContent = "검색할 상호명을 입력해주세요."; return; }
-    if (!mapReady || !ps) { statusBox.textContent = "카카오 지도가 아직 준비되지 않았습니다. 잠시 후 다시 시도해 주세요."; return; }
+    if (!window.kakao || !window.kakao.maps || !window.kakao.maps.services || !ps) {
+      statusBox.textContent = "카카오 장소 검색이 아직 준비되지 않았습니다. 카카오 JavaScript 키와 Web 도메인 설정을 확인해 주세요."; return;
+    }
     resultBox.innerHTML = ""; statusBox.textContent = "카카오맵에서 상호명을 검색 중...";
     ps.keywordSearch(query, function (data, st) {
       resultBox.innerHTML = "";
@@ -1509,6 +1532,7 @@
             var selectedPos = new kakao.maps.LatLng(parseFloat(place.y), parseFloat(place.x));
             kakaoMap.setLevel(3); kakaoMap.setCenter(selectedPos);
             setTimeout(function(){ kakaoMap.relayout(); kakaoMap.setCenter(selectedPos); }, 120);
+            setTimeout(function(){ var mapEl = $("placesMap"); if (mapEl) mapEl.scrollIntoView({behavior:"smooth",block:"center"}); }, 250);
           }
           closeKakaoSearchModal();
           placesStatus("선택 완료: " + place.place_name + " · 주소가 자동 입력되었습니다. 지도에서 위치를 확인할 수 있어요.");
@@ -1575,11 +1599,12 @@
   });
   $("btnSearchKakao").onclick = openKakaoSearchModal;
   $("placeName").addEventListener("click", openKakaoSearchModal);
-  $("placeName").addEventListener("focus", function(){ if (!$("kakaoSearchModal").hidden) return; openKakaoSearchModal(); });
+  $("placeName").addEventListener("focus", function(){ if (this.readOnly && $("kakaoSearchModal").hidden) openKakaoSearchModal(); });
   $("kakaoSearchSubmit").addEventListener("click", searchKakaoAddressOrKeyword);
   $("kakaoSearchQuery").addEventListener("keydown", function(e){ if(e.key === "Enter"){e.preventDefault();searchKakaoAddressOrKeyword();} });
   $("kakaoSearchClose").addEventListener("click", closeKakaoSearchModal);
   $("kakaoSearchModal").addEventListener("click", function(e){ if(e.target === this) closeKakaoSearchModal(); });
+  $("kakaoSearchModal").querySelector(".kakao-search-dialog").addEventListener("click", function(e){ e.stopPropagation(); });
   document.addEventListener("keydown", function(e){ if(e.key === "Escape" && !$("kakaoSearchModal").hidden) closeKakaoSearchModal(); });
 
   $("placeSaveForm").onsubmit = async function (e) {
