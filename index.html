@@ -1603,7 +1603,7 @@
     setText("communityStatus", avatarLookupFailed ? "작성자별 학생증 프로필을 불러오지 못했습니다. Supabase에서 student_cards 조회 정책을 확인해 주세요." : (posts.length ? "" : "아직 게시물이 없습니다. 첫 글을 작성해 보세요."));
     posts.forEach(function (p) {
       var row = document.createElement("div"); row.className = "community-row"; row.setAttribute("role", "button"); row.tabIndex = 0;
-      row.innerHTML = authorPhoto(p.author_id) + '<div class="community-row-title">' + escapeHtml(p.title) + '</div><div class="community-row-meta"><span>♥ ' + Number(p.like_count || 0) + '</span><span>💬 ' + (p.community_comments || []).length + '</span></div>';
+      row.innerHTML = authorPhoto(p.author_id) + '<div class="community-row-title-wrap" style="flex:1;min-width:0"><div class="community-row-title">' + escapeHtml(p.title) + '</div><div class="community-author-line" style="margin:5px 0 0">' + '<span>작성자 · ' + escapeHtml(p.author_nickname || "회원") + '</span><span>작성일시 · ' + escapeHtml(new Date(p.created_at).toLocaleString("ko-KR")) + '</span></div></div><div class="community-row-meta"><span>♥ ' + Number(p.like_count || 0) + '</span><span>💬 ' + (p.community_comments || []).length + '</span></div>';
       var open = function () { selectedPostId = (selectedPostId === p.id) ? null : p.id; loadCommunity(); };
       row.onclick = open; row.onkeydown = function (e) { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); open(); } };
       feed.appendChild(row);
@@ -1705,7 +1705,7 @@
       if (editingPostId) {
         var updates = { title: title, content: content, updated_at: new Date().toISOString() };
         if (imageUrl) updates.image_url = imageUrl;
-        result = await supabase.from("community_posts").update(updates).eq("id", editingPostId);
+        result = await supabase.from("community_posts").update(updates).eq("id", editingPostId).eq("author_id", u.id);
       } else result = await supabase.from("community_posts").insert({ title: title, content: content, author_id: u.id, author_nickname: nickname, image_url: imageUrl });
       if (result.error) throw result.error;
       $("communityComposer").hidden = true; editingPostId = null; $("communityPhoto").value = ""; $("communityPhotoPreview").innerHTML = ""; loadCommunity();
