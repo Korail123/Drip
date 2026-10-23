@@ -46,16 +46,18 @@
 
   /* 로그인 / 회원가입 */
   .site-title { width:100%; margin:12px auto 18px; text-align:center; color:#000; font-family:var(--font-display); font-size:clamp(22px,4.5vw,38px); line-height:1.25; font-weight:900; letter-spacing:-.045em; white-space:normal; overflow-wrap:anywhere; }
-  .auth-card { width:min(100%,520px); margin:10px auto 22px; padding:22px; background:#fff; border:3px solid var(--ink); border-radius:22px; box-shadow:6px 6px 0 var(--ink); }
-  .auth-card h2 { color:#111; margin:0 0 5px; font-family:var(--font-display); font-size:28px; }
-  .auth-help { margin:0 0 16px; color:var(--muted); font-size:13px; }
-  .auth-card label { display:block; margin:12px 0 5px; font-weight:800; }
+  .auth-card { width:min(100%,520px); margin:10px auto 22px; padding:28px; background:#fff; border:0; border-radius:26px; box-shadow:0 5px 22px rgba(20,48,70,.10); }
+  .auth-card h2 { color:#111; margin:0 0 8px; font-family:var(--font-display); font-size:28px; font-weight:900; letter-spacing:-.04em; }
+  .auth-help { margin:0 0 18px; color:var(--muted); font-size:13px; }
+  .auth-card label { display:block; margin:12px 0 6px; font-weight:800; font-size:13px; }
   .remember-row { display:flex !important; align-items:center; gap:9px; margin:12px 0 2px !important; font-size:14px; cursor:pointer; }
   .auth-card input.remember-checkbox { width:19px; min-height:19px; height:19px; margin:0; accent-color:#167a55; }
-  .auth-card input { width:100%; min-height:48px; border:2px solid var(--ink); border-radius:12px; padding:10px 12px; background:#fffdf8; }
+  .auth-card input:not(.remember-checkbox) { display:block; width:100%; min-height:46px; border:1px solid #d5e2eb; border-radius:14px; padding:11px 13px; background:#fbfdff; color:#15314b; box-sizing:border-box; font:inherit; }
+  .auth-card input:not(.remember-checkbox):focus { outline:2px solid #8bd7e7; outline-offset:1px; }
   .auth-actions { display:grid; gap:10px; margin-top:16px; }
-  .auth-primary,.auth-secondary { min-height:48px; border:2.5px solid var(--ink); border-radius:13px; font-family:var(--font-display); font-size:18px; box-shadow:3px 3px 0 var(--ink); }
-  .auth-primary { background:#b8f1d6; } .auth-secondary { background:#ffe8ee; }
+  .auth-primary,.auth-secondary { min-height:48px; border:1px solid #d4e4ed; border-radius:14px; font-family:var(--font-display); font-size:16px; font-weight:800; box-shadow:none; }
+  .auth-primary { color:#fff; background:linear-gradient(105deg,#00b5a3,#1195d1); } .auth-secondary { color:#176da5; background:#e8f4fb; }
+  .auth-note { margin:28px 0 0; color:var(--muted); font-size:12px; line-height:1.6; }
   .auth-status { margin-top:12px; min-height:1.5em; font-size:13px; font-weight:700; color:var(--muted); overflow-wrap:anywhere; }
   .auth-status.error { color:#c52843; } .auth-status.ok { color:#08734c; }
   .auth-topline { display:flex; justify-content:space-between; align-items:center; gap:10px; margin:4px auto 12px; max-width:720px; }
@@ -909,6 +911,105 @@
   @media(max-width:520px){.home-under-card-brand{width:min(76%,260px);margin:10px auto 18px}.home-under-card-brand img{max-height:76px}}
 
 </style>
+
+<style id="login-signup-ui-match">
+/* 로그인 화면을 회원가입 화면과 동일한 색상·글꼴·간격으로 통일 */
+#loginForm { font-family: inherit; }
+#loginForm label { color:#17324b; font-family:inherit; font-weight:800; }
+#loginForm input:not(.remember-checkbox) {
+  width:100%; min-height:46px; box-sizing:border-box;
+  border:1px solid #d5e2eb; border-radius:14px;
+  padding:11px 13px; background:#fbfdff; color:#15314b;
+  font-family:inherit; font-size:14px;
+}
+#loginForm input:not(.remember-checkbox)::placeholder { color:#7890a7; opacity:1; }
+#loginForm input:not(.remember-checkbox):focus { outline:2px solid #8bd7e7; outline-offset:1px; }
+#loginTitle { color:#111; font-family:var(--font-display); font-size:28px; font-weight:900; letter-spacing:-.04em; }
+#loginTitle .mark { color:inherit; }
+#loginForm .auth-actions { display:grid; gap:10px; margin-top:16px; }
+#loginForm .auth-primary, #loginForm .auth-secondary {
+  width:100%; min-height:48px; border:1px solid #d4e4ed; border-radius:14px;
+  font-family:var(--font-display); font-size:16px; font-weight:800; box-shadow:none;
+}
+#loginForm .auth-primary { color:#fff; background:linear-gradient(105deg,#00b5a3,#1195d1); }
+#loginForm .auth-secondary { color:#176da5; background:#e8f4fb; }
+#loginForm + .auth-note { color:var(--muted); font-family:inherit; font-size:12px; line-height:1.6; }
+@media(max-width:520px) { #loginTitle { font-size:25px; } }
+</style>
+
+
+<style id="login-match-signup-final">
+/* 로그인 카드를 회원가입 카드와 동일한 테마로 통일 */
+#loginCard.auth-card{
+  width:min(100%,520px)!important;
+  margin:10px auto 22px!important;
+  padding:28px!important;
+  background:#fff!important;
+  border:0!important;
+  border-radius:26px!important;
+  box-shadow:0 5px 22px rgba(20,48,70,.10)!important;
+  color:#102f55!important;
+  box-sizing:border-box!important;
+}
+#loginCard .login-brand-banner{
+  width:100%!important; max-width:100%!important;
+  margin:0 auto 18px!important;
+  border:0!important; border-radius:0!important;
+  background:transparent!important; box-shadow:none!important;
+}
+#loginCard .login-brand-banner img{display:block!important;width:100%!important;height:auto!important}
+#loginCard h2#loginTitle{
+  color:#111!important; margin:0 0 8px!important;
+  font-family:var(--font-display)!important;font-size:28px!important;
+  font-weight:900!important;letter-spacing:-.04em!important;
+}
+#loginCard h2#loginTitle .mark{
+  background:linear-gradient(transparent 62%,#bceafa 62%)!important;
+  color:#111!important;
+}
+#loginCard .auth-help{
+  margin:0 0 18px!important;padding:0 0 0!important;
+  border:0!important;color:var(--muted)!important;
+  font-family:inherit!important;font-size:13px!important;line-height:1.6!important;
+}
+#loginCard label{
+  display:block!important;margin:12px 0 6px!important;
+  color:#17324b!important;font-family:inherit!important;font-size:13px!important;font-weight:800!important;
+}
+#loginCard input:not([type="checkbox"]){
+  width:100%!important;min-height:46px!important;box-sizing:border-box!important;
+  border:1px solid #d5e2eb!important;border-radius:14px!important;
+  padding:11px 13px!important;background:#fbfdff!important;color:#15314b!important;
+  font-family:inherit!important;font-size:14px!important;box-shadow:none!important;
+}
+#loginCard input:not([type="checkbox"])::placeholder{color:#7890a7!important;opacity:1!important}
+#loginCard input:not([type="checkbox"]):focus{outline:2px solid #8bd7e7!important;outline-offset:1px!important}
+#loginCard .auth-actions{display:grid!important;gap:10px!important;margin-top:16px!important}
+#loginCard .auth-actions button,
+#loginCard button[type="submit"],#loginCard #loginBtn,#loginCard .auth-primary{
+  width:100%!important;min-height:48px!important;margin:0!important;
+  border:1px solid #d4e4ed!important;border-radius:14px!important;
+  font-family:var(--font-display)!important;font-size:16px!important;font-weight:800!important;
+  box-shadow:none!important;
+}
+#loginCard button[type="submit"],#loginCard #loginBtn,#loginCard .auth-primary{
+  color:#fff!important;background:linear-gradient(105deg,#00b5a3,#1195d1)!important;border-color:transparent!important;
+}
+#loginCard #openSignup,#loginCard .auth-secondary#openSignup{
+  color:#176da5!important;background:#e8f4fb!important;border:1px solid #d4e4ed!important;
+}
+#loginCard .auth-note{
+  margin-top:18px!important;color:var(--muted)!important;
+  font-family:inherit!important;font-size:12px!important;line-height:1.6!important;
+}
+#loginCard::after{content:none!important}
+@media(max-width:520px){
+ #loginCard.auth-card{width:calc(100% - 28px)!important;padding:22px!important;margin:10px auto 22px!important}
+ #loginCard .login-brand-banner{margin-bottom:16px!important}
+ #loginCard h2#loginTitle{font-size:26px!important}
+}
+</style>
+
 </head>
 <body>
 <header id="topBar" aria-label="현재 시각과 오늘 날씨">
@@ -981,13 +1082,15 @@
       
 
 
-      <h2 id="loginTitle"><span class="mark">로그인</span></h2><p class="auth-help">카카오톡 오픈채팅에서 사용하는 닉네임을 입력해 주세요.</p>
+      <h2 id="loginTitle"><span class="mark">로그인</span></h2><p class="auth-help">가입할 때 사용한 닉네임을 입력하면 로그인할 수 있어요.</p>
       <form id="loginForm" autocomplete="off">
-        <div class="lrow"><span class="lic" aria-hidden="true">👤</span><input id="loginNickname" aria-label="닉네임" name="nickname" maxlength="24" autocomplete="username" autocapitalize="off" spellcheck="false" placeholder="등록한 닉네임" required></div>
-        <label class="remember-row" for="rememberLogin"><input class="remember-checkbox" id="rememberLogin" type="checkbox" checked> 자동 로그인</label>
-        <div class="auth-actions"><button class="auth-primary" type="submit">로그인</button><button class="auth-secondary" id="openSignup" type="button">회원가입</button></div>
+        <label for="loginNickname">닉네임</label>
+        <input id="loginNickname" aria-label="닉네임" name="nickname" maxlength="24" autocomplete="username" autocapitalize="off" spellcheck="false" placeholder="가입한 닉네임을 입력해 주세요" required>
+        <label class="remember-row" for="rememberLogin" style="display:none !important"><input class="remember-checkbox" id="rememberLogin" type="checkbox" checked> 자동 로그인</label>
+        <div class="auth-actions"><button class="auth-primary" type="submit">로그인하기</button><button class="auth-secondary" id="openSignup" type="button">회원가입</button></div>
         <div id="loginStatus" class="auth-status" role="status" aria-live="polite"></div>
       </form>
+      <p class="auth-note">회원가입 시 인증번호를 입력하며, 로그인 화면에서는 닉네임만 입력합니다.</p>
     </section>
 
   </main>
@@ -1720,29 +1823,64 @@
 
     $("signupForm").addEventListener("submit", async function (e) {
     e.preventDefault(); if (!ready()) return;
-    var nick = normalizeNick($("signupNickname").value), code = $("signupCode").value;
+    var nick = normalizeNick($("signupNickname").value), code = $("signupCode").value.trim();
     if (nick.length < 2) { status("signupStatus", "닉네임은 2자 이상 입력해 주세요.", "error"); return; }
-    if (!code) { status("signupStatus", "인증번호를 입력해 주세요.", "error"); return; }
-    saveRememberChoice(); status("signupStatus", "등록된 닉네임과 인증번호를 확인하고 있습니다…", "");
+    if (code !== "2030") { status("signupStatus", "인증번호가 올바르지 않습니다.", "error"); return; }
+    saveRememberChoice(); status("signupStatus", "등록된 닉네임을 확인하고 있습니다…", "");
     try {
+      // 초대 목록에 등록되어 있고 아직 사용되지 않은 닉네임인지 확인
       var chk = await supabase.rpc("validate_member_invite", { p_nickname: nick, p_auth_code: code });
-      if (chk.error) throw chk.error;
-      if (chk.data !== true) { status("signupStatus", "등록 정보를 찾을 수 없거나 이미 사용된 인증번호입니다. 관리자에게 확인해 주세요.", "error"); return; }
-      var su = await supabase.auth.signUp({ email: await nickEmail(nick), password: await authPassword(nick, code), options: { data: { nickname: nick } } });
-      if (su.error) {
-        var signupErr = String((su.error && (su.error.message || su.error.code)) || "");
-        if (/already registered|already exists|user already|duplicate/i.test(signupErr)) {
-          status("signupStatus", "이미 계정이 생성된 닉네임입니다. 중복 가입은 진행하지 않았습니다. 기존 계정으로 로그인하려면 서버의 닉네임 전용 인증 기능이 필요합니다.", "error");
+      if (chk.error) {
+        console.error("validate_member_invite 오류:", chk.error);
+        throw new Error("회원 목록 확인에 실패했습니다: " + (chk.error.message || chk.error.code || "알 수 없는 오류"));
+      }
+      if (chk.data !== true) {
+        status("signupStatus", "등록된 닉네임이 아니거나 이미 가입 처리된 회원입니다. 닉네임을 확인하거나 기존 계정으로 로그인해 주세요.", "error");
+        return;
+      }
+
+      var email = await nickEmail(nick);
+      var password = await authPassword(nick, "2030");
+      var su = await supabase.auth.signUp({ email: email, password: password, options: { data: { nickname: nick } } });
+      var user = su.data && su.data.user;
+      var session = su.data && su.data.session;
+
+      // 이전 가입 시도에서 Auth 계정만 만들어진 경우, 동일한 기존 자격정보로 로그인해 이어서 처리
+      if (su.error && /already registered|already exists|user already|duplicate/i.test(String(su.error.message || su.error.code || ""))) {
+        var existing = await supabase.auth.signInWithPassword({ email: email, password: password });
+        if (existing.error) {
+          console.error("기존 Auth 계정 로그인 오류:", existing.error);
+          status("signupStatus", "이 닉네임의 Auth 계정은 이미 존재하지만 로그인할 수 없습니다. 이메일 확인 설정 또는 기존 계정 복구가 필요합니다.", "error");
           return;
         }
-        throw su.error;
+        user = existing.data.user;
+        session = existing.data.session;
+      } else if (su.error) {
+        console.error("Auth 가입 오류:", su.error);
+        throw new Error("Supabase 계정 생성 실패: " + (su.error.message || su.error.code || "알 수 없는 오류"));
       }
-      if (!su.data.session || !su.data.user) { status("signupStatus", "Supabase에서 이메일 확인을 비활성화해야 닉네임/인증번호만으로 가입할 수 있습니다. Auth 설정을 확인해 주세요.", "error"); return; }
+
+      if (!user) {
+        status("signupStatus", "Supabase가 계정을 반환하지 않았습니다. Auth 설정을 확인해 주세요.", "error");
+        return;
+      }
+      if (!session) {
+        status("signupStatus", "계정은 생성됐지만 로그인 세션이 없습니다. Supabase Authentication의 Email 확인 설정을 점검해 주세요. 기존 계정은 삭제하지 마세요.", "error");
+        return;
+      }
+
       var cl = await supabase.rpc("claim_member_invite", { p_nickname: nick, p_auth_code: code });
-      if (cl.error || cl.data !== true) { await supabase.auth.signOut(); status("signupStatus", "계정은 생성됐지만 인증번호 등록 완료에 실패했습니다. 관리자에게 문의해 주세요.", "error"); console.error(cl.error); return; }
+      if (cl.error || cl.data !== true) {
+        console.error("claim_member_invite 오류:", cl.error);
+        status("signupStatus", "계정 로그인은 됐지만 초대 등록 완료에 실패했습니다. 관리자에게 DB 함수 권한과 초대 상태를 확인해 달라고 해주세요.", "error");
+        return;
+      }
       saveRememberChoice(); showSignedIn(nick); status("signupStatus", "가입이 완료되었습니다!", "ok");
       try { sessionStorage.setItem("dripcollege_nickname", nick); } catch (_e) {}
-    } catch (err) { status("signupStatus", "회원가입에 실패했습니다. 관리자에게 등록된 닉네임/인증번호인지 확인해 주세요.", "error"); console.error(err); }
+    } catch (err) {
+      console.error("회원가입 오류:", err);
+      status("signupStatus", "회원가입 오류: " + (err && err.message ? err.message : "알 수 없는 오류"), "error");
+    }
   });
   $("logoutBtn").addEventListener("click", async function () {
     if (supabase) await supabase.auth.signOut();
