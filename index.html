@@ -882,6 +882,13 @@
     .du-seal-top,.du-seal-bottom{letter-spacing:.5px}
   }
 
+  .explore-rater-list{margin:12px 0 18px;padding:14px;border:1px solid #E2E7F0;border-radius:12px;background:#FAFBFE}
+  .explore-rater-list h4{margin:0 0 10px;font-size:14px}
+  .explore-rater-item{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:9px 0;border-bottom:1px solid #E8ECF4;font-size:13px}
+  .explore-rater-item:last-child{border-bottom:0}
+  .explore-rater-name{flex:1;min-width:100px}
+  .explore-rater-score{font-weight:900;color:#A96D00;white-space:nowrap}
+  .explore-rater-date{color:#68758E;font-size:11px}
 </style>
 </head>
 <body>
@@ -894,19 +901,7 @@
   <!-- ===== 메인 화면 ===== -->
   <main id="mainView" class="stage">
     
-<div class="du-live-brand" aria-label="Drip University Giving Talks">
-  <div class="du-seal" aria-label="Drip University Talk Department">
-    <span class="du-seal-top">DRIP UNIVERSITY</span>
-    <span class="du-seal-monogram">D<span>F</span></span>
-    <span class="du-seal-year">201</span>
-    <span class="du-seal-bottom">TALK DEPARTMENT</span>
-  </div>
-  <span class="du-brand-divider" aria-hidden="true"></span>
-  <div class="du-wordmark">
-    <span class="du-wordmark-main">DRIP UNIVERSITY</span>
-    <span class="du-wordmark-sub">GIVING TALKS</span>
-  </div>
-</div>
+
 
 
     <section id="homeStudentCard" class="home-student-wrap" hidden aria-label="내 학생증">
@@ -964,19 +959,7 @@
 
     <section id="loginCard" class="auth-card" aria-labelledby="loginTitle">
       
-<div class="du-live-brand" aria-label="Drip University Giving Talks">
-  <div class="du-seal" aria-label="Drip University Talk Department">
-    <span class="du-seal-top">DRIP UNIVERSITY</span>
-    <span class="du-seal-monogram">D<span>F</span></span>
-    <span class="du-seal-year">201</span>
-    <span class="du-seal-bottom">TALK DEPARTMENT</span>
-  </div>
-  <span class="du-brand-divider" aria-hidden="true"></span>
-  <div class="du-wordmark">
-    <span class="du-wordmark-main">DRIP UNIVERSITY</span>
-    <span class="du-wordmark-sub">GIVING TALKS</span>
-  </div>
-</div>
+
 
       <h2 id="loginTitle"><span class="mark">로그인</span></h2><p class="auth-help">카카오톡 오픈채팅에서 사용하는 닉네임과 인증번호를 입력해 주세요.</p>
       <form id="loginForm" autocomplete="off">
@@ -1189,6 +1172,10 @@
         <div class="explore-rating-copy"><h4>⭐ 학생증 별점</h4><p><strong id="exploreRatingAverage">-</strong> <span id="exploreRatingCount">아직 평가가 없어요.</span></p></div>
         <div class="explore-rating-actions"><div id="exploreRatingStars" class="explore-rating-stars" aria-label="별점 선택"></div><p id="exploreRatingHint" class="explore-rating-hint">별을 눌러 1~5점을 남겨 주세요.</p></div>
       </div>
+      <section class="explore-rater-list" aria-labelledby="exploreRaterTitle">
+        <h4 id="exploreRaterTitle">👀 별점을 남긴 사람</h4>
+        <div id="exploreRaterList" aria-live="polite"><p class="explore-empty">별점 정보가 없습니다.</p></div>
+      </section>
       <div id="exploreRatingStatus" class="community-status" role="status" aria-live="polite"></div>
       <div class="explore-guestbook-section">
         <div class="explore-guestbook-heading"><div><h4>📖 방명록</h4><p>짧은 인사와 응원을 남겨 주세요.</p></div><span id="exploreGuestbookCount" class="explore-count">0개</span></div>
@@ -2675,8 +2662,8 @@
       }
       if (result.error) throw result.error;
       var cards = result.data || [];
-      // 학생증을 실제로 저장한 다른 회원만 디렉터리에 표시합니다.
-      exploreCards = cards.filter(function (c) { return c.user_id !== user.id; });
+      // 저장된 학생증은 본인 프로필도 포함해 디렉터리에 표시합니다.
+      exploreCards = cards;
       var ids = exploreCards.map(function (c) { return c.user_id; });
       exploreRatings = [];
       if (ids.length) {
@@ -2725,6 +2712,23 @@
     var mine = me && card ? rows.find(function (r) { return r.rater_id === me.id; }) : null;
     $("exploreRatingAverage").textContent = stat.count ? stat.average.toFixed(1) + " / 5" : "-";
     $("exploreRatingCount").textContent = stat.count ? "(" + stat.count + "명 평가)" : "아직 평가가 없어요.";
+    var raterBox = $("exploreRaterList");
+    if (raterBox) {
+      raterBox.replaceChildren();
+      if (!rows.length) {
+        raterBox.appendChild(el("p", "explore-empty", "아직 별점을 남긴 사람이 없어요."));
+      } else {
+        rows.slice().sort(function (a, b) {
+          return new Date(b.updated_at || 0).getTime() - new Date(a.updated_at || 0).getTime();
+        }).forEach(function (row) {
+          var item = el("div", "explore-rater-item");
+          item.appendChild(el("strong", "explore-rater-name", row.rater_nickname || "회원"));
+          item.appendChild(el("span", "explore-rater-score", "★ " + Number(row.rating || 0) + "점"));
+          item.appendChild(el("time", "explore-rater-date", exploreFormatDate(row.updated_at)));
+          raterBox.appendChild(item);
+        });
+      }
+    }
     for (var i = 1; i <= 5; i++) {
       (function (value) {
         var b = el("button", "explore-rate-star" + (mine && value <= Number(mine.rating) ? " active" : ""), "★");
