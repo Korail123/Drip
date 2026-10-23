@@ -139,7 +139,11 @@
   .saved-place { padding:12px; border:1.5px solid var(--ink); border-radius:12px; margin:8px 0; background:#fff; box-shadow:2px 2px 0 var(--ink); }
   .saved-place a { overflow-wrap:anywhere; }
   .saved-place p { margin:6px 0; white-space:pre-wrap; overflow-wrap:anywhere; }
-  .kakao-overlay-iw { padding:10px 14px; border-radius:10px; background:#fff; border:2px solid var(--ink); font-size:13px; font-weight:700; box-shadow:2px 2px 0 var(--ink); white-space:nowrap; }
+  .kakao-place-results { display:grid; gap:7px; margin:-4px 0 8px; }
+  .kakao-place-result { text-align:left; white-space:normal; padding:10px 12px; border:1px solid #DCE2ED; border-radius:10px; background:#fff; cursor:pointer; }
+  .kakao-place-result strong { display:block; }
+  .kakao-place-result small { display:block; color:#68758E; margin-top:3px; }
+  .kakao-place-results { display:grid; gap:7px; margin:-4px 0 8px; }\n  .kakao-place-result { text-align:left; white-space:normal; padding:10px 12px; border:1px solid #DCE2ED; border-radius:10px; background:#fff; cursor:pointer; }\n  .kakao-place-result strong { display:block; }\n  .kakao-place-result small { display:block; color:#68758E; margin-top:3px; }\n  .kakao-overlay-iw { padding:10px 14px; border-radius:10px; background:#fff; border:2px solid var(--ink); font-size:13px; font-weight:700; box-shadow:2px 2px 0 var(--ink); white-space:nowrap; }
   @media(max-width:850px){ .places-layout{grid-template-columns:minmax(0,1fr)} .places-left{order:2} .places-right{order:1} .places-map{height:58vh;min-height:390px} .places-list{max-height:none} }
   @media(max-width:650px){ .places-map{height:420px;min-height:360px} .community-row{align-items:flex-start; flex-wrap:wrap} .community-row-meta{margin-left:auto} }
 
@@ -456,7 +460,7 @@
   .idv-photo svg { display:block; width:100%; height:100%; }
   .idv-name { margin-top:16px; font-size:24px; font-weight:800; letter-spacing:.25em; padding-left:.25em; text-align:center; overflow-wrap:anywhere; color:var(--ink); }
   .idv-school { margin-top:18px; display:flex; align-items:center; gap:8px; font-size:22px; font-weight:800; color:var(--ink); white-space:nowrap; }
-  .idv-logo { width:40px; height:40px; display:block; flex:none; }
+  .idv-logo { width:40px; height:40px; display:block; flex:none; }\n  .idv-school-en { margin-top:2px; font-size:10px; font-weight:800; letter-spacing:.22em; color:#4a5570; }\n  .idv-school-en { margin-top:2px; font-size:10px; font-weight:800; letter-spacing:.22em; color:#4a5570; }
   .idv-logo:not([src]) { display:none; }
   .home-student-wrap .idv { margin-bottom:0; }
 
@@ -488,7 +492,8 @@
         <div class="idv-ko">학생증</div>
         <div class="idv-photo" id="homeSidPhoto"></div>
         <div class="idv-name" id="homeSidName">회원</div>
-        <div class="idv-school"><img class="idv-logo" alt="" aria-hidden="true"><span>드립대학</span></div>
+        <div class="idv-school"><img class="idv-logo" alt="" aria-hidden="true"><span class="idv-school-name">드립대학</span></div>
+        <div class="idv-school-en">DRIP UNIVERSITY</div>
       </div>
     </section>
 
@@ -579,7 +584,8 @@
       <div class="idv-ko">학생증</div>
       <div class="idv-photo" id="sidPhoto"></div>
       <div class="idv-name" id="sidName">회원</div>
-      <div class="idv-school"><img class="idv-logo" alt="" aria-hidden="true"><span>드립대학</span></div>
+      <div class="idv-school"><img class="idv-logo" alt="" aria-hidden="true"><span class="idv-school-name">드립대학</span></div>
+        <div class="idv-school-en">DRIP UNIVERSITY</div>
     </div>
 
     <div class="card sid-editor">
@@ -637,14 +643,15 @@
           <label>분류
             <select id="placeCategory"><option>맛집</option><option>카페</option><option>명소</option><option>숙소</option><option>술집</option><option>주차장</option><option>기타</option></select>
           </label>
-          <label>장소명
-            <input id="placeName" maxlength="120" placeholder="예: 카카오 판교 아지트" required>
-          </label>
-          <label>주소 또는 키워드 검색
+          <label>상호명 검색
             <div style="display:flex;gap:6px;">
-              <input id="placeAddress" maxlength="300" placeholder="예: 판교역로 166 또는 장소명" required>
+              <input id="placeName" maxlength="120" placeholder="상호명을 입력하세요 (예: 카카오 판교 아지트)" autocomplete="off" required>
               <button type="button" id="btnSearchKakao" style="white-space:nowrap;padding:6px 10px;">검색</button>
             </div>
+          </label>
+          <div id="kakaoPlaceResults" class="kakao-place-results" hidden aria-live="polite"></div>
+          <label>주소
+            <input id="placeAddress" maxlength="300" placeholder="상호명을 검색한 뒤 결과를 선택하면 자동 입력됩니다." required readonly>
           </label>
           <input type="hidden" id="placeLat"><input type="hidden" id="placeLng">
           <label>추천 메모
@@ -680,7 +687,7 @@
     </div>
     <button class="card game-card" id="openWord" type="button">
       <span class="game-no">1</span>
-      <span class="game-info"><strong>오늘의 단어 (5칸)</strong><small>언제든 다시 도전 · 휴대폰 키보드로 단어를 입력하세요</small></span>
+      <span class="game-info"><strong>오늘의 단어 (국어사전 연동)</strong><small>언제든 다시 도전 · 휴대폰 키보드로 단어를 입력하세요</small></span>
       <span class="game-state" id="wordState">도전하기</span>
     </button>
   </section>
@@ -692,8 +699,8 @@
     </div>
     <div class="card wg">
       <div class="wg-top">
-        <span class="wg-date" id="wgDate">오늘의 단어 (5칸)</span>
-        <div style="display:flex;align-items:center;gap:8px;"><span class="wg-hint" id="wgHint">힌트</span></div>
+        <span class="wg-date" id="wgDate">오늘의 단어 (국어사전 연동)</span>
+
       </div>
       <div class="wg-desc-bar">💡 각 칸에는 자음 또는 모음 하나씩 들어갑니다. 키보드로 입력하고 Enter를 누르세요. 정답을 맞힐 때까지 횟수 제한 없이 도전할 수 있습니다.</div>
       <div id="wgBoard" class="wg-board"></div>
@@ -925,7 +932,7 @@
   });
 
   /* =====================================================================
-     오늘의 단어 (5칸) 게임
+     오늘의 단어 (국어사전 연동) 게임
      ===================================================================== */
   // 국어사전에 등재된 일반 어휘 중심의 정답 후보. 모든 단어는 자모 확장 후 5칸인 경우만 사용합니다.
   var WORD_POOL_5 = [
@@ -994,9 +1001,9 @@
   }
   function getNewRound() {
     // 자모 확장 규칙을 바꾸면 이전 라운드는 재사용하지 않습니다.
-    var candidates = WORD_POOL_5.filter(function(w) { return splitHangulWord(w.word).length === 5; });
-    var idx = Math.floor(Math.random() * candidates.length), base = candidates[idx];
-    var wordObj = { word: base.word, hint: base.hint, jamo: splitHangulWord(base.word) };
+    var candidates = WORD_POOL_5.filter(function(w) { var n=splitHangulWord(w.word).length; return n>=4 && n<=8; });
+    var idx = Math.floor(Math.random() * candidates.length), base = candidates[idx] || {word:"학교"};
+    var wordObj = { word: base.word, jamo: splitHangulWord(base.word) };
     return { version: 2, key: "wg_round_" + Date.now() + "_" + Math.random().toString(36).slice(2,8), wordObj: wordObj };
   }
   var curState = { periodKey: "", wordObj: null, guesses: [], currentInput: [], currentRaw: "", status: "PLAYING", keyColors: {} };
@@ -1007,7 +1014,7 @@
     curState.periodKey = active.key; curState.wordObj = active.wordObj;
     var saved = store(active.key); curState.guesses=[]; curState.status="PLAYING"; curState.keyColors={};
     if (saved) { try { var o=JSON.parse(saved); curState.guesses=o.guesses||[]; curState.status=o.status||"PLAYING"; curState.keyColors=o.keyColors||{}; } catch(e) {} }
-    curState.currentInput=[]; $("wgDate").textContent="새 단어 도전"; $("wgHint").textContent="힌트: "+curState.wordObj.hint;
+    curState.currentInput=[]; $("wgDate").textContent="오늘의 단어 · "+splitHangulWord(curState.wordObj.word).length+"칸";
     renderBoard(); renderResult(); renderStats();
     curState.currentRaw="";
     if (curState.status === "PLAYING") { var firstTile = $("wgBoard").querySelector(".wg-entry"); if (firstTile) setTimeout(function(){ firstTile.focus(); }, 0); }
@@ -1017,12 +1024,12 @@
   function renderBoard() {
     var board=$("wgBoard"); board.innerHTML="";
     var target=splitHangulWord(curState.wordObj.word), cols=target.length;
-    // 정답 도전은 총 5회입니다. 게임판은 고정 5줄이며, 입력이 많아져도 기록을 밀어내지 않습니다.
-    for(var r=0;r<5;r++) {
+    // 정답을 맞힐 때까지 시도 횟수 제한 없이 행을 추가합니다.
+    for(var r=0;r<curState.guesses.length+(curState.status==="PLAYING"?1:0);r++) {
       var rowEl=el("div","wg-row"), guess=null, isCurrent=false;
       rowEl.style.gridTemplateColumns="repeat("+cols+",minmax(0,1fr))";
       if(r<curState.guesses.length) guess=curState.guesses[r];
-      else if(r===curState.guesses.length && curState.guesses.length<5) isCurrent=curState.status==="PLAYING";
+      else if(r===curState.guesses.length) isCurrent=curState.status==="PLAYING";
       for(var c=0;c<cols;c++) {
         var tile;
         if(isCurrent) {
@@ -1411,27 +1418,31 @@
   function clearKakaoMarkers() { kakaoMarkers.forEach(function (m) { m.setMap(null); }); kakaoMarkers = []; closePinOverlay(); }
 
   function searchKakaoAddressOrKeyword() {
-    var addr = $("placeAddress").value.trim();
-    if (!addr) { placesStatus("주소 또는 검색할 장소명을 입력해주세요."); return; }
+    var query = $("placeName").value.trim(), resultBox = $("kakaoPlaceResults");
+    if (!query) { placesStatus("검색할 상호명을 입력해주세요."); return; }
     if (!mapReady || !ps) { placesStatus("지도가 아직 준비되지 않았습니다. 잠시 후 다시 시도해 주세요."); return; }
-    placesStatus("Kakao 지도로 검색 중...");
-    function pick(lat, lng) {
-      $("placeLat").value = lat; $("placeLng").value = lng;
-      kakaoMap.setCenter(new kakao.maps.LatLng(lat, lng)); // 마커 없이 위치만 이동
-    }
-    ps.keywordSearch(addr, function (data, st) {
-      if (st === kakao.maps.services.Status.OK) {
-        var f = data[0];
-        if (!$("placeName").value.trim()) $("placeName").value = f.place_name;
-        $("placeAddress").value = f.road_address_name || f.address_name || addr;
-        pick(parseFloat(f.y), parseFloat(f.x));
-        placesStatus("위치를 찾았습니다: " + f.place_name + " (" + (f.road_address_name || f.address_name) + ")");
-      } else if (geocoder) {
-        geocoder.addressSearch(addr, function (res, sg) {
-          if (sg === kakao.maps.services.Status.OK) { pick(parseFloat(res[0].y), parseFloat(res[0].x)); placesStatus("주소 위치를 찾았습니다."); }
-          else placesStatus("장소를 찾을 수 없습니다. 정확한 주소나 키워드로 다시 검색하거나 지도를 직접 클릭해 주세요.");
-        });
-      } else placesStatus("검색 서비스를 이용할 수 없습니다.");
+    resultBox.hidden = false; resultBox.innerHTML = "";
+    placesStatus("카카오맵에서 상호명을 검색 중...");
+    ps.keywordSearch(query, function (data, st) {
+      resultBox.innerHTML = "";
+      if (st !== kakao.maps.services.Status.OK || !data || !data.length) {
+        resultBox.hidden = true; placesStatus("검색 결과가 없습니다. 상호명을 확인해 주세요."); return;
+      }
+      placesStatus("검색 결과에서 장소를 선택하면 주소와 지도 위치가 자동 입력됩니다.");
+      data.slice(0, 8).forEach(function (place) {
+        var b = el("button", "kakao-place-result"); b.type = "button";
+        b.appendChild(el("strong", "", place.place_name));
+        b.appendChild(el("small", "", place.road_address_name || place.address_name || "주소 정보 없음"));
+        b.onclick = function () {
+          $("placeName").value = place.place_name;
+          $("placeAddress").value = place.road_address_name || place.address_name || "";
+          $("placeLat").value = place.y; $("placeLng").value = place.x;
+          resultBox.hidden = true; resultBox.innerHTML = "";
+          if (kakaoMap) kakaoMap.setCenter(new kakao.maps.LatLng(parseFloat(place.y), parseFloat(place.x)));
+          placesStatus("선택 완료: " + place.place_name + " · 주소가 자동 입력되었습니다.");
+        };
+        resultBox.appendChild(b);
+      });
     });
   }
 
@@ -1490,7 +1501,7 @@
     };
   });
   $("btnSearchKakao").onclick = searchKakaoAddressOrKeyword;
-  $("placeAddress").addEventListener("keydown", function (e) { if (e.key === "Enter") { e.preventDefault(); searchKakaoAddressOrKeyword(); } });
+  $("placeName").addEventListener("keydown", function (e) { if (e.key === "Enter") { e.preventDefault(); searchKakaoAddressOrKeyword(); } });
 
   $("placeSaveForm").onsubmit = async function (e) {
     e.preventDefault();
