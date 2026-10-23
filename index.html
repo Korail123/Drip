@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>드립대학 수다학과</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+PHJlY3Qgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0IiByeD0iMTMiIGZpbGw9IiMwRDNCNjYiLz48cGF0aCBkPSJNMzIgNiA1MyAxNHYxNmMwIDE0LTkgMjMtMjEgMjlDMjAgNTMgMTEgNDQgMTEgMzBWMTR6IiBmaWxsPSIjRjdGMURGIi8+PHBhdGggZD0iTTMyIDExIDQ4IDE3djEzYzAgMTAtNiAxOC0xNiAyNC0xMC02LTE2LTE0LTE2LTI0VjE3eiIgZmlsbD0iIzBEM0I2NiIvPjx0ZXh0IHg9IjMyIiB5PSIzNSIgZm9udC1mYW1pbHk9Ikdlb3JnaWEsc2VyaWYiIGZvbnQtc2l6ZT0iMTkiIGZvbnQtd2VpZ2h0PSI3MDAiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZpbGw9IiNGN0YxREYiPkRVPC90ZXh0PjxwYXRoIGQ9Ik0yMiA0MWgyMCIgc3Ryb2tlPSIjRTlCOTQ5IiBzdHJva2Utd2lkdGg9IjIuNSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+PC9zdmc+">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jua&family=Noto+Sans+KR:wght@400;500;700;800&display=swap">
@@ -251,9 +252,6 @@
   .notice-more p { font-size:13px; margin:10px 2px 0; color:#555; }
 
   /* 채팅 순위 */
-  .rank-tabs { display:flex; gap:8px; margin-bottom:16px; }
-  .rank-tab { border:2px solid var(--ink); border-radius:999px; background:#fff; padding:5px 14px; font-weight:800; font-size:13.5px; }
-  .rank-tab.active { background:var(--ink); color:#fff; }
   .rank-item { display:flex; align-items:center; gap:12px; padding:12px 14px; border-bottom:1.5px solid var(--row-line); }
   .rank-item:last-child { border-bottom:none; }
   .rank-num { width:28px; height:28px; border-radius:50%; border:2px solid var(--ink); display:grid; place-items:center; font-family:var(--font-display); font-size:16px; background:#fff; }
@@ -325,7 +323,6 @@
   .fortune-result-card p { margin:0; white-space:pre-wrap; line-height:1.65; overflow-wrap:anywhere; }
   .fortune-result-card.fortune-featured { grid-column:1/-1; background:linear-gradient(135deg,#fff7ed,#fff); border-color:#fed7aa; }
   .fortune-result-note { margin-top:12px; padding:10px 12px; border-radius:10px; background:#f5f7fb; color:#69758a; font-size:12px; }
-  .rank-period-note { margin:0 0 12px; color:#68758e; font-size:12px; }
   .rank-item { display:flex; align-items:center; gap:12px; }
   .rank-score { white-space:nowrap; }
   @media(max-width:520px){ .fortune-result-grid { grid-template-columns:minmax(0,1fr); } .fortune-result-card.fortune-featured { grid-column:auto; } }
@@ -338,7 +335,7 @@
   }
   body { background-color:var(--paper); background-image:radial-gradient(#E8EDF5 .8px, transparent 1px); background-size:20px 20px; line-height:1.5; }
   .page { width:100%; }
-  .stage, .community-panel, #signupView, #rankView, #gameHub, #wordGame { width:100%; }
+  .stage, .community-panel, #signupView, #exploreView, #gameHub, #wordGame { width:100%; }
   .auth-card, .card, .community-post, .community-form, .community-row, .community-detail,
   .notice-intro, .notice-highlight, .notice-rule, .saved-place, .sid-card, .game-card {
     border:1px solid #E2E7F0; box-shadow:0 4px 16px rgba(32,43,69,.06); border-radius:16px;
@@ -667,6 +664,70 @@
   /* 로그인 화면에서는 건의사항 미리보기를 숨기고, 로그인 후 메인 화면에서만 표시 */
   body:not(.signed-in) #homeSuggestPanel { display:none !important; }
 
+
+  /* ===== 타 학생 탐방하기: 학생증/별점/방명록 ===== */
+  .explore-head{display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:14px}
+  .explore-header-brand{display:flex;align-items:center;gap:14px;min-width:0;flex:1 1 280px}
+  .explore-brand-logo{width:58px;height:58px;object-fit:contain;padding:5px;background:#fff;border:1px solid #dce9ee;border-radius:17px;box-shadow:0 5px 16px rgba(14,108,126,.10)}
+  .explore-header-actions{display:flex;gap:7px;flex-wrap:wrap;align-items:center}
+  .explore-directory{margin-top:4px}
+  .explore-directory-top,.explore-detail-top,.explore-guestbook-heading{display:flex;align-items:center;justify-content:space-between;gap:12px}
+  .explore-directory-top h3,.explore-detail-top h3,.explore-guestbook-heading h4{margin:0;font-size:18px;font-weight:850;letter-spacing:-.025em}
+  .explore-directory-top p,.explore-guestbook-heading p{margin:4px 0 0;font-size:12.5px;color:#71828a}
+  .explore-count{display:inline-flex;align-items:center;justify-content:center;flex:none;min-width:44px;padding:5px 10px;border-radius:99px;background:#e5f7f6;color:#087c83;font-size:12px;font-weight:850}
+  .explore-search{width:100%;margin:16px 0;border:1px solid #d9e4e9!important;border-radius:13px!important;background:#fbfdfe!important;min-height:46px;padding:10px 13px;font:inherit}
+  .explore-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+  .explore-person{display:flex;align-items:center;gap:10px;width:100%;min-width:0;text-align:left;border:1px solid #e0ebef;border-radius:16px;padding:12px;background:#fff;color:#213740;cursor:pointer;transition:border-color .15s,transform .15s,box-shadow .15s}
+  .explore-person:hover,.explore-person:focus-visible{border-color:#86d2d5;transform:translateY(-1px);box-shadow:0 5px 14px rgba(7,126,139,.08);outline:none}
+  .explore-person-avatar{display:block;width:54px;height:54px;flex:none;overflow:hidden;border:1px solid #e0e9ed;border-radius:14px;background:#f4f9fa}
+  .explore-person-avatar svg{display:block;width:100%;height:100%}
+  .explore-person-main{min-width:0;flex:1}
+  .explore-person-name{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:14px;font-weight:850}
+  .explore-person-meta{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-top:3px;color:#647781;font-size:11.5px}
+  .explore-person-rating{display:block;margin-top:5px;color:#b77900;font-weight:800;font-size:11.5px}
+  .explore-person-arrow{flex:none;color:#5b8b92;font-size:20px}
+  .explore-empty{grid-column:1/-1;padding:20px 10px;text-align:center;color:#71828a;font-size:13px}
+  .explore-detail{margin-top:16px;scroll-margin-top:15px}
+  .explore-eyebrow{display:block;font-size:10px;font-weight:900;letter-spacing:.14em;color:#138b98;margin-bottom:3px}
+  .explore-card-display{width:100%;max-width:420px;margin:18px auto 22px}
+  .explore-card-tools{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:0 auto 8px;max-width:310px;color:#5f7780;font-size:12px;font-weight:800}
+  .explore-flip{width:min(100%,300px);margin:0 auto}
+  .explore-flip .flip-inner{min-height:425px}
+  .explore-flip .idv{box-sizing:border-box;min-height:425px}
+  .explore-idv-front{justify-content:flex-start}
+  .explore-idv-front .idv-photo{width:60%;height:188px;aspect-ratio:auto}
+  .explore-idv-front .idv-name{margin-top:10px}
+  .explore-idv-front .idv-school{margin-top:13px}
+  .explore-idv-back{padding:23px 20px!important}
+  .explore-idv-back .back-list{gap:8px;margin-top:14px}
+  .explore-idv-back .back-list>div{grid-template-columns:62px minmax(0,1fr);gap:8px;padding-bottom:8px}
+  .explore-idv-back .back-list dd{font-size:13px}
+  .explore-rating-panel{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:15px;border:1px solid #dcebed;border-radius:16px;background:linear-gradient(135deg,#f0fbfb,#f8fbff)}
+  .explore-rating-copy h4,.explore-guestbook-heading h4{margin:0;font-size:16px}
+  .explore-rating-copy p{margin:5px 0 0;color:#657780;font-size:12px}
+  #exploreRatingAverage{font-size:22px;color:#a96d00;letter-spacing:-.03em}
+  .explore-rating-actions{text-align:right;min-width:0}
+  .explore-rating-stars{display:flex;justify-content:flex-end;gap:3px}
+  .explore-rate-star{padding:0 1px;border:0!important;background:transparent!important;color:#c4cfd2;font-size:27px;line-height:1.1;cursor:pointer;box-shadow:none!important}
+  .explore-rate-star.active{color:#efb423}
+  .explore-rate-star:disabled{cursor:default;opacity:.65}
+  .explore-rating-hint{margin:4px 0 0;color:#71828a;font-size:11px}
+  .explore-guestbook-section{margin-top:22px}
+  .explore-guestbook-heading{margin-bottom:12px}
+  #exploreGuestbookForm{display:grid;gap:10px;padding:13px;border:1px solid #dfe9ed;border-radius:16px;background:#fbfdfe}
+  #exploreGuestbookMessage{width:100%;min-height:84px;padding:11px 12px;resize:vertical;border:1px solid #d9e4e9;border-radius:12px;background:#fff;font:inherit;font-size:14px}
+  .explore-guestbook-form-bottom{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+  .explore-guestbook-form-bottom small{color:#778790;font-size:11px}
+  .explore-guestbook-list{display:grid;gap:9px;margin-top:12px}
+  .explore-guestbook-entry{padding:13px 14px;border:1px solid #e4ecef;border-radius:14px;background:#fff}
+  .explore-guestbook-entry-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:7px}
+  .explore-guestbook-author{font-size:13px;font-weight:850;overflow-wrap:anywhere}
+  .explore-guestbook-date{font-size:10.5px;color:#8a999f;white-space:nowrap}
+  .explore-guestbook-message{margin:0;white-space:pre-wrap;overflow-wrap:anywhere;font-size:13px;line-height:1.6}
+  .explore-guestbook-delete{border:0;background:transparent;color:#a45b5b;font-size:11px;font-weight:800;cursor:pointer}
+  .explore-sync-note{font-size:11.5px;color:#71828a;margin:8px 0 0}
+  @media(max-width:560px){.explore-grid{grid-template-columns:minmax(0,1fr)}.explore-person{padding:11px}.explore-header-brand{align-items:flex-start}.explore-brand-logo{width:48px;height:48px}.explore-header-actions{width:100%}.explore-header-actions .btn{flex:1}.explore-rating-panel{align-items:flex-start;flex-direction:column}.explore-rating-actions{text-align:left;width:100%}.explore-rating-stars{justify-content:flex-start}.explore-detail-top h3{font-size:17px}}
+
 </style>
 </head>
 <body>
@@ -716,7 +777,7 @@
       <button class="nav-btn" id="goStudentId" type="button"><span class="ni"><svg class="ico" viewBox="0 0 40 40" aria-hidden="true"><rect x="5" y="8" width="30" height="24" rx="3"/><circle cx="14" cy="18" r="3.2"/><path d="M9 27c0-3 2.5-4.5 5-4.5s5 1.5 5 4.5"/><path class="ac" d="M23 16h8M23 21h8M23 26h5"/></svg></span><span class="nl">학생증 만들기</span></button>
       <button class="nav-btn" id="goGames" type="button"><span class="ni"><svg class="ico" viewBox="0 0 40 40" aria-hidden="true"><path d="M11 12h18a6 6 0 0 1 6 6l1.5 8a3.5 3.5 0 0 1-6 2.5L27 25H13l-3.5 3.5a3.5 3.5 0 0 1-6-2.5L5 18a6 6 0 0 1 6-6z"/><path class="ac" d="M13 16v5M10.5 18.5h5"/><circle class="ac" cx="26" cy="17.5" r="1.3"/><circle class="ac" cx="30" cy="20.5" r="1.3"/></svg></span><span class="nl">미니게임</span></button>
       <button class="nav-btn" id="goFortune" type="button"><span class="ni"><svg class="ico" viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="17" r="10"/><path d="M12 34h16l-2.5-6h-11z"/><path class="ac" d="M20 11v4M18 13h4M14 18a6 6 0 0 1 3-4.5"/></svg></span><span class="nl">오늘의 사주</span></button>
-      <button class="nav-btn" id="goRank" type="button"><span class="ni"><svg class="ico" viewBox="0 0 40 40" aria-hidden="true"><path d="M13 8h14v8a7 7 0 0 1-14 0z"/><path d="M13 11H8v2a4 4 0 0 0 4.5 4M27 11h5v2a4 4 0 0 1-4.5 4"/><path d="M20 23v5M16 28h8M14 33h12"/><path class="ac" d="M20 12l1.2 2.4 2.6.4-1.9 1.8.5 2.6L20 18l-2.4 1.2.5-2.6-1.9-1.8 2.6-.4z"/></svg></span><span class="nl">채팅순위</span></button>
+      <button class="nav-btn" id="goExplore" type="button"><span class="ni"><svg class="ico" viewBox="0 0 40 40" aria-hidden="true"><circle cx="16" cy="13" r="6"/><path d="M5 31c0-6 4.7-10 11-10s11 4 11 10"/><circle class="ac" cx="29" cy="26" r="7"/><path class="ac" d="M34 31l4 4M26 26h6M29 23v6"/></svg></span><span class="nl">타 학생 탐방하기</span></button>
       <button class="nav-btn" id="goPlaces" type="button"><span class="ni"><svg class="ico" viewBox="0 0 40 40" aria-hidden="true"><path d="M8 15h20v9a8 8 0 0 1-8 8h-4a8 8 0 0 1-8-8z"/><path d="M28 18h3a3.5 3.5 0 0 1 0 7h-3.5"/><path d="M10 36h18"/><path class="ac" d="M14 6v5M20 5v6M26 6v5"/></svg></span><span class="nl">맛집/카페</span></button>
       <button class="nav-btn" id="goSuggest" type="button"><span class="ni"><svg class="ico" viewBox="0 0 40 40" aria-hidden="true"><path d="M20 5a9 9 0 0 0-5 16.5V26h10v-4.5A9 9 0 0 0 20 5z"/><path d="M15.5 30h9M17 34h6"/><path class="ac" d="M20 10a5 5 0 0 0-3.5 1.5M20 14v6"/></svg></span><span class="nl">건의사항</span></button>
     </nav>
@@ -906,20 +967,56 @@
     <div id="suggestFeed" aria-live="polite"></div><div id="suggestStatus" class="community-status"></div>
   </section>
 
-  <!-- ===== 채팅 순위 ===== -->
-  <section id="rankView" hidden aria-labelledby="rankHead">
-    <div class="head">
-      <div class="head-main"><span class="pill-live"><span class="dot"></span>실시간 수다 랭킹</span><h2 class="title" id="rankHead">🏆 채팅 순위</h2><p class="sub">드립대학 최고의 입담꾼 왕좌에 도전해 보세요!</p></div>
-      <button class="btn small" id="rankBack" type="button">← 메인으로</button>
-    </div>
-    <div class="card">
-      <div class="rank-tabs">
-        <button class="rank-tab active" data-period="daily" type="button">일간</button>
-        <button class="rank-tab" data-period="weekly" type="button">주간</button>
-        <button class="rank-tab" data-period="monthly" type="button">월간</button>
+  <!-- ===== 타 학생 탐방하기 ===== -->
+  <section id="exploreView" hidden class="community-panel" aria-labelledby="exploreHead">
+    <div class="head explore-head">
+      <div class="explore-header-brand">
+        <img class="idv-logo brand-logo explore-brand-logo" alt="드립대학 로고">
+        <div class="head-main"><span class="pill-live"><span class="dot"></span>DRIP UNIVERSITY COMMUNITY</span><h2 class="title" id="exploreHead">타 학생 탐방하기</h2><p class="sub">학생증 앞면과 뒷면을 살펴보고, 방명록과 별점으로 인사를 남겨 보세요.</p></div>
       </div>
-      <div id="rankList"></div>
+      <div class="explore-header-actions"><button class="btn small" id="exploreRefresh" type="button">↻ 새로고침</button><button class="btn small" id="exploreBackup" type="button">⬇ JSON 백업</button><button class="btn small" data-home type="button">← 메인으로</button></div>
     </div>
+    <div id="exploreStatus" class="community-status" role="status" aria-live="polite">학생증을 불러올 준비가 되었어요.</div>
+    <div class="card explore-directory">
+      <div class="explore-directory-top"><div><h3>🎓 드립대학 학생들</h3><p>학생증을 저장한 회원이 표시됩니다. 검색해서 친구를 찾아보세요.</p></div><span class="explore-count" id="exploreCount">0명</span></div>
+      <input id="exploreSearch" class="explore-search" type="search" placeholder="닉네임·학과·MBTI 검색" autocomplete="off" aria-label="학생 검색">
+      <div id="exploreList" class="explore-grid" aria-live="polite"></div>
+    </div>
+    <section id="exploreDetail" class="card explore-detail" hidden aria-labelledby="exploreDetailTitle">
+      <div class="explore-detail-top"><div><span class="explore-eyebrow">STUDENT PROFILE</span><h3 id="exploreDetailTitle">학생증 살펴보기</h3></div><button id="exploreCloseDetail" class="btn small" type="button">닫기</button></div>
+      <div class="explore-card-display">
+        <div class="explore-card-tools"><span id="exploreFaceLabel">학생증 앞면</span><button class="btn small" id="exploreFlipToggle" type="button">뒷면 보기 ↻</button></div>
+        <div class="flip explore-flip" id="exploreFlipCard" role="button" tabindex="0" aria-label="학생증 앞면, 누르면 뒷면">
+          <div class="flip-inner">
+            <div class="idv flip-face flip-front explore-idv-front">
+              <div class="idv-en">DRIP STUDENT</div><div class="idv-ko">학생증</div>
+              <div class="idv-photo" id="exploreSidPhoto"></div><div class="idv-name" id="exploreSidName">회원</div>
+              <div class="idv-school"><img class="idv-logo" alt="" aria-hidden="true"><span class="idv-school-name">드립대학</span></div><div class="idv-school-en">DRIP UNIVERSITY</div>
+            </div>
+            <div class="idv flip-face flip-back explore-idv-back" aria-hidden="true">
+              <div class="idv-en">DRIP STUDENT</div><div class="back-title">학생 정보</div>
+              <dl class="back-list"><div><dt>학과</dt><dd id="exploreBackMajor">-</dd></div><div><dt>좌우명</dt><dd id="exploreBackMotto">-</dd></div><div><dt>MBTI</dt><dd id="exploreBackMbti">-</dd></div><div><dt>취미</dt><dd id="exploreBackHobby">-</dd></div><div><dt>특기</dt><dd id="exploreBackSkill">-</dd></div><div><dt>하는 일</dt><dd id="exploreBackJob">-</dd></div></dl>
+              <div class="idv-school-en" style="margin-top:auto;padding-top:12px">DRIP UNIVERSITY</div>
+            </div>
+          </div>
+        </div>
+        <p class="flip-hint">학생증을 누르거나 ‘뒷면 보기’를 눌러 앞·뒷면을 확인하세요.</p>
+      </div>
+      <div class="explore-rating-panel">
+        <div class="explore-rating-copy"><h4>⭐ 학생증 별점</h4><p><strong id="exploreRatingAverage">-</strong> <span id="exploreRatingCount">아직 평가가 없어요.</span></p></div>
+        <div class="explore-rating-actions"><div id="exploreRatingStars" class="explore-rating-stars" aria-label="별점 선택"></div><p id="exploreRatingHint" class="explore-rating-hint">별을 눌러 1~5점을 남겨 주세요.</p></div>
+      </div>
+      <div id="exploreRatingStatus" class="community-status" role="status" aria-live="polite"></div>
+      <div class="explore-guestbook-section">
+        <div class="explore-guestbook-heading"><div><h4>📖 방명록</h4><p>짧은 인사와 응원을 남겨 주세요.</p></div><span id="exploreGuestbookCount" class="explore-count">0개</span></div>
+        <form id="exploreGuestbookForm" class="community-form">
+          <textarea id="exploreGuestbookMessage" maxlength="500" rows="3" placeholder="예: 학생증 멋지네요! 반가워요 😊" required></textarea>
+          <div class="explore-guestbook-form-bottom"><small>최대 500자 · 등록한 글은 다른 로그인 회원에게도 보여요.</small><button class="btn coral" id="exploreGuestbookSubmit" type="submit">방명록 남기기</button></div>
+        </form>
+        <div id="exploreGuestbookList" class="explore-guestbook-list" aria-live="polite"></div>
+        <div id="exploreGuestbookStatus" class="community-status" role="status" aria-live="polite"></div>
+      </div>
+    </section>
   </section>
 
   <!-- ===== 미니게임 ===== -->
@@ -998,7 +1095,7 @@
 
 
   /* ---------------- 화면 전환 ---------------- */
-  var views = { main: $("mainView"), board: $("boardView"), rank: $("rankView"), hub: $("gameHub"), word: $("wordGame"), notice: $("noticeView"), studentId: $("studentIdView"), fortune: $("fortuneView"), places: $("placesView"), suggest: $("suggestView") };
+  var views = { main: $("mainView"), board: $("boardView"), explore: $("exploreView"), hub: $("gameHub"), word: $("wordGame"), notice: $("noticeView"), studentId: $("studentIdView"), fortune: $("fortuneView"), places: $("placesView"), suggest: $("suggestView") };
   var currentAppView = "main";
   var handlingBrowserBack = false;
   try { history.replaceState({ dripcollegeApp: true, view: "main" }, "", location.href); } catch (_historyInitError) {}
@@ -1050,8 +1147,7 @@
   });
   $("goBoard").addEventListener("click", function () { showView("board"); selectedPostId = null; loadCommunity(); });
   $("boardBack").onclick = function () { showView("main"); };
-  $("goRank").onclick = function () { showView("rank"); renderRankings("daily"); };
-  $("rankBack").onclick = function () { showView("main"); };
+  $("goExplore").onclick = function () { showView("explore"); openExplore(); };
   $("goGames").onclick = function () { showView("hub"); updateHubState(); };
   $("hubBack").onclick = function () { showView("main"); };
   $("openWord").onclick = function () { showView("word"); initWordGame(); };
@@ -1136,48 +1232,7 @@
     $("fortuneBirthDate").max = [today.getFullYear(), String(today.getMonth()+1).padStart(2,"0"), String(today.getDate()).padStart(2,"0")].join("-");
   })();
 
-  /* ---------------- 채팅 순위: Supabase에 가져온 카카오톡 내보내기 집계 ---------------- */
-  function dateKey(d) { return [d.getFullYear(), String(d.getMonth()+1).padStart(2,"0"), String(d.getDate()).padStart(2,"0")].join("-"); }
-  function rankPeriodRange(period) {
-    var now = new Date(), start = new Date(now.getFullYear(), now.getMonth(), now.getDate()), end = new Date(start);
-    if (period === "weekly") { var day = (start.getDay() + 6) % 7; start.setDate(start.getDate() - day); end = new Date(start); end.setDate(start.getDate() + 6); }
-    else if (period === "monthly") { start = new Date(now.getFullYear(), now.getMonth(), 1); end = new Date(now.getFullYear(), now.getMonth()+1, 0); }
-    return { start: dateKey(start), end: dateKey(end) };
-  }
-  async function renderRankings(period) {
-    var list = $("rankList"); list.innerHTML = "";
-    var range = rankPeriodRange(period);
-    var note = el("p", "rank-period-note", (period === "daily" ? "오늘" : period === "weekly" ? "이번 주" : "이번 달") + " · " + range.start + " ~ " + range.end + " · 메시지 수 기준 TOP 50");
-    list.appendChild(note);
-    if (!supabase) { list.appendChild(el("p", "community-status error", "Supabase 연결을 확인해 주세요.")); return; }
-    list.appendChild(el("p", "community-status", "채팅 기록을 집계하는 중…"));
-    try {
-      var q = await supabase.from("chat_activity_daily").select("activity_date,nickname,message_count").gte("activity_date", range.start).lte("activity_date", range.end).limit(10000);
-      if (q.error) throw q.error;
-      var totals = Object.create(null);
-      (q.data || []).forEach(function (r) { totals[r.nickname] = (totals[r.nickname] || 0) + Number(r.message_count || 0); });
-      var ranked = Object.keys(totals).map(function (nick) { return { nick: nick, count: totals[nick] }; }).sort(function (a,b) { return b.count-a.count || a.nick.localeCompare(b.nick, "ko"); }).slice(0,50);
-      list.innerHTML = ""; list.appendChild(note);
-      if (!ranked.length) { list.appendChild(el("p", "community-status", "해당 기간의 채팅 집계가 없습니다. chat_activity_daily 테이블에 가져오기 SQL을 실행했는지 확인해 주세요.")); return; }
-      ranked.forEach(function (item, idx) {
-        var row = el("div", "rank-item");
-        row.appendChild(el("div", "rank-num" + (idx===0 ? " gold" : idx===1 ? " silver" : idx===2 ? " bronze" : ""), String(idx+1)));
-        var info = el("div", "rank-info"), top = el("div");
-        top.appendChild(el("span", "nick", item.nick)); info.appendChild(top);
-        row.appendChild(info); row.appendChild(el("div", "rank-score", item.count.toLocaleString("ko-KR") + "개 메시지")); list.appendChild(row);
-      });
-    } catch (err) {
-      list.innerHTML = ""; list.appendChild(note);
-      list.appendChild(el("p", "community-status error", "채팅 순위를 불러오지 못했습니다: " + (err && err.message ? err.message : String(err))));
-    }
-  }
-  var rankTabs = document.querySelectorAll(".rank-tab");
-  Array.prototype.forEach.call(rankTabs, function (tab) {
-    tab.onclick = function () {
-      Array.prototype.forEach.call(rankTabs, function (t) { t.classList.remove("active"); });
-      tab.classList.add("active"); renderRankings(tab.getAttribute("data-period"));
-    };
-  });
+  /* 채팅 순위 기능은 메인 메뉴에서 타 학생 탐방하기로 대체되었습니다. */
 
   /* =====================================================================
      오늘의 단어 (국어사전 연동) 게임
@@ -2304,6 +2359,290 @@
   };
 
   buildSidControls(); fillSidInputs(); renderSidCard();
+
+  /* =====================================================================
+     타 학생 탐방하기 — 공개 학생증, 별점, 방명록, Supabase 동기화/백업
+     ===================================================================== */
+  var exploreCards = [], exploreSelectedCard = null, exploreRatings = [], exploreGuestbook = [];
+  var exploreChannel = null, exploreRefreshTimer = null, exploreDirectoryBusy = false;
+  function exploreNickname(user) {
+    return String((user && user.user_metadata && user.user_metadata.nickname) || (user && user.email ? user.email.split("@")[0] : "회원")).slice(0, 24);
+  }
+  function exploreFormatDate(value) {
+    try { return new Date(value).toLocaleString("ko-KR", { year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit" }); }
+    catch (e) { return ""; }
+  }
+  function exploreProfileText(card, key) {
+    var v = card && card[key];
+    return v == null || String(v).trim() === "" ? "-" : String(v);
+  }
+  function exploreRatingStats(rows) {
+    rows = rows || [];
+    var sum = rows.reduce(function (total, row) { return total + Number(row.rating || 0); }, 0);
+    return { average: rows.length ? Math.round((sum / rows.length) * 10) / 10 : 0, count: rows.length };
+  }
+  function exploreShowStatus(id, message, isError) {
+    var n = $(id); if (!n) return;
+    n.textContent = message || "";
+    n.className = "community-status" + (isError ? " error" : message ? "" : "");
+  }
+  function exploreRenderDirectory() {
+    var box = $("exploreList"), search = String($("exploreSearch").value || "").trim().toLocaleLowerCase("ko-KR");
+    box.replaceChildren();
+    var rows = exploreCards.filter(function (card) {
+      var query = [card.nickname, card.major, card.motto, card.mbti, card.hobby, card.skill, card.job].join(" ").toLocaleLowerCase("ko-KR");
+      return !search || query.indexOf(search) >= 0;
+    });
+    $("exploreCount").textContent = exploreCards.length + "명";
+    if (!rows.length) {
+      box.appendChild(el("div", "explore-empty", exploreCards.length ? "검색 결과가 없습니다. 다른 검색어를 입력해 보세요." : "아직 탐방할 학생증이 없습니다. 학생들이 학생증을 만들고 저장하면 여기에 표시됩니다."));
+      return;
+    }
+    rows.forEach(function (card) {
+      var button = el("button", "explore-person"); button.type = "button";
+      var avatar = el("span", "explore-person-avatar"); avatar.innerHTML = avatarSVG(sanitizeAvatar(card.avatar || AV_DEFAULT));
+      var main = el("span", "explore-person-main");
+      main.appendChild(el("span", "explore-person-name", card.nickname || "회원"));
+      main.appendChild(el("span", "explore-person-meta", (card.major || "학과 미입력") + " · " + (card.mbti || "MBTI 미입력")));
+      var stats = exploreRatingStats(exploreRatings.filter(function (r) { return r.profile_user_id === card.user_id; }));
+      main.appendChild(el("span", "explore-person-rating", stats.count ? "★ " + stats.average.toFixed(1) + " · " + stats.count + "명 평가" : "☆ 아직 별점 없음"));
+      button.appendChild(avatar); button.appendChild(main); button.appendChild(el("span", "explore-person-arrow", "›"));
+      button.addEventListener("click", function () { exploreSelectedCard = card; loadExploreProfile(card.user_id); });
+      box.appendChild(button);
+    });
+  }
+  async function loadExploreDirectory(preserveSelection) {
+    if (exploreDirectoryBusy || !supabase) {
+      if (!supabase) exploreShowStatus("exploreStatus", "Supabase 연결이 없어 학생 목록을 불러올 수 없습니다.", true);
+      return;
+    }
+    exploreDirectoryBusy = true;
+    exploreShowStatus("exploreStatus", "학생증과 평가 정보를 불러오는 중…", false);
+    try {
+      var user = await currentUser();
+      if (!user) { exploreShowStatus("exploreStatus", "로그인한 회원만 타 학생을 탐방할 수 있습니다.", true); return; }
+      var result = await supabase.from("student_cards")
+        .select("user_id,nickname,major,motto,avatar,mbti,hobby,skill,job,updated_at")
+        .order("updated_at", { ascending: false }).limit(5000);
+      if (result.error) throw result.error;
+      var cards = result.data || [];
+      // 학생증을 실제로 저장한 다른 회원만 디렉터리에 표시합니다.
+      exploreCards = cards.filter(function (c) { return c.user_id !== user.id; });
+      var ids = exploreCards.map(function (c) { return c.user_id; });
+      exploreRatings = [];
+      if (ids.length) {
+        var ratingsResult = await supabase.from("student_card_ratings").select("profile_user_id,rater_id,rating,rater_nickname,updated_at").in("profile_user_id", ids).limit(20000);
+        if (ratingsResult.error) throw ratingsResult.error;
+        exploreRatings = ratingsResult.data || [];
+      }
+      exploreRenderDirectory();
+      exploreShowStatus("exploreStatus", "학생증은 Supabase에 저장된 공개 프로필을 불러옵니다. 방명록과 별점도 서버에 저장되어 다른 기기와 동기화됩니다.", false);
+      if (preserveSelection && exploreSelectedCard) {
+        var updated = exploreCards.find(function (c) { return c.user_id === exploreSelectedCard.user_id; });
+        if (updated) { exploreSelectedCard = updated; await loadExploreProfile(updated.user_id); }
+        else { exploreSelectedCard = null; $("exploreDetail").hidden = true; }
+      }
+    } catch (err) {
+      console.error("타 학생 탐방 목록 조회 실패", err);
+      exploreShowStatus("exploreStatus", "학생 목록 조회 오류: " + (err && err.message ? err.message : String(err)) + " — 아래 drip_student_explorer_setup.sql을 같은 Supabase 프로젝트에서 실행했는지 확인해 주세요.", true);
+      $("exploreList").replaceChildren();
+      $("exploreList").appendChild(el("div", "explore-empty", "학생 목록을 불러오지 못했습니다. 설정 SQL과 student_cards 조회 권한을 확인해 주세요."));
+    } finally { exploreDirectoryBusy = false; }
+  }
+  function exploreApplyCard(card) {
+    var name = card.nickname || "회원";
+    $("exploreSidName").textContent = name;
+    $("exploreSidPhoto").innerHTML = avatarSVG(sanitizeAvatar(card.avatar || AV_DEFAULT));
+    $("exploreBackMajor").textContent = exploreProfileText(card, "major");
+    $("exploreBackMotto").textContent = exploreProfileText(card, "motto");
+    $("exploreBackMbti").textContent = exploreProfileText(card, "mbti");
+    $("exploreBackHobby").textContent = exploreProfileText(card, "hobby");
+    $("exploreBackSkill").textContent = exploreProfileText(card, "skill");
+    $("exploreBackJob").textContent = exploreProfileText(card, "job");
+    $("exploreDetailTitle").textContent = name + "님의 학생증";
+    var flip = $("exploreFlipCard"); flip.classList.remove("flipped");
+    $("exploreFlipToggle").textContent = "뒷면 보기 ↻"; $("exploreFaceLabel").textContent = "학생증 앞면";
+    Array.prototype.forEach.call(flip.querySelectorAll(".flip-face"), function (face) { face.setAttribute("aria-hidden", face.classList.contains("flip-back") ? "true" : "false"); });
+    $("exploreDetail").hidden = false;
+  }
+  function exploreRenderRating() {
+    var card = exploreSelectedCard, box = $("exploreRatingStars"); box.replaceChildren();
+    var rows = exploreRatings.filter(function (r) { return card && r.profile_user_id === card.user_id; });
+    var stat = exploreRatingStats(rows), me = window.__dripCurrentUser;
+    var mine = me && card ? rows.find(function (r) { return r.rater_id === me.id; }) : null;
+    $("exploreRatingAverage").textContent = stat.count ? stat.average.toFixed(1) + " / 5" : "-";
+    $("exploreRatingCount").textContent = stat.count ? "(" + stat.count + "명 평가)" : "아직 평가가 없어요.";
+    for (var i = 1; i <= 5; i++) {
+      (function (value) {
+        var b = el("button", "explore-rate-star" + (mine && value <= Number(mine.rating) ? " active" : ""), "★");
+        b.type = "button"; b.dataset.rating = String(value); b.setAttribute("aria-label", value + "점 별점");
+        b.disabled = !me || !card || me.id === card.user_id;
+        b.addEventListener("click", function () { saveExploreRating(value); });
+        box.appendChild(b);
+      })(i);
+    }
+    $("exploreRatingHint").textContent = !me ? "로그인 후 평가할 수 있어요." : (card && me.id === card.user_id ? "내 학생증에는 별점을 남길 수 없어요." : mine ? "내가 남긴 별점: " + mine.rating + "점 · 별을 다시 눌러 변경 가능" : "별을 눌러 1~5점을 남겨 주세요.");
+  }
+  function exploreRenderGuestbook(rows) {
+    var box = $("exploreGuestbookList"); box.replaceChildren();
+    exploreGuestbook = rows || [];
+    $("exploreGuestbookCount").textContent = exploreGuestbook.length + "개";
+    var me = window.__dripCurrentUser;
+    if (!exploreGuestbook.length) { box.appendChild(el("div", "explore-empty", "첫 번째 방명록을 남겨 보세요.")); return; }
+    exploreGuestbook.forEach(function (entry) {
+      var article = el("article", "explore-guestbook-entry"), head = el("div", "explore-guestbook-entry-head");
+      var author = el("span", "explore-guestbook-author", entry.author_nickname || "회원");
+      var meta = el("span", "explore-guestbook-date", exploreFormatDate(entry.created_at));
+      head.appendChild(author); head.appendChild(meta); article.appendChild(head);
+      article.appendChild(el("p", "explore-guestbook-message", entry.message || ""));
+      if (me && exploreSelectedCard && (me.id === entry.author_id || me.id === exploreSelectedCard.user_id)) {
+        var del = el("button", "explore-guestbook-delete", "삭제"); del.type = "button";
+        del.addEventListener("click", function () { deleteExploreGuestbook(entry.id); });
+        var actions = el("div"); actions.style.textAlign = "right"; actions.appendChild(del); article.appendChild(actions);
+      }
+      box.appendChild(article);
+    });
+  }
+  async function loadExploreProfile(userId) {
+    if (!supabase || !userId) return;
+    var card = exploreCards.find(function (c) { return c.user_id === userId; }) || exploreSelectedCard;
+    if (!card) return;
+    exploreSelectedCard = card; exploreApplyCard(card);
+    exploreShowStatus("exploreGuestbookStatus", "방명록을 불러오는 중…", false);
+    try {
+      var me = await currentUser(); window.__dripCurrentUser = me || null;
+      var results = await Promise.all([
+        supabase.from("student_card_guestbook").select("id,profile_user_id,author_id,author_nickname,message,created_at").eq("profile_user_id", userId).order("created_at", { ascending: false }).limit(200),
+        supabase.from("student_card_ratings").select("profile_user_id,rater_id,rater_nickname,rating,updated_at").eq("profile_user_id", userId).limit(5000)
+      ]);
+      if (results[0].error) throw results[0].error;
+      if (results[1].error) throw results[1].error;
+      exploreRenderGuestbook(results[0].data || []);
+      // 전체 탐방 목록용 집계에서 해당 프로필의 최신 평가 목록을 교체합니다.
+      exploreRatings = exploreRatings.filter(function (r) { return r.profile_user_id !== userId; }).concat(results[1].data || []);
+      exploreRenderRating(); exploreRenderDirectory();
+      exploreShowStatus("exploreGuestbookStatus", "", false);
+      var own = me && me.id === userId;
+      $("exploreGuestbookForm").querySelector("textarea").disabled = !!own;
+      $("exploreGuestbookSubmit").disabled = !!own;
+      $("exploreGuestbookMessage").placeholder = own ? "내 학생증에는 방명록을 남길 수 없어요." : "예: 학생증 멋지네요! 반가워요 😊";
+      if (own) exploreShowStatus("exploreGuestbookStatus", "내 학생증에서는 방명록을 작성할 수 없습니다.", false);
+    } catch (err) {
+      console.error("학생 탐방 상세 조회 실패", err);
+      exploreShowStatus("exploreGuestbookStatus", "방명록/별점 조회 오류: " + (err && err.message ? err.message : String(err)) + " — drip_student_explorer_setup.sql의 테이블 및 권한을 확인해 주세요.", true);
+    }
+  }
+  async function saveExploreRating(value) {
+    var me = null, card = exploreSelectedCard;
+    try { me = await currentUser(); } catch (e) {}
+    if (!me || !card || me.id === card.user_id) { exploreShowStatus("exploreRatingStatus", "로그인한 다른 회원의 학생증에만 별점을 남길 수 있어요.", true); return; }
+    exploreShowStatus("exploreRatingStatus", "별점을 저장하는 중…", false);
+    var nickname = exploreNickname(me);
+    try {
+      var result = await supabase.from("student_card_ratings").upsert({ profile_user_id: card.user_id, rater_id: me.id, rater_nickname: nickname, rating: value, updated_at: new Date().toISOString() }, { onConflict: "profile_user_id,rater_id" });
+      if (result.error) throw result.error;
+      exploreShowStatus("exploreRatingStatus", "별점 " + value + "점이 서버에 저장되었어요. 다른 기기와도 동기화됩니다.", false);
+      await loadExploreProfile(card.user_id);
+    } catch (err) {
+      console.error("학생증 별점 저장 실패", err);
+      exploreShowStatus("exploreRatingStatus", "별점 저장 실패: " + (err && err.message ? err.message : String(err)) + " — 설정 SQL을 실행했는지 확인해 주세요.", true);
+    }
+  }
+  async function deleteExploreGuestbook(id) {
+    var card = exploreSelectedCard;
+    if (!card || !supabase) return;
+    try {
+      var result = await supabase.from("student_card_guestbook").delete().eq("id", id);
+      if (result.error) throw result.error;
+      await loadExploreProfile(card.user_id); toast("방명록을 삭제했어요.");
+    } catch (err) {
+      exploreShowStatus("exploreGuestbookStatus", "방명록 삭제 실패: " + (err && err.message ? err.message : String(err)), true);
+    }
+  }
+  $("exploreGuestbookForm").addEventListener("submit", async function (event) {
+    event.preventDefault();
+    var card = exploreSelectedCard, text = String($("exploreGuestbookMessage").value || "").trim();
+    if (!card || !text) { exploreShowStatus("exploreGuestbookStatus", "방명록 내용을 입력해 주세요.", true); return; }
+    var me = null; try { me = await currentUser(); } catch (e) {}
+    if (!me || me.id === card.user_id) { exploreShowStatus("exploreGuestbookStatus", "로그인한 다른 회원의 학생증에만 방명록을 남길 수 있어요.", true); return; }
+    $("exploreGuestbookSubmit").disabled = true;
+    exploreShowStatus("exploreGuestbookStatus", "방명록을 서버에 저장하는 중…", false);
+    try {
+      var result = await supabase.from("student_card_guestbook").insert({ profile_user_id: card.user_id, author_id: me.id, author_nickname: exploreNickname(me), message: text }).select("id").single();
+      if (result.error) throw result.error;
+      $("exploreGuestbookMessage").value = "";
+      exploreShowStatus("exploreGuestbookStatus", "방명록이 저장되었어요. 다른 기기에서도 확인할 수 있습니다.", false);
+      await loadExploreProfile(card.user_id);
+    } catch (err) {
+      console.error("방명록 저장 실패", err);
+      exploreShowStatus("exploreGuestbookStatus", "방명록 저장 실패: " + (err && err.message ? err.message : String(err)) + " — 설정 SQL을 실행했는지 확인해 주세요.", true);
+    } finally { $("exploreGuestbookSubmit").disabled = !!(window.__dripCurrentUser && exploreSelectedCard && window.__dripCurrentUser.id === exploreSelectedCard.user_id); }
+  });
+  function startExploreRealtime() {
+    if (!supabase || exploreChannel) return;
+    var scheduleRefresh = function () {
+      clearTimeout(exploreRefreshTimer);
+      exploreRefreshTimer = setTimeout(function () {
+        if (currentAppView !== "explore") return;
+        loadExploreDirectory(true);
+      }, 450);
+    };
+    try {
+      exploreChannel = supabase.channel("drip-student-explorer-sync")
+        .on("postgres_changes", { event: "*", schema: "public", table: "student_cards" }, scheduleRefresh)
+        .on("postgres_changes", { event: "*", schema: "public", table: "student_card_guestbook" }, scheduleRefresh)
+        .on("postgres_changes", { event: "*", schema: "public", table: "student_card_ratings" }, scheduleRefresh)
+        .subscribe(function (state) {
+          if (state === "CHANNEL_ERROR" && currentAppView === "explore") {
+            exploreShowStatus("exploreStatus", "실시간 구독에 연결하지 못했습니다. 새로고침 버튼으로 서버 데이터를 다시 불러올 수 있어요.", false);
+          }
+        });
+    } catch (err) { console.warn("학생 탐방 실시간 구독 오류", err); }
+  }
+  function openExplore() {
+    exploreSelectedCard = null; $("exploreDetail").hidden = true;
+    exploreShowStatus("exploreStatus", "학생증을 불러오는 중…", false);
+    startExploreRealtime(); loadExploreDirectory(false);
+  }
+  $("exploreSearch").addEventListener("input", exploreRenderDirectory);
+  $("exploreRefresh").addEventListener("click", async function () { await loadExploreDirectory(true); if (exploreSelectedCard) await loadExploreProfile(exploreSelectedCard.user_id); });
+  $("exploreCloseDetail").addEventListener("click", function () { $("exploreDetail").hidden = true; exploreSelectedCard = null; });
+  function toggleExploreFlip() {
+    var flip = $("exploreFlipCard"), flipped = flip.classList.toggle("flipped");
+    $("exploreFlipToggle").textContent = flipped ? "앞면 보기 ↻" : "뒷면 보기 ↻";
+    $("exploreFaceLabel").textContent = flipped ? "학생증 뒷면" : "학생증 앞면";
+    Array.prototype.forEach.call(flip.querySelectorAll(".flip-face"), function (face) { face.setAttribute("aria-hidden", face.classList.contains("flip-back") ? String(!flipped) : String(flipped)); });
+    flip.setAttribute("aria-label", flipped ? "학생증 뒷면, 누르면 앞면" : "학생증 앞면, 누르면 뒷면");
+  }
+  $("exploreFlipToggle").addEventListener("click", toggleExploreFlip);
+  $("exploreFlipCard").addEventListener("click", toggleExploreFlip);
+  $("exploreFlipCard").addEventListener("keydown", function (event) { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); toggleExploreFlip(); } });
+  async function downloadExploreBackup() {
+    if (!supabase) { exploreShowStatus("exploreStatus", "Supabase 연결이 없어 백업을 만들 수 없습니다.", true); return; }
+    exploreShowStatus("exploreStatus", "학생증·방명록·별점 백업을 준비하는 중…", false);
+    try {
+      var cardsResult = await supabase.from("student_cards").select("user_id,nickname,major,motto,avatar,mbti,hobby,skill,job,updated_at").order("updated_at", { ascending: false }).limit(5000);
+      if (cardsResult.error) throw cardsResult.error;
+      var cards = cardsResult.data || [], ids = cards.map(function (c) { return c.user_id; }), guests = [], ratings = [];
+      if (ids.length) {
+        var guestResult = await supabase.from("student_card_guestbook").select("id,profile_user_id,author_id,author_nickname,message,created_at").in("profile_user_id", ids).order("created_at", { ascending: false }).limit(20000);
+        if (guestResult.error) throw guestResult.error;
+        guests = guestResult.data || [];
+        var ratingResult = await supabase.from("student_card_ratings").select("profile_user_id,rater_id,rater_nickname,rating,updated_at").in("profile_user_id", ids).limit(20000);
+        if (ratingResult.error) throw ratingResult.error;
+        ratings = ratingResult.data || [];
+      }
+      var payload = { format: "drip-university-student-explorer-backup", exported_at: new Date().toISOString(), note: "현재 로그인 회원에게 조회 권한이 있는 프로필/방명록/별점 데이터의 수동 백업", student_cards: cards, guestbook: guests, ratings: ratings };
+      var blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json;charset=utf-8" }), url = URL.createObjectURL(blob), a = document.createElement("a");
+      a.href = url; a.download = "드립대학_학생탐방_백업_" + new Date().toISOString().slice(0,10) + ".json";
+      document.body.appendChild(a); a.click(); a.remove(); setTimeout(function () { URL.revokeObjectURL(url); }, 1500);
+      exploreShowStatus("exploreStatus", "학생증 " + cards.length + "명 · 방명록 " + guests.length + "개 · 별점 " + ratings.length + "건을 JSON으로 백업했어요.", false);
+    } catch (err) {
+      console.error("학생 탐방 백업 실패", err);
+      exploreShowStatus("exploreStatus", "JSON 백업 실패: " + (err && err.message ? err.message : String(err)), true);
+    }
+  }
+  $("exploreBackup").addEventListener("click", downloadExploreBackup);
 
 
   /* =====================================================================
