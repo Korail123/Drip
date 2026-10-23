@@ -46,7 +46,7 @@
   /* 로그인 / 회원가입 */
   .site-title { width:100%; margin:12px auto 18px; text-align:center; color:#000; font-family:var(--font-display); font-size:clamp(22px,4.5vw,38px); line-height:1.25; font-weight:900; letter-spacing:-.045em; white-space:normal; overflow-wrap:anywhere; }
   .auth-card { width:min(100%,520px); margin:10px auto 22px; padding:22px; background:#fff; border:3px solid var(--ink); border-radius:22px; box-shadow:6px 6px 0 var(--ink); }
-  .auth-card h2 { margin:0 0 5px; font-family:var(--font-display); font-size:28px; }
+  .auth-card h2 { color:#111; margin:0 0 5px; font-family:var(--font-display); font-size:28px; }
   .auth-help { margin:0 0 16px; color:var(--muted); font-size:13px; }
   .auth-card label { display:block; margin:12px 0 5px; font-weight:800; }
   .remember-row { display:flex !important; align-items:center; gap:9px; margin:12px 0 2px !important; font-size:14px; cursor:pointer; }
@@ -477,6 +477,51 @@
   .idv-logo { width:40px; height:40px; display:block; flex:none; }\n  .idv-school-en { margin-top:2px; font-size:10px; font-weight:800; letter-spacing:.22em; color:#4a5570; }\n  .idv-school-en { margin-top:2px; font-size:10px; font-weight:800; letter-spacing:.22em; color:#4a5570; }
   .idv-logo:not([src]) { display:none; }
   .home-student-wrap .idv { margin-bottom:0; }
+
+
+  /* ===== DRIP UNIVERSITY modern teal/blue redesign ===== */
+  :root{--paper:#f4f8fa;--dot:transparent;--ink:#17252d;--muted:#647781;--card:#fff;--coral:#079eaa;--kakao:#fee500;--mint-bg:#e5f7f6;--mint-line:#a7e3df;--mint-ink:#087c83;--butter-bg:#eaf3ff;--butter-line:#c7dcf7;--butter-ink:#285a8d;--pink-bg:#edf1ff;--pink-line:#d3dcff;--pink-ink:#4456a4;--slate-bg:#f1f5f7;--slate-ink:#354952;--row-line:#e5ecef;--teal:#08a7a9;}
+  body{background:#f4f8fa;background-image:none;color:#17252d;padding-top:18px}
+  .page{max-width:900px}
+  .site-title{font-family:var(--font-body);font-size:clamp(20px,3.4vw,30px);font-weight:800;letter-spacing:-.055em;white-space:nowrap;overflow-wrap:normal;color:#111;margin:12px auto 22px;line-height:1.35}
+  @media(max-width:520px){.site-title{font-size:clamp(14px,4.2vw,21px);letter-spacing:-.07em;white-space:nowrap}}
+  .auth-card,.card,.community-post,.community-form,.community-row,.community-detail,.idv,.fortune-card,.game-panel,.notice-card,.saved-place,.rank-item,.wg,.student-card{border:1px solid #e3ebef!important;border-radius:22px!important;box-shadow:0 8px 24px rgba(29,67,79,.07)!important;background:#fff}
+  .auth-card{border:1px solid #e3ebef!important;box-shadow:0 12px 32px rgba(29,67,79,.09)!important;padding:clamp(18px,4vw,28px)}
+  .auth-card h2,h2.title,.head h2{font-family:var(--font-body);font-weight:800;letter-spacing:-.035em;color:#17252d}
+  .auth-card input,.community-form input,.community-form textarea,.community-form select,.sid-field input,.sid-field select,.sid-field textarea,.kakao-search-line input{border:1px solid #d9e4e9!important;border-radius:13px!important;background:#fbfdfe!important;box-shadow:none!important;min-height:46px}
+  .auth-card input:focus,.community-form input:focus,.community-form textarea:focus,.community-form select:focus,.sid-field input:focus,.kakao-search-line input:focus{border-color:#079eaa!important;outline:3px solid rgba(7,158,170,.12)!important}
+  .auth-primary,.btn.coral,.nav-btn.coral{background:linear-gradient(135deg,#08a8ad,#1689c6)!important;color:#fff!important;border:0!important;box-shadow:none!important}
+  .auth-secondary{background:#edf6f8!important;color:#176a77!important;border:1px solid #d4e9ec!important;box-shadow:none!important}
+  .btn,.nav-btn,.logout-btn,.auth-primary,.auth-secondary,.community-form button,.place-save-form button{border-radius:14px!important;box-shadow:none!important;border:1px solid #dbe7eb!important;transition:transform .15s,background .15s}
+  .btn:hover,.nav-btn:hover{transform:translateY(-1px);box-shadow:0 5px 14px rgba(21,82,95,.08)!important}
+  .nav-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:20px 0 32px}
+  .nav-btn{justify-content:flex-start;min-height:76px;padding:18px 20px;background:#fff!important;color:#263a43!important;font-family:var(--font-body);font-size:16px;font-weight:800;border:1px solid #e0e9ed!important}
+  .nav-btn.mint,.nav-btn.butter{background:#fff!important;color:#263a43!important}
+  .nav-btn:before{content:"";width:4px;height:30px;border-radius:4px;background:linear-gradient(#08aaa8,#248ed0);margin-right:2px;flex:none}
+  .card{padding:clamp(16px,3vw,24px);margin-bottom:22px}
+  .head{align-items:center;margin-bottom:20px}.pill-live{background:#e5f7f6;border:0;color:#087c83}
+  .sub,.auth-help,.auth-note{color:#71828a}
+  .community-form,.place-save-form,.community-detail,.community-row{border:1px solid #e3ebef!important;box-shadow:none!important}
+  .community-row{margin-bottom:9px;padding:14px 16px;background:#fff}
+  .dept{background:#eaf5ff;border:0;color:#28628e}
+  .game-card{border:1px solid #e0e9ed!important;border-radius:18px!important;box-shadow:0 5px 18px rgba(29,67,79,.05)!important;background:#fff!important}
+  .game-card:hover{transform:translateY(-1px);box-shadow:0 8px 22px rgba(29,67,79,.1)!important}
+  .game-no{background:#e5f7f6;border:0;color:#087c83}
+  .wg-tile{border:1px solid #dbe5e9!important;border-radius:12px!important;box-shadow:none!important;background:#fff!important}
+  .wg-tile.correct{background:#08a8a4!important;color:#fff!important;border-color:#08a8a4!important}
+  .wg-tile.present{background:#dceeff!important;color:#245f92!important;border-color:#b9d8f2!important}
+  .wg-tile.absent{background:#e9eef1!important;color:#65757c!important;border-color:#e0e7eb!important}
+  .wg-desc-bar{background:#edf8f8;border:1px solid #ccebea;box-shadow:none;border-radius:14px}
+  .kakao-search-modal{position:fixed;inset:0;z-index:9999;background:rgba(16,35,43,.48);display:flex;align-items:center;justify-content:center;padding:18px;backdrop-filter:blur(3px)}
+  .kakao-search-dialog{width:min(100%,520px);max-height:min(80vh,720px);overflow:auto;background:#fff;border:1px solid #e0e9ed;border-radius:24px;box-shadow:0 24px 70px rgba(10,35,45,.22);padding:22px}
+  .kakao-search-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:14px}.kakao-search-head h3{margin:0;font-size:20px;font-weight:800;color:#17252d}
+  .kakao-search-close,.kakao-search-line button{border:0!important;border-radius:12px!important;background:#e7f6f6!important;color:#087c83!important;padding:10px 14px;font-weight:800}
+  .kakao-search-line{display:flex;gap:8px}.kakao-place-results button{display:block;width:100%;text-align:left;padding:13px 14px;margin-top:8px;border:1px solid #e1eaee;border-radius:14px;background:#fff}.kakao-place-results button:hover{background:#f0f9fa;border-color:#9bdcdd}
+  .idv{background:linear-gradient(180deg,#fff 0%,#fff 60%,#eaf7fa 100%)!important}
+  .idv-school-en{color:#167e8b!important}
+  .saved-place,.rank-item,.community-detail{padding:16px!important}
+  button:focus-visible,a:focus-visible,input:focus-visible{outline:3px solid rgba(8,158,170,.28);outline-offset:2px}
+  @media(max-width:520px){.nav-grid{grid-template-columns:1fr;gap:9px}.nav-btn{min-height:60px;padding:14px 16px}.kakao-search-dialog{padding:17px;border-radius:20px}.kakao-search-line{flex-wrap:wrap}.kakao-search-line input{flex:1 1 180px;min-width:0}}
 
 </style>
 </head>
@@ -1011,13 +1056,13 @@
     var candidates = WORD_POOL_5.filter(function(w) { return splitHangulWord(w.word).length === 5; });
     var idx = Math.floor(Math.random() * candidates.length), base = candidates[idx] || {word:"학교"};
     var wordObj = { word: base.word, jamo: splitHangulWord(base.word) };
-    return { version: 3, key: "wg_round_" + Date.now() + "_" + Math.random().toString(36).slice(2,8), wordObj: wordObj };
+    return { version: 4, key: "wg_round_" + Date.now() + "_" + Math.random().toString(36).slice(2,8), wordObj: wordObj };
   }
   var curState = { periodKey: "", wordObj: null, guesses: [], currentInput: [], currentRaw: "", status: "PLAYING", keyColors: {} };
   function initWordGame(newRound) {
     var active = null;
     if (!newRound) { try { active = JSON.parse(store("wg_active_round") || "null"); } catch(e) {} }
-    if (!active || !active.key || !active.wordObj || active.version !== 3 || newRound) { active = getNewRound(); store("wg_active_round", JSON.stringify(active)); }
+    if (!active || !active.key || !active.wordObj || active.version !== 4 || newRound) { active = getNewRound(); store("wg_active_round", JSON.stringify(active)); }
     curState.periodKey = active.key; curState.wordObj = active.wordObj;
     var saved = store(active.key); curState.guesses=[]; curState.status="PLAYING"; curState.keyColors={};
     if (saved) { try { var o=JSON.parse(saved); curState.guesses=o.guesses||[]; curState.status=o.status||"PLAYING"; curState.keyColors=o.keyColors||{}; } catch(e) {} }
