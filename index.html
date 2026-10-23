@@ -44,10 +44,9 @@
   @keyframes bongchul-greet { 0%,100%{transform:translateY(0) rotate(-0.5deg)} 50%{transform:translateY(-5px) rotate(0.5deg)} }
 
   /* 로그인 / 회원가입 */
-  .rainbow-title { width:min(100%,720px); display:block; margin:0 auto -4px; overflow:visible; }
-  .rainbow-title text { font-family:var(--font-display); font-weight:900; paint-order:stroke fill; stroke:var(--ink); stroke-width:7px; stroke-linejoin:round; }
+  .site-title { width:100%; margin:12px auto 18px; text-align:center; color:#000; font-family:var(--font-display); font-size:clamp(22px,4.5vw,38px); line-height:1.25; font-weight:900; letter-spacing:-.045em; white-space:normal; overflow-wrap:anywhere; }
   .auth-card { width:min(100%,520px); margin:10px auto 22px; padding:22px; background:#fff; border:3px solid var(--ink); border-radius:22px; box-shadow:6px 6px 0 var(--ink); }
-  .auth-card h2 { margin:0 0 5px; font-family:var(--font-display); font-size:28px; }
+  .auth-card h2 { color:#111; margin:0 0 5px; font-family:var(--font-display); font-size:28px; }
   .auth-help { margin:0 0 16px; color:var(--muted); font-size:13px; }
   .auth-card label { display:block; margin:12px 0 5px; font-weight:800; }
   .remember-row { display:flex !important; align-items:center; gap:9px; margin:12px 0 2px !important; font-size:14px; cursor:pointer; }
@@ -63,7 +62,7 @@
   .logout-btn { border:2px solid var(--ink); background:#fff; border-radius:10px; padding:6px 12px; font-weight:800; }
   .auth-note { font-size:12px; color:var(--muted); margin:12px 0 0; }
   #signupView { max-width:720px; margin:0 auto; }
-  @media(max-width:520px){ .auth-card{padding:17px;border-radius:18px} .auth-card h2{font-size:25px} .rainbow-title text{stroke-width:9px} }
+  @media(max-width:520px){ .auth-card{padding:17px;border-radius:18px} .auth-card h2{font-size:25px} .site-title{font-size:clamp(19px,5.2vw,28px); letter-spacing:-.06em; margin:8px auto 14px;} }
 
   /* 메뉴 버튼 */
   .nav-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:16px; margin:20px 0 34px; }
@@ -139,7 +138,26 @@
   .saved-place { padding:12px; border:1.5px solid var(--ink); border-radius:12px; margin:8px 0; background:#fff; box-shadow:2px 2px 0 var(--ink); }
   .saved-place a { overflow-wrap:anywhere; }
   .saved-place p { margin:6px 0; white-space:pre-wrap; overflow-wrap:anywhere; }
-  .kakao-overlay-iw { padding:10px 14px; border-radius:10px; background:#fff; border:2px solid var(--ink); font-size:13px; font-weight:700; box-shadow:2px 2px 0 var(--ink); white-space:nowrap; }
+  .kakao-place-results { display:grid; gap:7px; margin:-4px 0 8px; }
+  .kakao-place-result { text-align:left; white-space:normal; padding:10px 12px; border:1px solid #DCE2ED; border-radius:10px; background:#fff; cursor:pointer; }
+  .kakao-place-result strong { display:block; }
+  .kakao-place-result small { display:block; color:#68758E; margin-top:3px; }
+  .kakao-place-results { display:grid; gap:7px; margin:-4px 0 8px; }\n  .kakao-place-result { text-align:left; white-space:normal; padding:10px 12px; border:1px solid #DCE2ED; border-radius:10px; background:#fff; cursor:pointer; }\n  .kakao-place-result strong { display:block; }\n  .kakao-place-result small { display:block; color:#68758E; margin-top:3px; }\n  .kakao-overlay-iw { padding:10px 14px; border-radius:10px; background:#fff; border:2px solid var(--ink); font-size:13px; font-weight:700; box-shadow:2px 2px 0 var(--ink); white-space:nowrap; }
+  .kakao-search-modal[hidden] { display:none !important; }
+  .kakao-search-modal { position:fixed; inset:0; z-index:9999; display:flex; align-items:center; justify-content:center; padding:18px; background:rgba(15,23,42,.58); }
+  .kakao-search-dialog { width:min(100%,520px); max-height:min(82vh,720px); overflow:auto; background:#fff; border:2px solid var(--ink); border-radius:18px; padding:18px; box-shadow:7px 7px 0 rgba(0,0,0,.25); }
+  .kakao-search-head { display:flex; justify-content:space-between; align-items:center; gap:12px; margin-bottom:12px; }
+  .kakao-search-head h3 { margin:0; font-size:20px; }
+  .kakao-search-close { border:1.5px solid var(--ink); border-radius:9px; background:#fff; padding:6px 10px; font-weight:800; }
+  .kakao-search-line { display:flex; gap:8px; }
+  .kakao-search-line input { flex:1; min-width:0; border:2px solid var(--ink); border-radius:10px; padding:11px; }
+  .kakao-search-line button { border:2px solid var(--ink); border-radius:10px; padding:8px 14px; background:#d9f7e9; font-weight:800; }
+  .kakao-place-results { display:grid; gap:7px; margin-top:12px; }
+  .kakao-place-result { text-align:left; white-space:normal; padding:10px 12px; border:1px solid #DCE2ED; border-radius:10px; background:#fff; cursor:pointer; }
+  .kakao-place-result strong { display:block; }
+  .kakao-place-result small { display:block; color:#68758E; margin-top:3px; }
+  .kakao-search-status { margin:10px 0 0; color:#536078; font-size:13px; }
+
   @media(max-width:850px){ .places-layout{grid-template-columns:minmax(0,1fr)} .places-left{order:2} .places-right{order:1} .places-map{height:58vh;min-height:390px} .places-list{max-height:none} }
   @media(max-width:650px){ .places-map{height:420px;min-height:360px} .community-row{align-items:flex-start; flex-wrap:wrap} .community-row-meta{margin-left:auto} }
 
@@ -456,10 +474,109 @@
   .idv-photo svg { display:block; width:100%; height:100%; }
   .idv-name { margin-top:16px; font-size:24px; font-weight:800; letter-spacing:.25em; padding-left:.25em; text-align:center; overflow-wrap:anywhere; color:var(--ink); }
   .idv-school { margin-top:18px; display:flex; align-items:center; gap:8px; font-size:22px; font-weight:800; color:var(--ink); white-space:nowrap; }
-  .idv-logo { width:40px; height:40px; display:block; flex:none; }
+  .idv-logo { width:40px; height:40px; display:block; flex:none; }\n  .idv-school-en { margin-top:2px; font-size:10px; font-weight:800; letter-spacing:.22em; color:#4a5570; }\n  .idv-school-en { margin-top:2px; font-size:10px; font-weight:800; letter-spacing:.22em; color:#4a5570; }
   .idv-logo:not([src]) { display:none; }
   .home-student-wrap .idv { margin-bottom:0; }
 
+
+  /* 검색 모달 hidden 상태가 뒤쪽 스타일에 의해 무시되지 않도록 고정 */
+  body.kakao-search-open { overflow:hidden; }
+  #kakaoSearchModal[hidden] { display:none !important; }
+  #kakaoSearchModal:not([hidden]) { display:flex !important; }
+  #sidAvatarControls { display:flex !important; gap:10px; overflow-x:auto; padding:4px 2px 12px; align-items:stretch; visibility:visible !important; }
+  #sidAvatarControls .sid-group { display:block !important; flex:0 0 min(86%,340px); min-width:0; }
+  #sidAvatarControls .sid-opts { display:flex !important; visibility:visible !important; }
+  #sidAvatarControls .sid-opts button { display:inline-flex !important; visibility:visible !important; align-items:center; justify-content:center; cursor:pointer; }
+  .sid-editor .sid-field, .sid-editor .sid-h, .sid-editor .sid-swipe-hint, .sid-editor .sid-actions { display:block; visibility:visible; }
+  /* ===== DRIP UNIVERSITY modern teal/blue redesign ===== */
+  :root{--paper:#f4f8fa;--dot:transparent;--ink:#17252d;--muted:#647781;--card:#fff;--coral:#079eaa;--kakao:#fee500;--mint-bg:#e5f7f6;--mint-line:#a7e3df;--mint-ink:#087c83;--butter-bg:#eaf3ff;--butter-line:#c7dcf7;--butter-ink:#285a8d;--pink-bg:#edf1ff;--pink-line:#d3dcff;--pink-ink:#4456a4;--slate-bg:#f1f5f7;--slate-ink:#354952;--row-line:#e5ecef;--teal:#08a7a9;}
+  body{background:#f4f8fa;background-image:none;color:#17252d;padding-top:18px}
+  .page{max-width:900px}
+  .site-title{font-family:var(--font-body);font-size:clamp(20px,3.4vw,30px);font-weight:800;letter-spacing:-.055em;white-space:nowrap;overflow-wrap:normal;color:#111;margin:12px auto 22px;line-height:1.35}
+  @media(max-width:520px){.site-title{font-size:clamp(14px,4.2vw,21px);letter-spacing:-.07em;white-space:nowrap}}
+  .auth-card,.card,.community-post,.community-form,.community-row,.community-detail,.idv,.fortune-card,.game-panel,.notice-card,.saved-place,.rank-item,.wg,.student-card{border:1px solid #e3ebef!important;border-radius:22px!important;box-shadow:0 8px 24px rgba(29,67,79,.07)!important;background:#fff}
+  .auth-card{border:1px solid #e3ebef!important;box-shadow:0 12px 32px rgba(29,67,79,.09)!important;padding:clamp(18px,4vw,28px)}
+  .auth-card h2,h2.title,.head h2{font-family:var(--font-body);font-weight:800;letter-spacing:-.035em;color:#17252d}
+  .auth-card input,.community-form input,.community-form textarea,.community-form select,.sid-field input,.sid-field select,.sid-field textarea,.kakao-search-line input{border:1px solid #d9e4e9!important;border-radius:13px!important;background:#fbfdfe!important;box-shadow:none!important;min-height:46px}
+  .auth-card input:focus,.community-form input:focus,.community-form textarea:focus,.community-form select:focus,.sid-field input:focus,.kakao-search-line input:focus{border-color:#079eaa!important;outline:3px solid rgba(7,158,170,.12)!important}
+  .auth-primary,.btn.coral,.nav-btn.coral{background:linear-gradient(135deg,#08a8ad,#1689c6)!important;color:#fff!important;border:0!important;box-shadow:none!important}
+  .auth-secondary{background:#edf6f8!important;color:#176a77!important;border:1px solid #d4e9ec!important;box-shadow:none!important}
+  .btn,.nav-btn,.logout-btn,.auth-primary,.auth-secondary,.community-form button,.place-save-form button{border-radius:14px!important;box-shadow:none!important;border:1px solid #dbe7eb!important;transition:transform .15s,background .15s}
+  .btn:hover,.nav-btn:hover{transform:translateY(-1px);box-shadow:0 5px 14px rgba(21,82,95,.08)!important}
+  .nav-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:20px 0 32px}
+  .nav-btn{justify-content:flex-start;min-height:76px;padding:18px 20px;background:#fff!important;color:#263a43!important;font-family:var(--font-body);font-size:16px;font-weight:800;border:1px solid #e0e9ed!important}
+  .nav-btn.mint,.nav-btn.butter{background:#fff!important;color:#263a43!important}
+  .nav-btn:before{content:"";width:4px;height:30px;border-radius:4px;background:linear-gradient(#08aaa8,#248ed0);margin-right:2px;flex:none}
+  .card{padding:clamp(16px,3vw,24px);margin-bottom:22px}
+  .head{align-items:center;margin-bottom:20px}.pill-live{background:#e5f7f6;border:0;color:#087c83}
+  .sub,.auth-help,.auth-note{color:#71828a}
+  .community-form,.place-save-form,.community-detail,.community-row{border:1px solid #e3ebef!important;box-shadow:none!important}
+  .community-row{margin-bottom:9px;padding:14px 16px;background:#fff}
+  .dept{background:#eaf5ff;border:0;color:#28628e}
+  .game-card{border:1px solid #e0e9ed!important;border-radius:18px!important;box-shadow:0 5px 18px rgba(29,67,79,.05)!important;background:#fff!important}
+  .game-card:hover{transform:translateY(-1px);box-shadow:0 8px 22px rgba(29,67,79,.1)!important}
+  .game-no{background:#e5f7f6;border:0;color:#087c83}
+  .wg-tile{border:1px solid #dbe5e9!important;border-radius:12px!important;box-shadow:none!important;background:#fff!important}
+  .wg-tile.correct{background:#08a8a4!important;color:#fff!important;border-color:#08a8a4!important}
+  .wg-tile.present{background:#dceeff!important;color:#245f92!important;border-color:#b9d8f2!important}
+  .wg-tile.absent{background:#e9eef1!important;color:#65757c!important;border-color:#e0e7eb!important}
+  .wg-desc-bar{background:#edf8f8;border:1px solid #ccebea;box-shadow:none;border-radius:14px}
+  .kakao-search-modal{position:fixed;inset:0;z-index:9999;background:rgba(16,35,43,.48);display:flex;align-items:center;justify-content:center;padding:18px;backdrop-filter:blur(3px)}
+  .kakao-search-dialog{width:min(100%,520px);max-height:min(80vh,720px);overflow:auto;background:#fff;border:1px solid #e0e9ed;border-radius:24px;box-shadow:0 24px 70px rgba(10,35,45,.22);padding:22px}
+  .kakao-search-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:14px}.kakao-search-head h3{margin:0;font-size:20px;font-weight:800;color:#17252d}
+  .kakao-search-close,.kakao-search-line button{border:0!important;border-radius:12px!important;background:#e7f6f6!important;color:#087c83!important;padding:10px 14px;font-weight:800}
+  .kakao-search-line{display:flex;gap:8px}.kakao-place-results button{display:block;width:100%;text-align:left;padding:13px 14px;margin-top:8px;border:1px solid #e1eaee;border-radius:14px;background:#fff}.kakao-place-results button:hover{background:#f0f9fa;border-color:#9bdcdd}
+  .idv{background:linear-gradient(180deg,#fff 0%,#fff 60%,#eaf7fa 100%)!important}
+  .idv-school-en{color:#167e8b!important}
+  .saved-place,.rank-item,.community-detail{padding:16px!important}
+  button:focus-visible,a:focus-visible,input:focus-visible{outline:3px solid rgba(8,158,170,.28);outline-offset:2px}
+  @media(max-width:520px){.nav-grid{grid-template-columns:1fr;gap:9px}.nav-btn{min-height:60px;padding:14px 16px}.kakao-search-dialog{padding:17px;border-radius:20px}.kakao-search-line{flex-wrap:wrap}.kakao-search-line input{flex:1 1 180px;min-width:0}}
+
+
+  /* ===== 동양생명 모바일Web 스타일: 청록→파랑→보라 헤더, 하이라이트 밑줄, 서비스 바로가기 아이콘 그리드 ===== */
+  :root{--g1:#00b0a0;--g2:#0a8fd0;--g3:#7b6cff;--mark:#c6ecfb;--sky:#35a7e1;--soft:0 6px 20px rgba(30,70,120,.10)}
+  body{background:#f2f6fb!important}
+  .mark{background:linear-gradient(transparent 58%,var(--mark) 58%);padding:0 6px 0 2px}
+  h2.title{display:inline-block;background:linear-gradient(transparent 62%,var(--mark) 62%);padding-right:8px}
+  .site-title{position:relative;overflow:hidden;text-align:left!important;white-space:normal!important;color:#fff!important;
+    background:linear-gradient(160deg,var(--g1) 0%,var(--g2) 58%,var(--g3) 100%);border-radius:26px;padding:26px 24px 30px;margin:0 0 16px!important;
+    font-size:clamp(24px,6vw,32px)!important;letter-spacing:-.04em!important;line-height:1.25;box-shadow:var(--soft)}
+  .site-title small{display:block;font-size:.5em;font-weight:700;opacity:.88;letter-spacing:0;margin-bottom:4px}
+  .site-title::before,.site-title::after{content:"";position:absolute;border-radius:50%;pointer-events:none}
+  .site-title::before{width:150px;height:150px;right:-34px;top:-40px;background:repeating-linear-gradient(135deg,rgba(255,255,255,.24) 0 2px,transparent 2px 7px)}
+  .site-title::after{width:90px;height:90px;right:60px;bottom:-46px;background:rgba(255,255,255,.14)}
+  .auth-topline{background:#fff;border-radius:16px;padding:12px 16px;box-shadow:var(--soft);max-width:none}
+  .auth-user{font-size:14px}.logout-btn{border:0!important;background:none!important;color:#5c6b7e;font-size:13px;text-decoration:underline}
+  .auth-card{border-radius:24px!important;box-shadow:var(--soft)!important;border:0!important;max-width:520px}
+  .auth-card h2{font-size:26px;margin-bottom:8px}
+  .lrow{display:flex;align-items:center;gap:12px;margin:10px 0;padding:0 16px;background:#fff;border-radius:14px;box-shadow:0 2px 10px rgba(30,70,120,.12)}
+  .lrow .lic{font-size:20px;flex:none}
+  .lrow input{border:0!important;outline:0!important;box-shadow:none!important;background:transparent!important;min-height:52px!important;padding:0!important}
+  .lrow:focus-within{box-shadow:0 0 0 2px var(--sky),0 2px 10px rgba(30,70,120,.12)}
+  .auth-primary{background:linear-gradient(135deg,var(--g1),var(--g2))!important;border-radius:14px!important;min-height:50px;font-size:16px}
+  .auth-secondary#openSignup{background:var(--sky)!important;color:#fff!important;border:0!important;border-radius:20px 20px 20px 6px!important;text-align:left;padding:14px 18px;min-height:52px;margin-top:8px}
+  #signupView .auth-secondary{background:#e9f4fb!important;color:#1f6f9f!important}
+  #mainNav{display:grid;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:18px 6px!important;background:#fff;border-radius:24px;padding:20px 12px 22px;box-shadow:var(--soft);margin:14px 0 24px!important}
+  #mainNav[hidden]{display:none!important}
+  #mainNav::before{content:"서비스 바로가기";grid-column:1/-1;font-size:15px;font-weight:800;padding:0 8px 4px;color:#33475b}
+  #mainNav .nav-btn{flex-direction:column!important;justify-content:flex-start!important;align-items:center;gap:8px!important;min-height:0!important;padding:4px 0!important;background:none!important;border:0!important;box-shadow:none!important;border-radius:12px!important;color:#2b3a4a!important;font-size:12.5px!important;font-weight:700;text-align:center;line-height:1.3;white-space:normal!important}
+  #mainNav .nav-btn:before{display:none!important}
+  #mainNav .nav-btn .ni{width:54px;height:54px;border-radius:50%;display:grid;place-items:center;font-size:26px;background:#eef8fd;border:1.5px solid #cfeaf7;transition:transform .15s,background .15s}
+  #mainNav .nav-btn:hover{transform:none;box-shadow:none!important}
+  #mainNav .nav-btn:hover .ni,#mainNav .nav-btn:active .ni{transform:translateY(-2px);background:#dff2fb}
+  .bongchul-hero{margin:4px auto 6px}
+  .head{background:#fff;border-radius:20px;padding:16px 18px;box-shadow:var(--soft)}
+  .head .btn.small{background:#eef6fb!important;color:#1f6f9f!important;border:0!important}
+  .card,.community-form,.community-detail,.community-row,.saved-place,.notice-list,.game-card,.sid-card,.idv{border:0!important;box-shadow:var(--soft)!important;border-radius:20px!important}
+  .community-row{margin:10px 0}
+  .pill-live{background:#e3f6f3;color:#0b7d70}
+  #placesTabs,.rank-tabs{background:#fff;border-radius:16px 16px 0 0;border-bottom:1px solid #dfe6ee!important;gap:0}
+  #placesTabs button,.rank-tab{background:none!important;border:0!important;border-bottom:3px solid transparent!important;border-radius:0!important;color:#7a8794;padding:12px 14px}
+  #placesTabs button.active,.rank-tab.active{color:#111!important;border-bottom-color:#111!important}
+  .notice-banner{background:#e9f6fd!important;color:#1f5f86!important}
+  .rank-item.me{background:#e9f6fd}.rank-score{color:var(--g2)}
+  .nav-btn.coral,.btn.coral{background:linear-gradient(135deg,var(--g1),var(--g2))!important}
+  @media(max-width:380px){#mainNav{gap:14px 2px!important;padding-inline:6px}#mainNav .nav-btn{font-size:11.5px!important}#mainNav .nav-btn .ni{width:46px;height:46px;font-size:22px}}
 </style>
 </head>
 <body>
@@ -467,13 +584,7 @@
 
   <!-- ===== 메인 화면 ===== -->
   <main id="mainView" class="stage">
-    <svg class="rainbow-title" viewBox="0 0 1000 245" role="img" aria-label="2030 직장인 드립대학 수다학과 아치형 무지개 제목">
-      <defs>
-        <linearGradient id="titleRainbow" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#ff4d6d"/><stop offset="17%" stop-color="#ff9f1c"/><stop offset="34%" stop-color="#ffe66d"/><stop offset="50%" stop-color="#2ec4b6"/><stop offset="67%" stop-color="#3a86ff"/><stop offset="84%" stop-color="#8338ec"/><stop offset="100%" stop-color="#ff4d6d"/></linearGradient>
-        <path id="titleArc" d="M 65 218 Q 500 -80 935 218" fill="none"/>
-      </defs>
-      <text font-size="62" fill="url(#titleRainbow)" text-anchor="middle"><textPath href="#titleArc" startOffset="50%">2030 직장인 드립대학 수다학과</textPath></text>
-    </svg>
+    <h1 class="site-title"><small>2030 직장인</small>드립대학 수다학과</h1>
 
     <div id="authTopline" class="auth-topline" hidden><span id="signedInLabel" class="auth-user"></span><button id="logoutBtn" class="logout-btn" type="button">로그아웃</button></div>
 
@@ -488,37 +599,38 @@
         <div class="idv-ko">학생증</div>
         <div class="idv-photo" id="homeSidPhoto"></div>
         <div class="idv-name" id="homeSidName">회원</div>
-        <div class="idv-school"><img class="idv-logo" alt="" aria-hidden="true"><span>드립대학</span></div>
+        <div class="idv-school"><img class="idv-logo" alt="" aria-hidden="true"><span class="idv-school-name">드립대학</span></div>
+        <div class="idv-school-en">DRIP UNIVERSITY</div>
       </div>
     </section>
 
     <section id="loginCard" class="auth-card" aria-labelledby="loginTitle">
-      <h2 id="loginTitle">로그인</h2><p class="auth-help">카카오톡 오픈채팅에서 사용하는 닉네임과 인증번호를 입력해 주세요.</p>
+      <h2 id="loginTitle"><span class="mark">로그인</span></h2><p class="auth-help">카카오톡 오픈채팅에서 사용하는 닉네임과 인증번호를 입력해 주세요.</p>
       <form id="loginForm" autocomplete="on">
-        <label for="loginNickname">닉네임</label><input id="loginNickname" name="nickname" maxlength="24" autocomplete="username" placeholder="등록한 닉네임" required>
-        <label for="loginCode">인증번호</label><input id="loginCode" name="code" type="password" autocomplete="current-password" placeholder="인증번호 입력" required>
+        <div class="lrow"><span class="lic" aria-hidden="true">👤</span><input id="loginNickname" aria-label="닉네임" name="nickname" maxlength="24" autocomplete="username" placeholder="등록한 닉네임" required></div>
+        <div class="lrow"><span class="lic" aria-hidden="true">🔑</span><input id="loginCode" aria-label="인증번호" name="code" type="password" autocomplete="current-password" placeholder="인증번호 입력" required></div>
         <label class="remember-row" for="rememberLogin"><input class="remember-checkbox" id="rememberLogin" type="checkbox" checked> 자동 로그인 (캐시/사이트 데이터 삭제 전까지 유지)</label>
-        <div class="auth-actions"><button class="auth-primary" type="submit">로그인</button><button class="auth-secondary" id="openSignup" type="button">회원가입</button></div>
+        <div class="auth-actions"><button class="auth-primary" type="submit">로그인</button><button class="auth-secondary" id="openSignup" type="button">고객님! 처음 오셨나요? 회원가입</button></div>
         <div id="loginStatus" class="auth-status" role="status" aria-live="polite"></div>
       </form>
       <p class="auth-note">회원가입은 관리자가 Supabase에 미리 등록한 닉네임과 인증번호가 있어야 가능합니다.</p>
     </section>
 
     <nav id="mainNav" class="nav-grid" aria-label="메인 메뉴" hidden>
-      <button class="nav-btn coral" id="goNotice" type="button">📢 공지사항</button>
-      <button class="nav-btn butter" id="goBoard" type="button">💬 수다게시판</button>
-      <button class="nav-btn mint" id="goStudentId" type="button">🪪 학생증 만들기</button>
-      <button class="nav-btn coral" id="goGames" type="button">🎮 미니게임</button>
-      <button class="nav-btn butter" id="goFortune" type="button">🔮 오늘의 사주</button>
-      <button class="nav-btn mint" id="goRank" type="button">🏆 채팅순위 보기</button>
-      <button class="nav-btn coral" id="goPlaces" type="button">☕ 맛집/카페 보기</button>
+      <button class="nav-btn coral" id="goNotice" type="button"><span class="ni">📢</span><span class="nl">공지사항</span></button>
+      <button class="nav-btn butter" id="goBoard" type="button"><span class="ni">💬</span><span class="nl">수다게시판</span></button>
+      <button class="nav-btn mint" id="goStudentId" type="button"><span class="ni">🪪</span><span class="nl">학생증 만들기</span></button>
+      <button class="nav-btn coral" id="goGames" type="button"><span class="ni">🎮</span><span class="nl">미니게임</span></button>
+      <button class="nav-btn butter" id="goFortune" type="button"><span class="ni">🔮</span><span class="nl">오늘의 사주</span></button>
+      <button class="nav-btn mint" id="goRank" type="button"><span class="ni">🏆</span><span class="nl">채팅순위</span></button>
+      <button class="nav-btn coral" id="goPlaces" type="button"><span class="ni">☕</span><span class="nl">맛집/카페</span></button>
     </nav>
   </main>
 
   <!-- ===== 회원가입 ===== -->
   <section id="signupView" hidden aria-labelledby="signupTitle">
     <div class="auth-card">
-      <h2 id="signupTitle">회원가입</h2>
+      <h2 id="signupTitle"><span class="mark">회원가입</span></h2>
       <p class="auth-help">관리자가 등록한 닉네임과 인증번호를 입력하면 가입할 수 있어요.</p>
       <form id="signupForm" autocomplete="off">
         <label for="signupNickname">닉네임</label><input id="signupNickname" name="nickname" maxlength="24" autocomplete="username" placeholder="관리자에게 등록된 닉네임" required>
@@ -579,7 +691,8 @@
       <div class="idv-ko">학생증</div>
       <div class="idv-photo" id="sidPhoto"></div>
       <div class="idv-name" id="sidName">회원</div>
-      <div class="idv-school"><img class="idv-logo" alt="" aria-hidden="true"><span>드립대학</span></div>
+      <div class="idv-school"><img class="idv-logo" alt="" aria-hidden="true"><span class="idv-school-name">드립대학</span></div>
+        <div class="idv-school-en">DRIP UNIVERSITY</div>
     </div>
 
     <div class="card sid-editor">
@@ -637,14 +750,14 @@
           <label>분류
             <select id="placeCategory"><option>맛집</option><option>카페</option><option>명소</option><option>숙소</option><option>술집</option><option>주차장</option><option>기타</option></select>
           </label>
-          <label>장소명
-            <input id="placeName" maxlength="120" placeholder="예: 카카오 판교 아지트" required>
-          </label>
-          <label>주소 또는 키워드 검색
+          <label>상호명 검색
             <div style="display:flex;gap:6px;">
-              <input id="placeAddress" maxlength="300" placeholder="예: 판교역로 166 또는 장소명" required>
+              <input id="placeName" maxlength="120" placeholder="눌러서 상호명을 검색하세요" autocomplete="off" required readonly aria-haspopup="dialog" aria-controls="kakaoSearchModal">
               <button type="button" id="btnSearchKakao" style="white-space:nowrap;padding:6px 10px;">검색</button>
             </div>
+          </label>
+          <label>주소
+            <input id="placeAddress" maxlength="300" placeholder="상호명을 검색한 뒤 결과를 선택하면 자동 입력됩니다." required readonly>
           </label>
           <input type="hidden" id="placeLat"><input type="hidden" id="placeLng">
           <label>추천 메모
@@ -680,7 +793,7 @@
     </div>
     <button class="card game-card" id="openWord" type="button">
       <span class="game-no">1</span>
-      <span class="game-info"><strong>오늘의 단어 (5칸)</strong><small>언제든 다시 도전 · 휴대폰 키보드로 단어를 입력하세요</small></span>
+      <span class="game-info"><strong>오늘의 단어 (국어사전 연동)</strong><small>언제든 다시 도전 · 휴대폰 키보드로 단어를 입력하세요</small></span>
       <span class="game-state" id="wordState">도전하기</span>
     </button>
   </section>
@@ -692,8 +805,8 @@
     </div>
     <div class="card wg">
       <div class="wg-top">
-        <span class="wg-date" id="wgDate">오늘의 단어 (5칸)</span>
-        <div style="display:flex;align-items:center;gap:8px;"><span class="wg-hint" id="wgHint">힌트</span></div>
+        <span class="wg-date" id="wgDate">오늘의 단어 (국어사전 연동)</span>
+
       </div>
       <div class="wg-desc-bar">💡 각 칸에는 자음 또는 모음 하나씩 들어갑니다. 키보드로 입력하고 Enter를 누르세요. 정답을 맞힐 때까지 횟수 제한 없이 도전할 수 있습니다.</div>
       <div id="wgBoard" class="wg-board"></div>
@@ -711,6 +824,15 @@
     </div>
   </section>
 </div>
+
+  <div id="kakaoSearchModal" class="kakao-search-modal" hidden role="presentation">
+    <div class="kakao-search-dialog" role="dialog" aria-modal="true" aria-labelledby="kakaoSearchTitle">
+      <div class="kakao-search-head"><h3 id="kakaoSearchTitle">카카오맵 상호명 검색</h3><button id="kakaoSearchClose" class="kakao-search-close" type="button" aria-label="검색창 닫기">닫기 ✕</button></div>
+      <div class="kakao-search-line"><input id="kakaoSearchQuery" type="search" placeholder="상호명 또는 지점명을 입력하세요" autocomplete="off"><button id="kakaoSearchSubmit" type="button">검색</button></div>
+      <p id="kakaoSearchStatus" class="kakao-search-status">상호명을 입력하고 검색하세요.</p>
+      <div id="kakaoPlaceResults" class="kakao-place-results" aria-live="polite"></div>
+    </div>
+  </div>
 
 <div class="toast" id="toast" role="status" hidden></div>
 
@@ -925,7 +1047,7 @@
   });
 
   /* =====================================================================
-     오늘의 단어 (5칸) 게임
+     오늘의 단어 (국어사전 연동) 게임
      ===================================================================== */
   // 국어사전에 등재된 일반 어휘 중심의 정답 후보. 모든 단어는 자모 확장 후 5칸인 경우만 사용합니다.
   var WORD_POOL_5 = [
@@ -995,19 +1117,19 @@
   function getNewRound() {
     // 자모 확장 규칙을 바꾸면 이전 라운드는 재사용하지 않습니다.
     var candidates = WORD_POOL_5.filter(function(w) { return splitHangulWord(w.word).length === 5; });
-    var idx = Math.floor(Math.random() * candidates.length), base = candidates[idx];
-    var wordObj = { word: base.word, hint: base.hint, jamo: splitHangulWord(base.word) };
-    return { version: 2, key: "wg_round_" + Date.now() + "_" + Math.random().toString(36).slice(2,8), wordObj: wordObj };
+    var idx = Math.floor(Math.random() * candidates.length), base = candidates[idx] || {word:"학교"};
+    var wordObj = { word: base.word, jamo: splitHangulWord(base.word) };
+    return { version: 4, key: "wg_round_" + Date.now() + "_" + Math.random().toString(36).slice(2,8), wordObj: wordObj };
   }
   var curState = { periodKey: "", wordObj: null, guesses: [], currentInput: [], currentRaw: "", status: "PLAYING", keyColors: {} };
   function initWordGame(newRound) {
     var active = null;
     if (!newRound) { try { active = JSON.parse(store("wg_active_round") || "null"); } catch(e) {} }
-    if (!active || !active.key || !active.wordObj || active.version !== 2 || newRound) { active = getNewRound(); store("wg_active_round", JSON.stringify(active)); }
+    if (!active || !active.key || !active.wordObj || active.version !== 4 || newRound) { active = getNewRound(); store("wg_active_round", JSON.stringify(active)); }
     curState.periodKey = active.key; curState.wordObj = active.wordObj;
     var saved = store(active.key); curState.guesses=[]; curState.status="PLAYING"; curState.keyColors={};
     if (saved) { try { var o=JSON.parse(saved); curState.guesses=o.guesses||[]; curState.status=o.status||"PLAYING"; curState.keyColors=o.keyColors||{}; } catch(e) {} }
-    curState.currentInput=[]; $("wgDate").textContent="새 단어 도전"; $("wgHint").textContent="힌트: "+curState.wordObj.hint;
+    curState.currentInput=[]; $("wgDate").textContent="오늘의 단어 · "+splitHangulWord(curState.wordObj.word).length+"칸";
     renderBoard(); renderResult(); renderStats();
     curState.currentRaw="";
     if (curState.status === "PLAYING") { var firstTile = $("wgBoard").querySelector(".wg-entry"); if (firstTile) setTimeout(function(){ firstTile.focus(); }, 0); }
@@ -1016,13 +1138,13 @@
   function updateHubState() { var badge=$("wordState"); badge.textContent="언제든 도전"; badge.className="game-state"; }
   function renderBoard() {
     var board=$("wgBoard"); board.innerHTML="";
-    var target=splitHangulWord(curState.wordObj.word), cols=target.length;
-    // 정답 도전은 총 5회입니다. 게임판은 고정 5줄이며, 입력이 많아져도 기록을 밀어내지 않습니다.
+    var target=splitHangulWord(curState.wordObj.word), cols=5;
+    // 게임판은 항상 5칸 × 5줄로 고정합니다.
     for(var r=0;r<5;r++) {
       var rowEl=el("div","wg-row"), guess=null, isCurrent=false;
       rowEl.style.gridTemplateColumns="repeat("+cols+",minmax(0,1fr))";
       if(r<curState.guesses.length) guess=curState.guesses[r];
-      else if(r===curState.guesses.length && curState.guesses.length<5) isCurrent=curState.status==="PLAYING";
+      else if(r===curState.guesses.length && r<5) isCurrent=curState.status==="PLAYING";
       for(var c=0;c<cols;c++) {
         var tile;
         if(isCurrent) {
@@ -1069,7 +1191,7 @@
   function submitGuess() {
     if(curState.status!=="PLAYING") return;
     var inputText=String(curState.currentRaw||"").trim().replace(/\s/g, ""), input=(curState.currentInput||[]).filter(Boolean), target=splitHangulWord(curState.wordObj.word);
-    if(!inputText || input.length!==target.length){toast("정답과 같은 길이의 한글 단어를 입력해 주세요.");return;}
+    if(!inputText || input.length!==5 || target.length!==5){toast("5칸에 맞춰 한글 단어를 입력해 주세요.");return;}
     var result=target.map(function(ch,i){return input[i]===ch?"correct":"absent";}), remaining=target.slice();
     for(var i=0;i<target.length;i++) if(result[i]==="correct") remaining[i]=null;
     for(var j=0;j<target.length;j++) if(result[j]!=="correct"){var f=remaining.indexOf(input[j]);if(f!==-1){result[j]="present";remaining[f]=null;}}
@@ -1092,7 +1214,7 @@
     if (curState.status === "PLAYING") { rd.hidden = true; return; }
     rd.hidden = false; rd.className = "wg-result";
     var win = curState.status === "WON", lost = curState.status === "LOST";
-    var share = "드립대학 [오늘의 단어 5칸]\n" + (win ? curState.guesses.length + "회 시도 성공!" : lost ? "5회 도전 종료" : "도전 중") + "\n";
+    var share = "드립대학 [오늘의 단어 5칸 × 5줄]\n" + (win ? curState.guesses.length + "회 시도 성공!" : lost ? "5회 도전 종료" : "도전 중") + "\n";
     curState.guesses.forEach(function (g) { g.result.forEach(function (r) { share += (r === "correct" ? "🟩" : r === "present" ? "🟨" : "⬛"); }); share += "\n"; });
     rd.innerHTML = "<strong>" + (win ? "🎉 정답입니다!" : "💪 5번의 기회를 모두 사용했어요.") + "</strong><p>정답 단어: <b>" + escapeHtml(curState.wordObj.word + " (" + curState.wordObj.jamo.join("") + ")") + "</b></p><div class='wg-share'>" + escapeHtml(share.trim()) + "</div><button class='btn small coral' style='margin-top:10px;' id='btnShare' type='button'>결과 복사하기</button>";
     $("btnShare").onclick = function () {
@@ -1165,7 +1287,7 @@
   function showSignup(options) { options = options || {}; if (!options.fromPop) { try { history.pushState({ dripcollegeApp: true, screen: "signup", view: "main" }, "", location.href); } catch (_e) {} } mainView.hidden = true; signupView.hidden = false; status("signupStatus", "", ""); window.scrollTo({ top: 0, behavior: "smooth" }); }
   function showSignedIn(nick) {
     document.body.classList.add("signed-in");
-    signupView.hidden = true; mainView.hidden = false; loginCard.hidden = true; mainNav.hidden = false; authTopline.hidden = false; $("homeStudentCard").hidden = true;
+    signupView.hidden = true; mainView.hidden = false; loginCard.hidden = true; mainNav.hidden = false; authTopline.hidden = false;
     $("signedInLabel").textContent = nick + " 님, 환영합니다!";
     loadStudentCard();
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -1228,11 +1350,24 @@
      ===================================================================== */
   var editingPostId = null, selectedPostId = null;
   async function loadCommunity() {
-    if (!supabase) return;
-    var feed = $("communityFeed"); feed.innerHTML = ""; setText("communityStatus", "게시글을 불러오는 중…");
-    var q = await supabase.from("community_posts").select("id,title,content,author_id,author_nickname,created_at,updated_at,image_url,like_count,community_comments(id,content,author_id,author_nickname,created_at)").order("created_at", { ascending: false });
-    if (q.error) { setText("communityStatus", "게시판 테이블 설정을 확인해 주세요: " + q.error.message); return; }
-    var posts = q.data, user = await currentUser(), avatarByUser = {}, avatarLookupFailed = false;
+    var feed = $("communityFeed");
+    if (!supabase) { setText("communityStatus", "Supabase 연결이 없어 게시글을 불러올 수 없습니다. 기존 게시글 데이터가 삭제된 것은 아닐 수 있습니다."); return; }
+    setText("communityStatus", "게시글을 불러오는 중…");
+    var q;
+    try {
+      q = await supabase.from("community_posts").select("id,title,content,author_id,author_nickname,created_at,updated_at,image_url,like_count,community_comments(id,content,author_id,author_nickname,created_at)").order("created_at", { ascending: false });
+    } catch (loadErr) {
+      console.error("수다게시판 불러오기 실패", loadErr);
+      setText("communityStatus", "게시글을 불러오지 못했습니다. 네트워크와 Supabase 연결을 확인해 주세요. 게시글 삭제 여부와는 별개입니다.");
+      return;
+    }
+    if (q.error) {
+      console.error("수다게시판 조회 오류", q.error);
+      setText("communityStatus", "게시글 조회 오류: " + q.error.message + " (데이터를 삭제하지 않았습니다.)");
+      return;
+    }
+    var posts = q.data || [], user = await currentUser(), avatarByUser = {}, avatarLookupFailed = false;
+    feed.innerHTML = "";
     // 게시글·댓글 작성자별로 Supabase에 저장된 학생증 아바타를 조회합니다.
     // 각 작성자의 author_id와 student_cards.user_id를 연결하므로 로그인한 사용자 본인의 프로필이 아니라 글쓴이의 프로필이 표시됩니다.
     try {
@@ -1410,28 +1545,76 @@
 
   function clearKakaoMarkers() { kakaoMarkers.forEach(function (m) { m.setMap(null); }); kakaoMarkers = []; closePinOverlay(); }
 
+  function openKakaoSearchModal() {
+    var modal = $("kakaoSearchModal");
+    if (!modal) return;
+    modal.hidden = false;
+    document.body.classList.add("kakao-search-open");
+    $("kakaoSearchQuery").value = $("placeName").value || "";
+    $("kakaoPlaceResults").innerHTML = "";
+    $("kakaoSearchStatus").textContent = "상호명을 입력하고 검색하세요.";
+    setTimeout(function(){ $("kakaoSearchQuery").focus(); }, 0);
+  }
+  function closeKakaoSearchModal() {
+    var modal = $("kakaoSearchModal");
+    if (!modal) return;
+    modal.hidden = true;
+    document.body.classList.remove("kakao-search-open");
+    var opener = $("placeName"); if (opener) opener.blur();
+  }
+  function ensureKakaoPlaces(cb) {
+    if (ps) return cb(true);
+    if (!window.kakao || !kakao.maps || !kakao.maps.load) return cb(false);
+    var done = false, t = setTimeout(function () { if (!done) { done = true; cb(false); } }, 6000);
+    try {
+      kakao.maps.load(function () {
+        if (done) return; done = true; clearTimeout(t);
+        try { if (kakao.maps.services) { ps = new kakao.maps.services.Places(); if (!geocoder) geocoder = new kakao.maps.services.Geocoder(); } } catch (e) {}
+        cb(!!ps);
+      });
+    } catch (e) { clearTimeout(t); if (!done) { done = true; cb(false); } }
+  }
   function searchKakaoAddressOrKeyword() {
-    var addr = $("placeAddress").value.trim();
-    if (!addr) { placesStatus("주소 또는 검색할 장소명을 입력해주세요."); return; }
-    if (!mapReady || !ps) { placesStatus("지도가 아직 준비되지 않았습니다. 잠시 후 다시 시도해 주세요."); return; }
-    placesStatus("Kakao 지도로 검색 중...");
-    function pick(lat, lng) {
-      $("placeLat").value = lat; $("placeLng").value = lng;
-      kakaoMap.setCenter(new kakao.maps.LatLng(lat, lng)); // 마커 없이 위치만 이동
+    var query = $("kakaoSearchQuery").value.trim(), resultBox = $("kakaoPlaceResults"), statusBox = $("kakaoSearchStatus");
+    if (!query) { statusBox.textContent = "검색할 상호명을 입력해주세요."; return; }
+    if (!ps) {
+      statusBox.textContent = "카카오 검색 모듈을 연결하는 중...";
+      ensureKakaoPlaces(function (ok) {
+        if (ok) { searchKakaoAddressOrKeyword(); return; }
+        var o = location.origin;
+        statusBox.textContent = (!o || o === "null" || location.protocol === "file:")
+          ? "내 컴퓨터/휴대폰에 저장된 파일(file://)로 열면 카카오 지도를 쓸 수 없습니다. 등록한 웹 주소로 접속해 주세요."
+          : "카카오 연결 실패. 카카오 개발자 콘솔 > 앱 > 플랫폼 > Web 사이트 도메인에 [" + o + "] 가 등록돼 있는지, JavaScript 키가 맞는지 확인해 주세요.";
+      });
+      return;
     }
-    ps.keywordSearch(addr, function (data, st) {
-      if (st === kakao.maps.services.Status.OK) {
-        var f = data[0];
-        if (!$("placeName").value.trim()) $("placeName").value = f.place_name;
-        $("placeAddress").value = f.road_address_name || f.address_name || addr;
-        pick(parseFloat(f.y), parseFloat(f.x));
-        placesStatus("위치를 찾았습니다: " + f.place_name + " (" + (f.road_address_name || f.address_name) + ")");
-      } else if (geocoder) {
-        geocoder.addressSearch(addr, function (res, sg) {
-          if (sg === kakao.maps.services.Status.OK) { pick(parseFloat(res[0].y), parseFloat(res[0].x)); placesStatus("주소 위치를 찾았습니다."); }
-          else placesStatus("장소를 찾을 수 없습니다. 정확한 주소나 키워드로 다시 검색하거나 지도를 직접 클릭해 주세요.");
-        });
-      } else placesStatus("검색 서비스를 이용할 수 없습니다.");
+    resultBox.innerHTML = ""; statusBox.textContent = "카카오맵에서 상호명을 검색 중...";
+    ps.keywordSearch(query, function (data, st) {
+      resultBox.innerHTML = "";
+      if (st !== kakao.maps.services.Status.OK || !data || !data.length) {
+        statusBox.textContent = "검색 결과가 없습니다. 상호명이나 지점명을 확인해 주세요."; return;
+      }
+      statusBox.textContent = "장소를 선택하면 주소가 자동 입력됩니다.";
+      data.slice(0, 8).forEach(function (place) {
+        var b = el("button", "kakao-place-result"); b.type = "button";
+        b.appendChild(el("strong", "", place.place_name));
+        b.appendChild(el("small", "", (place.road_address_name || place.address_name || "주소 정보 없음") + (place.category_name ? " · " + place.category_name : "")));
+        b.onclick = function () {
+          $("placeName").value = place.place_name;
+          $("placeAddress").value = place.road_address_name || place.address_name || "";
+          $("placeLat").value = place.y; $("placeLng").value = place.x;
+          if (kakaoMap) {
+            var selectedPos = new kakao.maps.LatLng(parseFloat(place.y), parseFloat(place.x));
+            kakaoMap.setLevel(3); kakaoMap.setCenter(selectedPos);
+            setTimeout(function(){ kakaoMap.relayout(); kakaoMap.setCenter(selectedPos); }, 120);
+            setTimeout(function(){ var mapEl = $("placesMap"); if (mapEl) mapEl.scrollIntoView({behavior:"smooth",block:"center"}); }, 250);
+          }
+          closeKakaoSearchModal();
+          placesStatus("선택 완료: " + place.place_name + " · 주소가 자동 입력되었습니다. 지도에서 위치를 확인할 수 있어요.");
+          setTimeout(function(){ var mapEl = $("placesMap"); if (mapEl) mapEl.scrollIntoView({behavior:"smooth",block:"center"}); }, 150);
+        };
+        resultBox.appendChild(b);
+      });
     });
   }
 
@@ -1489,8 +1672,19 @@
       loadSavedPlaces();
     };
   });
-  $("btnSearchKakao").onclick = searchKakaoAddressOrKeyword;
-  $("placeAddress").addEventListener("keydown", function (e) { if (e.key === "Enter") { e.preventDefault(); searchKakaoAddressOrKeyword(); } });
+  $("btnSearchKakao").onclick = openKakaoSearchModal;
+  $("placeName").addEventListener("click", openKakaoSearchModal);
+  $("placeName").addEventListener("focus", function(){ var m = $("kakaoSearchModal"); if (this.readOnly && m && m.hidden) openKakaoSearchModal(); });
+  (function bindKakaoSearchModal() {
+    var m = $("kakaoSearchModal"); if (!m) return;
+    var go = $("kakaoSearchSubmit"), q = $("kakaoSearchQuery"), cl = $("kakaoSearchClose"), dlg = m.querySelector(".kakao-search-dialog");
+    if (go) go.addEventListener("click", searchKakaoAddressOrKeyword);
+    if (q) q.addEventListener("keydown", function(e){ if(e.key === "Enter"){e.preventDefault();searchKakaoAddressOrKeyword();} });
+    if (cl) cl.addEventListener("click", closeKakaoSearchModal);
+    m.addEventListener("click", function(e){ if(e.target === m) closeKakaoSearchModal(); });
+    if (dlg) dlg.addEventListener("click", function(e){ e.stopPropagation(); });
+    document.addEventListener("keydown", function(e){ if(e.key === "Escape" && !m.hidden) closeKakaoSearchModal(); });
+  })();
 
   $("placeSaveForm").onsubmit = async function (e) {
     e.preventDefault();
@@ -1537,7 +1731,7 @@
       selectedCategory = category;
       Array.prototype.forEach.call($("placesTabs").querySelectorAll("button"), function (x) { x.classList.toggle("active", x.dataset.category === category); });
     }
-    $("placeSaveForm").reset(); $("placeLat").value = ""; $("placeLng").value = "";
+    $("placeSaveForm").reset(); $("placeLat").value = ""; $("placeLng").value = ""; closeKakaoSearchModal();
     toast("장소가 지도에 저장되었습니다!");
     loadSavedPlaces();
   };
@@ -1951,5 +2145,7 @@
   }
 })();
 </script>
+
+
 </body>
 </html>
