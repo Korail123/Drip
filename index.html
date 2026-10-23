@@ -1088,6 +1088,20 @@
 }
 </style>
 
+<style id="explore-rating-top3-style">
+.explore-rankings{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:14px 0 18px}
+.explore-rank-card{min-width:0;border:1px solid #dce7ee;border-radius:16px;padding:14px;background:#fff;box-shadow:0 4px 14px rgba(32,43,69,.05)}
+.explore-rank-low{background:linear-gradient(145deg,#fff9f6,#fff)}.explore-rank-high{background:linear-gradient(145deg,#f1fbf8,#fff)}
+.explore-rank-card h3{margin:0;font-size:15px;line-height:1.35;color:#183b56}.explore-rank-note{margin:4px 0 10px;color:#70818d;font-size:11px}
+.explore-rank-card ol{margin:0;padding:0;list-style:none;display:grid;gap:7px}
+.explore-rank-item{display:flex;align-items:center;gap:8px;width:100%;min-width:0;text-align:left;border:1px solid #e3eaf0;border-radius:10px;background:rgba(255,255,255,.9);padding:8px 9px;cursor:pointer;color:#183b56}
+.explore-rank-number{flex:0 0 21px;width:21px;height:21px;display:grid;place-items:center;border-radius:7px;background:#e8f1f7;font-size:11px;font-weight:900}
+.explore-rank-low .explore-rank-number{background:#fff0e8;color:#a54f29}.explore-rank-high .explore-rank-number{background:#dff7ed;color:#087c65}
+.explore-rank-name{min-width:0;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:12px;font-weight:800}
+.explore-rank-score{flex:0 0 auto;font-size:12px;font-weight:900;color:#a96d00;white-space:nowrap}.explore-rank-empty{list-style:none;color:#788995;font-size:12px;padding:8px 0}
+@media(max-width:480px){.explore-rankings{gap:7px;margin:10px 0 14px}.explore-rank-card{padding:10px 8px;border-radius:12px}.explore-rank-card h3{font-size:12px;letter-spacing:-.03em}.explore-rank-note{font-size:10px}.explore-rank-card ol{gap:5px}.explore-rank-item{gap:5px;padding:7px 5px}.explore-rank-number{width:18px;height:18px;flex-basis:18px;font-size:10px}.explore-rank-name,.explore-rank-score{font-size:10px}}
+</style>
+
 </head>
 <body>
 <header id="topBar" aria-label="현재 시각과 오늘 날씨">
@@ -1341,6 +1355,16 @@
       </div>
       <div class="explore-header-actions"><button class="btn small" id="exploreRefresh" type="button">↻ 새로고침</button><button class="btn small" data-home type="button">← 메인으로</button></div>
     </div>
+    <section id="exploreRatingRankings" class="explore-rankings" aria-label="학생 평점 순위">
+      <div class="explore-rank-card explore-rank-low">
+        <h3>📉 평점 낮은 순 TOP 3</h3><p class="explore-rank-note">평가가 등록된 학생 기준</p>
+        <ol id="exploreLowestRank"><li class="explore-rank-empty">평가 정보를 불러오는 중…</li></ol>
+      </div>
+      <div class="explore-rank-card explore-rank-high">
+        <h3>🏆 평점 높은 순 TOP 3</h3><p class="explore-rank-note">평가가 등록된 학생 기준</p>
+        <ol id="exploreHighestRank"><li class="explore-rank-empty">평가 정보를 불러오는 중…</li></ol>
+      </div>
+    </section>
     <div id="exploreStatus" class="community-status" role="status" aria-live="polite">학생증을 불러올 준비가 되었어요.</div>
     <div class="card explore-directory">
       <div class="explore-directory-top"><div><h3>🎓 드립대학 학생들</h3><p>학생증을 저장한 회원이 표시됩니다. 검색해서 친구를 찾아보세요.</p></div><span class="explore-count" id="exploreCount">0명</span></div>
@@ -2879,6 +2903,29 @@
     n.textContent = message || "";
     n.className = "community-status" + (isError ? " error" : message ? "" : "");
   }
+  function exploreRenderRatingRankings() {
+    var rated = exploreCards.map(function (card) {
+      var stats = exploreRatingStats(exploreRatings.filter(function (r) { return r.profile_user_id === card.user_id; }));
+      return { card: card, average: stats.average, count: stats.count };
+    }).filter(function (item) { return item.count > 0; });
+    var lowest = rated.slice().sort(function (a,b) { return a.average-b.average || b.count-a.count; }).slice(0,3);
+    var highest = rated.slice().sort(function (a,b) { return b.average-a.average || b.count-a.count; }).slice(0,3);
+    function fill(id, items) {
+      var list=$(id); if(!list) return; list.replaceChildren();
+      if(!items.length){list.appendChild(el("li","explore-rank-empty","아직 평가된 학생이 없습니다."));return;}
+      items.forEach(function(item,index){
+        var li=el("li"), button=el("button","explore-rank-item"); button.type="button";
+        button.appendChild(el("span","explore-rank-number",String(index+1)));
+        button.appendChild(el("span","explore-rank-name",item.card.nickname||"회원"));
+        button.appendChild(el("span","explore-rank-score","★ "+item.average.toFixed(1)));
+        button.title="평점 "+item.average.toFixed(1)+"점 · "+item.count+"명 평가";
+        button.addEventListener("click",function(){exploreSelectedCard=item.card;loadExploreProfile(item.card.user_id);var detail=$("exploreDetail");if(detail)detail.scrollIntoView({behavior:"smooth",block:"start"});});
+        li.appendChild(button);list.appendChild(li);
+      });
+    }
+    fill("exploreLowestRank",lowest); fill("exploreHighestRank",highest);
+  }
+
   function exploreRenderDirectory() {
     var box = $("exploreList"), search = String($("exploreSearch").value || "").trim().toLocaleLowerCase("ko-KR");
     box.replaceChildren();
@@ -2903,6 +2950,7 @@
       button.addEventListener("click", function () { exploreSelectedCard = card; loadExploreProfile(card.user_id); });
       box.appendChild(button);
     });
+    exploreRenderRatingRankings();
   }
   async function loadExploreDirectory(preserveSelection) {
     if (exploreDirectoryBusy || !supabase) {
@@ -3440,6 +3488,53 @@ body{padding-bottom:calc(76px + env(safe-area-inset-bottom))}
  });
 })();
 </script>
+
+
+<style id="humor-delete-button-polish">
+/* 유머게시판 댓글 삭제 버튼을 댓글 행의 오른쪽 끝에 배치 */
+#humor .comment-item, #goBoard .comment-item, .humor-board .comment-item,
+.community-detail .comment-item {
+  display:flex; align-items:center; flex-wrap:wrap; gap:7px;
+}
+#humor .comment-item [data-comment-delete],
+#goBoard .comment-item [data-comment-delete],
+.humor-board .comment-item [data-comment-delete],
+.community-detail .comment-item [data-comment-delete] {
+  margin-left:auto !important;
+  flex:0 0 auto;
+  border:1px solid #e4c7c7 !important;
+  border-radius:9px !important;
+  background:#fff7f7 !important;
+  color:#b54747 !important;
+  padding:6px 11px !important;
+  min-height:30px;
+  font-size:12px !important;
+  font-weight:700 !important;
+  line-height:1.2 !important;
+  box-shadow:none !important;
+  cursor:pointer;
+  transition:background .15s ease,border-color .15s ease;
+}
+#humor .comment-item [data-comment-delete]:hover,
+#goBoard .comment-item [data-comment-delete]:hover,
+.humor-board .comment-item [data-comment-delete]:hover,
+.community-detail .comment-item [data-comment-delete]:hover {
+  background:#ffeaea !important; border-color:#d99a9a !important;
+}
+.community-detail .community-actions [data-delete],
+.community-detail .community-actions [data-edit] {
+  border:1px solid #dce5ec !important; border-radius:10px !important;
+  padding:7px 12px !important; font-size:12px !important; font-weight:700 !important;
+  background:#fff !important; color:#425a6b !important; box-shadow:none !important;
+}
+.community-detail .community-actions [data-delete] {
+  border-color:#e4c7c7 !important; background:#fff7f7 !important; color:#b54747 !important;
+}
+@media(max-width:600px){
+  .community-detail .comment-item { gap:5px; }
+  .community-detail .comment-item [data-comment-delete] { padding:5px 9px !important; font-size:11px !important; }
+}
+</style>
 
 </body>
 </html>
