@@ -894,7 +894,7 @@
 
   <!-- ===== 건의사항 게시판 ===== -->
   <section id="suggestView" hidden aria-labelledby="suggestHead" class="community-panel">
-    <div class="head"><div class="head-main"><span class="pill-live"><span class="dot"></span>건의사항</span><h2 class="title" id="suggestHead">💡 건의사항</h2><p class="sub">불편한 점, 바라는 점을 남겨 주세요. 🔒 비공개로 남기면 작성자와 운영진만 볼 수 있어요.</p></div><div style="display:flex;gap:8px"><button class="btn small" data-home type="button">← 메인으로</button><button class="btn small coral" id="newSuggest" type="button">건의하기</button></div></div>
+    <div class="head"><div class="head-main"><span class="pill-live"><span class="dot"></span>건의사항</span><h2 class="title" id="suggestHead">💡 건의사항</h2><p class="sub">불편한 점, 바라는 점을 남겨 주세요. 🔒 비공개로 남기면 작성자와 운영진만 볼 수 있어요.</p></div><div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn small" data-home type="button">← 메인으로</button><button class="btn small" id="backupSuggest" type="button">⬇ JSON 백업</button><button class="btn small coral" id="newSuggest" type="button">건의하기</button></div></div>
     <form id="suggestComposer" class="community-form" hidden>
       <h3>건의사항 작성</h3>
       <input id="suggestTitle" maxlength="100" placeholder="제목" required>
@@ -2455,7 +2455,13 @@
       var q;
       try { q = await supabase.from("suggestions").select("id,title,content,author_id,author_nickname,is_secret,status,admin_reply,created_at").order("created_at", { ascending: false }); }
       catch (err) { setText("suggestStatus", "건의사항을 불러오지 못했습니다. 네트워크와 Supabase 연결을 확인해 주세요."); return; }
-      if (q.error) { setText("suggestStatus", "건의사항 조회 오류: " + q.error.message + " (drip_suggestions_setup.sql을 실행했는지 확인해 주세요.)"); renderHomePreview([]); return; }
+      if (q.error) {
+        var missingTable = q.error.code === "PGRST205" || /could not find the table .*public\.suggestions|relation .*suggestions.* does not exist|schema cache/i.test(q.error.message || "");
+        setText("suggestStatus", missingTable
+          ? "건의사항 DB 테이블이 아직 준비되지 않았습니다. 같은 Supabase 프로젝트의 SQL Editor에서 drip_suggestions_setup.sql 전체를 실행한 뒤 새로고침해 주세요."
+          : "건의사항 조회 오류: " + q.error.message);
+        renderHomePreview([]); return;
+      }
       var rows = q.data || [], me = null, admin = window.__dripIsAdmin === true, details = [];
       renderHomePreview(rows);
       try { me = await currentUser(); } catch (e) {}
@@ -2498,6 +2504,26 @@
         row.onclick = open; row.onkeydown = function (e) { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); open(); } };
       });
     }
+    $("backupSuggest").onclick = async function () {
+      if (!supabase) { setText("suggestStatus", "Supabase 연결이 없어 백업할 수 없습니다."); return; }
+      setText("suggestStatus", "백업 파일을 만드는 중…");
+      var r;
+      try {
+        r = await supabase.from("suggestions")
+          .select("id,title,content,author_id,author_nickname,is_secret,status,admin_reply,created_at,updated_at")
+          .order("created_at", { ascending: true });
+      } catch (err) {
+        setText("suggestStatus", "백업 실패: 네트워크 연결을 확인해 주세요."); return;
+      }
+      if (r.error) { setText("suggestStatus", "백업 실패: " + r.error.message + ". SQL 설정과 로그인 권한을 확인해 주세요."); return; }
+      var rows = r.data || [];
+      var payload = { app: "드립대학", type: "suggestions-backup", exported_at: new Date().toISOString(), record_count: rows.length, rows: rows };
+      var blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json;charset=utf-8" });
+      var url = URL.createObjectURL(blob), a = document.createElement("a");
+      a.href = url; a.download = "drip-university-suggestions-backup-" + new Date().toISOString().slice(0, 10) + ".json";
+      document.body.appendChild(a); a.click(); a.remove(); setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
+      setText("suggestStatus", rows.length + "건을 JSON 파일로 백업했습니다. 비공개 건의는 본인/운영진 계정에서 조회 가능한 항목만 포함됩니다.");
+    };
     $("goSuggest").onclick = function () { showView("suggest"); openId = null; $("suggestComposer").hidden = true; load(); };
     $("newSuggest").onclick = function () {
       $("suggestTitle").value = ""; $("suggestContent").value = ""; $("suggestSecret").checked = false; setText("suggestPostStatus", "");
@@ -2516,6 +2542,20 @@
       if (r.error) { setText("suggestPostStatus", "등록 실패: " + r.error.message + " (drip_suggestions_setup.sql 실행 여부를 확인해 주세요.)"); return; }
       $("suggestComposer").hidden = true; toast("건의사항이 등록되었어요 💡"); load();
     };
+    // Supabase Realtime으로 다른 기기에서 추가/수정/삭제한 내용을 동기화합니다.
+    // SQL 설정은 suggestions 테이블을 supabase_realtime publication에 추가합니다.
+    var refreshTimer = null;
+    if (supabase && typeof supabase.channel === "function") {
+      supabase.channel("drip-suggestions-live-sync")
+        .on("postgres_changes", { event: "*", schema: "public", table: "suggestions" }, function () {
+          if (refreshTimer) clearTimeout(refreshTimer);
+          refreshTimer = setTimeout(function () { load(); }, 250);
+        })
+        .subscribe();
+    }
+    // 탭을 다시 열면 서버의 최신 데이터를 가져와 오프라인 이후 변경도 반영합니다.
+    window.addEventListener("focus", function () { if (!document.hidden) load(); });
+    document.addEventListener("visibilitychange", function () { if (!document.hidden) load(); });
     load();
   })();
 })();
