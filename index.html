@@ -1010,6 +1010,84 @@
 }
 </style>
 
+
+<style id="mobile-one-line-layout-fix">
+/* 모바일에서 한 줄 정렬 + 내용/하단 메뉴 겹침 방지 */
+@media (max-width: 600px) {
+  html { -webkit-text-size-adjust: 100%; }
+  body { overflow-x: hidden; }
+  /* 공통 버튼/탭/옵션은 줄바꿈 대신 폭과 글자 크기를 화면에 맞춤 */
+  button, .btn, [role="button"], .tab, .nav-item, .menu-item {
+    min-width: 0;
+    max-width: 100%;
+    overflow-wrap: normal;
+    word-break: keep-all;
+  }
+  /* 하단 고정 메뉴는 항상 5개 항목 한 줄 유지 */
+  .bottom-nav, .fixed-bottom-nav, .app-bottom-nav, #bottomNav, #bottom-nav, .mobile-bottom-nav {
+    display: grid !important;
+    grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
+    align-items: center;
+    gap: 0 !important;
+    width: 100%;
+    box-sizing: border-box;
+    padding-left: 3px !important;
+    padding-right: 3px !important;
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  .bottom-nav a, .bottom-nav button,
+  .fixed-bottom-nav a, .fixed-bottom-nav button,
+  .app-bottom-nav a, .app-bottom-nav button,
+  #bottomNav a, #bottomNav button, #bottom-nav a, #bottom-nav button,
+  .mobile-bottom-nav a, .mobile-bottom-nav button {
+    min-width: 0 !important;
+    width: 100%;
+    padding: 5px 1px !important;
+    margin: 0 !important;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    white-space: nowrap !important;
+    font-size: clamp(9px, 2.55vw, 12px) !important;
+    line-height: 1.15 !important;
+    box-sizing: border-box;
+  }
+  .bottom-nav svg, .fixed-bottom-nav svg, .app-bottom-nav svg,
+  #bottomNav svg, #bottom-nav svg, .mobile-bottom-nav svg {
+    width: 17px !important;
+    height: 17px !important;
+    flex: 0 0 auto;
+  }
+  /* 하단 메뉴에 본문이 가리지 않도록 스크롤 영역에 여유 공간 */
+  main, #app, .app, .page, .page-content, .main-content, .content, .view {
+    scroll-margin-bottom: 100px;
+  }
+  body { padding-bottom: calc(78px + env(safe-area-inset-bottom, 0px)); }
+  /* 옵션 선택 영역은 한 줄로 가로 스크롤 */
+  .options, .option-list, .option-grid, .choice-list, .character-options,
+  .avatar-options, .student-card-options, [data-options] {
+    min-width: 0;
+  }
+  .options.horizontal, .option-list.horizontal, .character-options,
+  .avatar-options, .student-card-options {
+    display: flex;
+    flex-wrap: nowrap !important;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    -webkit-overflow-scrolling: touch;
+  }
+  /* 제목/탭 라벨이 두 줄로 늘어나 레이아웃을 밀지 않게 처리 */
+  .section-title, .page-title, .tab, .nav-label {
+    min-width: 0;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+  }
+}
+</style>
+
 </head>
 <body>
 <header id="topBar" aria-label="현재 시각과 오늘 날씨">
@@ -3316,6 +3394,52 @@
 })();
 </script>
 
+
+
+<style id="fixed-bottom-nav-and-horizontal-options">
+/* 학생증 만들기: 입력/선택 옵션을 가로 스크롤할 수 있게 */
+#sidAvatarControls{display:flex!important;flex-wrap:nowrap!important;overflow-x:auto!important;overflow-y:hidden;gap:10px;padding:8px 4px 14px;scroll-snap-type:x proximity;-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain;touch-action:pan-x pan-y}
+#sidAvatarControls>*{flex:0 0 auto;scroll-snap-align:start;max-width:88vw}
+#studentCardView .sid-field{min-width:0}
+#studentCardView .sid-field input,#studentCardView .sid-field select,#studentCardView .sid-field textarea{max-width:100%;box-sizing:border-box}
+/* 하단 고정 메뉴 */
+#dripFixedBottomNav{position:fixed;z-index:99999;left:0;right:0;bottom:0;display:none;grid-template-columns:repeat(5,minmax(0,1fr));gap:2px;padding:7px max(5px,env(safe-area-inset-left)) calc(7px + env(safe-area-inset-bottom)) max(5px,env(safe-area-inset-right));background:rgba(255,255,255,.97);border-top:1px solid #d9e5ec;box-shadow:0 -4px 18px rgba(20,50,70,.10);backdrop-filter:blur(12px)}
+body.signed-in #dripFixedBottomNav{display:grid}
+#dripFixedBottomNav button{min-width:0;border:0;background:transparent;color:#34536b;border-radius:11px;padding:6px 1px 5px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;font-family:inherit;font-size:10px;font-weight:800;line-height:1.15;white-space:nowrap;cursor:pointer}
+#dripFixedBottomNav button .bottom-icon{font-size:19px;line-height:1.1}
+#dripFixedBottomNav button.active{color:#008f9b;background:#e5f8f7}
+body{padding-bottom:calc(76px + env(safe-area-inset-bottom))}
+@media(min-width:800px){#dripFixedBottomNav{left:50%;right:auto;transform:translateX(-50%);width:min(100%,760px);border:1px solid #d9e5ec;border-bottom:0;border-radius:16px 16px 0 0}}
+</style>
+<nav id="dripFixedBottomNav" aria-label="하단 고정 메뉴">
+ <button type="button" data-bottom-target="home"><span class="bottom-icon">🏠</span><span>메인화면</span></button>
+ <button type="button" data-bottom-target="notice"><span class="bottom-icon">📢</span><span>공지사항</span></button>
+ <button type="button" data-bottom-target="games"><span class="bottom-icon">🎮</span><span>미니게임</span></button>
+ <button type="button" data-bottom-target="explore"><span class="bottom-icon">🧑‍🎓</span><span>타 학생 탐방</span></button>
+ <button type="button" data-bottom-target="humor"><span class="bottom-icon">😂</span><span>유머게시판</span></button>
+</nav>
+<script id="dripFixedBottomNavScript">
+(function(){
+ const nav=document.getElementById('dripFixedBottomNav'); if(!nav)return;
+ const targets={notice:'goNotice',games:'goGames',explore:'goExplore',humor:'goBoard'};
+ function activate(key){
+   nav.querySelectorAll('button').forEach(b=>b.classList.toggle('active',b.dataset.bottomTarget===key));
+   if(key==='home'){
+     const home=document.querySelector('[data-home]');
+     if(home) home.click();
+     else {const b=document.getElementById('goHome');if(b)b.click();}
+     return;
+   }
+   const target=document.getElementById(targets[key]); if(target) target.click();
+ }
+ nav.addEventListener('click',e=>{const b=e.target.closest('button[data-bottom-target]');if(b)activate(b.dataset.bottomTarget)});
+ document.addEventListener('click',e=>{
+   const b=e.target.closest('#goNotice,#goGames,#goExplore,#goBoard,[data-home]');if(!b)return;
+   const id=b.id;let key=id==='goNotice'?'notice':id==='goGames'?'games':id==='goExplore'?'explore':id==='goBoard'?'humor':'home';
+   nav.querySelectorAll('button').forEach(x=>x.classList.toggle('active',x.dataset.bottomTarget===key));
+ });
+})();
+</script>
 
 </body>
 </html>
