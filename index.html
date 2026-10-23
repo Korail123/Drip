@@ -747,7 +747,7 @@
 <body>
 <header id="topBar" aria-label="현재 시각과 오늘 날씨">
   <div class="tb-clock" aria-label="한국 시간"><span class="tb-sub" id="tbDate"></span><span class="tb-time" id="tbTime">--:--:--</span></div>
-  <button type="button" class="tb-wx" id="tbWeather" title="누르면 내 위치 날씨로 바꿔요"><span class="wx-ico" id="wxIco" aria-hidden="true">⛅</span><span class="wx-txt"><span class="wx-main" id="wxMain">날씨 불러오는 중</span><span class="wx-sub" id="wxSub"></span></span></button>
+  <button type="button" class="tb-wx" id="tbWeather" title="현재 위치 날씨 자동 표시 · 누르면 위치 다시 확인"><span class="wx-ico" id="wxIco" aria-hidden="true">⛅</span><span class="wx-txt"><span class="wx-main" id="wxMain">날씨 불러오는 중</span><span class="wx-sub" id="wxSub"></span></span></button>
 </header>
 <div class="page">
 
@@ -969,7 +969,7 @@
 
   <!-- ===== 건의사항 게시판 ===== -->
   <section id="suggestView" hidden aria-labelledby="suggestHead" class="community-panel">
-    <div class="head"><div class="head-main"><h2 class="title" id="suggestHead">💡 건의사항</h2><p class="sub">불편한 점, 바라는 점을 남겨 주세요. 🔒 비공개로 남기면 작성자와 운영진만 볼 수 있어요.</p></div><div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn small" data-home type="button">← 메인으로</button><button class="btn small" id="backupSuggest" type="button">⬇ JSON 백업</button><button class="btn small coral" id="newSuggest" type="button">건의하기</button></div></div>
+    <div class="head"><div class="head-main"><h2 class="title" id="suggestHead">💡 건의사항</h2><p class="sub">불편한 점, 바라는 점을 남겨 주세요. 🔒 비공개로 남기면 작성자와 운영진만 볼 수 있어요.</p></div><div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn small" data-home type="button">← 메인으로</button><button class="btn small coral" id="newSuggest" type="button">건의하기</button></div></div>
     <form id="suggestComposer" class="community-form" hidden>
       <h3>건의사항 작성</h3>
       <input id="suggestTitle" maxlength="100" placeholder="제목" required>
@@ -988,7 +988,7 @@
         <img class="idv-logo brand-logo explore-brand-logo" alt="드립대학 로고">
         <div class="head-main"><h2 class="title" id="exploreHead">타 학생 탐방하기</h2><p class="sub">학생증 앞면과 뒷면을 살펴보고, 방명록과 별점으로 인사를 남겨 보세요.</p></div>
       </div>
-      <div class="explore-header-actions"><button class="btn small" id="exploreRefresh" type="button">↻ 새로고침</button><button class="btn small" id="exploreBackup" type="button">⬇ JSON 백업</button><button class="btn small" data-home type="button">← 메인으로</button></div>
+      <div class="explore-header-actions"><button class="btn small" id="exploreRefresh" type="button">↻ 새로고침</button><button class="btn small" data-home type="button">← 메인으로</button></div>
     </div>
     <div id="exploreStatus" class="community-status" role="status" aria-live="polite">학생증을 불러올 준비가 되었어요.</div>
     <div class="card explore-directory">
@@ -1743,10 +1743,12 @@
     card.appendChild(el("div", "pin-author", "작성자 · " + (p.author_nickname || "회원")));
     card.appendChild(el("div", "pin-memo", p.memo || "등록된 메모가 없습니다."));
     var links = el("div", "pin-links");
-    var q = encodeURIComponent(p.name);
-    [["카카오맵", "https://map.kakao.com/link/map/" + q + "," + p.lat + "," + p.lon],
-     ["네이버지도", "https://map.naver.com/p/search/" + q + "?c=" + p.lon + "," + p.lat + ",15,0,0,0,dh"]].forEach(function (l) {
-      var a = el("a", "", l[0]); a.href = l[1]; a.target = "_blank"; a.rel = "noopener"; links.appendChild(a);
+    // 상호명과 주소를 함께 검색해 동명이인 장소로 연결될 가능성을 줄입니다.
+    var searchText = [p.name, p.address].filter(function (v) { return String(v || "").trim(); }).join(" ");
+    var q = encodeURIComponent(searchText || p.name || "");
+    [["카카오맵", "https://map.kakao.com/link/search/" + q],
+     ["네이버지도", "https://map.naver.com/p/search/" + q]].forEach(function (l) {
+      var a = el("a", "", l[0]); a.href = l[1]; a.target = "_blank"; a.rel = "noopener noreferrer"; links.appendChild(a);
     });
     card.appendChild(links); wrap.appendChild(card);
     pinOverlay = new kakao.maps.CustomOverlay({ content: wrap, position: pos, yAnchor: 1, zIndex: 5 });
@@ -1875,8 +1877,11 @@
     data.forEach(function (p) {
       var emoji = CAT_EMOJI[p.category] || "📌", color = CAT_COLOR[p.category] || CAT_COLOR["기타"];
       var d = document.createElement("article"); d.className = "saved-place";
-      var url = (p.lat != null && p.lon != null) ? "https://map.kakao.com/link/map/" + encodeURIComponent(p.name) + "," + p.lat + "," + p.lon : "https://map.kakao.com/link/search/" + encodeURIComponent(p.name);
-      var naverUrl = (p.lat != null && p.lon != null) ? "https://map.naver.com/p/search/" + encodeURIComponent(p.name) + "?c=" + p.lon + "," + p.lat + ",15,0,0,0,dh" : "https://map.naver.com/p/search/" + encodeURIComponent(p.name);
+      // 목록 카드에서도 상호명과 주소를 묶어서 검색합니다.
+      var mapSearchText = [p.name, p.address].filter(function (v) { return String(v || "").trim(); }).join(" ");
+      var mapSearchQuery = encodeURIComponent(mapSearchText || p.name || "");
+      var url = "https://map.kakao.com/link/search/" + mapSearchQuery;
+      var naverUrl = "https://map.naver.com/p/search/" + mapSearchQuery;
       var isOwner = !!(window.__dripCurrentUser && window.__dripCurrentUser.id === p.author_id);
       var canDelete = isOwner || !!window.__dripIsAdmin;
       d.innerHTML = '<strong><span class="cat-dot" style="background:' + color + '"></span>' + emoji + ' ' + escapeHtml(p.name) + ' <span class="dept">' + escapeHtml(p.category) + '</span></strong><div class="place-address"><b>주소</b> · ' + escapeHtml(p.address || "주소 미등록") + '</div><div class="place-author"><b>작성자</b> · ' + escapeHtml(p.author_nickname || "회원") + ' · ' + new Date(p.created_at).toLocaleDateString("ko-KR") + '</div><p class="place-memo"><b>메모</b><br>' + escapeHtml(p.memo || "등록된 메모가 없습니다.") + '</p><div class="place-actions"><a href="' + url + '" target="_blank" rel="noopener">📍 카카오맵</a> <a href="' + naverUrl + '" target="_blank" rel="noopener">🧭 네이버지도</a>' + (isOwner ? ' <button class="place-action-btn edit" data-place-edit type="button" aria-label="' + escapeHtml(p.name) + ' 수정">✏️ 수정</button>' : '') + (canDelete ? ' <button class="place-action-btn delete" data-place-delete type="button" aria-label="' + escapeHtml(p.name) + ' 삭제">🗑️ 삭제</button>' : '') + '</div>';
@@ -2696,35 +2701,7 @@
   $("exploreFlipToggle").addEventListener("click", toggleExploreFlip);
   $("exploreFlipCard").addEventListener("click", toggleExploreFlip);
   $("exploreFlipCard").addEventListener("keydown", function (event) { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); toggleExploreFlip(); } });
-  async function downloadExploreBackup() {
-    if (!supabase) { exploreShowStatus("exploreStatus", "Supabase 연결이 없어 백업을 만들 수 없습니다.", true); return; }
-    exploreShowStatus("exploreStatus", "학생증·방명록·별점 백업을 준비하는 중…", false);
-    try {
-      var cardsResult = await supabase.from("student_cards").select("user_id,nickname,major,motto,avatar,mbti,hobby,skill,job,updated_at").order("updated_at", { ascending: false }).limit(5000);
-      if (cardsResult.error && /student_cards\.(mbti|hobby|skill|job).*does not exist|Could not find the ['\"](mbti|hobby|skill|job)['\"] column/i.test(cardsResult.error.message || "")) {
-        cardsResult = await supabase.from("student_cards").select("*").order("updated_at", { ascending: false }).limit(5000);
-      }
-      if (cardsResult.error) throw cardsResult.error;
-      var cards = cardsResult.data || [], ids = cards.map(function (c) { return c.user_id; }), guests = [], ratings = [];
-      if (ids.length) {
-        var guestResult = await supabase.from("student_card_guestbook").select("id,profile_user_id,author_id,author_nickname,message,created_at").in("profile_user_id", ids).order("created_at", { ascending: false }).limit(20000);
-        if (guestResult.error) throw guestResult.error;
-        guests = guestResult.data || [];
-        var ratingResult = await supabase.from("student_card_ratings").select("profile_user_id,rater_id,rater_nickname,rating,updated_at").in("profile_user_id", ids).limit(20000);
-        if (ratingResult.error) throw ratingResult.error;
-        ratings = ratingResult.data || [];
-      }
-      var payload = { format: "drip-university-student-explorer-backup", exported_at: new Date().toISOString(), note: "현재 로그인 회원에게 조회 권한이 있는 프로필/방명록/별점 데이터의 수동 백업", student_cards: cards, guestbook: guests, ratings: ratings };
-      var blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json;charset=utf-8" }), url = URL.createObjectURL(blob), a = document.createElement("a");
-      a.href = url; a.download = "드립대학_학생탐방_백업_" + new Date().toISOString().slice(0,10) + ".json";
-      document.body.appendChild(a); a.click(); a.remove(); setTimeout(function () { URL.revokeObjectURL(url); }, 1500);
-      exploreShowStatus("exploreStatus", "학생증 " + cards.length + "명 · 방명록 " + guests.length + "개 · 별점 " + ratings.length + "건을 JSON으로 백업했어요.", false);
-    } catch (err) {
-      console.error("학생 탐방 백업 실패", err);
-      exploreShowStatus("exploreStatus", "JSON 백업 실패: " + (err && err.message ? err.message : String(err)), true);
-    }
-  }
-  $("exploreBackup").addEventListener("click", downloadExploreBackup);
+
 
 
   /* =====================================================================
@@ -2805,29 +2782,46 @@
       61:["🌧️","비"],63:["🌧️","비"],65:["🌧️","강한 비"],66:["🌧️","언 비"],67:["🌧️","언 비"],
       71:["🌨️","눈"],73:["🌨️","눈"],75:["❄️","강한 눈"],77:["🌨️","싸락눈"],80:["🌦️","소나기"],81:["🌦️","소나기"],82:["⛈️","강한 소나기"],
       85:["🌨️","눈 소나기"],86:["🌨️","눈 소나기"],95:["⛈️","뇌우"],96:["⛈️","뇌우"],99:["⛈️","뇌우"] };
-    var place = { name: "고양", lat: 37.6584, lon: 126.832 };   // 기본 위치(고양). 바꾸려면 이 값을 수정하세요.
-    var loading = false;
+    // 로그인한 기기의 현재 위치를 기본 날씨 위치로 자동 사용합니다.
+    // 위치 권한이 거부되거나 지원되지 않으면 대체 위치를 사용하고, 사용자가 버튼을 눌러 재시도할 수 있습니다.
+    var fallbackPlace = { name: "고양(대체 위치)", lat: 37.6584, lon: 126.832 };
+    var place = { name: "현재 위치 확인 중", lat: fallbackPlace.lat, lon: fallbackPlace.lon };
+    var weatherRequestSeq = 0;
     function loadWeather() {
-      if (loading) return; loading = true;
-      var url = "https://api.open-meteo.com/v1/forecast?latitude=" + place.lat + "&longitude=" + place.lon +
-        "&current=temperature_2m,weather_code&daily=temperature_2m_max,temperature_2m_min,precipitation_probability_max&timezone=Asia%2FSeoul&forecast_days=1";
+      var thisRequest = ++weatherRequestSeq;
+      var requestedPlace = { name: place.name, lat: place.lat, lon: place.lon };
+      var url = "https://api.open-meteo.com/v1/forecast?latitude=" + requestedPlace.lat + "&longitude=" + requestedPlace.lon +
+        "&current=temperature_2m,weather_code&daily=temperature_2m_max,temperature_2m_min,precipitation_probability_max&timezone=auto&forecast_days=1";
       fetch(url).then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); }).then(function (d) {
+        if (thisRequest !== weatherRequestSeq) return;
         var c = d.current, dy = d.daily, w = WX[c.weather_code] || ["⛅", "날씨"];
         $("wxIco").textContent = w[0];
         $("wxMain").textContent = w[1] + " " + Math.round(c.temperature_2m) + "°";
-        $("wxSub").textContent = place.name + " · " + Math.round(dy.temperature_2m_min[0]) + "°/" + Math.round(dy.temperature_2m_max[0]) + "° · 강수 " + (dy.precipitation_probability_max[0] == null ? "-" : dy.precipitation_probability_max[0]) + "%";
+        $("wxSub").textContent = requestedPlace.name + " · " + Math.round(dy.temperature_2m_min[0]) + "°/" + Math.round(dy.temperature_2m_max[0]) + "° · 강수 " + (dy.precipitation_probability_max[0] == null ? "-" : dy.precipitation_probability_max[0]) + "%";
       }).catch(function () {
-        $("wxMain").textContent = "날씨 확인 불가"; $("wxSub").textContent = "눌러서 다시 시도";
-      }).then(function () { loading = false; });
+        if (thisRequest !== weatherRequestSeq) return;
+        $("wxMain").textContent = "날씨 확인 불가"; $("wxSub").textContent = "위치 권한 또는 네트워크를 확인해 주세요";
+      });
     }
-    loadWeather(); setInterval(loadWeather, 30 * 60 * 1000);
-    // 누르면: 내 위치 날씨로 전환(브라우저 위치 권한 허용 시), 거부/미지원이면 기본 위치로 새로고침
-    $("tbWeather").addEventListener("click", function () {
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(function (pos) { place = { name: "내 위치", lat: pos.coords.latitude, lon: pos.coords.longitude }; loadWeather(); },
-          function () { loadWeather(); }, { timeout: 8000, maximumAge: 600000 });
-      } else loadWeather();
-    });
+    function requestCurrentLocation() {
+      if (!navigator.geolocation) {
+        place = fallbackPlace; loadWeather();
+        $("wxSub").textContent = "이 브라우저는 위치 기능을 지원하지 않아 대체 위치를 표시합니다";
+        return;
+      }
+      navigator.geolocation.getCurrentPosition(function (pos) {
+        place = { name: "내 현재 위치", lat: pos.coords.latitude, lon: pos.coords.longitude };
+        loadWeather();
+      }, function () {
+        place = fallbackPlace; loadWeather();
+      }, { enableHighAccuracy: false, timeout: 10000, maximumAge: 300000 });
+    }
+    // 화면을 열면 자동으로 현재 위치를 요청합니다. 브라우저에서 위치 허용이 필요합니다.
+    loadWeather();
+    requestCurrentLocation();
+    setInterval(function () { loadWeather(); }, 30 * 60 * 1000);
+    // 날씨 영역을 누르면 현재 위치를 다시 확인합니다.
+    $("tbWeather").addEventListener("click", requestCurrentLocation);
   })();
   $("homeNoticeMore").addEventListener("click", function () { $("goNotice").click(); });
 
@@ -2925,26 +2919,6 @@
         row.onclick = open; row.onkeydown = function (e) { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); open(); } };
       });
     }
-    $("backupSuggest").onclick = async function () {
-      if (!supabase) { setText("suggestStatus", "Supabase 연결이 없어 백업할 수 없습니다."); return; }
-      setText("suggestStatus", "백업 파일을 만드는 중…");
-      var r;
-      try {
-        r = await supabase.from("suggestions")
-          .select("id,title,content,author_id,author_nickname,is_secret,status,admin_reply,created_at,updated_at")
-          .order("created_at", { ascending: true });
-      } catch (err) {
-        setText("suggestStatus", "백업 실패: 네트워크 연결을 확인해 주세요."); return;
-      }
-      if (r.error) { setText("suggestStatus", "백업 실패: " + r.error.message + ". SQL 설정과 로그인 권한을 확인해 주세요."); return; }
-      var rows = r.data || [];
-      var payload = { app: "드립대학", type: "suggestions-backup", exported_at: new Date().toISOString(), record_count: rows.length, rows: rows };
-      var blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json;charset=utf-8" });
-      var url = URL.createObjectURL(blob), a = document.createElement("a");
-      a.href = url; a.download = "drip-university-suggestions-backup-" + new Date().toISOString().slice(0, 10) + ".json";
-      document.body.appendChild(a); a.click(); a.remove(); setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
-      setText("suggestStatus", rows.length + "건을 JSON 파일로 백업했습니다. 비공개 건의는 본인/운영진 계정에서 조회 가능한 항목만 포함됩니다.");
-    };
     $("goSuggest").onclick = function () { showView("suggest"); openId = null; $("suggestComposer").hidden = true; load(); };
     $("newSuggest").onclick = function () {
       $("suggestTitle").value = ""; $("suggestContent").value = ""; $("suggestSecret").checked = false; setText("suggestPostStatus", "");
