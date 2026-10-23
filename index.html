@@ -479,6 +479,14 @@
   .home-student-wrap .idv { margin-bottom:0; }
 
 
+  /* 검색 모달 hidden 상태가 뒤쪽 스타일에 의해 무시되지 않도록 고정 */
+  #kakaoSearchModal[hidden] { display:none !important; }
+  #kakaoSearchModal:not([hidden]) { display:flex !important; }
+  #sidAvatarControls { display:flex !important; gap:10px; overflow-x:auto; padding:4px 2px 12px; align-items:stretch; visibility:visible !important; }
+  #sidAvatarControls .sid-group { display:block !important; flex:0 0 min(86%,340px); min-width:0; }
+  #sidAvatarControls .sid-opts { display:flex !important; visibility:visible !important; }
+  #sidAvatarControls .sid-opts button { display:inline-flex !important; visibility:visible !important; align-items:center; justify-content:center; cursor:pointer; }
+  .sid-editor .sid-field, .sid-editor .sid-h, .sid-editor .sid-swipe-hint, .sid-editor .sid-actions { display:block; visibility:visible; }
   /* ===== DRIP UNIVERSITY modern teal/blue redesign ===== */
   :root{--paper:#f4f8fa;--dot:transparent;--ink:#17252d;--muted:#647781;--card:#fff;--coral:#079eaa;--kakao:#fee500;--mint-bg:#e5f7f6;--mint-line:#a7e3df;--mint-ink:#087c83;--butter-bg:#eaf3ff;--butter-line:#c7dcf7;--butter-ink:#285a8d;--pink-bg:#edf1ff;--pink-line:#d3dcff;--pink-ink:#4456a4;--slate-bg:#f1f5f7;--slate-ink:#354952;--row-line:#e5ecef;--teal:#08a7a9;}
   body{background:#f4f8fa;background-image:none;color:#17252d;padding-top:18px}
@@ -1224,7 +1232,7 @@
   function showSignup(options) { options = options || {}; if (!options.fromPop) { try { history.pushState({ dripcollegeApp: true, screen: "signup", view: "main" }, "", location.href); } catch (_e) {} } mainView.hidden = true; signupView.hidden = false; status("signupStatus", "", ""); window.scrollTo({ top: 0, behavior: "smooth" }); }
   function showSignedIn(nick) {
     document.body.classList.add("signed-in");
-    signupView.hidden = true; mainView.hidden = false; loginCard.hidden = true; mainNav.hidden = false; authTopline.hidden = false; $("homeStudentCard").hidden = true;
+    signupView.hidden = true; mainView.hidden = false; loginCard.hidden = true; mainNav.hidden = false; authTopline.hidden = false;
     $("signedInLabel").textContent = nick + " 님, 환영합니다!";
     loadStudentCard();
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -1497,9 +1505,14 @@
           $("placeName").value = place.place_name;
           $("placeAddress").value = place.road_address_name || place.address_name || "";
           $("placeLat").value = place.y; $("placeLng").value = place.x;
-          if (kakaoMap) kakaoMap.setCenter(new kakao.maps.LatLng(parseFloat(place.y), parseFloat(place.x)));
+          if (kakaoMap) {
+            var selectedPos = new kakao.maps.LatLng(parseFloat(place.y), parseFloat(place.x));
+            kakaoMap.setLevel(3); kakaoMap.setCenter(selectedPos);
+            setTimeout(function(){ kakaoMap.relayout(); kakaoMap.setCenter(selectedPos); }, 120);
+          }
           closeKakaoSearchModal();
-          placesStatus("선택 완료: " + place.place_name + " · 주소가 자동 입력되었습니다.");
+          placesStatus("선택 완료: " + place.place_name + " · 주소가 자동 입력되었습니다. 지도에서 위치를 확인할 수 있어요.");
+          setTimeout(function(){ var mapEl = $("placesMap"); if (mapEl) mapEl.scrollIntoView({behavior:"smooth",block:"center"}); }, 150);
         };
         resultBox.appendChild(b);
       });
