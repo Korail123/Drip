@@ -984,10 +984,8 @@
       <h2 id="loginTitle"><span class="mark">로그인</span></h2><p class="auth-help">카카오톡 오픈채팅에서 사용하는 닉네임을 입력해 주세요.</p>
       <form id="loginForm" autocomplete="off">
         <div class="lrow"><span class="lic" aria-hidden="true">👤</span><input id="loginNickname" aria-label="닉네임" name="nickname" maxlength="24" autocomplete="username" autocapitalize="off" spellcheck="false" placeholder="등록한 닉네임" required></div>
-        <div class="lrow"><span class="lic" aria-hidden="true">🔐</span><input id="loginPin" aria-label="개인 로그인 PIN" name="pin" type="password" minlength="10" maxlength="64" autocomplete="current-password" placeholder="개인 로그인 PIN (10~64자)" required></div>
         <label class="remember-row" for="rememberLogin"><input class="remember-checkbox" id="rememberLogin" type="checkbox" checked> 자동 로그인</label>
         <div class="auth-actions"><button class="auth-primary" type="submit">로그인</button><button class="auth-secondary" id="openSignup" type="button">회원가입</button></div>
-        <div class="auth-actions"><button class="auth-secondary" id="registerLoginPin" type="button">기존 회원 PIN 등록</button></div>
         <div id="loginStatus" class="auth-status" role="status" aria-live="polite"></div>
       </form>
     </section>
@@ -1688,49 +1686,39 @@
   $("loginForm").addEventListener("submit", async function (e) {
     e.preventDefault();
     if (!ready()) return;
+
     var nick = normalizeNick($("loginNickname").value);
-    var pin = $("loginPin").value;
-    if (nick.length < 2) { status("loginStatus", "닉네임은 2자 이상 입력해 주세요.", "error"); return; }
-    if (pin.length < 10 || pin.length > 64) { status("loginStatus", "개인 로그인 PIN은 10~64자로 입력해 주세요.", "error"); return; }
-    saveRememberChoice(); status("loginStatus", "로그인 중입니다…", "");
+    if (nick.length < 2) {
+      status("loginStatus", "닉네임은 2자 이상 입력해 주세요.", "error");
+      return;
+    }
+
+    saveRememberChoice();
+    status("loginStatus", "로그인 중입니다…", "");
     try {
-      var result = await supabase.functions.invoke("nickname-pin-login", { body: { nickname: nick, pin: pin } });
-      if (result.error || !result.data || !result.data.token_hash) throw new Error("PIN 로그인 실패");
-      var authResult = await supabase.auth.verifyOtp({ token_hash: result.data.token_hash, type: "magiclink" });
-      if (authResult.error || !authResult.data.user) throw new Error("세션 확인 실패");
-      var signedNick = (authResult.data.user.user_metadata && authResult.data.user.user_metadata.nickname) || nick;
-      showSignedIn(signedNick); status("loginStatus", "", "");
+      // 회원가입 때 사용한 인증번호(2030)를 기존 계정의 로그인 비밀번호 계산에 사용합니다.
+      var result = await supabase.auth.signInWithPassword({
+        email: await nickEmail(nick),
+        password: await authPassword(nick, "2030")
+      });
+
+      if (result.error || !result.data || !result.data.user) {
+        console.error("로그인 오류:", result.error);
+        status("loginStatus", "로그인에 실패했습니다. 기존 계정이 2030 인증번호로 가입되었는지 확인해 주세요.", "error");
+        return;
+      }
+
+      var signedNick = (result.data.user.user_metadata && result.data.user.user_metadata.nickname) || nick;
+      showSignedIn(signedNick);
+      status("loginStatus", "", "");
       try { sessionStorage.setItem("dripcollege_nickname", signedNick); } catch (_e) {}
-      $("loginPin").value = "";
     } catch (err) {
-      console.error("PIN 로그인 오류:", err);
-      status("loginStatus", "로그인에 실패했습니다. 닉네임과 개인 PIN을 확인하거나 서버 설정을 확인해 주세요.", "error");
+      console.error("로그인 오류:", err);
+      status("loginStatus", "로그인 중 오류가 발생했습니다. 브라우저 Console의 오류를 확인해 주세요.", "error");
     }
   });
-  $("registerLoginPin").addEventListener("click", async function () {
-    if (!ready()) return;
-    var nick = normalizeNick($("loginNickname").value);
-    if (nick.length < 2) { status("loginStatus", "먼저 등록한 닉네임을 입력해 주세요.", "error"); return; }
-    var code = prompt("기존 회원 인증번호를 입력해 본인 계정으로 로그인한 뒤 PIN을 등록합니다.");
-    if (code === null || !code) return;
-    var newPin = prompt("새 개인 로그인 PIN을 입력하세요 (10~64자). 다른 사이트에서 쓰는 비밀번호는 사용하지 마세요.");
-    if (newPin === null) return;
-    if (newPin.length < 10 || newPin.length > 64) { status("loginStatus", "PIN은 10~64자로 입력해 주세요.", "error"); return; }
-    saveRememberChoice(); status("loginStatus", "기존 계정을 확인하고 PIN을 등록하고 있습니다…", "");
-    try {
-      var oldLogin = await supabase.auth.signInWithPassword({ email: await nickEmail(nick), password: await authPassword(nick, code) });
-      if (oldLogin.error || !oldLogin.data.user) throw oldLogin.error || new Error("기존 계정 인증 실패");
-      var setPin = await supabase.rpc("set_member_login_pin", { p_pin: newPin });
-      if (setPin.error || setPin.data !== true) throw setPin.error || new Error("PIN 등록 실패");
-      showSignedIn((oldLogin.data.user.user_metadata && oldLogin.data.user.user_metadata.nickname) || nick);
-      status("loginStatus", "PIN 등록이 완료되어 로그인되었습니다.", "ok");
-      try { sessionStorage.setItem("dripcollege_nickname", nick); } catch (_e) {}
-    } catch (err) {
-      console.error("PIN 등록 오류:", err);
-      status("loginStatus", "PIN 등록에 실패했습니다. 기존 인증번호와 Supabase SQL 설정을 확인해 주세요.", "error");
-    }
-  });
-  $("signupForm").addEventListener("submit", async function (e) {
+
+    $("signupForm").addEventListener("submit", async function (e) {
     e.preventDefault(); if (!ready()) return;
     var nick = normalizeNick($("signupNickname").value), code = $("signupCode").value;
     if (nick.length < 2) { status("signupStatus", "닉네임은 2자 이상 입력해 주세요.", "error"); return; }
