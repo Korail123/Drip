@@ -838,7 +838,7 @@
 
   <!-- ===== 수다게시판 ===== -->
   <section id="boardView" hidden aria-labelledby="boardHead" class="community-panel">
-    <div class="head"><div class="head-main"><span class="pill-live"><span class="dot"></span>실시간 게시판</span><h2 class="title" id="boardHead">💬 수다게시판</h2><p class="sub">게시물과 댓글은 Supabase에 저장됩니다.</p></div><div style="display:flex;gap:8px"><button class="btn small" id="boardBack" type="button">← 메인으로</button><button class="btn small coral" id="newCommunityPost" type="button">글 작성</button></div></div>
+    <div class="head"><div class="head-main"><h2 class="title" id="boardHead">💬 수다게시판</h2><p class="sub">게시물과 댓글은 Supabase에 저장됩니다.</p></div><div style="display:flex;gap:8px"><button class="btn small" id="boardBack" type="button">← 메인으로</button><button class="btn small coral" id="newCommunityPost" type="button">글 작성</button></div></div>
     <form id="communityComposer" class="community-form" hidden><h3 id="communityFormTitle">새 글 작성</h3><input id="communityTitle" maxlength="120" placeholder="제목" required><textarea id="communityContent" maxlength="10000" placeholder="내용을 입력해 주세요." required></textarea><label>사진 첨부 (JPG, PNG, WEBP / 최대 5MB)<input id="communityPhoto" type="file" accept="image/jpeg,image/png,image/webp"></label><div id="communityPhotoPreview"></div><div class="community-actions"><button type="submit">저장</button><button type="button" id="cancelCommunityPost">취소</button></div><div id="communityPostStatus" class="community-status"></div></form>
     <div id="communityFeed" aria-live="polite"></div><div id="communityStatus" class="community-status"></div>
   </section>
@@ -906,10 +906,10 @@
     </div>
   </section>
   <section id="fortuneView" hidden class="community-panel">
-    <div class="head"><div><h2 class="title">🔮 오늘의 사주</h2><p class="sub">Gemini AI가 사주 관련 내용만 해석합니다.</p></div><button class="btn small" data-home type="button">← 메인으로</button></div>
+    <div class="head"><div><h2 class="title">🔮 오늘의 사주</h2><p class="sub">UN7 운세 API로 오늘의 운세를 조회합니다.</p></div><button class="btn small" data-home type="button">← 메인으로</button></div>
     <form id="fortuneForm" class="community-post" style="display:grid;gap:12px">
       <p style="margin:0">생년월일과 태어난 시간을 입력해 주세요. 입력값은 사주 해석 요청에만 사용하며 이 웹페이지의 DB에 저장하지 않습니다.</p>
-      <small style="display:block">개인정보 안내: 입력값은 해석을 위해 Google Gemini API로 전송됩니다. 무료 API 이용 조건에서는 입력·응답이 서비스 개선이나 검토에 사용될 수 있으므로, 개인정보 전송에 동의하지 않으면 이용하지 마세요. 브라우저나 DB에 저장하지 않도록 구성했지만 외부 제공자의 처리·보관까지 보장할 수는 없습니다.</small>
+      <small style="display:block">개인정보 안내: 생년월일·태어난 시간은 UN7 운세 API 조회를 위해 서버 함수로 전송된 뒤 UN7 서비스에 전달됩니다. 이 웹페이지의 데이터베이스나 브라우저 저장소에는 입력값을 저장하지 않습니다. 외부 서비스의 데이터 처리·보관 방식은 UN7 정책을 확인해 주세요.</small>
       <label for="fortuneBirthDate">생년월일</label><input id="fortuneBirthDate" type="date" required>
       <label for="fortuneBirthHour">태어난 시간</label><select id="fortuneBirthHour"><option value="12">모름 (정오 기준)</option><option value="0">00시</option><option value="1">01시</option><option value="2">02시</option><option value="3">03시</option><option value="4">04시</option><option value="5">05시</option><option value="6">06시</option><option value="7">07시</option><option value="8">08시</option><option value="9">09시</option><option value="10">10시</option><option value="11">11시</option><option value="12">12시</option><option value="13">13시</option><option value="14">14시</option><option value="15">15시</option><option value="16">16시</option><option value="17">17시</option><option value="18">18시</option><option value="19">19시</option><option value="20">20시</option><option value="21">21시</option><option value="22">22시</option><option value="23">23시</option></select>
       <label style="display:flex;align-items:center;gap:8px"><input id="fortuneIsLunar" type="checkbox" style="width:auto;min-height:0"> 음력 생일입니다</label>
@@ -969,7 +969,7 @@
 
   <!-- ===== 건의사항 게시판 ===== -->
   <section id="suggestView" hidden aria-labelledby="suggestHead" class="community-panel">
-    <div class="head"><div class="head-main"><span class="pill-live"><span class="dot"></span>건의사항</span><h2 class="title" id="suggestHead">💡 건의사항</h2><p class="sub">불편한 점, 바라는 점을 남겨 주세요. 🔒 비공개로 남기면 작성자와 운영진만 볼 수 있어요.</p></div><div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn small" data-home type="button">← 메인으로</button><button class="btn small" id="backupSuggest" type="button">⬇ JSON 백업</button><button class="btn small coral" id="newSuggest" type="button">건의하기</button></div></div>
+    <div class="head"><div class="head-main"><h2 class="title" id="suggestHead">💡 건의사항</h2><p class="sub">불편한 점, 바라는 점을 남겨 주세요. 🔒 비공개로 남기면 작성자와 운영진만 볼 수 있어요.</p></div><div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn small" data-home type="button">← 메인으로</button><button class="btn small" id="backupSuggest" type="button">⬇ JSON 백업</button><button class="btn small coral" id="newSuggest" type="button">건의하기</button></div></div>
     <form id="suggestComposer" class="community-form" hidden>
       <h3>건의사항 작성</h3>
       <input id="suggestTitle" maxlength="100" placeholder="제목" required>
@@ -986,7 +986,7 @@
     <div class="head explore-head">
       <div class="explore-header-brand">
         <img class="idv-logo brand-logo explore-brand-logo" alt="드립대학 로고">
-        <div class="head-main"><span class="pill-live"><span class="dot"></span>DRIP UNIVERSITY COMMUNITY</span><h2 class="title" id="exploreHead">타 학생 탐방하기</h2><p class="sub">학생증 앞면과 뒷면을 살펴보고, 방명록과 별점으로 인사를 남겨 보세요.</p></div>
+        <div class="head-main"><h2 class="title" id="exploreHead">타 학생 탐방하기</h2><p class="sub">학생증 앞면과 뒷면을 살펴보고, 방명록과 별점으로 인사를 남겨 보세요.</p></div>
       </div>
       <div class="explore-header-actions"><button class="btn small" id="exploreRefresh" type="button">↻ 새로고침</button><button class="btn small" id="exploreBackup" type="button">⬇ JSON 백업</button><button class="btn small" data-home type="button">← 메인으로</button></div>
     </div>
@@ -1036,7 +1036,7 @@
   <!-- ===== 미니게임 ===== -->
   <section id="gameHub" hidden aria-label="미니게임">
     <div class="head">
-      <div class="head-main"><span class="pill-live"><span class="dot"></span>쉬는 시간</span><h2 class="title">🎮 미니게임</h2><p class="sub">점심 먹고 남은 10분, 가볍게 한 판 해요.</p></div>
+      <div class="head-main"><h2 class="title">🎮 미니게임</h2><p class="sub">점심 먹고 남은 10분, 가볍게 한 판 해요.</p></div>
       <button class="btn small" id="hubBack" type="button">← 메인으로</button>
     </div>
     <button class="card game-card" id="openWord" type="button">
@@ -1048,7 +1048,7 @@
 
   <section id="wordGame" hidden aria-label="단어 맞추기">
     <div class="head">
-      <div class="head-main"><span class="pill-live"><span class="dot"></span>무제한 도전</span><h2 class="title">오늘의 단어</h2><p class="sub">칸마다 자음이나 모음 하나씩 입력하세요. 한글 음절은 자모로 나뉘어 들어갑니다.</p></div>
+      <div class="head-main"><h2 class="title">오늘의 단어</h2><p class="sub">칸마다 자음이나 모음 하나씩 입력하세요. 한글 음절은 자모로 나뉘어 들어갑니다.</p></div>
       <button class="btn small" id="wordBack" type="button">← 미니게임</button>
     </div>
     <div class="card wg">
@@ -1174,8 +1174,8 @@
   $("goPlaces").onclick = function () { showView("places"); initKakaoMap(); };
   Array.prototype.forEach.call(document.querySelectorAll("[data-home]"), function (b) { b.onclick = function () { showView("main"); }; });
 
-  // Gemini 사주 해석: 브라우저에서는 API 키를 보관하지 않고 Supabase Edge Function만 호출합니다.
-  // 생년월일/시간은 DB나 브라우저 저장소에 기록하지 않습니다.
+  // UN7 오늘의 운세 조회: API Key는 브라우저에 노출하지 않고 Supabase Edge Function에서 사용합니다.
+  // 생년월일/시간은 DB나 브라우저 저장소에 저장하지 않습니다.
   $("fortuneForm").addEventListener("submit", async function (event) {
     event.preventDefault();
     var status = $("fortuneStatus"), result = $("fortuneResult"), progress = $("fortuneProgress");
@@ -1193,46 +1193,57 @@
     if (birthObj.getFullYear() !== parts[0] || birthObj.getMonth() !== parts[1]-1 || birthObj.getDate() !== parts[2] || birthObj > new Date(now.getFullYear(), now.getMonth(), now.getDate())) {
       status.textContent = "올바른 과거 생년월일을 입력해 주세요."; status.className = "community-status error"; return;
     }
+    var targetDate = [now.getFullYear(), String(now.getMonth()+1).padStart(2,"0"), String(now.getDate()).padStart(2,"0")].join("-");
     var fortuneAbortController = new AbortController();
-    var remaining = 60;
-    var fortuneTimeoutId = setTimeout(function () { fortuneAbortController.abort(); }, 60000);
+    var remaining = 20;
+    var fortuneTimeoutId = setTimeout(function () { fortuneAbortController.abort(); }, 20000);
     var countdownId = setInterval(function () {
       remaining = Math.max(0, remaining - 1);
       countdown.textContent = "남은 시간 " + remaining + "초";
-      if (remaining <= 40) progressHint.textContent = "해석 결과를 정리하고 있어요. 잠시만 기다려 주세요.";
-      if (remaining <= 15) progressHint.textContent = "거의 다 됐어요. 연결 상태에 따라 조금 더 걸릴 수 있어요.";
+      if (remaining <= 12) progressHint.textContent = "UN7 운세 API에서 결과를 가져오고 있습니다.";
+      if (remaining <= 5) progressHint.textContent = "응답이 늦어지고 있어요. 연결 상태를 확인해 주세요.";
     }, 1000);
-    progress.hidden = false; button.disabled = true; button.textContent = "해석 중…";
-    status.textContent = "요청을 보내고 있습니다."; status.className = "community-status";
+    progress.hidden = false; button.disabled = true; button.textContent = "운세 조회 중…";
+    status.textContent = "UN7 운세 API에 조회를 요청하고 있습니다."; status.className = "community-status";
     try {
-      var response = await fetch(SUPABASE_URL + "/functions/v1/saju-fortune", {
+      var response = await fetch(SUPABASE_URL + "/functions/v1/un7-fortune", {
         method: "POST", signal: fortuneAbortController.signal,
         headers: { "Content-Type": "application/json", "apikey": SUPABASE_ANON_KEY, "Authorization": "Bearer " + SUPABASE_ANON_KEY },
-        body: JSON.stringify({ birthDate: birthDate, birthHour: birthHour, isLunar: isLunar, today: [now.getFullYear(), String(now.getMonth()+1).padStart(2,"0"), String(now.getDate()).padStart(2,"0")].join("-") })
+        body: JSON.stringify({ birthDate: birthDate, birthHour: birthHour, isLunar: isLunar, targetDate: targetDate })
       });
       var payload = await response.json().catch(function () { return {}; });
-      if (!response.ok || !payload.success || typeof payload.fortune !== "string") throw new Error(payload.error || "사주 해석을 불러오지 못했습니다.");
+      if (!response.ok || !payload.success || !payload.data || typeof payload.data !== "object") {
+        throw new Error(payload.error || "운세 조회에 실패했습니다. UN7 운영용 API Key와 Edge Function 배포 상태를 확인해 주세요.");
+      }
+      var entries = Object.keys(payload.data).map(function (key) { return { key: key, item: payload.data[key] }; })
+        .filter(function (entry) { return entry.item && typeof entry.item === "object"; })
+        .sort(function (a, b) { return (Number((a.key.match(/\d+/) || ["999"])[0])) - (Number((b.key.match(/\d+/) || ["999"])[0])); });
+      if (!entries.length) throw new Error("UN7에서 운세 결과를 반환하지 않았습니다.");
       var card = el("article", "community-post"); card.style.margin = "12px 0";
       var heading = el("h3", "", "✨ 오늘의 사주 한눈에 보기"); heading.style.marginTop = "0"; card.appendChild(heading);
-      var intro = el("p", "fortune-result-note", "AI가 생성한 전통 명리학 관점의 참고용 해석입니다."); card.appendChild(intro);
+      var resultDate = payload.targetDate || targetDate;
+      var intro = el("p", "fortune-result-note", resultDate + " · UN7 운세 API 결과입니다. 운세는 참고용으로 확인해 주세요."); card.appendChild(intro);
       var grid = el("div", "fortune-result-grid");
-      var blocks = payload.fortune.split(/\n{2,}/).map(function (line) { return line.trim(); }).filter(Boolean);
-      blocks.forEach(function (block, idx) {
-        var lines = block.split("\n").map(function (x) { return x.trim(); }).filter(Boolean);
-        var first = lines[0] || "오늘의 운세";
-        var headingText = first.replace(/^[#*\s🔮✨🌟📌💰❤️💼🍀⚠️-]+/, "").replace(/[：:]$/, "").trim();
-        var hasHeading = lines.length > 1 || /^(오늘|총평|종합|재물|연애|건강|학업|직장|대인관계|행운|주의|오행|기질|운세)/.test(headingText);
+      entries.forEach(function (entry, idx) {
+        var data = entry.item;
+        var title = String(data.title || entry.key || "오늘의 운세");
+        var descriptions = [];
+        if (data.description) descriptions.push(String(data.description));
+        if (data.summary && data.summary !== data.description) descriptions.push("요약: " + String(data.summary));
+        if (data.maleDescription) descriptions.push("남성: " + String(data.maleDescription));
+        if (data.femaleDescription) descriptions.push("여성: " + String(data.femaleDescription));
+        var description = descriptions.join("\n\n") || "상세 설명이 제공되지 않았습니다.";
         var section = el("section", "fortune-result-card" + (idx === 0 ? " fortune-featured" : ""));
-        section.appendChild(el("h4", "", hasHeading ? (headingText || "오늘의 운세") : (idx === 0 ? "오늘의 총평" : "운세 포인트")));
-        section.appendChild(el("p", "", hasHeading && lines.length > 1 ? lines.slice(1).join("\n") : block));
+        section.appendChild(el("h4", "", title));
+        section.appendChild(el("p", "", description));
         grid.appendChild(section);
       });
       card.appendChild(grid); result.appendChild(card);
-      status.textContent = "사주 해석을 완료했습니다."; status.className = "community-status ok";
+      status.textContent = "UN7 운세 API에서 오늘의 운세를 불러왔습니다."; status.className = "community-status ok";
     } catch (error) {
       status.textContent = error && error.name === "AbortError"
-        ? "사주 조회 시간이 초과되었습니다. 잠시 후 다시 시도해 주세요."
-        : "사주 조회 실패: " + (error && error.message ? error.message : "잠시 후 다시 시도해 주세요.");
+        ? "운세 조회 시간이 초과되었습니다. 잠시 후 다시 시도해 주세요."
+        : "운세 조회 실패: " + (error && error.message ? error.message : "잠시 후 다시 시도해 주세요.");
       status.className = "community-status error";
     } finally {
       clearTimeout(fortuneTimeoutId); clearInterval(countdownId);
@@ -2480,6 +2491,14 @@
       var result = await supabase.from("student_cards")
         .select("user_id,nickname,major,motto,avatar,mbti,hobby,skill,job,updated_at")
         .order("updated_at", { ascending: false }).limit(5000);
+      var usingSchemaFallback = false;
+      // DB metadata says these columns may exist while the PostgREST cache is stale.
+      // Retry without naming newer columns so the directory itself can still load.
+      if (result.error && /student_cards\.(mbti|hobby|skill|job).*does not exist|Could not find the ['\"](mbti|hobby|skill|job)['\"] column/i.test(result.error.message || "")) {
+        console.warn("student_cards schema cache fallback", result.error);
+        result = await supabase.from("student_cards").select("*").order("updated_at", { ascending: false }).limit(5000);
+        usingSchemaFallback = !result.error;
+      }
       if (result.error) throw result.error;
       var cards = result.data || [];
       // 학생증을 실제로 저장한 다른 회원만 디렉터리에 표시합니다.
@@ -2492,7 +2511,11 @@
         exploreRatings = ratingsResult.data || [];
       }
       exploreRenderDirectory();
-      exploreShowStatus("exploreStatus", "학생증은 Supabase에 저장된 공개 프로필을 불러옵니다. 방명록과 별점도 서버에 저장되어 다른 기기와 동기화됩니다.", false);
+      if (usingSchemaFallback) {
+        exploreShowStatus("exploreStatus", "학생 목록은 불러왔지만 Supabase API 스키마 캐시가 오래되어 뒷면 정보 일부가 빠질 수 있습니다. SQL Editor에서 NOTIFY pgrst, 'reload schema'; 를 단독 실행하고 API 설정의 Exposed schemas에 public이 있는지 확인해 주세요.", true);
+      } else {
+        exploreShowStatus("exploreStatus", "학생증은 Supabase에 저장된 공개 프로필을 불러옵니다. 방명록과 별점도 서버에 저장되어 다른 기기와 동기화됩니다.", false);
+      }
       if (preserveSelection && exploreSelectedCard) {
         var updated = exploreCards.find(function (c) { return c.user_id === exploreSelectedCard.user_id; });
         if (updated) { exploreSelectedCard = updated; await loadExploreProfile(updated.user_id); }
@@ -2678,6 +2701,9 @@
     exploreShowStatus("exploreStatus", "학생증·방명록·별점 백업을 준비하는 중…", false);
     try {
       var cardsResult = await supabase.from("student_cards").select("user_id,nickname,major,motto,avatar,mbti,hobby,skill,job,updated_at").order("updated_at", { ascending: false }).limit(5000);
+      if (cardsResult.error && /student_cards\.(mbti|hobby|skill|job).*does not exist|Could not find the ['\"](mbti|hobby|skill|job)['\"] column/i.test(cardsResult.error.message || "")) {
+        cardsResult = await supabase.from("student_cards").select("*").order("updated_at", { ascending: false }).limit(5000);
+      }
       if (cardsResult.error) throw cardsResult.error;
       var cards = cardsResult.data || [], ids = cards.map(function (c) { return c.user_id; }), guests = [], ratings = [];
       if (ids.length) {
