@@ -408,6 +408,37 @@
   #noticeView .notice-rule li { line-height:1.6; }
   @media(max-width:520px){ #noticeView .notice-list { grid-template-columns:1fr; } #noticeView .notice-row:nth-last-child(-n+2) { border-bottom:1px solid #EDF0F5; } #noticeView .notice-row:last-child { border-bottom:0; } }
 
+  /* ===== 지도 화면: 지도 크게 위, 목록은 아래 ===== */
+  .places-layout { grid-template-columns:minmax(0,1fr) !important; }
+  .places-right { order:1; } .places-left { order:2; }
+  .places-map { height:min(70vh,640px); min-height:420px; }
+  .places-list { max-height:none; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); }
+  .places-tabs { gap:0; border-bottom:2px solid var(--ink); overflow-x:auto; flex-wrap:nowrap; }
+  .places-tabs button { border:0; border-right:1px solid #ccc; border-radius:0; padding:10px 14px; flex:0 0 auto; }
+  .places-tabs button.active { background:#2e9e2e; color:#fff; }
+  .cat-dot { display:inline-block; width:10px; height:10px; border-radius:50%; margin-right:4px; }
+
+  /* 마커 클릭 시 뜨는 정보창 */
+  .pin-wrap { padding-bottom:46px; }
+  .pin-card { position:relative; width:min(320px,78vw); background:#fff; border-radius:6px; box-shadow:0 4px 18px rgba(0,0,0,.3); padding:14px 16px 0; font-size:13px; line-height:1.5; color:#222; text-align:left; }
+  .pin-card::after { content:""; position:absolute; left:50%; bottom:-9px; margin-left:-9px; border:9px solid transparent; border-bottom:0; border-top-color:#fff; }
+  .pin-close { position:absolute; top:6px; right:10px; border:0; background:none; font-size:18px; cursor:pointer; }
+  .pin-name { font-size:17px; font-weight:800; padding-right:22px; overflow-wrap:anywhere; }
+  .pin-addr { margin-top:4px; font-weight:700; font-size:12.5px; overflow-wrap:anywhere; }
+  .pin-author { margin-top:2px; color:#2a9d3b; font-size:12.5px; font-weight:700; }
+  .pin-memo { margin-top:6px; color:#777; font-size:12.5px; white-space:pre-wrap; overflow-wrap:anywhere; max-height:90px; overflow:auto; }
+  .pin-links { display:flex; border-top:2px solid #222; margin:10px -16px 0; }
+  .pin-links a { flex:1; text-align:center; padding:10px 2px; font-size:13px; color:#222; text-decoration:none; border-right:2px solid #222; white-space:nowrap; }
+  .pin-links a:last-child { border-right:0; }
+
+  /* 모바일: 미니게임 '언제든 도전' 겹침 해결 */
+  .game-info strong, .game-info small { white-space:normal; overflow-wrap:anywhere; }
+  @media(max-width:520px){
+    .game-card { gap:10px; }
+    .game-state { display:none; }
+    .game-info small { font-size:12px; }
+  }
+
 </style>
 </head>
 <body>
@@ -568,7 +599,7 @@
     </form>
   </section>
 
-  <!-- ===== 맛집 · 카페 · 명소 · 숙소 · 기타 (Kakao 지도) ===== -->
+  <!-- ===== 맛집 · 카페 · 명소 · 숙소 · 술집 · 주차장 · 기타 (Kakao 지도) ===== -->
   <section id="placesView" hidden class="community-panel">
     <div class="head"><div><h2 class="title">📍 맛집 · 카페 · 명소 · 숙소</h2><p class="sub">Kakao 지도 기반 · 저장한 장소는 모든 회원에게 공유됩니다. 지도를 클릭해 위치를 지정할 수도 있어요.</p></div><button class="btn small" data-home type="button">← 메인으로</button></div>
     <div class="places-tabs" id="placesTabs">
@@ -577,6 +608,8 @@
       <button data-category="카페" type="button">☕ 카페</button>
       <button data-category="명소" type="button">📸 명소</button>
       <button data-category="숙소" type="button">🛏️ 숙소</button>
+      <button data-category="술집" type="button">🍺 술집</button>
+      <button data-category="주차장" type="button">🅿️ 주차장</button>
       <button data-category="기타" type="button">📌 기타</button>
     </div>
     <div class="places-layout">
@@ -592,7 +625,7 @@
         <form id="placeSaveForm" class="community-form place-save-form">
           <h3>장소 공유하기</h3>
           <label>분류
-            <select id="placeCategory"><option>맛집</option><option>카페</option><option>명소</option><option>숙소</option><option>기타</option></select>
+            <select id="placeCategory"><option>맛집</option><option>카페</option><option>명소</option><option>숙소</option><option>술집</option><option>주차장</option><option>기타</option></select>
           </label>
           <label>장소명
             <input id="placeName" maxlength="120" placeholder="예: 카카오 판교 아지트" required>
@@ -1290,13 +1323,45 @@
   };
 
   /* =====================================================================
-     Kakao 지도 · 장소 공유 (맛집 / 카페 / 명소 / 숙소 / 기타)
+     Kakao 지도 · 장소 공유 (맛집 / 카페 / 명소 / 숙소 / 술집 / 주차장 / 기타)
      ===================================================================== */
-  var CAT_EMOJI = { "맛집": "🍜", "카페": "☕", "명소": "📸", "숙소": "🛏️", "기타": "📌" };
+  var CAT_EMOJI = { "맛집": "🍜", "카페": "☕", "명소": "📸", "숙소": "🛏️", "술집": "🍺", "주차장": "🅿️", "기타": "📌" };
+  var CAT_COLOR = { "맛집": "#E53935", "카페": "#FBC02D", "명소": "#FB8C00", "숙소": "#43A047", "술집": "#1A237E", "주차장": "#1E88E5", "기타": "#757575" };
   var selectedCategory = "전체";
-  var kakaoMap = null, kakaoMarkers = [], kakaoInfoWindow = null, geocoder = null, ps = null, pickMarker = null, mapReady = false;
+  var kakaoMap = null, kakaoMarkers = [], geocoder = null, ps = null, mapReady = false, pinOverlay = null, pinImgCache = {};
 
   function placesStatus(msg) { setText("placesStatus", msg); }
+
+  function pinImage(cat) {
+    var color = CAT_COLOR[cat] || CAT_COLOR["기타"];
+    if (pinImgCache[color]) return pinImgCache[color];
+    var svg = '<svg xmlns="http://www.w3.org/2000/svg" width="30" height="40" viewBox="0 0 30 40"><path d="M15 1C7.3 1 1 7.2 1 14.8 1 25 15 39 15 39s14-14 14-24.2C29 7.2 22.7 1 15 1z" fill="' + color + '" stroke="#fff" stroke-width="2"/><circle cx="15" cy="15" r="5.5" fill="#fff"/></svg>';
+    pinImgCache[color] = new kakao.maps.MarkerImage("data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg), new kakao.maps.Size(30, 40), { offset: new kakao.maps.Point(15, 40) });
+    return pinImgCache[color];
+  }
+
+  function closePinOverlay() { if (pinOverlay) { pinOverlay.setMap(null); pinOverlay = null; } }
+
+  function openPinOverlay(p, pos) {
+    closePinOverlay();
+    var wrap = el("div", "pin-wrap"), card = el("div", "pin-card");
+    var x = el("button", "pin-close", "×"); x.type = "button"; x.onclick = closePinOverlay;
+    card.appendChild(x);
+    card.appendChild(el("div", "pin-name", p.name));
+    card.appendChild(el("div", "pin-addr", p.address || "주소 미등록"));
+    card.appendChild(el("div", "pin-author", "작성자 · " + (p.author_nickname || "회원")));
+    card.appendChild(el("div", "pin-memo", p.memo || "등록된 메모가 없습니다."));
+    var links = el("div", "pin-links");
+    var q = encodeURIComponent(p.name);
+    [["카카오맵", "https://map.kakao.com/link/map/" + q + "," + p.lat + "," + p.lon],
+     ["네이버지도", "https://map.naver.com/p/search/" + q],
+     ["Google Map", "https://www.google.com/maps/search/?api=1&query=" + p.lat + "," + p.lon]].forEach(function (l) {
+      var a = el("a", "", l[0]); a.href = l[1]; a.target = "_blank"; a.rel = "noopener"; links.appendChild(a);
+    });
+    card.appendChild(links); wrap.appendChild(card);
+    pinOverlay = new kakao.maps.CustomOverlay({ content: wrap, position: pos, yAnchor: 1, zIndex: 5 });
+    pinOverlay.setMap(kakaoMap);
+  }
 
   function initKakaoMap() {
     if (mapReady && kakaoMap) { setTimeout(function () { kakaoMap.relayout(); }, 100); loadSavedPlaces(); return; }
@@ -1306,16 +1371,14 @@
     }
     kakao.maps.load(function () {
       kakaoMap = new kakao.maps.Map($("placesMap"), { center: new kakao.maps.LatLng(37.395297, 127.110449), level: 4 });
-      kakaoInfoWindow = new kakao.maps.InfoWindow({ zIndex: 1 });
       if (kakao.maps.services) { geocoder = new kakao.maps.services.Geocoder(); ps = new kakao.maps.services.Places(); }
       mapReady = true;
 
-      // 지도를 클릭해 위치 지정
+      // 지도를 클릭하면 위치만 저장하고 마커는 찍지 않습니다.
       kakao.maps.event.addListener(kakaoMap, "click", function (e) {
+        closePinOverlay();
         var ll = e.latLng;
         $("placeLat").value = ll.getLat(); $("placeLng").value = ll.getLng();
-        if (pickMarker) pickMarker.setMap(null);
-        pickMarker = new kakao.maps.Marker({ position: ll, map: kakaoMap });
         if (geocoder) {
           geocoder.coord2Address(ll.getLng(), ll.getLat(), function (r, s) {
             if (s === kakao.maps.services.Status.OK && r[0]) {
@@ -1323,7 +1386,7 @@
             }
           });
         }
-        placesStatus("지도에서 위치를 선택했어요. 장소명과 메모를 적고 저장해 주세요.");
+        placesStatus("지도에서 위치를 선택했어요. 아래 '장소 공유하기'에서 장소명과 메모를 적고 저장해 주세요.");
       });
 
       setTimeout(function () { kakaoMap.relayout(); }, 100);
@@ -1331,31 +1394,27 @@
     });
   }
 
-  function clearKakaoMarkers() { kakaoMarkers.forEach(function (m) { m.setMap(null); }); kakaoMarkers = []; }
+  function clearKakaoMarkers() { kakaoMarkers.forEach(function (m) { m.setMap(null); }); kakaoMarkers = []; closePinOverlay(); }
 
   function searchKakaoAddressOrKeyword() {
     var addr = $("placeAddress").value.trim();
     if (!addr) { placesStatus("주소 또는 검색할 장소명을 입력해주세요."); return; }
     if (!mapReady || !ps) { placesStatus("지도가 아직 준비되지 않았습니다. 잠시 후 다시 시도해 주세요."); return; }
     placesStatus("Kakao 지도로 검색 중...");
-    function pick(lat, lng, label) {
+    function pick(lat, lng) {
       $("placeLat").value = lat; $("placeLng").value = lng;
-      var pos = new kakao.maps.LatLng(lat, lng);
-      kakaoMap.setCenter(pos);
-      if (pickMarker) pickMarker.setMap(null);
-      pickMarker = new kakao.maps.Marker({ position: pos, map: kakaoMap });
-      if (label) { kakaoInfoWindow.setContent('<div class="kakao-overlay-iw">' + escapeHtml(label) + '</div>'); kakaoInfoWindow.open(kakaoMap, pickMarker); }
+      kakaoMap.setCenter(new kakao.maps.LatLng(lat, lng)); // 마커 없이 위치만 이동
     }
     ps.keywordSearch(addr, function (data, st) {
       if (st === kakao.maps.services.Status.OK) {
         var f = data[0];
         if (!$("placeName").value.trim()) $("placeName").value = f.place_name;
         $("placeAddress").value = f.road_address_name || f.address_name || addr;
-        pick(parseFloat(f.y), parseFloat(f.x), f.place_name);
+        pick(parseFloat(f.y), parseFloat(f.x));
         placesStatus("위치를 찾았습니다: " + f.place_name + " (" + (f.road_address_name || f.address_name) + ")");
       } else if (geocoder) {
         geocoder.addressSearch(addr, function (res, sg) {
-          if (sg === kakao.maps.services.Status.OK) { pick(parseFloat(res[0].y), parseFloat(res[0].x), null); placesStatus("주소 위치를 찾았습니다."); }
+          if (sg === kakao.maps.services.Status.OK) { pick(parseFloat(res[0].y), parseFloat(res[0].x)); placesStatus("주소 위치를 찾았습니다."); }
           else placesStatus("장소를 찾을 수 없습니다. 정확한 주소나 키워드로 다시 검색하거나 지도를 직접 클릭해 주세요.");
         });
       } else placesStatus("검색 서비스를 이용할 수 없습니다.");
@@ -1363,34 +1422,24 @@
   }
 
   async function loadSavedPlaces() {
-    if (!supabase) { placesStatus("Supabase 연결 설정이 없어 공유 장소를 불러올 수 없습니다. 페이지의 Supabase URL/anon key 설정을 확인하세요."); return; }
+    if (!supabase) { placesStatus("Supabase 연결 설정이 없어 공유 장소를 불러올 수 없습니다."); return; }
     var q = supabase.from("shared_places").select("id,category,name,address,memo,author_id,author_nickname,created_at,lat,lon").order("created_at", { ascending: false });
     if (selectedCategory !== "전체") q = q.eq("category", selectedCategory);
     var res, box = $("savedPlaces"); box.innerHTML = "";
     try { res = await q; } catch (err) { placesStatus("장소 불러오기 중 오류가 발생했습니다: " + (err && err.message ? err.message : String(err))); return; }
-    if (res.error) {
-      var msg = res.error.message || "알 수 없는 오류";
-      if (/shared_places|relation|does not exist|schema cache/i.test(msg)) {
-        placesStatus("장소 목록을 불러오지 못했습니다. Supabase에 shared_places 테이블이 없거나 API 스키마 갱신이 필요합니다. 제공된 shared_places_setup.sql을 SQL Editor에서 실행한 뒤 새로고침해 주세요. 상세 오류: " + msg);
-      } else if (/permission|policy|row-level security|rls/i.test(msg)) {
-        placesStatus("장소 조회 권한이 없습니다. Supabase에서 shared_places_setup.sql의 RLS 정책을 적용했는지 확인해 주세요. 상세 오류: " + msg);
-      } else {
-        placesStatus("장소 불러오기 실패: " + msg);
-      }
-      return;
-    }
+    if (res.error) { placesStatus("장소 불러오기 실패: " + (res.error.message || "알 수 없는 오류") + " (shared_places 테이블/RLS 설정을 확인해 주세요)"); return; }
     var data = res.data;
     placesStatus(data.length ? "" : "아직 저장된 장소가 없습니다. 첫 장소를 공유해 보세요!");
 
-    if (kakaoMap) { clearKakaoMarkers(); if (pickMarker) { pickMarker.setMap(null); pickMarker = null; } }
+    if (kakaoMap) clearKakaoMarkers();
     var bounds = (kakaoMap && window.kakao && kakao.maps) ? new kakao.maps.LatLngBounds() : null, hasCoords = false;
 
     data.forEach(function (p) {
-      var emoji = CAT_EMOJI[p.category] || "📌";
+      var emoji = CAT_EMOJI[p.category] || "📌", color = CAT_COLOR[p.category] || CAT_COLOR["기타"];
       var d = document.createElement("article"); d.className = "saved-place";
       var url = (p.lat != null && p.lon != null) ? "https://map.kakao.com/link/map/" + encodeURIComponent(p.name) + "," + p.lat + "," + p.lon : "https://map.kakao.com/link/search/" + encodeURIComponent(p.name);
       var canDelete = (window.__dripCurrentUser && window.__dripCurrentUser.id === p.author_id) || window.__dripIsAdmin;
-      d.innerHTML = '<strong>' + emoji + ' ' + escapeHtml(p.name) + ' <span class="dept">' + escapeHtml(p.category) + '</span></strong><div class="place-address"><b>주소명</b> · ' + escapeHtml(p.address || "주소 미등록") + '</div><div class="place-author"><b>작성자</b> · ' + escapeHtml(p.author_nickname || "회원") + ' · ' + new Date(p.created_at).toLocaleDateString("ko-KR") + '</div><p class="place-memo"><b>작성자의 메모</b><br>' + escapeHtml(p.memo || "등록된 메모가 없습니다.") + '</p><div class="place-actions"><a href="' + url + '" target="_blank" rel="noopener">Kakao 지도에서 보기/길찾기 ↗</a>' + (canDelete ? ' <button data-place-delete type="button">삭제</button>' : '') + '</div>';
+      d.innerHTML = '<strong><span class="cat-dot" style="background:' + color + '"></span>' + emoji + ' ' + escapeHtml(p.name) + ' <span class="dept">' + escapeHtml(p.category) + '</span></strong><div class="place-address"><b>주소</b> · ' + escapeHtml(p.address || "주소 미등록") + '</div><div class="place-author"><b>작성자</b> · ' + escapeHtml(p.author_nickname || "회원") + ' · ' + new Date(p.created_at).toLocaleDateString("ko-KR") + '</div><p class="place-memo"><b>메모</b><br>' + escapeHtml(p.memo || "등록된 메모가 없습니다.") + '</p><div class="place-actions"><a href="' + url + '" target="_blank" rel="noopener">Kakao 지도에서 보기/길찾기 ↗</a>' + (canDelete ? ' <button data-place-delete type="button">삭제</button>' : '') + '</div>';
       box.appendChild(d);
 
       var del = d.querySelector("[data-place-delete]");
@@ -1403,17 +1452,13 @@
 
       if (kakaoMap && p.lat != null && p.lon != null) {
         var pos = new kakao.maps.LatLng(p.lat, p.lon);
-        var marker = new kakao.maps.Marker({ position: pos, map: kakaoMap, title: p.name });
+        var marker = new kakao.maps.Marker({ position: pos, map: kakaoMap, title: p.name, image: pinImage(p.category) });
         kakaoMarkers.push(marker); hasCoords = true; if (bounds) bounds.extend(pos);
-        var openInfo = function () {
-          kakaoInfoWindow.setContent('<div class="kakao-overlay-iw">' + emoji + ' <b>' + escapeHtml(p.name) + '</b><br><span style="font-size:11px;color:#666;">' + escapeHtml(p.address) + '</span></div>');
-          kakaoInfoWindow.open(kakaoMap, marker);
-        };
-        kakao.maps.event.addListener(marker, "click", openInfo);
-        d.style.cursor = "pointer";
+        kakao.maps.event.addListener(marker, "click", function () { openPinOverlay(p, pos); });
         d.addEventListener("click", function (ev) {
           if (ev.target.closest("a,button")) return;
-          kakaoMap.setLevel(3); kakaoMap.panTo(pos); openInfo();
+          kakaoMap.setLevel(3); kakaoMap.panTo(pos); openPinOverlay(p, pos);
+          $("placesMap").scrollIntoView({ behavior: "smooth", block: "center" });
         });
       }
     });
