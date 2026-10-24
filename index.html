@@ -1116,12 +1116,13 @@
     </div>
   </section>
   <section id="fortuneView" hidden class="community-panel">
-    <div class="head"><div><h2 class="title">🔮 오늘의 사주</h2><p class="sub">UN7 운세 API로 오늘의 운세를 조회합니다.</p></div><button class="btn small" data-home type="button">← 메인으로</button></div>
+    <div class="head"><div><h2 class="title">🔮 오늘의 사주</h2><p class="sub">SAZU 사주 API로 오늘의 운세를 조회합니다.</p></div><button class="btn small" data-home type="button">← 메인으로</button></div>
     <form id="fortuneForm" class="community-post" style="display:grid;gap:12px">
       <p style="margin:0">생년월일과 태어난 시간을 입력해 주세요. 입력값은 사주 해석 요청에만 사용하며 이 웹페이지의 DB에 저장하지 않습니다.</p>
-      <small style="display:block">개인정보 안내: 생년월일·태어난 시간은 UN7 운세 API 조회를 위해 서버 함수로 전송된 뒤 UN7 서비스에 전달됩니다. 이 웹페이지의 데이터베이스나 브라우저 저장소에는 입력값을 저장하지 않습니다. 외부 서비스의 데이터 처리·보관 방식은 UN7 정책을 확인해 주세요.</small>
+      <small style="display:block">개인정보 안내: 생년월일·태어난 시간·성별은 서버 함수로 전송된 뒤 SAZU 서비스에 전달됩니다. 이 웹페이지의 데이터베이스나 브라우저 저장소에는 입력값을 저장하지 않습니다. 외부 서비스의 데이터 처리·보관 방식은 SAZU 정책을 확인해 주세요.</small>
       <label for="fortuneBirthDate">생년월일</label><input id="fortuneBirthDate" type="date" required>
       <label for="fortuneBirthHour">태어난 시간</label><select id="fortuneBirthHour"><option value="12">모름 (정오 기준)</option><option value="0">00시</option><option value="1">01시</option><option value="2">02시</option><option value="3">03시</option><option value="4">04시</option><option value="5">05시</option><option value="6">06시</option><option value="7">07시</option><option value="8">08시</option><option value="9">09시</option><option value="10">10시</option><option value="11">11시</option><option value="12">12시</option><option value="13">13시</option><option value="14">14시</option><option value="15">15시</option><option value="16">16시</option><option value="17">17시</option><option value="18">18시</option><option value="19">19시</option><option value="20">20시</option><option value="21">21시</option><option value="22">22시</option><option value="23">23시</option></select>
+      <label for="fortuneGender">성별</label><select id="fortuneGender"><option value="male">남성</option><option value="female">여성</option><option value="unknown">선택 안 함(남성 기준으로 조회)</option></select>
       <label style="display:flex;align-items:center;gap:8px"><input id="fortuneIsLunar" type="checkbox" style="width:auto;min-height:0"> 음력 생일입니다</label>
       <button class="btn coral" id="fortuneButton" type="submit">오늘의 사주 보기</button>
       <div id="fortuneProgress" class="fortune-progress" hidden><div class="fortune-progress-top"><strong>🔮 사주를 해석하고 있어요</strong><span id="fortuneCountdown">남은 시간 60초</span></div><div class="fortune-progress-track"><div class="fortune-progress-bar"></div></div><p id="fortuneProgressHint">입력한 정보를 바탕으로 오늘의 운세를 정리하고 있습니다.</p></div>
@@ -1439,7 +1440,7 @@
   $("goPlaces").onclick = function () { showView("places"); initKakaoMap(); };
   Array.prototype.forEach.call(document.querySelectorAll("[data-home]"), function (b) { b.onclick = function () { showView("main"); }; });
 
-  // UN7 오늘의 운세 조회: API Key는 브라우저에 노출하지 않고 Supabase Edge Function에서 사용합니다.
+  // SAZU 오늘의 운세 조회: API Key는 브라우저에 노출하지 않고 Supabase Edge Function에서 사용합니다.
   // 생년월일/시간은 DB나 브라우저 저장소에 저장하지 않습니다.
   $("fortuneForm").addEventListener("submit", async function (event) {
     event.preventDefault();
@@ -1449,6 +1450,7 @@
     var birthDate = $("fortuneBirthDate").value;
     var birthHour = Number($("fortuneBirthHour").value);
     var isLunar = $("fortuneIsLunar").checked;
+    var isFemale = $("fortuneGender").value === "female";
     if (!/^\d{4}-\d{2}-\d{2}$/.test(birthDate) || !Number.isInteger(birthHour) || birthHour < 0 || birthHour > 23) {
       status.textContent = "생년월일과 태어난 시간을 확인해 주세요."; status.className = "community-status error"; return;
     }
@@ -1465,38 +1467,44 @@
     var countdownId = setInterval(function () {
       remaining = Math.max(0, remaining - 1);
       countdown.textContent = "남은 시간 " + remaining + "초";
-      if (remaining <= 12) progressHint.textContent = "UN7 운세 API에서 결과를 가져오고 있습니다.";
+      if (remaining <= 12) progressHint.textContent = "SAZU 운세 API에서 결과를 가져오고 있습니다.";
       if (remaining <= 5) progressHint.textContent = "응답이 늦어지고 있어요. 연결 상태를 확인해 주세요.";
     }, 1000);
     progress.hidden = false; button.disabled = true; button.textContent = "운세 조회 중…";
-    status.textContent = "UN7 운세 API에 조회를 요청하고 있습니다."; status.className = "community-status";
+    status.textContent = "SAZU 운세 API에 조회를 요청하고 있습니다."; status.className = "community-status";
     try {
-      var response = await fetch(SUPABASE_URL + "/functions/v1/un7-fortune", {
+      var response = await fetch(SUPABASE_URL + "/functions/v1/sazu-fortune", {
         method: "POST", signal: fortuneAbortController.signal,
         headers: { "Content-Type": "application/json", "apikey": SUPABASE_ANON_KEY, "Authorization": "Bearer " + SUPABASE_ANON_KEY },
-        body: JSON.stringify({ birthDate: birthDate, birthHour: birthHour, isLunar: isLunar, targetDate: targetDate })
+        body: JSON.stringify({ birthDate: birthDate, birthHour: birthHour, isLunar: isLunar, isFemale: isFemale, targetDate: targetDate })
       });
       var payload = await response.json().catch(function () { return {}; });
       if (!response.ok || !payload.success || !payload.data || typeof payload.data !== "object") {
         throw new Error(payload.error || "운세 조회에 실패했습니다. UN7 운영용 API Key와 Edge Function 배포 상태를 확인해 주세요.");
       }
-      var entries = Object.keys(payload.data).map(function (key) { return { key: key, item: payload.data[key] }; })
-        .filter(function (entry) { return entry.item && typeof entry.item === "object"; })
+      var resultObject = payload.data.modules && typeof payload.data.modules === "object" ? payload.data.modules : payload.data;
+      var entries = Object.keys(resultObject).map(function (key) { return { key: key, item: resultObject[key] }; })
+        .filter(function (entry) { return entry.item != null; })
         .sort(function (a, b) { return (Number((a.key.match(/\d+/) || ["999"])[0])) - (Number((b.key.match(/\d+/) || ["999"])[0])); });
-      if (!entries.length) throw new Error("UN7에서 운세 결과를 반환하지 않았습니다.");
+      if (!entries.length) throw new Error("SAZU에서 운세 결과를 반환하지 않았습니다.");
       var card = el("article", "community-post"); card.style.margin = "12px 0";
       var heading = el("h3", "", "✨ 오늘의 사주 한눈에 보기"); heading.style.marginTop = "0"; card.appendChild(heading);
       var resultDate = payload.targetDate || targetDate;
-      var intro = el("p", "fortune-result-note", resultDate + " · UN7 운세 API 결과입니다. 운세는 참고용으로 확인해 주세요."); card.appendChild(intro);
+      var intro = el("p", "fortune-result-note", resultDate + " · SAZU 운세 API 결과입니다. 운세는 참고용으로 확인해 주세요."); card.appendChild(intro);
       var grid = el("div", "fortune-result-grid");
       entries.forEach(function (entry, idx) {
         var data = entry.item;
-        var title = String(data.title || entry.key || "오늘의 운세");
+        var title = String((data && typeof data === "object" && (data.title || data.name)) || entry.key || "오늘의 운세");
         var descriptions = [];
-        if (data.description) descriptions.push(String(data.description));
-        if (data.summary && data.summary !== data.description) descriptions.push("요약: " + String(data.summary));
-        if (data.maleDescription) descriptions.push("남성: " + String(data.maleDescription));
-        if (data.femaleDescription) descriptions.push("여성: " + String(data.femaleDescription));
+        if (typeof data === "string" || typeof data === "number" || typeof data === "boolean") descriptions.push(String(data));
+        if (data && typeof data === "object") {
+          if (data.description) descriptions.push(String(data.description));
+          if (data.text) descriptions.push(String(data.text));
+          if (data.summary && data.summary !== data.description) descriptions.push("요약: " + String(data.summary));
+          if (data.maleDescription) descriptions.push("남성: " + String(data.maleDescription));
+          if (data.femaleDescription) descriptions.push("여성: " + String(data.femaleDescription));
+          if (!descriptions.length) descriptions.push(JSON.stringify(data, null, 2));
+        }
         var description = descriptions.join("\n\n") || "상세 설명이 제공되지 않았습니다.";
         var section = el("section", "fortune-result-card" + (idx === 0 ? " fortune-featured" : ""));
         section.appendChild(el("h4", "", title));
@@ -1504,7 +1512,7 @@
         grid.appendChild(section);
       });
       card.appendChild(grid); result.appendChild(card);
-      status.textContent = "UN7 운세 API에서 오늘의 운세를 불러왔습니다."; status.className = "community-status ok";
+      status.textContent = "SAZU 운세 API에서 오늘의 운세를 불러왔습니다."; status.className = "community-status ok";
     } catch (error) {
       status.textContent = error && error.name === "AbortError"
         ? "운세 조회 시간이 초과되었습니다. 잠시 후 다시 시도해 주세요."
