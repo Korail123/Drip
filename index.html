@@ -46,18 +46,16 @@
 
   /* 로그인 / 회원가입 */
   .site-title { width:100%; margin:12px auto 18px; text-align:center; color:#000; font-family:var(--font-display); font-size:clamp(22px,4.5vw,38px); line-height:1.25; font-weight:900; letter-spacing:-.045em; white-space:normal; overflow-wrap:anywhere; }
-  .auth-card { width:min(100%,520px); margin:10px auto 22px; padding:28px; background:#fff; border:0; border-radius:26px; box-shadow:0 5px 22px rgba(20,48,70,.10); }
-  .auth-card h2 { color:#111; margin:0 0 8px; font-family:var(--font-display); font-size:28px; font-weight:900; letter-spacing:-.04em; }
-  .auth-help { margin:0 0 18px; color:var(--muted); font-size:13px; }
-  .auth-card label { display:block; margin:12px 0 6px; font-weight:800; font-size:13px; }
+  .auth-card { width:min(100%,520px); margin:10px auto 22px; padding:22px; background:#fff; border:3px solid var(--ink); border-radius:22px; box-shadow:6px 6px 0 var(--ink); }
+  .auth-card h2 { color:#111; margin:0 0 5px; font-family:var(--font-display); font-size:28px; }
+  .auth-help { margin:0 0 16px; color:var(--muted); font-size:13px; }
+  .auth-card label { display:block; margin:12px 0 5px; font-weight:800; }
   .remember-row { display:flex !important; align-items:center; gap:9px; margin:12px 0 2px !important; font-size:14px; cursor:pointer; }
   .auth-card input.remember-checkbox { width:19px; min-height:19px; height:19px; margin:0; accent-color:#167a55; }
-  .auth-card input:not(.remember-checkbox) { display:block; width:100%; min-height:46px; border:1px solid #d5e2eb; border-radius:14px; padding:11px 13px; background:#fbfdff; color:#15314b; box-sizing:border-box; font:inherit; }
-  .auth-card input:not(.remember-checkbox):focus { outline:2px solid #8bd7e7; outline-offset:1px; }
+  .auth-card input { width:100%; min-height:48px; border:2px solid var(--ink); border-radius:12px; padding:10px 12px; background:#fffdf8; }
   .auth-actions { display:grid; gap:10px; margin-top:16px; }
-  .auth-primary,.auth-secondary { min-height:48px; border:1px solid #d4e4ed; border-radius:14px; font-family:var(--font-display); font-size:16px; font-weight:800; box-shadow:none; }
-  .auth-primary { color:#fff; background:linear-gradient(105deg,#00b5a3,#1195d1); } .auth-secondary { color:#176da5; background:#e8f4fb; }
-  .auth-note { margin:28px 0 0; color:var(--muted); font-size:12px; line-height:1.6; }
+  .auth-primary,.auth-secondary { min-height:48px; border:2.5px solid var(--ink); border-radius:13px; font-family:var(--font-display); font-size:18px; box-shadow:3px 3px 0 var(--ink); }
+  .auth-primary { background:#b8f1d6; } .auth-secondary { background:#ffe8ee; }
   .auth-status { margin-top:12px; min-height:1.5em; font-size:13px; font-weight:700; color:var(--muted); overflow-wrap:anywhere; }
   .auth-status.error { color:#c52843; } .auth-status.ok { color:#08734c; }
   .auth-topline { display:flex; justify-content:space-between; align-items:center; gap:10px; margin:4px auto 12px; max-width:720px; }
@@ -910,198 +908,28 @@
   #mainView > .du-extracted-brand{display:none!important}.main-brand-banner{display:none!important}
   @media(max-width:520px){.home-under-card-brand{width:min(76%,260px);margin:10px auto 18px}.home-under-card-brand img{max-height:76px}}
 
+
+  /* ===== 카카오톡 채팅 순위 ===== */
+  .chat-rank-panel{max-width:980px;margin:0 auto;padding-bottom:30px}
+  .chat-rank-tools{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin:14px 0}
+  .chat-rank-tools button,.chat-rank-tools label{display:inline-flex;align-items:center;justify-content:center;gap:7px;border:2px solid var(--ink);border-radius:12px;padding:10px 13px;font-weight:800;background:#fff;box-shadow:2px 2px 0 var(--ink);cursor:pointer}
+  .chat-rank-tools .primary{background:var(--gold,#ffe07a)}
+  .chat-rank-tools input[type=file]{max-width:100%;font-size:12px}
+  .chat-rank-status{padding:11px 13px;border-radius:12px;background:#f4f7fb;color:#334155;font-size:13px;line-height:1.55;margin:10px 0}
+  .chat-rank-status.error{background:#fff0f0;color:#a32626}.chat-rank-status.ok{background:#eaf8ef;color:#17643a}
+  .chat-rank-switch{display:flex;gap:8px;margin:14px 0;flex-wrap:wrap}
+  .chat-rank-switch button{flex:1;min-width:110px;border:2px solid var(--ink);border-radius:12px;padding:11px;background:#fff;font-weight:850;cursor:pointer}
+  .chat-rank-switch button.active{background:var(--gold,#ffe07a);box-shadow:2px 2px 0 var(--ink)}
+  .chat-rank-columns{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+  .chat-rank-card{background:#fff;border:2px solid var(--ink);border-radius:16px;overflow:hidden;box-shadow:3px 3px 0 var(--ink);min-width:0}
+  .chat-rank-card h3{margin:0;padding:14px;background:#f8f3dc;border-bottom:2px solid var(--ink);font-size:16px}
+  .chat-rank-card.quiet h3{background:#eaf2fa}
+  .chat-rank-row{display:grid;grid-template-columns:28px minmax(0,1fr) auto;gap:9px;align-items:center;padding:10px 12px;border-bottom:1px solid #e7e7e7}
+  .chat-rank-row:last-child{border-bottom:0}.chat-rank-place{font-weight:900;text-align:center}.chat-rank-name{font-weight:800;overflow-wrap:anywhere}.chat-rank-count{font-size:12px;color:#536273;white-space:nowrap}
+  .chat-rank-empty{padding:20px 14px;color:#64748b;font-size:13px;line-height:1.6}
+  @media(max-width:620px){.chat-rank-columns{grid-template-columns:1fr}.chat-rank-tools{align-items:stretch}.chat-rank-tools>*{width:100%;box-sizing:border-box}.chat-rank-tools input[type=file]{width:100%}}
+
 </style>
-
-<style id="login-signup-ui-match">
-/* 로그인 화면을 회원가입 화면과 동일한 색상·글꼴·간격으로 통일 */
-#loginForm { font-family: inherit; }
-#loginForm label { color:#17324b; font-family:inherit; font-weight:800; }
-#loginForm input:not(.remember-checkbox) {
-  width:100%; min-height:46px; box-sizing:border-box;
-  border:1px solid #d5e2eb; border-radius:14px;
-  padding:11px 13px; background:#fbfdff; color:#15314b;
-  font-family:inherit; font-size:14px;
-}
-#loginForm input:not(.remember-checkbox)::placeholder { color:#7890a7; opacity:1; }
-#loginForm input:not(.remember-checkbox):focus { outline:2px solid #8bd7e7; outline-offset:1px; }
-#loginTitle { color:#111; font-family:var(--font-display); font-size:28px; font-weight:900; letter-spacing:-.04em; }
-#loginTitle .mark { color:inherit; }
-#loginForm .auth-actions { display:grid; gap:10px; margin-top:16px; }
-#loginForm .auth-primary, #loginForm .auth-secondary {
-  width:100%; min-height:48px; border:1px solid #d4e4ed; border-radius:14px;
-  font-family:var(--font-display); font-size:16px; font-weight:800; box-shadow:none;
-}
-#loginForm .auth-primary { color:#fff; background:linear-gradient(105deg,#00b5a3,#1195d1); }
-#loginForm .auth-secondary { color:#176da5; background:#e8f4fb; }
-#loginForm + .auth-note { color:var(--muted); font-family:inherit; font-size:12px; line-height:1.6; }
-@media(max-width:520px) { #loginTitle { font-size:25px; } }
-</style>
-
-
-<style id="login-match-signup-final">
-/* 로그인 카드를 회원가입 카드와 동일한 테마로 통일 */
-#loginCard.auth-card{
-  width:min(100%,520px)!important;
-  margin:10px auto 22px!important;
-  padding:28px!important;
-  background:#fff!important;
-  border:0!important;
-  border-radius:26px!important;
-  box-shadow:0 5px 22px rgba(20,48,70,.10)!important;
-  color:#102f55!important;
-  box-sizing:border-box!important;
-}
-#loginCard .login-brand-banner{
-  width:100%!important; max-width:100%!important;
-  margin:0 auto 18px!important;
-  border:0!important; border-radius:0!important;
-  background:transparent!important; box-shadow:none!important;
-}
-#loginCard .login-brand-banner img{display:block!important;width:100%!important;height:auto!important}
-#loginCard h2#loginTitle{
-  color:#111!important; margin:0 0 8px!important;
-  font-family:var(--font-display)!important;font-size:28px!important;
-  font-weight:900!important;letter-spacing:-.04em!important;
-}
-#loginCard h2#loginTitle .mark{
-  background:linear-gradient(transparent 62%,#bceafa 62%)!important;
-  color:#111!important;
-}
-#loginCard .auth-help{
-  margin:0 0 18px!important;padding:0 0 0!important;
-  border:0!important;color:var(--muted)!important;
-  font-family:inherit!important;font-size:13px!important;line-height:1.6!important;
-}
-#loginCard label{
-  display:block!important;margin:12px 0 6px!important;
-  color:#17324b!important;font-family:inherit!important;font-size:13px!important;font-weight:800!important;
-}
-#loginCard input:not([type="checkbox"]){
-  width:100%!important;min-height:46px!important;box-sizing:border-box!important;
-  border:1px solid #d5e2eb!important;border-radius:14px!important;
-  padding:11px 13px!important;background:#fbfdff!important;color:#15314b!important;
-  font-family:inherit!important;font-size:14px!important;box-shadow:none!important;
-}
-#loginCard input:not([type="checkbox"])::placeholder{color:#7890a7!important;opacity:1!important}
-#loginCard input:not([type="checkbox"]):focus{outline:2px solid #8bd7e7!important;outline-offset:1px!important}
-#loginCard .auth-actions{display:grid!important;gap:10px!important;margin-top:16px!important}
-#loginCard .auth-actions button,
-#loginCard button[type="submit"],#loginCard #loginBtn,#loginCard .auth-primary{
-  width:100%!important;min-height:48px!important;margin:0!important;
-  border:1px solid #d4e4ed!important;border-radius:14px!important;
-  font-family:var(--font-display)!important;font-size:16px!important;font-weight:800!important;
-  box-shadow:none!important;
-}
-#loginCard button[type="submit"],#loginCard #loginBtn,#loginCard .auth-primary{
-  color:#fff!important;background:linear-gradient(105deg,#00b5a3,#1195d1)!important;border-color:transparent!important;
-}
-#loginCard #openSignup,#loginCard .auth-secondary#openSignup{
-  color:#176da5!important;background:#e8f4fb!important;border:1px solid #d4e4ed!important;
-}
-#loginCard .auth-note{
-  margin-top:18px!important;color:var(--muted)!important;
-  font-family:inherit!important;font-size:12px!important;line-height:1.6!important;
-}
-#loginCard::after{content:none!important}
-@media(max-width:520px){
- #loginCard.auth-card{width:calc(100% - 28px)!important;padding:22px!important;margin:10px auto 22px!important}
- #loginCard .login-brand-banner{margin-bottom:16px!important}
- #loginCard h2#loginTitle{font-size:26px!important}
-}
-</style>
-
-
-<style id="mobile-one-line-layout-fix">
-/* 모바일에서 한 줄 정렬 + 내용/하단 메뉴 겹침 방지 */
-@media (max-width: 600px) {
-  html { -webkit-text-size-adjust: 100%; }
-  body { overflow-x: hidden; }
-  /* 공통 버튼/탭/옵션은 줄바꿈 대신 폭과 글자 크기를 화면에 맞춤 */
-  button, .btn, [role="button"], .tab, .nav-item, .menu-item {
-    min-width: 0;
-    max-width: 100%;
-    overflow-wrap: normal;
-    word-break: keep-all;
-  }
-  /* 하단 고정 메뉴는 항상 5개 항목 한 줄 유지 */
-  .bottom-nav, .fixed-bottom-nav, .app-bottom-nav, #bottomNav, #bottom-nav, .mobile-bottom-nav {
-    display: grid !important;
-    grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
-    align-items: center;
-    gap: 0 !important;
-    width: 100%;
-    box-sizing: border-box;
-    padding-left: 3px !important;
-    padding-right: 3px !important;
-    padding-bottom: env(safe-area-inset-bottom, 0px);
-  }
-  .bottom-nav a, .bottom-nav button,
-  .fixed-bottom-nav a, .fixed-bottom-nav button,
-  .app-bottom-nav a, .app-bottom-nav button,
-  #bottomNav a, #bottomNav button, #bottom-nav a, #bottom-nav button,
-  .mobile-bottom-nav a, .mobile-bottom-nav button {
-    min-width: 0 !important;
-    width: 100%;
-    padding: 5px 1px !important;
-    margin: 0 !important;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 3px;
-    white-space: nowrap !important;
-    font-size: clamp(9px, 2.55vw, 12px) !important;
-    line-height: 1.15 !important;
-    box-sizing: border-box;
-  }
-  .bottom-nav svg, .fixed-bottom-nav svg, .app-bottom-nav svg,
-  #bottomNav svg, #bottom-nav svg, .mobile-bottom-nav svg {
-    width: 17px !important;
-    height: 17px !important;
-    flex: 0 0 auto;
-  }
-  /* 하단 메뉴에 본문이 가리지 않도록 스크롤 영역에 여유 공간 */
-  main, #app, .app, .page, .page-content, .main-content, .content, .view {
-    scroll-margin-bottom: 100px;
-  }
-  body { padding-bottom: calc(78px + env(safe-area-inset-bottom, 0px)); }
-  /* 옵션 선택 영역은 한 줄로 가로 스크롤 */
-  .options, .option-list, .option-grid, .choice-list, .character-options,
-  .avatar-options, .student-card-options, [data-options] {
-    min-width: 0;
-  }
-  .options.horizontal, .option-list.horizontal, .character-options,
-  .avatar-options, .student-card-options {
-    display: flex;
-    flex-wrap: nowrap !important;
-    overflow-x: auto;
-    overscroll-behavior-x: contain;
-    -webkit-overflow-scrolling: touch;
-  }
-  /* 제목/탭 라벨이 두 줄로 늘어나 레이아웃을 밀지 않게 처리 */
-  .section-title, .page-title, .tab, .nav-label {
-    min-width: 0;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    overflow: hidden;
-  }
-}
-</style>
-
-<style id="explore-rating-top3-style">
-.explore-rankings{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:14px 0 18px}
-.explore-rank-card{min-width:0;border:1px solid #dce7ee;border-radius:16px;padding:14px;background:#fff;box-shadow:0 4px 14px rgba(32,43,69,.05)}
-.explore-rank-low{background:linear-gradient(145deg,#fff9f6,#fff)}.explore-rank-high{background:linear-gradient(145deg,#f1fbf8,#fff)}
-.explore-rank-card h3{margin:0;font-size:15px;line-height:1.35;color:#183b56}.explore-rank-note{margin:4px 0 10px;color:#70818d;font-size:11px}
-.explore-rank-card ol{margin:0;padding:0;list-style:none;display:grid;gap:7px}
-.explore-rank-item{display:flex;align-items:center;gap:8px;width:100%;min-width:0;text-align:left;border:1px solid #e3eaf0;border-radius:10px;background:rgba(255,255,255,.9);padding:8px 9px;cursor:pointer;color:#183b56}
-.explore-rank-number{flex:0 0 21px;width:21px;height:21px;display:grid;place-items:center;border-radius:7px;background:#e8f1f7;font-size:11px;font-weight:900}
-.explore-rank-low .explore-rank-number{background:#fff0e8;color:#a54f29}.explore-rank-high .explore-rank-number{background:#dff7ed;color:#087c65}
-.explore-rank-name{min-width:0;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:12px;font-weight:800}
-.explore-rank-score{flex:0 0 auto;font-size:12px;font-weight:900;color:#a96d00;white-space:nowrap}.explore-rank-empty{list-style:none;color:#788995;font-size:12px;padding:8px 0}
-@media(max-width:480px){.explore-rankings{gap:7px;margin:10px 0 14px}.explore-rank-card{padding:10px 8px;border-radius:12px}.explore-rank-card h3{font-size:12px;letter-spacing:-.03em}.explore-rank-note{font-size:10px}.explore-rank-card ol{gap:5px}.explore-rank-item{gap:5px;padding:7px 5px}.explore-rank-number{width:18px;height:18px;flex-basis:18px;font-size:10px}.explore-rank-name,.explore-rank-score{font-size:10px}}
-</style>
-
 </head>
 <body>
 <header id="topBar" aria-label="현재 시각과 오늘 날씨">
@@ -1148,12 +976,12 @@
     <nav id="mainNav" class="nav-grid" aria-label="메인 메뉴" hidden>
       <button class="nav-btn" id="goNotice" type="button"><span class="ni"><svg class="ico" viewBox="0 0 40 40" aria-hidden="true"><path d="M7 16h6l12-6v20l-12-6H7z"/><path d="M13 24l2 8h4l-2-7.5"/><path class="ac" d="M29 15c2.5 2 2.5 8 0 10M32 12c4.5 4 4.5 12 0 16"/></svg></span><span class="nl">공지사항</span></button>
       <button class="nav-btn" id="goBoard" type="button"><span class="ni"><svg class="ico" viewBox="0 0 40 40" aria-hidden="true"><path d="M6 8h20a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H15l-6 5v-5H6a2 2 0 0 1-2-2V10a2 2 0 0 1 2-2z"/><path d="M10 15.5h.01M16 15.5h.01M22 15.5h.01" stroke-width="2.4"/><path class="ac" d="M31 15h2a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-1v4l-5-4h-8"/></svg></span><span class="nl">수다게시판</span></button>
-      <button class="nav-btn" id="goAuthBoard" type="button"><span class="ni"><svg class="ico" viewBox="0 0 40 40" aria-hidden="true"><path d="M7 9h26v22H7z"/><path d="M12 24l5-6 4 4 4-7 4 9"/><circle class="ac" cx="13" cy="14" r="2"/></svg></span><span class="nl">인증게시판</span></button>
       <button class="nav-btn" id="goStudentId" type="button"><span class="ni"><svg class="ico" viewBox="0 0 40 40" aria-hidden="true"><rect x="5" y="8" width="30" height="24" rx="3"/><circle cx="14" cy="18" r="3.2"/><path d="M9 27c0-3 2.5-4.5 5-4.5s5 1.5 5 4.5"/><path class="ac" d="M23 16h8M23 21h8M23 26h5"/></svg></span><span class="nl">학생증 만들기</span></button>
       <button class="nav-btn" id="goGames" type="button"><span class="ni"><svg class="ico" viewBox="0 0 40 40" aria-hidden="true"><path d="M11 12h18a6 6 0 0 1 6 6l1.5 8a3.5 3.5 0 0 1-6 2.5L27 25H13l-3.5 3.5a3.5 3.5 0 0 1-6-2.5L5 18a6 6 0 0 1 6-6z"/><path class="ac" d="M13 16v5M10.5 18.5h5"/><circle class="ac" cx="26" cy="17.5" r="1.3"/><circle class="ac" cx="30" cy="20.5" r="1.3"/></svg></span><span class="nl">미니게임</span></button>
       <button class="nav-btn" id="goFortune" type="button"><span class="ni"><svg class="ico" viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="17" r="10"/><path d="M12 34h16l-2.5-6h-11z"/><path class="ac" d="M20 11v4M18 13h4M14 18a6 6 0 0 1 3-4.5"/></svg></span><span class="nl">오늘의 사주</span></button>
       <button class="nav-btn" id="goExplore" type="button"><span class="ni"><svg class="ico" viewBox="0 0 40 40" aria-hidden="true"><circle cx="16" cy="13" r="6"/><path d="M5 31c0-6 4.7-10 11-10s11 4 11 10"/><circle class="ac" cx="29" cy="26" r="7"/><path class="ac" d="M34 31l4 4M26 26h6M29 23v6"/></svg></span><span class="nl">타 학생 탐방하기</span></button>
       <button class="nav-btn" id="goPlaces" type="button"><span class="ni"><svg class="ico" viewBox="0 0 40 40" aria-hidden="true"><path d="M8 15h20v9a8 8 0 0 1-8 8h-4a8 8 0 0 1-8-8z"/><path d="M28 18h3a3.5 3.5 0 0 1 0 7h-3.5"/><path d="M10 36h18"/><path class="ac" d="M14 6v5M20 5v6M26 6v5"/></svg></span><span class="nl">맛집/카페</span></button>
+      <button class="nav-btn" id="goChatRank" type="button"><span class="ni"><svg class="ico" viewBox="0 0 40 40" aria-hidden="true"><path d="M6 7h28v20H19l-8 6v-6H6z"/><path class="ac" d="M12 14h16M12 19h11"/><circle cx="29" cy="29" r="6"/><path d="M29 25v4l2 1"/></svg></span><span class="nl">채팅 순위</span></button>
       <button class="nav-btn" id="goSuggest" type="button"><span class="ni"><svg class="ico" viewBox="0 0 40 40" aria-hidden="true"><path d="M20 5a9 9 0 0 0-5 16.5V26h10v-4.5A9 9 0 0 0 20 5z"/><path d="M15.5 30h9M17 34h6"/><path class="ac" d="M20 10a5 5 0 0 0-3.5 1.5M20 14v6"/></svg></span><span class="nl">건의사항</span></button>
     </nav>
     <section id="homeNotice" class="home-notice" aria-label="공지사항 미리보기">
@@ -1175,15 +1003,13 @@
       
 
 
-      <h2 id="loginTitle"><span class="mark">로그인</span></h2><p class="auth-help">가입할 때 사용한 닉네임을 입력하면 로그인할 수 있어요.</p>
+      <h2 id="loginTitle"><span class="mark">로그인</span></h2><p class="auth-help">카카오톡 오픈채팅에서 사용하는 닉네임을 입력해 주세요.</p>
       <form id="loginForm" autocomplete="off">
-        <label for="loginNickname">닉네임</label>
-        <input id="loginNickname" aria-label="닉네임" name="nickname" maxlength="24" autocomplete="username" autocapitalize="off" spellcheck="false" placeholder="가입한 닉네임을 입력해 주세요" required>
-        <label class="remember-row" for="rememberLogin" style="display:none !important"><input class="remember-checkbox" id="rememberLogin" type="checkbox" checked> 자동 로그인</label>
-        <div class="auth-actions"><button class="auth-primary" type="submit">로그인하기</button><button class="auth-secondary" id="openSignup" type="button">회원가입</button></div>
+        <div class="lrow"><span class="lic" aria-hidden="true">👤</span><input id="loginNickname" aria-label="닉네임" name="nickname" maxlength="24" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="등록한 닉네임" required></div>
+        <label class="remember-row" for="rememberLogin"><input class="remember-checkbox" id="rememberLogin" type="checkbox" checked> 자동 로그인</label>
+        <div class="auth-actions"><button class="auth-primary" type="submit">로그인</button><button class="auth-secondary" id="openSignup" type="button">회원가입</button></div>
         <div id="loginStatus" class="auth-status" role="status" aria-live="polite"></div>
       </form>
-      <p class="auth-note">회원가입 시 인증번호를 입력하며, 로그인 화면에서는 닉네임만 입력합니다.</p>
     </section>
 
   </main>
@@ -1241,14 +1067,6 @@
     </div>
       <p>🎮 디스코드방은 게임을 함께 즐기기 위한 전용 공간입니다. 친목으로 인해 우리 채팅방 구성원이 소외되는 경우는 허용하지 않습니다.</p>
     </details>
-  </section>
-
-  <!-- ===== 인증게시판: 운동/식단 ===== -->
-  <section id="authBoardView" hidden class="community-panel" aria-labelledby="authBoardHead">
-    <div class="head"><div class="head-main"><h2 class="title" id="authBoardHead">🏅 인증게시판</h2><p class="sub">운동과 식단 기록을 사진과 함께 공유해요. 게시물은 Supabase에 저장되어 다른 기기에서도 동기화됩니다.</p></div><div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn small" id="authBoardBack" type="button">← 메인으로</button><button class="btn small coral" id="authBoardNew" type="button">인증글 작성</button></div></div>
-    <div class="auth-board-tabs" role="tablist" aria-label="인증게시판 카테고리"><button type="button" class="active" id="authCategoryExercise" data-auth-category="운동" role="tab" aria-selected="true">💪 운동 인증</button><button type="button" id="authCategoryDiet" data-auth-category="식단" role="tab" aria-selected="false">🥗 식단 인증</button></div>
-    <form id="authBoardComposer" class="community-form" hidden><h3 id="authBoardFormTitle">운동 인증글 작성</h3><label for="authBoardTitle">제목</label><input id="authBoardTitle" maxlength="120" placeholder="예: 오늘 하체 운동 완료!" required><label for="authBoardContent">인증 내용</label><textarea id="authBoardContent" maxlength="5000" rows="5" placeholder="운동 내용, 식단, 느낀 점 등을 적어주세요." required></textarea><label for="authBoardPhoto">사진 첨부 (JPG, PNG, WEBP / 최대 8MB)</label><input id="authBoardPhoto" type="file" accept="image/jpeg,image/png,image/webp"><div id="authBoardPhotoPreview"></div><div class="community-actions"><button type="submit" class="btn coral" id="authBoardSave">등록하기</button><button type="button" class="btn" id="authBoardCancel">취소</button></div><div id="authBoardFormStatus" class="community-status" role="status"></div></form>
-    <div id="authBoardFeed" aria-live="polite"></div><div id="authBoardStatus" class="community-status" role="status" aria-live="polite"></div>
   </section>
 
   <!-- ===== 학생증 / 사주 ===== -->
@@ -1341,6 +1159,21 @@
     </div>
   </section>
 
+  <!-- ===== 카카오톡 채팅 순위 ===== -->
+  <section id="chatRankView" hidden class="community-panel chat-rank-panel" aria-labelledby="chatRankTitle">
+    <div class="head"><div class="head-main"><h2 class="title" id="chatRankTitle">💬 채팅 순위</h2><p class="sub">카카오톡 대화 내보내기 TXT를 기준으로 주간·월간 메시지 수를 집계합니다.</p></div><button class="btn small" id="chatRankBack" type="button">← 메인으로</button></div>
+    <div class="card" style="padding:16px">
+      <div id="chatRankAdminTools" hidden>
+        <div class="chat-rank-tools"><label for="chatRankFile">📄 TXT 파일 선택 <input id="chatRankFile" type="file" accept=".txt,text/plain"></label><button class="primary" id="chatRankUpload" type="button">업로드 및 순위 갱신</button><button id="chatRankRefresh" type="button">↻ 순위 새로고침</button></div>
+        <p class="sub">운영자 계정에서만 업로드할 수 있습니다. 메시지 본문은 저장하지 않고, 중복 업로드는 메시지 지문으로 걸러냅니다.</p>
+      </div>
+      <div id="chatRankStatus" class="chat-rank-status" role="status" aria-live="polite">순위를 불러오는 중입니다.</div>
+      <div class="chat-rank-switch"><button class="active" data-chat-period="weekly" type="button">📅 주간 (월~일)</button><button data-chat-period="monthly" type="button">🗓️ 월간</button></div>
+      <div id="chatRankPeriodLabel" class="sub" style="margin:0 0 14px"></div>
+      <div class="chat-rank-columns"><section class="chat-rank-card"><h3>🔥 말 많은 사람 TOP10</h3><div id="chatRankTop"></div></section><section class="chat-rank-card quiet"><h3>🤫 말 없는 사람 WORST10</h3><div id="chatRankQuiet"></div></section></div>
+    </div>
+  </section>
+
   <!-- ===== 건의사항 게시판 ===== -->
   <section id="suggestView" hidden aria-labelledby="suggestHead" class="community-panel">
     <div class="head"><div class="head-main"><h2 class="title" id="suggestHead">💡 건의사항</h2><p class="sub">불편한 점, 바라는 점을 남겨 주세요. 🔒 비공개로 남기면 작성자와 운영진만 볼 수 있어요.</p></div><div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn small" data-home type="button">← 메인으로</button><button class="btn small coral" id="newSuggest" type="button">건의하기</button></div></div>
@@ -1364,16 +1197,6 @@
       </div>
       <div class="explore-header-actions"><button class="btn small" id="exploreRefresh" type="button">↻ 새로고침</button><button class="btn small" data-home type="button">← 메인으로</button></div>
     </div>
-    <section id="exploreRatingRankings" class="explore-rankings" aria-label="학생 평점 순위">
-      <div class="explore-rank-card explore-rank-low">
-        <h3>📉 평점 낮은 순 TOP 3</h3><p class="explore-rank-note">평가가 등록된 학생 기준</p>
-        <ol id="exploreLowestRank"><li class="explore-rank-empty">평가 정보를 불러오는 중…</li></ol>
-      </div>
-      <div class="explore-rank-card explore-rank-high">
-        <h3>🏆 평점 높은 순 TOP 3</h3><p class="explore-rank-note">평가가 등록된 학생 기준</p>
-        <ol id="exploreHighestRank"><li class="explore-rank-empty">평가 정보를 불러오는 중…</li></ol>
-      </div>
-    </section>
     <div id="exploreStatus" class="community-status" role="status" aria-live="polite">학생증을 불러올 준비가 되었어요.</div>
     <div class="card explore-directory">
       <div class="explore-directory-top"><div><h3>🎓 드립대학 학생들</h3><p>학생증을 저장한 회원이 표시됩니다. 검색해서 친구를 찾아보세요.</p></div><span class="explore-count" id="exploreCount">0명</span></div>
@@ -1470,13 +1293,8 @@
     </div>
   </div>
 
-<div id="welcomeGuestbookModal" class="welcome-modal" hidden role="presentation"><div class="welcome-dialog" role="dialog" aria-modal="true" aria-labelledby="welcomeGuestbookTitle"><div class="welcome-emoji">🎉</div><h2 id="welcomeGuestbookTitle">가입을 축하합니다!</h2><p>학생증 만들기를 완료하셨네요.<br>다른 학우들에게 첫인사를 남겨 보세요 😊</p><button type="button" id="welcomeGuestbookGo" class="btn coral">📖 방명록 쓰러가기</button><button type="button" id="welcomeGuestbookClose" class="welcome-close">나중에 할게요</button></div></div>
-
 <div class="toast" id="toast" role="status" hidden></div>
 
-<style>
-.auth-board-tabs{display:flex;gap:9px;margin:8px 0 16px}.auth-board-tabs button{flex:1;border:1px solid #d8e2ee;border-radius:13px;background:#fff;padding:12px 10px;font-weight:800;color:#31415f}.auth-board-tabs button.active{background:#173f6b;color:#fff;border-color:#173f6b}.auth-board-item{background:#fff;border:1px solid #e2e7f0;border-radius:16px;padding:15px;margin:12px 0;box-shadow:0 4px 14px rgba(32,43,69,.05)}.auth-board-item h3{margin:0 0 7px;font-size:18px}.auth-board-meta{color:#75819a;font-size:12px;margin-bottom:10px}.auth-board-content{white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.65}.auth-board-image{display:block;width:100%;max-height:480px;object-fit:contain;margin-top:12px;border-radius:12px;background:#f3f6fa}.auth-board-item-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:12px}.welcome-modal{position:fixed;inset:0;z-index:10000;background:rgba(15,27,49,.62);display:flex;align-items:center;justify-content:center;padding:20px}.welcome-modal[hidden]{display:none!important}.welcome-dialog{width:min(100%,390px);padding:27px 22px 22px;text-align:center;border-radius:24px;background:#fff;box-shadow:0 22px 70px rgba(0,0,0,.25);border:2px solid #173f6b}.welcome-emoji{font-size:44px}.welcome-dialog h2{margin:8px 0 10px;font-size:25px;color:#173f6b}.welcome-dialog p{line-height:1.7;color:#53627a;margin:0 0 20px}.welcome-dialog .btn{width:100%;justify-content:center;min-height:48px}.welcome-close{margin-top:12px;border:0;background:transparent;color:#6d7890;padding:9px 15px;font-weight:700}
-</style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 (function () {
@@ -1502,7 +1320,7 @@
 
 
   /* ---------------- 화면 전환 ---------------- */
-  var views = { main: $("mainView"), board: $("boardView"), authBoard: $("authBoardView"), explore: $("exploreView"), hub: $("gameHub"), word: $("wordGame"), notice: $("noticeView"), studentId: $("studentIdView"), fortune: $("fortuneView"), places: $("placesView"), suggest: $("suggestView") };
+  var views = { main: $("mainView"), board: $("boardView"), explore: $("exploreView"), hub: $("gameHub"), word: $("wordGame"), notice: $("noticeView"), studentId: $("studentIdView"), fortune: $("fortuneView"), places: $("placesView"), chatRank: $("chatRankView"), suggest: $("suggestView") };
   var currentAppView = "main";
   var handlingBrowserBack = false;
   try { history.replaceState({ dripcollegeApp: true, view: "main" }, "", location.href); } catch (_historyInitError) {}
@@ -1553,9 +1371,6 @@
     handlingBrowserBack = false;
   });
   $("goBoard").addEventListener("click", function () { showView("board"); selectedPostId = null; loadCommunity(); });
-  $("goAuthBoard").addEventListener("click", function () { showView("authBoard"); loadAuthBoard(); });
-  $("authBoardBack").onclick = function () { showView("main"); };
-
   $("boardBack").onclick = function () { showView("main"); };
   $("goExplore").onclick = function () { showView("explore"); openExplore(); };
   $("goGames").onclick = function () { showView("hub"); updateHubState(); };
@@ -1653,7 +1468,126 @@
     $("fortuneBirthDate").max = [today.getFullYear(), String(today.getMonth()+1).padStart(2,"0"), String(today.getDate()).padStart(2,"0")].join("-");
   })();
 
-  /* 채팅 순위 기능은 메인 메뉴에서 타 학생 탐방하기로 대체되었습니다. */
+  /* =====================================================================
+     카카오톡 TXT 기반 채팅 순위
+     - 메시지 본문은 DB에 저장하지 않음
+     - event_key unique 로 중복 업로드 방지
+     - 현재 회원 목록은 student_cards 테이블의 회원 닉네임을 기준으로 표시
+     ===================================================================== */
+  var chatRankPeriod = "weekly";
+  function chatRankStatus(message, kind) {
+    var node = $("chatRankStatus"); if (!node) return;
+    node.textContent = message || ""; node.className = "chat-rank-status" + (kind ? " " + kind : "");
+  }
+  function chatRankDateRange(period) {
+    var now = new Date(); var start, end;
+    if (period === "monthly") {
+      start = new Date(now.getFullYear(), now.getMonth(), 1); end = new Date(now.getFullYear(), now.getMonth()+1, 1);
+    } else {
+      start = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+      start.setHours(0,0,0,0); var day = (start.getDay()+6)%7; start.setDate(start.getDate()-day);
+      end = new Date(start); end.setDate(end.getDate()+7);
+    }
+    return {start:start,end:end,label:period === "monthly" ? start.getFullYear()+"년 "+(start.getMonth()+1)+"월" : start.getFullYear()+"년 "+(start.getMonth()+1)+"월 "+start.getDate()+"일 ~ "+end.getFullYear()+"년 "+(end.getMonth()+1)+"월 "+end.getDate()+"일"};
+  }
+  function chatRankRenderRows(targetId, rows, quiet) {
+    var target = $(targetId); target.replaceChildren();
+    if (!rows.length) { target.appendChild(el("div","chat-rank-empty",quiet ? "집계할 회원이 없습니다." : "이 기간에 집계된 메시지가 없습니다.")); return; }
+    rows.forEach(function(row,index){
+      var item=el("div","chat-rank-row"), place=el("div","chat-rank-place",String(index+1)), name=el("div","chat-rank-name",row.nickname), count=el("div","chat-rank-count",row.count.toLocaleString("ko-KR")+"개");
+      item.append(place,name,count); target.appendChild(item);
+    });
+  }
+  async function chatRankFetchAll(table, select, startIso, endIso) {
+    var all=[], offset=0, pageSize=1000;
+    while (true) {
+      var query=supabase.from(table).select(select).gte("sent_at",startIso).lt("sent_at",endIso).order("sent_at",{ascending:true}).range(offset,offset+pageSize-1);
+      var result=await query; if(result.error) throw result.error;
+      var part=result.data||[]; all=all.concat(part); if(part.length<pageSize) break; offset+=pageSize;
+      if(offset>500000) throw new Error("조회 데이터가 너무 많습니다. 운영자에게 문의해 주세요.");
+    }
+    return all;
+  }
+  async function refreshChatRank() {
+    if (!supabase) { chatRankStatus("Supabase 연결이 없어 채팅 순위를 불러올 수 없습니다.","error"); return; }
+    chatRankStatus("회원 목록과 채팅 집계를 불러오는 중…");
+    try {
+      var range=chatRankDateRange(chatRankPeriod);
+      $("chatRankPeriodLabel").textContent=range.label;
+      var membersResult=await supabase.from("student_cards").select("user_id,nickname").order("nickname",{ascending:true}).limit(10000);
+      if(membersResult.error) throw membersResult.error;
+      var memberMap={}, memberList=[];
+      (membersResult.data||[]).forEach(function(m){var nick=String(m.nickname||"").trim();if(!nick)return;var key=nick.normalize("NFC").toLocaleLowerCase("ko-KR");if(!memberMap[key]){memberMap[key]={nickname:nick,count:0};memberList.push(memberMap[key]);}});
+      var events=await chatRankFetchAll("chat_rank_messages","event_key,nickname,sent_at",range.start.toISOString(),range.end.toISOString());
+      events.forEach(function(event){var key=String(event.nickname||"").trim().normalize("NFC").toLocaleLowerCase("ko-KR");if(memberMap[key])memberMap[key].count++;});
+      var sorted=memberList.slice().sort(function(a,b){return b.count-a.count || a.nickname.localeCompare(b.nickname,"ko");});
+      chatRankRenderRows("chatRankTop",sorted.filter(function(x){return x.count>0;}).slice(0,10),false);
+      var quiet=memberList.slice().sort(function(a,b){return a.count-b.count || a.nickname.localeCompare(b.nickname,"ko");}).slice(0,10);
+      chatRankRenderRows("chatRankQuiet",quiet,true);
+      chatRankStatus("집계 완료 · 현재 학생증이 등록된 회원 "+memberList.length+"명 · 기간 내 중복 제거된 메시지 "+events.length.toLocaleString("ko-KR")+"개", "ok");
+    } catch(err) {
+      console.error("채팅 순위 조회 실패",err);
+      var msg=err && err.message ? err.message : String(err);
+      chatRankStatus(/chat_rank_messages/i.test(msg) ? "채팅 순위 테이블이 아직 준비되지 않았습니다. 제공된 SQL을 Supabase SQL Editor에서 먼저 실행해 주세요." : "채팅 순위를 불러오지 못했습니다: "+msg,"error");
+    }
+  }
+  function chatRankParseTxt(text) {
+    var lines=String(text||"").replace(/^\uFEFF/,"").replace(/\r/g,"").split("\n");
+    var records=[], currentDate=null, current=null, ordinalMap={};
+    function finish(){if(current && current.nickname && current.sentAt && current.body.trim() && !/^사진|^동영상|^파일:/.test(current.body.trim())) records.push(current); current=null;}
+    function makeDate(y,mo,d,ampm,h,mi){var hour=Number(h);if(ampm==="오후"&&hour<12)hour+=12;if(ampm==="오전"&&hour===12)hour=0;return new Date(Number(y),Number(mo)-1,Number(d),hour,Number(mi),0,0);}
+    var fullA=/^(\d{4})년\s*(\d{1,2})월\s*(\d{1,2})일(?:\s+[월화수목금토일]요일)?\s+(오전|오후)\s*(\d{1,2}):(\d{2}),\s*(.*?)\s*:\s?(.*)$/;
+    var fullB=/^(\d{4})\.\s*(\d{1,2})\.\s*(\d{1,2})\.\s*(오전|오후)\s*(\d{1,2}):(\d{2}),\s*(.*?)\s*:\s?(.*)$/;
+    var dateHead=/^-{3,}\s*(\d{4})년\s*(\d{1,2})월\s*(\d{1,2})일/;
+    var alt=/^\[(.+?)\]\s*\[(오전|오후)\s*(\d{1,2}):(\d{2})\]\s*(.*)$/;
+    lines.forEach(function(raw){
+      var line=raw.trimEnd(); if(!line.trim()) { if(current) current.body+="\n"; return; }
+      var dh=line.trim().match(dateHead); if(dh){finish();currentDate={y:Number(dh[1]),m:Number(dh[2]),d:Number(dh[3])};return;}
+      var m=line.match(fullA)||line.match(fullB);
+      if(m){finish();var dt=makeDate(m[1],m[2],m[3],m[4],m[5],m[6]);current={nickname:m[7].trim(),sentAt:dt,body:m[8]||""};return;}
+      var am=line.match(alt);
+      if(am&&currentDate){finish();var dt2=makeDate(currentDate.y,currentDate.m,currentDate.d,am[2],am[3],am[4]);current={nickname:am[1].trim(),sentAt:dt2,body:am[5]||""};return;}
+      if(current) current.body+=(current.body?"\n":"")+line;
+    });
+    finish();
+    // 동일 파일 안에서 같은 시각·닉네임·본문이 반복된 경우도 각 메시지를 보존하면서,
+    // 같은 파일을 다시 올리면 동일한 지문이 생성되도록 반복 순번을 포함합니다.
+    records=records.filter(function(r){return r.sentAt instanceof Date&&!isNaN(r.sentAt.getTime())&&r.sentAt.getFullYear()>2000&&r.sentAt.getFullYear()<2100;});
+    records.forEach(function(r){var base=[r.sentAt.toISOString(),r.nickname.normalize("NFC").trim().toLocaleLowerCase("ko-KR"),r.body.trim()].join("\u001f");ordinalMap[base]=(ordinalMap[base]||0)+1;r.eventBase=base;r.duplicateOrdinal=ordinalMap[base];});
+    return records;
+  }
+  async function uploadChatRankTxt() {
+    if(!window.__dripIsAdmin){chatRankStatus("운영자 계정에서만 TXT 업로드가 가능합니다.","error");return;}
+    var file=$("chatRankFile").files&&$("chatRankFile").files[0];if(!file){chatRankStatus("먼저 카카오톡 대화 내보내기 TXT 파일을 선택해 주세요.","error");return;}
+    if(file.size>25*1024*1024){chatRankStatus("파일은 25MB 이하만 업로드할 수 있습니다.","error");return;}
+    var btn=$("chatRankUpload");btn.disabled=true;btn.textContent="분석 중…";
+    try{
+      var content=await file.text();var parsed=chatRankParseTxt(content);
+      if(!parsed.length)throw new Error("인식 가능한 메시지가 없습니다. 카카오톡에서 '대화 내보내기'로 저장한 TXT인지 확인해 주세요.");
+      chatRankStatus("메시지 "+parsed.length.toLocaleString("ko-KR")+"개를 분석했습니다. 중복 확인 및 저장 중…");
+      var payload=[];
+      for(var i=0;i<parsed.length;i++){
+        var rec=parsed[i];var digest=await sha256Hex(rec.eventBase+"\u001f"+rec.duplicateOrdinal);
+        payload.push({event_key:digest,nickname:rec.nickname,sent_at:rec.sentAt.toISOString()});
+      }
+      var inserted=0;
+      for(var offset=0;offset<payload.length;offset+=400){
+        var batch=payload.slice(offset,offset+400);
+        var result=await supabase.from("chat_rank_messages").upsert(batch,{onConflict:"event_key",ignoreDuplicates:true});
+        if(result.error)throw result.error;
+        inserted+=batch.length;chatRankStatus("중복 확인 및 저장 중… "+Math.min(offset+batch.length,payload.length).toLocaleString("ko-KR")+" / "+payload.length.toLocaleString("ko-KR"));
+      }
+      $("chatRankFile").value="";
+      chatRankStatus("업로드 처리 완료 · "+payload.length.toLocaleString("ko-KR")+"개 메시지를 확인했습니다. 이미 저장된 메시지는 중복 집계되지 않습니다.","ok");
+      await refreshChatRank();
+    }catch(err){console.error("채팅 TXT 업로드 실패",err);chatRankStatus("업로드 실패: "+(err&&err.message?err.message:String(err)),"error");}
+    finally{btn.disabled=false;btn.textContent="업로드 및 순위 갱신";}
+  }
+  if($("goChatRank")) $("goChatRank").addEventListener("click",function(){showView("chatRank");$("chatRankAdminTools").hidden=!window.__dripIsAdmin;refreshChatRank();});
+  if($("chatRankBack")) $("chatRankBack").addEventListener("click",function(){showView("main");});
+  if($("chatRankUpload")) $("chatRankUpload").addEventListener("click",uploadChatRankTxt);
+  if($("chatRankRefresh")) $("chatRankRefresh").addEventListener("click",refreshChatRank);
+  Array.prototype.forEach.call(document.querySelectorAll("[data-chat-period]"),function(button){button.addEventListener("click",function(){chatRankPeriod=button.getAttribute("data-chat-period");document.querySelectorAll("[data-chat-period]").forEach(function(b){b.classList.toggle("active",b===button);});refreshChatRank();});});
 
   /* =====================================================================
      오늘의 단어 (국어사전 연동) 게임
@@ -1900,8 +1834,6 @@
     $("signedInLabel").innerHTML = '<span class="mark">' + escapeHtml(nick) + '</span> 님, 환영합니다!';
     loadStudentCard();
     window.scrollTo({ top: 0, behavior: "smooth" });
-    // 서버에 저장된 학생증 완성 표시가 있고, 방명록 안내를 아직 보지 않은 신규 회원만 노출
-    setTimeout(checkWelcomeGuestbook, 650);
   }
   function ready() { if (!supabase) { status("loginStatus", "Supabase 초기화에 실패했습니다. CDN 로딩, 프로젝트 URL, 공개 API 키를 확인해 주세요.", "error"); return false; } return true; }
 
@@ -1910,130 +1842,38 @@
   $("loginForm").addEventListener("submit", async function (e) {
     e.preventDefault();
     if (!ready()) return;
-
     var nick = normalizeNick($("loginNickname").value);
-    if (nick.length < 2) {
-      status("loginStatus", "닉네임은 2자 이상 입력해 주세요.", "error");
-      return;
-    }
-
+    if (nick.length < 2) { status("loginStatus", "닉네임은 2자 이상 입력해 주세요.", "error"); return; }
     saveRememberChoice();
-    status("loginStatus", "로그인 중입니다…", "");
-    try {
-      // 회원가입 때 사용한 인증번호(2030)를 기존 계정의 로그인 비밀번호 계산에 사용합니다.
-      var result = await supabase.auth.signInWithPassword({
-        email: await nickEmail(nick),
-        password: await authPassword(nick, "2030")
-      });
-
-      if (result.error || !result.data || !result.data.user) {
-        console.error("로그인 오류:", result.error);
-        status("loginStatus", "로그인에 실패했습니다. 기존 계정이 2030 인증번호로 가입되었는지 확인해 주세요.", "error");
-        return;
-      }
-
-      var signedNick = (result.data.user.user_metadata && result.data.user.user_metadata.nickname) || nick;
-      showSignedIn(signedNick);
-      status("loginStatus", "", "");
-      try { sessionStorage.setItem("dripcollege_nickname", signedNick); } catch (_e) {}
-    } catch (err) {
-      console.error("로그인 오류:", err);
-      status("loginStatus", "로그인 중 오류가 발생했습니다. 브라우저 Console의 오류를 확인해 주세요.", "error");
-    }
+    // 닉네임만으로 Supabase 계정을 인증하려면 서버 측에서 회원 확인과 세션 발급을 함께 처리해야 합니다.
+    // 브라우저에서 단순히 닉네임만 확인하면 다른 사람을 사칭할 수 있으므로 인증 성공으로 처리하지 않습니다.
+    status("loginStatus", "닉네임 전용 로그인은 서버 인증 기능이 필요합니다. 기존 계정 보호를 위해 서버 기능을 연결한 뒤 로그인할 수 있습니다.", "error");
   });
-
-    var signupInProgress = false;
   $("signupForm").addEventListener("submit", async function (e) {
-    e.preventDefault();
-    if (signupInProgress) return;
-    if (!ready()) return;
-    var nick = normalizeNick($("signupNickname").value), code = $("signupCode").value.trim();
+    e.preventDefault(); if (!ready()) return;
+    var nick = normalizeNick($("signupNickname").value), code = $("signupCode").value;
     if (nick.length < 2) { status("signupStatus", "닉네임은 2자 이상 입력해 주세요.", "error"); return; }
-    if (code !== "2030") { status("signupStatus", "인증번호가 올바르지 않습니다.", "error"); return; }
-    signupInProgress = true;
-    var signupButton = $("signupForm").querySelector('button[type="submit"]');
-    if (signupButton) {
-      signupButton.disabled = true;
-      signupButton.dataset.originalText = signupButton.textContent;
-      signupButton.textContent = "가입 처리 중…";
-      signupButton.setAttribute("aria-busy", "true");
-    }
-    saveRememberChoice(); status("signupStatus", "등록된 닉네임을 확인하고 있습니다…", "");
+    if (!code) { status("signupStatus", "인증번호를 입력해 주세요.", "error"); return; }
+    saveRememberChoice(); status("signupStatus", "등록된 닉네임과 인증번호를 확인하고 있습니다…", "");
     try {
-      // 초대 목록에 등록되어 있고 아직 사용되지 않은 닉네임인지 확인
       var chk = await supabase.rpc("validate_member_invite", { p_nickname: nick, p_auth_code: code });
-      if (chk.error) {
-        console.error("validate_member_invite 오류:", chk.error);
-        throw new Error("회원 목록 확인에 실패했습니다: " + (chk.error.message || chk.error.code || "알 수 없는 오류"));
-      }
-      if (chk.data !== true) {
-        status("signupStatus", "등록된 닉네임이 아니거나 이미 가입 처리된 회원입니다. 닉네임을 확인하거나 기존 계정으로 로그인해 주세요.", "error");
-        return;
-      }
-
-      var email = await nickEmail(nick);
-      var password = await authPassword(nick, "2030");
-      var su = await supabase.auth.signUp({ email: email, password: password, options: { data: { nickname: nick } } });
-      var user = su.data && su.data.user;
-      var session = su.data && su.data.session;
-
-      // 이전 가입 시도에서 Auth 계정만 만들어진 경우, 동일한 기존 자격정보로 로그인해 이어서 처리
-      if (su.error && /already registered|already exists|user already|duplicate/i.test(String(su.error.message || su.error.code || ""))) {
-        var existing = await supabase.auth.signInWithPassword({ email: email, password: password });
-        if (existing.error) {
-          console.error("기존 Auth 계정 로그인 오류:", existing.error);
-          status("signupStatus", "이 닉네임의 Auth 계정은 이미 존재하지만 로그인할 수 없습니다. 이메일 확인 설정 또는 기존 계정 복구가 필요합니다.", "error");
+      if (chk.error) throw chk.error;
+      if (chk.data !== true) { status("signupStatus", "등록 정보를 찾을 수 없거나 이미 사용된 인증번호입니다. 관리자에게 확인해 주세요.", "error"); return; }
+      var su = await supabase.auth.signUp({ email: await nickEmail(nick), password: await authPassword(nick, code), options: { data: { nickname: nick } } });
+      if (su.error) {
+        var signupErr = String((su.error && (su.error.message || su.error.code)) || "");
+        if (/already registered|already exists|user already|duplicate/i.test(signupErr)) {
+          status("signupStatus", "이미 계정이 생성된 닉네임입니다. 중복 가입은 진행하지 않았습니다. 기존 계정으로 로그인하려면 서버의 닉네임 전용 인증 기능이 필요합니다.", "error");
           return;
         }
-        user = existing.data.user;
-        session = existing.data.session;
-      } else if (su.error) {
-        console.error("Auth 가입 오류:", su.error);
-        throw new Error("Supabase 계정 생성 실패: " + (su.error.message || su.error.code || "알 수 없는 오류"));
+        throw su.error;
       }
-
-      if (!user) {
-        status("signupStatus", "Supabase가 계정을 반환하지 않았습니다. Auth 설정을 확인해 주세요.", "error");
-        return;
-      }
-      if (!session) {
-        status(
-          "signupStatus",
-          "이 사이트는 이메일 인증을 사용하지 않고 인증번호 2030으로 가입하도록 설정되어 있습니다. 다만 Supabase에서 이메일 확인이 켜져 있으면 가입이 막힙니다. Supabase Dashboard → Authentication → Sign In / Providers → Email에서 Confirm email을 끈 뒤 다시 시도해 주세요. 기존 회원이나 데이터는 삭제하지 마세요.",
-          "error"
-        );
-        return;
-      }
-
+      if (!su.data.session || !su.data.user) { status("signupStatus", "Supabase에서 이메일 확인을 비활성화해야 닉네임/인증번호만으로 가입할 수 있습니다. Auth 설정을 확인해 주세요.", "error"); return; }
       var cl = await supabase.rpc("claim_member_invite", { p_nickname: nick, p_auth_code: code });
-      if (cl.error || cl.data !== true) {
-        console.error("claim_member_invite 오류:", cl.error);
-        status("signupStatus", "계정 로그인은 됐지만 초대 등록 완료에 실패했습니다. 관리자에게 DB 함수 권한과 초대 상태를 확인해 달라고 해주세요.", "error");
-        return;
-      }
+      if (cl.error || cl.data !== true) { await supabase.auth.signOut(); status("signupStatus", "계정은 생성됐지만 인증번호 등록 완료에 실패했습니다. 관리자에게 문의해 주세요.", "error"); console.error(cl.error); return; }
       saveRememberChoice(); showSignedIn(nick); status("signupStatus", "가입이 완료되었습니다!", "ok");
       try { sessionStorage.setItem("dripcollege_nickname", nick); } catch (_e) {}
-    } catch (err) {
-      console.error("회원가입 오류:", err);
-      var errorMessage = String(err && err.message ? err.message : "알 수 없는 오류");
-      if (/email rate limit exceeded|rate limit/i.test(errorMessage)) {
-        status(
-          "signupStatus",
-          "Supabase에서 이메일 인증 발송 제한에 도달했습니다. 이 사이트는 이메일 인증 없이 2030 코드로 가입하도록 사용할 수 있습니다. Supabase Dashboard → Authentication → Sign In / Providers → Email에서 Confirm email을 끄면 이메일 인증 발송이 필요하지 않습니다. 설정 후 다시 시도해 주세요. 기존 회원 정보는 삭제하지 마세요.",
-          "error"
-        );
-      } else {
-        status("signupStatus", "회원가입 오류: " + errorMessage, "error");
-      }
-    } finally {
-      signupInProgress = false;
-      if (signupButton) {
-        signupButton.disabled = false;
-        signupButton.textContent = signupButton.dataset.originalText || "가입하기";
-        signupButton.removeAttribute("aria-busy");
-        delete signupButton.dataset.originalText;
-      }
-    }
+    } catch (err) { status("signupStatus", "회원가입에 실패했습니다. 관리자에게 등록된 닉네임/인증번호인지 확인해 주세요.", "error"); console.error(err); }
   });
   $("logoutBtn").addEventListener("click", async function () {
     if (supabase) await supabase.auth.signOut();
@@ -2207,116 +2047,6 @@
       $("communityComposer").hidden = true; editingPostId = null; $("communityPhoto").value = ""; $("communityPhotoPreview").innerHTML = ""; loadCommunity();
     } catch (err) { setText("communityPostStatus", "저장 실패: " + err.message + " (게시판 SQL 및 사진 저장소 설정을 확인해 주세요.)"); }
   };
-
-  /* =====================================================================
-     인증게시판 — 운동/식단, Supabase DB + Storage + Realtime 동기화
-     ===================================================================== */
-  var authBoardCategory = "운동", authBoardChannel = null, authBoardBusy = false;
-  function setAuthBoardCategory(category) {
-    authBoardCategory = category === "식단" ? "식단" : "운동";
-    document.querySelectorAll("[data-auth-category]").forEach(function (b) {
-      var active = b.getAttribute("data-auth-category") === authBoardCategory;
-      b.classList.toggle("active", active); b.setAttribute("aria-selected", active ? "true" : "false");
-    });
-    $("authBoardFormTitle").textContent = authBoardCategory + " 인증글 작성";
-    $("authBoardTitle").placeholder = authBoardCategory === "운동" ? "예: 오늘 하체 운동 완료!" : "예: 오늘의 식단 기록 🥗";
-    loadAuthBoard();
-  }
-  document.querySelectorAll("[data-auth-category]").forEach(function (b) { b.addEventListener("click", function () { setAuthBoardCategory(b.getAttribute("data-auth-category")); }); });
-  $("authBoardNew").onclick = function () {
-    $("authBoardComposer").reset(); $("authBoardPhotoPreview").innerHTML = ""; $("authBoardFormStatus").textContent = "";
-    $("authBoardFormTitle").textContent = authBoardCategory + " 인증글 작성"; $("authBoardComposer").hidden = false;
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  };
-  $("authBoardCancel").onclick = function () { $("authBoardComposer").hidden = true; };
-  $("authBoardPhoto").onchange = function () {
-    var f = this.files && this.files[0]; $("authBoardPhotoPreview").innerHTML = ""; if (!f) return;
-    if (f.size > 8 * 1024 * 1024) { alert("사진은 8MB 이하만 첨부할 수 있습니다."); this.value = ""; return; }
-    if (!/^image\/(jpeg|png|webp)$/.test(f.type)) { alert("JPG, PNG, WEBP 사진만 첨부할 수 있습니다."); this.value = ""; return; }
-    var img = document.createElement("img"); img.className = "auth-board-image"; img.alt = "사진 미리보기"; img.src = URL.createObjectURL(f); $("authBoardPhotoPreview").appendChild(img);
-  };
-  async function uploadAuthBoardPhoto(file, userId) {
-    if (!file) return null;
-    var ext = (file.name.split(".").pop() || "jpg").toLowerCase().replace(/[^a-z0-9]/g, "");
-    var path = userId + "/" + Date.now() + "-" + crypto.randomUUID() + "." + ext;
-    var up = await supabase.storage.from("verification-photos").upload(path, file, { upsert: false, contentType: file.type, cacheControl: "3600" });
-    if (up.error) throw up.error;
-    return supabase.storage.from("verification-photos").getPublicUrl(path).data.publicUrl;
-  }
-  async function loadAuthBoard() {
-    if (authBoardBusy) return; authBoardBusy = true;
-    if (!supabase) { setText("authBoardStatus", "Supabase 연결을 확인해 주세요."); authBoardBusy = false; return; }
-    setText("authBoardStatus", "인증 게시글을 불러오는 중…");
-    try {
-      var q = await supabase.from("verification_posts").select("id,category,title,content,author_id,author_nickname,image_url,created_at,updated_at").eq("category", authBoardCategory).order("created_at", { ascending: false }).limit(100);
-      if (q.error) throw q.error;
-      var feed = $("authBoardFeed"); feed.replaceChildren();
-      if (!q.data || !q.data.length) { setText("authBoardStatus", "아직 등록된 인증글이 없습니다. 첫 인증을 남겨보세요! 💪"); return; }
-      setText("authBoardStatus", "최근 게시글 " + q.data.length + "개 · 서버 저장 및 동기화 사용 중");
-      var u = await currentUser();
-      q.data.forEach(function (post) {
-        var article = document.createElement("article"); article.className = "auth-board-item";
-        var title = document.createElement("h3"); title.textContent = post.title;
-        var meta = document.createElement("div"); meta.className = "auth-board-meta"; meta.textContent = (post.category === "식단" ? "🥗 식단" : "💪 운동") + " · " + (post.author_nickname || "회원") + " · " + new Date(post.created_at).toLocaleString("ko-KR");
-        var content = document.createElement("div"); content.className = "auth-board-content"; content.textContent = post.content;
-        article.append(title, meta, content);
-        if (post.image_url) { var a = document.createElement("a"); a.href = post.image_url; a.target = "_blank"; a.rel = "noopener noreferrer"; var img = document.createElement("img"); img.className = "auth-board-image"; img.src = post.image_url; img.alt = "인증 첨부 사진"; img.loading = "lazy"; a.appendChild(img); article.appendChild(a); }
-        if (u && (u.id === post.author_id || window.__dripIsAdmin === true)) {
-          var actions = document.createElement("div"); actions.className = "auth-board-item-actions"; var del = document.createElement("button"); del.className = "btn small"; del.type = "button"; del.textContent = "삭제";
-          del.onclick = async function () { if (!confirm("이 인증글을 삭제할까요?")) return; var d = await supabase.from("verification_posts").delete().eq("id", post.id); if (d.error) alert("삭제 실패: " + d.error.message); else loadAuthBoard(); };
-          actions.appendChild(del); article.appendChild(actions);
-        }
-        feed.appendChild(article);
-      });
-    } catch (err) {
-      console.error("인증게시판 조회 오류:", err);
-      setText("authBoardStatus", "불러오기 실패: " + (err.message || String(err)) + " · 인증게시판 SQL 및 verification-photos 저장소 설정을 확인해 주세요.");
-    } finally { authBoardBusy = false; }
-  }
-  $("authBoardComposer").onsubmit = async function (e) {
-    e.preventDefault(); if (!supabase) return;
-    var u = await currentUser(); if (!u) { setText("authBoardFormStatus", "로그인이 필요합니다."); return; }
-    var title = $("authBoardTitle").value.trim(), content = $("authBoardContent").value.trim(), file = $("authBoardPhoto").files && $("authBoardPhoto").files[0];
-    if (!title || !content) { setText("authBoardFormStatus", "제목과 내용을 입력해 주세요."); return; }
-    var save = $("authBoardSave"); save.disabled = true; save.textContent = "저장 중…"; setText("authBoardFormStatus", "서버에 저장하는 중입니다. 창을 닫지 마세요.");
-    try {
-      var imageUrl = await uploadAuthBoardPhoto(file, u.id);
-      var r = await supabase.from("verification_posts").insert({ category: authBoardCategory, title: title, content: content, author_id: u.id, author_nickname: (u.user_metadata && u.user_metadata.nickname) || "회원", image_url: imageUrl });
-      if (r.error) throw r.error;
-      $("authBoardComposer").reset(); $("authBoardPhotoPreview").innerHTML = ""; $("authBoardComposer").hidden = true; setText("authBoardFormStatus", "");
-      await loadAuthBoard(); toast("인증글이 서버에 저장되었습니다! 📸");
-    } catch (err) { console.error("인증글 저장 오류:", err); setText("authBoardFormStatus", "저장 실패: " + (err.message || String(err)) + " · SQL/사진 저장소 설정을 확인해 주세요."); }
-    finally { save.disabled = false; save.textContent = "등록하기"; }
-  };
-  if (supabase) {
-    try { authBoardChannel = supabase.channel("verification-posts-live").on("postgres_changes", { event: "*", schema: "public", table: "verification_posts" }, function () { if (currentAppView === "authBoard") loadAuthBoard(); }).subscribe(); }
-    catch (e) { console.warn("인증게시판 실시간 구독을 시작하지 못했습니다.", e); }
-  }
-
-  /* =====================================================================
-     신규 회원 첫 로그인 안내 — 학생증 완성 후 서버 메타데이터로 1회만 표시
-     ===================================================================== */
-  var welcomeModalBusy = false;
-  async function checkWelcomeGuestbook() {
-    if (welcomeModalBusy || !supabase || !document.body.classList.contains("signed-in")) return;
-    try {
-      var r = await supabase.auth.getUser(), u = r.data && r.data.user; if (!u) return;
-      var m = u.user_metadata || {};
-      if (!m.student_card_completed_at || m.welcome_guestbook_seen === true) return;
-      var card = await supabase.from("student_cards").select("user_id").eq("user_id", u.id).maybeSingle();
-      if (card.error || !card.data) return;
-      welcomeModalBusy = true; $("welcomeGuestbookModal").hidden = false;
-    } catch (e) { console.warn("첫 로그인 축하 팝업 확인 실패:", e); }
-  }
-  async function closeWelcomeGuestbook(goGuestbook) {
-    $("welcomeGuestbookModal").hidden = true; welcomeModalBusy = false;
-    try { var r = await supabase.auth.updateUser({ data: { welcome_guestbook_seen: true } }); if (r.error) console.warn("축하 팝업 확인 상태 저장 실패:", r.error); }
-    catch (e) { console.warn("축하 팝업 확인 상태 저장 실패:", e); }
-    if (goGuestbook) { showView("explore"); openExplore(); }
-  }
-  $("welcomeGuestbookGo").onclick = function () { closeWelcomeGuestbook(true); };
-  $("welcomeGuestbookClose").onclick = function () { closeWelcomeGuestbook(false); };
-  $("welcomeGuestbookModal").addEventListener("click", function (e) { if (e.target === this) closeWelcomeGuestbook(false); });
 
   /* =====================================================================
      Kakao 지도 · 장소 공유 (맛집 / 카페 / 명소 / 숙소 / 술집 / 주차장 / 기타)
@@ -3009,7 +2739,6 @@
     try { u = supabase ? await currentUser() : null; } catch (e) {}
     if (!u) { setText("sidStatus", "로그인이 필요합니다."); return; }
     var major = sidState.major.slice(0, 14), motto = sidState.motto.slice(0, 30);
-    var wasSavedBefore = sidHasSavedCard;
     var payload = {
       user_id: u.id, nickname: (u.user_metadata && u.user_metadata.nickname) || sidNick || "회원",
       major: major, motto: motto, avatar: sidState.avatar, updated_at: new Date().toISOString(),
@@ -3025,11 +2754,6 @@
       try { localStorage.setItem("dripcollege_sid_" + u.id, JSON.stringify({ major: major, motto: motto, avatar: sidState.avatar, mbti: sidState.mbti, hobby: sidState.hobby, skill: sidState.skill, job: sidState.job, synced_at: new Date().toISOString() })); } catch (e) {}
       sidHasSavedCard = true;
       if ($("homeStudentCard")) $("homeStudentCard").hidden = false;
-      // 처음으로 학생증을 완성한 회원에게만 서버 메타데이터로 안내 대기 상태를 기록합니다.
-      if (!wasSavedBefore && !(u.user_metadata && u.user_metadata.student_card_completed_at)) {
-        var metaResult = await supabase.auth.updateUser({ data: { student_card_completed_at: new Date().toISOString(), welcome_guestbook_seen: false } });
-        if (metaResult.error) console.warn("신규 회원 학생증 완료 상태 저장 실패:", metaResult.error);
-      }
       setText("sidStatus", "Supabase 저장 완료! 앞면과 뒷면 정보가 서버에 저장되어 다른 기기에서도 불러올 수 있어요.");
       toast("학생증이 Supabase 데이터베이스에 저장되었어요! 🎓");
       renderSidCard();
@@ -3070,29 +2794,6 @@
     n.textContent = message || "";
     n.className = "community-status" + (isError ? " error" : message ? "" : "");
   }
-  function exploreRenderRatingRankings() {
-    var rated = exploreCards.map(function (card) {
-      var stats = exploreRatingStats(exploreRatings.filter(function (r) { return r.profile_user_id === card.user_id; }));
-      return { card: card, average: stats.average, count: stats.count };
-    }).filter(function (item) { return item.count > 0; });
-    var lowest = rated.slice().sort(function (a,b) { return a.average-b.average || b.count-a.count; }).slice(0,3);
-    var highest = rated.slice().sort(function (a,b) { return b.average-a.average || b.count-a.count; }).slice(0,3);
-    function fill(id, items) {
-      var list=$(id); if(!list) return; list.replaceChildren();
-      if(!items.length){list.appendChild(el("li","explore-rank-empty","아직 평가된 학생이 없습니다."));return;}
-      items.forEach(function(item,index){
-        var li=el("li"), button=el("button","explore-rank-item"); button.type="button";
-        button.appendChild(el("span","explore-rank-number",String(index+1)));
-        button.appendChild(el("span","explore-rank-name",item.card.nickname||"회원"));
-        button.appendChild(el("span","explore-rank-score","★ "+item.average.toFixed(1)));
-        button.title="평점 "+item.average.toFixed(1)+"점 · "+item.count+"명 평가";
-        button.addEventListener("click",function(){exploreSelectedCard=item.card;loadExploreProfile(item.card.user_id);var detail=$("exploreDetail");if(detail)detail.scrollIntoView({behavior:"smooth",block:"start"});});
-        li.appendChild(button);list.appendChild(li);
-      });
-    }
-    fill("exploreLowestRank",lowest); fill("exploreHighestRank",highest);
-  }
-
   function exploreRenderDirectory() {
     var box = $("exploreList"), search = String($("exploreSearch").value || "").trim().toLocaleLowerCase("ko-KR");
     box.replaceChildren();
@@ -3117,7 +2818,6 @@
       button.addEventListener("click", function () { exploreSelectedCard = card; loadExploreProfile(card.user_id); });
       box.appendChild(button);
     });
-    exploreRenderRatingRankings();
   }
   async function loadExploreDirectory(preserveSelection) {
     if (exploreDirectoryBusy || !supabase) {
@@ -3609,99 +3309,6 @@
 })();
 </script>
 
-
-
-<style id="fixed-bottom-nav-and-horizontal-options">
-/* 학생증 만들기: 입력/선택 옵션을 가로 스크롤할 수 있게 */
-#sidAvatarControls{display:flex!important;flex-wrap:nowrap!important;overflow-x:auto!important;overflow-y:hidden;gap:10px;padding:8px 4px 14px;scroll-snap-type:x proximity;-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain;touch-action:pan-x pan-y}
-#sidAvatarControls>*{flex:0 0 auto;scroll-snap-align:start;max-width:88vw}
-#studentCardView .sid-field{min-width:0}
-#studentCardView .sid-field input,#studentCardView .sid-field select,#studentCardView .sid-field textarea{max-width:100%;box-sizing:border-box}
-/* 하단 고정 메뉴 */
-#dripFixedBottomNav{position:fixed;z-index:99999;left:0;right:0;bottom:0;display:none;grid-template-columns:repeat(5,minmax(0,1fr));gap:2px;padding:7px max(5px,env(safe-area-inset-left)) calc(7px + env(safe-area-inset-bottom)) max(5px,env(safe-area-inset-right));background:rgba(255,255,255,.97);border-top:1px solid #d9e5ec;box-shadow:0 -4px 18px rgba(20,50,70,.10);backdrop-filter:blur(12px)}
-body.signed-in #dripFixedBottomNav{display:grid}
-#dripFixedBottomNav button{min-width:0;border:0;background:transparent;color:#34536b;border-radius:11px;padding:6px 1px 5px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;font-family:inherit;font-size:10px;font-weight:800;line-height:1.15;white-space:nowrap;cursor:pointer}
-#dripFixedBottomNav button .bottom-icon{font-size:19px;line-height:1.1}
-#dripFixedBottomNav button.active{color:#008f9b;background:#e5f8f7}
-body{padding-bottom:calc(76px + env(safe-area-inset-bottom))}
-@media(min-width:800px){#dripFixedBottomNav{left:50%;right:auto;transform:translateX(-50%);width:min(100%,760px);border:1px solid #d9e5ec;border-bottom:0;border-radius:16px 16px 0 0}}
-</style>
-<nav id="dripFixedBottomNav" aria-label="하단 고정 메뉴">
- <button type="button" data-bottom-target="home"><span class="bottom-icon">🏠</span><span>메인화면</span></button>
- <button type="button" data-bottom-target="notice"><span class="bottom-icon">📢</span><span>공지사항</span></button>
- <button type="button" data-bottom-target="games"><span class="bottom-icon">🎮</span><span>미니게임</span></button>
- <button type="button" data-bottom-target="explore"><span class="bottom-icon">🧑‍🎓</span><span>타 학생 탐방</span></button>
- <button type="button" data-bottom-target="humor"><span class="bottom-icon">😂</span><span>유머게시판</span></button>
-</nav>
-<script id="dripFixedBottomNavScript">
-(function(){
- const nav=document.getElementById('dripFixedBottomNav'); if(!nav)return;
- const targets={notice:'goNotice',games:'goGames',explore:'goExplore',humor:'goBoard'};
- function activate(key){
-   nav.querySelectorAll('button').forEach(b=>b.classList.toggle('active',b.dataset.bottomTarget===key));
-   if(key==='home'){
-     const home=document.querySelector('[data-home]');
-     if(home) home.click();
-     else {const b=document.getElementById('goHome');if(b)b.click();}
-     return;
-   }
-   const target=document.getElementById(targets[key]); if(target) target.click();
- }
- nav.addEventListener('click',e=>{const b=e.target.closest('button[data-bottom-target]');if(b)activate(b.dataset.bottomTarget)});
- document.addEventListener('click',e=>{
-   const b=e.target.closest('#goNotice,#goGames,#goExplore,#goBoard,[data-home]');if(!b)return;
-   const id=b.id;let key=id==='goNotice'?'notice':id==='goGames'?'games':id==='goExplore'?'explore':id==='goBoard'?'humor':'home';
-   nav.querySelectorAll('button').forEach(x=>x.classList.toggle('active',x.dataset.bottomTarget===key));
- });
-})();
-</script>
-
-
-<style id="humor-delete-button-polish">
-/* 유머게시판 댓글 삭제 버튼을 댓글 행의 오른쪽 끝에 배치 */
-#humor .comment-item, #goBoard .comment-item, .humor-board .comment-item,
-.community-detail .comment-item {
-  display:flex; align-items:center; flex-wrap:wrap; gap:7px;
-}
-#humor .comment-item [data-comment-delete],
-#goBoard .comment-item [data-comment-delete],
-.humor-board .comment-item [data-comment-delete],
-.community-detail .comment-item [data-comment-delete] {
-  margin-left:auto !important;
-  flex:0 0 auto;
-  border:1px solid #e4c7c7 !important;
-  border-radius:9px !important;
-  background:#fff7f7 !important;
-  color:#b54747 !important;
-  padding:6px 11px !important;
-  min-height:30px;
-  font-size:12px !important;
-  font-weight:700 !important;
-  line-height:1.2 !important;
-  box-shadow:none !important;
-  cursor:pointer;
-  transition:background .15s ease,border-color .15s ease;
-}
-#humor .comment-item [data-comment-delete]:hover,
-#goBoard .comment-item [data-comment-delete]:hover,
-.humor-board .comment-item [data-comment-delete]:hover,
-.community-detail .comment-item [data-comment-delete]:hover {
-  background:#ffeaea !important; border-color:#d99a9a !important;
-}
-.community-detail .community-actions [data-delete],
-.community-detail .community-actions [data-edit] {
-  border:1px solid #dce5ec !important; border-radius:10px !important;
-  padding:7px 12px !important; font-size:12px !important; font-weight:700 !important;
-  background:#fff !important; color:#425a6b !important; box-shadow:none !important;
-}
-.community-detail .community-actions [data-delete] {
-  border-color:#e4c7c7 !important; background:#fff7f7 !important; color:#b54747 !important;
-}
-@media(max-width:600px){
-  .community-detail .comment-item { gap:5px; }
-  .community-detail .comment-item [data-comment-delete] { padding:5px 9px !important; font-size:11px !important; }
-}
-</style>
 
 </body>
 </html>
