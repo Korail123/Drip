@@ -322,8 +322,10 @@
   .wg-input-form { display:flex; gap:8px; margin:10px 0; }
   .wg-word-input { flex:1; min-width:0; border:2px solid var(--ink); border-radius:12px; padding:12px 14px; font:600 17px var(--font-body); background:#fff; color:var(--ink); }
   .wg-word-input:focus { outline:3px solid var(--butter-bg); outline-offset:1px; }
-  .wg-keys { display:none !important; }
-  .wg-krow { display:flex; gap:5px; justify-content:center; }
+  .wg-keys { display:flex !important; flex-direction:column; gap:6px; max-width:420px; margin:6px auto 4px; user-select:none; -webkit-user-select:none; -webkit-tap-highlight-color:transparent; }
+  .wg-krow { display:flex; gap:4px; justify-content:center; }
+  .wg-key { touch-action:manipulation; }
+  .wg-tile.next { border-color:var(--teal) !important; box-shadow:0 0 0 3px var(--butter-bg) !important; }
   .wg-key { flex:1 1 0; min-width:0; max-width:44px; height:46px; border:2px solid var(--ink); border-radius:999px; background:#fff; font-family:var(--font-display); font-size:18px; padding:0; box-shadow:2px 2px 0 var(--ink); }
   .wg-key.wide { flex:1.7 1 0; max-width:72px; font-family:var(--font-body); font-weight:800; font-size:14px; }
   .wg-key:active { transform:translate(1px,1px); box-shadow:none; }
@@ -1328,7 +1330,7 @@
 
   <section id="wordGame" hidden aria-label="단어 맞추기">
     <div class="head">
-      <div class="head-main"><h2 class="title">오늘의 단어</h2><p class="sub">칸마다 자음이나 모음 하나씩 입력하세요. 한글 음절은 자모로 나뉘어 들어갑니다.</p></div>
+      <div class="head-main"><h2 class="title">오늘의 단어</h2><p class="sub">화면 키보드로 칸마다 자음이나 모음 하나씩 입력하세요. 한글 음절은 자모로 나뉘어 들어갑니다.</p></div>
       <button class="btn small" id="wordBack" type="button">← 미니게임</button>
     </div>
     <div class="card wg">
@@ -1336,9 +1338,10 @@
         <span class="wg-date" id="wgDate">오늘의 단어 (국어사전 연동)</span>
 
       </div>
-      <div class="wg-desc-bar">💡 각 칸에는 자음 또는 모음 하나씩 들어갑니다. 키보드로 입력하고 Enter를 누르세요. 정답을 맞힐 때까지 횟수 제한 없이 도전할 수 있습니다.</div>
+      <div class="wg-desc-bar">💡 각 칸에는 자음 또는 모음 하나씩 들어갑니다. 아래 키보드로 입력하고 [입력]을 누르세요. 쌍자음은 같은 자음을 두 번 누르세요 (ㄲ = ㄱ ㄱ).</div>
       <div id="wgBoard" class="wg-board"></div>
       <div id="wgPreview" class="wg-preview" aria-live="polite"></div>
+      <div id="wgKeys" class="wg-keys" aria-label="한글 자모 키보드"></div>
       <button class="btn small" id="wgNewGame" type="button" style="margin-top:10px">↻ 새 단어로 다시 하기</button>
       <div id="wgResult" class="wg-result" hidden></div>
     </div>
@@ -1380,6 +1383,12 @@
 
   /* ---------------- 공통 유틸 ---------------- */
   function $(id) { return document.getElementById(id); }
+  // 날짜: PC는 전체, 모바일은 짧게(MM.DD HH:mm) 보여 한 줄에 들어가게 합니다.
+  function ddDateHtml(v) {
+    var d = new Date(v), p2 = function (n) { return (n < 10 ? "0" : "") + n; };
+    var shortTxt = p2(d.getMonth() + 1) + "." + p2(d.getDate()) + " " + p2(d.getHours()) + ":" + p2(d.getMinutes());
+    return '<span class="cm-full">' + escapeHtml(d.toLocaleString("ko-KR")) + '</span><span class="cm-short">' + shortTxt + '</span>';
+  }
   function el(tag, cls, text) { var e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; }
   function escapeHtml(v) { return String(v == null ? "" : v).replace(/[&<>"']/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; }); }
   var toastTimer = 0;
@@ -1820,85 +1829,86 @@
     var saved = store(active.key); curState.guesses=[]; curState.status="PLAYING"; curState.keyColors={};
     if (saved) { try { var o=JSON.parse(saved); curState.guesses=o.guesses||[]; curState.status=o.status||"PLAYING"; curState.keyColors=o.keyColors||{}; } catch(e) {} }
     curState.currentInput=[]; $("wgDate").textContent="오늘의 단어 · "+splitHangulWord(curState.wordObj.word).length+"칸";
-    renderBoard(); renderResult(); renderStats();
+    renderBoard(); renderKeys(); renderResult(); renderStats();
     curState.currentRaw="";
-    if (curState.status === "PLAYING") { var firstTile = $("wgBoard").querySelector(".wg-entry"); if (firstTile) setTimeout(function(){ firstTile.focus(); }, 0); }
     if (curState.status !== "PLAYING") syncWordResult(); else renderWordRanking();
   }
   function updateHubState() { var badge=$("wordState"); badge.textContent="언제든 도전"; badge.className="game-state"; }
   function renderBoard() {
     var board=$("wgBoard"); board.innerHTML="";
-    var target=splitHangulWord(curState.wordObj.word), cols=5;
-    // 게임판은 항상 5칸 × 5줄로 고정합니다.
+    var cols=5;
+    // 게임판은 항상 5칸 × 5줄로 고정합니다. 입력은 화면 키보드로만 받습니다(핸드폰 키보드가 뜨지 않음).
     for(var r=0;r<5;r++) {
       var rowEl=el("div","wg-row"), guess=null, isCurrent=false;
       rowEl.style.gridTemplateColumns="repeat("+cols+",minmax(0,1fr))";
       if(r<curState.guesses.length) guess=curState.guesses[r];
       else if(r===curState.guesses.length && r<5) isCurrent=curState.status==="PLAYING";
       for(var c=0;c<cols;c++) {
-        var tile;
+        var tile=el("div","wg-tile");
         if(isCurrent) {
-          tile=document.createElement("input"); tile.type="text"; tile.className="wg-tile wg-entry";
-          tile.inputMode="text"; tile.lang="ko"; tile.autocomplete="off"; tile.autocapitalize="off";
-          tile.enterKeyHint="done"; tile.maxLength=8; tile.value=curState.currentInput[c]||"";
-          tile.setAttribute("aria-label", "자음 또는 모음 입력 칸 "+(c+1));
-          tile.addEventListener("input",function(){
-            var cells=Array.prototype.slice.call(board.querySelectorAll(".wg-entry"));
-            var at=cells.indexOf(this), entered=splitHangulWord(this.value);
-            if(!entered.length){ curState.currentInput[at]=""; }
-            else {
-              for(var k=0;k<entered.length && at+k<cells.length;k++) curState.currentInput[at+k]=entered[k];
-            }
-            curState.currentInput=curState.currentInput.slice(0,cols);
-            cells.forEach(function(cell,i){cell.value=curState.currentInput[i]||"";});
-            curState.currentRaw=curState.currentInput.join("");
-            var next=Math.min(cols-1,at+Math.max(1,entered.length));
-            if(entered.length && cells[next] && next!==at) cells[next].focus();
-            else if(entered.length && at<cols-1 && cells[at+1]) cells[at+1].focus();
-          });
-          tile.addEventListener("keydown",function(e){
-            var cells=Array.prototype.slice.call(board.querySelectorAll(".wg-entry")), at=cells.indexOf(this);
-            if(e.key==="Enter"){e.preventDefault();submitGuess();}
-            else if(e.key==="Backspace" && !this.value && at>0){e.preventDefault();curState.currentInput[at-1]="";curState.currentRaw=curState.currentInput.join("");cells[at-1].value="";cells[at-1].focus();}
-            else if(e.key==="ArrowLeft" && at>0){e.preventDefault();cells[at-1].focus();}
-            else if(e.key==="ArrowRight" && at<cells.length-1){e.preventDefault();cells[at+1].focus();}
-          });
-        } else {
-          tile=el("div","wg-tile");
-          if(guess){tile.textContent=guess.input[c]||"";tile.classList.add(guess.result[c]||"absent");}
-        }
+          var ch=curState.currentInput[c]||"";
+          tile.textContent=ch; if(ch) tile.classList.add("filled");
+          if(c===curState.currentInput.length) tile.classList.add("next");
+        } else if(guess) { tile.textContent=guess.input[c]||""; tile.classList.add(guess.result[c]||"absent"); }
         rowEl.appendChild(tile);
       }
       board.appendChild(rowEl);
     }
     $("wgPreview").textContent="";
   }
-  function renderKeys() { /* 사용자 키보드 사용: 화면 키보드 제거 */ }
-  function handleInput(key) {
+  var WG_LAYOUT = [
+    ["ㄱ","ㄴ","ㄷ","ㄹ","ㅁ","ㅂ","ㅅ"],
+    ["ㅇ","ㅈ","ㅊ","ㅋ","ㅌ","ㅍ","ㅎ"],
+    ["ㅏ","ㅑ","ㅓ","ㅕ","ㅗ","ㅛ","ㅜ","ㅠ","ㅡ","ㅣ"],
+    ["ㅐ","ㅒ","ㅔ","ㅖ","ㅘ","ㅙ","ㅚ","ㅝ","ㅞ","ㅟ","ㅢ"],
+    ["지우기","입력"]
+  ];
+  function renderKeys() {
+    var host=$("wgKeys"); if(!host) return; host.innerHTML="";
+    var playing=curState.status==="PLAYING";
+    WG_LAYOUT.forEach(function(row){
+      var rowEl=el("div","wg-krow");
+      row.forEach(function(k){
+        var b=document.createElement("button"); b.type="button"; b.className="wg-key"; b.setAttribute("data-k",k);
+        if(k==="지우기"||k==="입력"){ b.classList.add("wide"); b.textContent=(k==="지우기"?"⌫ 지우기":"입력"); b.setAttribute("aria-label",k); }
+        else { b.textContent=k; var col=curState.keyColors&&curState.keyColors[k]; if(col) b.classList.add(col); }
+        if(!playing) b.disabled=true;
+        rowEl.appendChild(b);
+      });
+      host.appendChild(rowEl);
+    });
+  }
+  (function(){ var host=$("wgKeys"); if(host) host.addEventListener("click",function(e){ var b=e.target.closest?e.target.closest("button[data-k]"):null; if(b&&!b.disabled) pressKey(b.getAttribute("data-k")); }); })();
+  var WG_TENSE = {"ㄲ":["ㄱ","ㄱ"],"ㄸ":["ㄷ","ㄷ"],"ㅃ":["ㅂ","ㅂ"],"ㅆ":["ㅅ","ㅅ"],"ㅉ":["ㅈ","ㅈ"]};
+  function pressKey(k) {
     if(curState.status!=="PLAYING") return;
-    if(key==="Enter") submitGuess();
+    if(k==="입력"||k==="Enter"){ submitGuess(); return; }
+    if(k==="지우기"||k==="Backspace"){ curState.currentInput.pop(); renderBoard(); return; }
+    var jamos=WG_TENSE[k]||[k];
+    if(curState.currentInput.length+jamos.length>5) return;
+    jamos.forEach(function(j){ curState.currentInput.push(j); });
+    curState.currentRaw=curState.currentInput.join("");
+    renderBoard();
   }
   function submitGuess() {
     if(curState.status!=="PLAYING") return;
-    var inputText=String(curState.currentRaw||"").trim().replace(/\s/g, ""), input=(curState.currentInput||[]).filter(Boolean), target=splitHangulWord(curState.wordObj.word);
-    if(!inputText || input.length!==5 || target.length!==5){toast("5칸에 맞춰 한글 단어를 입력해 주세요.");return;}
+    var input=(curState.currentInput||[]).filter(Boolean), target=splitHangulWord(curState.wordObj.word);
+    if(input.length!==5 || target.length!==5){toast("5칸을 모두 채워 주세요.");return;}
     var result=target.map(function(ch,i){return input[i]===ch?"correct":"absent";}), remaining=target.slice();
     for(var i=0;i<target.length;i++) if(result[i]==="correct") remaining[i]=null;
     for(var j=0;j<target.length;j++) if(result[j]!=="correct"){var f=remaining.indexOf(input[j]);if(f!==-1){result[j]="present";remaining[f]=null;}}
     curState.guesses.push({input:input,result:result});
+    // 키보드 색칠: 정답(초록) > 위치 다름(노랑) > 없음(회색) 순으로 가장 좋은 결과를 유지
+    var rank={absent:1,present:2,correct:3};
+    input.forEach(function(ch,idx){ var rs=result[idx], old=curState.keyColors[ch]; if(!old||rank[rs]>rank[old]) curState.keyColors[ch]=rs; });
     if(result.every(function(r){return r==="correct";})){curState.status="WON";saveStat(true);}
     else if(curState.guesses.length>=5){curState.status="LOST";saveStat(false);}
     store(curState.periodKey,JSON.stringify({guesses:curState.guesses,status:curState.status,keyColors:curState.keyColors}));
     curState.currentRaw=""; curState.currentInput=[];
-    if(curState.status!=="PLAYING") syncWordResult(); renderBoard(); renderResult(); renderStats();
-    if(curState.status==="PLAYING") { var nextTile=$("wgBoard").querySelector(".wg-entry"); if(nextTile) nextTile.focus(); }
+    if(curState.status!=="PLAYING") syncWordResult();
+    renderBoard(); renderKeys(); renderResult(); renderStats();
   }
-  $("wgNewGame").addEventListener("click",function(){initWordGame(true);var first=$("wgBoard").querySelector(".wg-entry");if(first)first.focus();});
-  window.addEventListener("keydown", function(e) {
-    if(views.word.hidden || curState.status!=="PLAYING") return;
-    if(e.key==="Enter"){e.preventDefault();submitGuess();}
-  });
-
+  $("wgNewGame").addEventListener("click",function(){initWordGame(true);});
   function renderResult() {
     var rd = $("wgResult");
     if (curState.status === "PLAYING") { rd.hidden = true; return; }
@@ -1924,15 +1934,17 @@
     var s = readStat(), rate = s.played ? Math.round((s.win / s.played) * 100) : 0;
     $("wgStats").innerHTML = "<div><b>" + s.played + "</b><span>판수</span></div><div><b>" + rate + "%</b><span>승률</span></div><div><b>" + s.streak + "</b><span>연승</span></div><div><b>" + s.maxStreak + "</b><span>최다연승</span></div>";
   }
+  // PC 물리 키보드(두벌식)도 쓸 수 있게: 한/영 상태와 상관없이 키 위치로 자모를 입력합니다.
+  var WG_CODE = {KeyQ:["ㅂ","ㅃ"],KeyW:["ㅈ","ㅉ"],KeyE:["ㄷ","ㄸ"],KeyR:["ㄱ","ㄲ"],KeyT:["ㅅ","ㅆ"],KeyY:["ㅛ","ㅛ"],KeyU:["ㅕ","ㅕ"],KeyI:["ㅑ","ㅑ"],KeyO:["ㅐ","ㅒ"],KeyP:["ㅔ","ㅖ"],
+    KeyA:["ㅁ","ㅁ"],KeyS:["ㄴ","ㄴ"],KeyD:["ㅇ","ㅇ"],KeyF:["ㄹ","ㄹ"],KeyG:["ㅎ","ㅎ"],KeyH:["ㅗ","ㅗ"],KeyJ:["ㅓ","ㅓ"],KeyK:["ㅏ","ㅏ"],KeyL:["ㅣ","ㅣ"],
+    KeyZ:["ㅋ","ㅋ"],KeyX:["ㅌ","ㅌ"],KeyC:["ㅊ","ㅊ"],KeyV:["ㅍ","ㅍ"],KeyB:["ㅠ","ㅠ"],KeyN:["ㅜ","ㅜ"],KeyM:["ㅡ","ㅡ"]};
   window.addEventListener("keydown", function (e) {
     if (views.word.hidden || curState.status !== "PLAYING") return;
     var tag = document.activeElement ? document.activeElement.tagName : "";
-    if (tag === "INPUT" || tag === "TEXTAREA") return;
-    var k = e.key;
-    if (k === "Backspace") { handleInput("지우기"); e.preventDefault(); }
-    else if (k === "Enter") { handleInput("확인"); e.preventDefault(); }
-    else if (KEY_MAP[k]) { handleInput(KEY_MAP[k]); e.preventDefault(); }
-    else if ("ㄱㄴㄷㄹㅁㅂㅅㅇㅈㅊㅋㅌㅍㅎㅏㅑㅓㅕㅗㅛㅜㅠㅡㅣㅐㅔㅚㅟㅢ".indexOf(k) !== -1 && k.length === 1) { handleInput(k); e.preventDefault(); }
+    if (tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT" || e.ctrlKey || e.metaKey || e.altKey) return;
+    if (e.key === "Backspace") { pressKey("지우기"); e.preventDefault(); }
+    else if (e.key === "Enter") { pressKey("입력"); e.preventDefault(); }
+    else if (WG_CODE[e.code]) { pressKey(WG_CODE[e.code][e.shiftKey ? 1 : 0]); e.preventDefault(); }
   });
 
   /* =====================================================================
@@ -2250,7 +2262,7 @@
     setText("communityStatus", avatarLookupFailed ? "작성자별 학생증 프로필을 불러오지 못했습니다. Supabase에서 student_cards 조회 정책을 확인해 주세요." : (posts.length ? "" : "아직 게시물이 없습니다. 첫 글을 작성해 보세요."));
     posts.forEach(function (p) {
       var row = document.createElement("div"); row.className = "community-row"; row.setAttribute("role", "button"); row.tabIndex = 0;
-      row.innerHTML = authorPhoto(p.author_id) + '<div class="community-row-title-wrap" style="flex:1;min-width:0"><div class="community-row-title">' + escapeHtml(p.title) + '</div><div class="community-author-line" style="margin:5px 0 0">' + '<span>작성자 · ' + escapeHtml(p.author_nickname || "회원") + '</span><span>작성일시 · ' + escapeHtml(new Date(p.created_at).toLocaleString("ko-KR")) + '</span></div></div><div class="community-row-meta"><span>♥ ' + Number(p.like_count || 0) + '</span><span>💬 ' + (p.community_comments || []).length + '</span></div>';
+      row.innerHTML = authorPhoto(p.author_id) + '<div class="community-row-title-wrap" style="flex:1;min-width:0"><div class="community-row-title">' + escapeHtml(p.title) + '</div><div class="community-author-line" style="margin:5px 0 0">' + '<span class="cm-name">작성자 · ' + escapeHtml(p.author_nickname || "회원") + '</span><span class="cm-date"><i class="cm-lbl">작성일시 · </i>' + ddDateHtml(p.created_at) + '</span></div></div><div class="community-row-meta"><span>♥ ' + Number(p.like_count || 0) + '</span><span>💬 ' + (p.community_comments || []).length + '</span></div>';
       var open = function () { selectedPostId = (selectedPostId === p.id) ? null : p.id; loadCommunity(); };
       row.onclick = open; row.onkeydown = function (e) { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); open(); } };
       feed.appendChild(row);
@@ -2258,7 +2270,7 @@
 
       var own = user && user.id === p.author_id, admin = window.__dripIsAdmin === true;
       var detail = document.createElement("article"); detail.className = "community-detail";
-      detail.innerHTML = '<h3>' + escapeHtml(p.title) + '</h3><div class="community-author-line">' + authorPhoto(p.author_id) + '<span>' + escapeHtml(p.author_nickname) + ' · ' + new Date(p.created_at).toLocaleString("ko-KR") + '</span></div><div class="community-body">' + escapeHtml(p.content) + '</div>'
+      detail.innerHTML = '<h3>' + escapeHtml(p.title) + '</h3><div class="community-author-line">' + authorPhoto(p.author_id) + '<span class="cm-name">' + escapeHtml(p.author_nickname) + '</span><span class="cm-date">· ' + ddDateHtml(p.created_at) + '</span></div><div class="community-body">' + escapeHtml(p.content) + '</div>'
         + (p.image_url ? '<a href="' + escapeHtml(p.image_url) + '" target="_blank" rel="noopener"><img class="community-photo" src="' + escapeHtml(p.image_url) + '" alt="게시물 첨부 사진"></a>' : '')
         + '<div class="community-actions"><button class="like-btn" data-like type="button">♥ 좋아요 ' + Number(p.like_count || 0) + '</button>' + (own ? '<button data-edit type="button">수정</button>' : '') + (own || admin ? '<button data-delete type="button">삭제</button>' : '') + '</div>'
         + '<div class="comment-list"><strong>댓글 ' + (p.community_comments || []).length + '개</strong><div class="comments"></div><form class="community-form comment-form"><textarea maxlength="2000" placeholder="댓글을 입력해 주세요." required></textarea><button type="submit">댓글 작성</button><div class="community-status"></div></form></div>';
@@ -3554,7 +3566,7 @@
 
         var d = el("article", "community-detail"); d.hidden = openId !== p.id;
         d.appendChild(el("h3", "", p.title));
-        d.appendChild(el("div", "community-meta", (p.author_nickname || "회원") + " · " + new Date(p.created_at).toLocaleString("ko-KR") + (p.is_secret ? " · 비공개" : "")));
+        var sgMeta = el("div", "community-meta sg-meta"); sgMeta.innerHTML = '<span class="cm-name">' + escapeHtml(p.author_nickname || "회원") + '</span><span class="cm-date"> · ' + ddDateHtml(p.created_at) + (p.is_secret ? ' · 비공개' : '') + '</span>'; d.appendChild(sgMeta);
         d.appendChild(el("div", "community-body", p.content));
         if (p.admin_reply) { var rp = el("div", "sg-reply"); rp.appendChild(el("strong", "", "💬 운영진 답변")); rp.appendChild(el("p", "", p.admin_reply)); d.appendChild(rp); }
         if (me && (me.id === p.author_id || admin)) {
@@ -3673,5 +3685,20 @@
   width:min(72%, 190px) !important;
   max-width:190px !important;
   max-height:58px !important;
+}
+
+/* === 게시판 작성자 / 작성일시 한 줄 === */
+.community-author-line .cm-name{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:0 1 auto}
+.community-author-line .cm-date{flex:none;white-space:nowrap}
+.sg-meta{display:flex;gap:0;align-items:baseline;min-width:0;white-space:nowrap}
+.sg-meta .cm-name{min-width:0;overflow:hidden;text-overflow:ellipsis;flex:0 1 auto}
+.sg-meta .cm-date{flex:none}
+.cm-short{display:none}
+@media (max-width:650px){
+  .cm-full{display:none}
+  .cm-short{display:inline}
+  .cm-lbl{display:none}
+  .community-row .community-author-line{flex-wrap:nowrap!important;gap:6px!important;font-size:11.5px}
+  .community-detail .community-author-line{flex-wrap:nowrap!important;gap:6px!important}
 }
 </style>
