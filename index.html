@@ -277,6 +277,24 @@
   .rank-avatar { width:36px; height:36px; flex:none; border:2px solid var(--ink); border-radius:50%; overflow:hidden; background:#FFF0C2; display:grid; place-items:center; }
   .rank-avatar svg { width:100%; height:100%; display:block; }
 
+
+  /* 오늘은 뭐먹지 - Yes/No 가지치기 */
+  .food-choice-card { margin-top:14px; }
+  .food-category-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; margin-top:14px; }
+  .food-category { border:2px solid var(--ink); border-radius:14px; padding:13px 10px; background:#fff; font-weight:800; cursor:pointer; text-align:center; box-shadow:3px 3px 0 var(--ink); }
+  .food-category:active,.food-answer:active { transform:translate(1px,1px); box-shadow:1px 1px 0 var(--ink); }
+  .food-tree { display:flex; flex-direction:column; align-items:center; gap:10px; padding:16px 8px; overflow:hidden; }
+  .food-tree-node { width:min(100%,300px); border:2px solid #5276ff; border-radius:50%; padding:15px 12px; text-align:center; background:#fff; font-weight:800; line-height:1.4; }
+  .food-branch-labels { display:flex; justify-content:space-between; width:min(100%,300px); font-size:13px; font-weight:800; }
+  .food-answers { display:flex; justify-content:center; gap:12px; width:100%; }
+  .food-answer { flex:1; max-width:140px; border:2px solid var(--ink); border-radius:10px; padding:12px; font-weight:900; background:#fff; box-shadow:3px 3px 0 var(--ink); cursor:pointer; }
+  .food-answer.yes { background:#dff6e8; } .food-answer.no { background:#fff0d6; }
+  .food-tree-history { width:100%; display:flex; flex-direction:column; align-items:center; gap:6px; }
+  .food-history-item { border:1px solid #d7ddeb; border-radius:10px; background:#f8faff; padding:8px 12px; width:min(100%,320px); text-align:center; font-size:13px; }
+  .food-result { width:min(100%,340px); border:2px solid var(--ink); border-radius:16px; background:#fff0c2; padding:20px 14px; text-align:center; box-shadow:5px 5px 0 var(--ink); }
+  .food-result-name { font-size:25px; font-weight:900; margin:8px 0; }
+  @media(min-width:560px) { .food-category-grid { grid-template-columns:repeat(3,minmax(0,1fr)); } }
+
   /* 미니게임 */
   .game-card { display:flex; align-items:center; gap:16px; width:100%; text-align:left; transition:transform .08s, box-shadow .08s; }
   .game-card:hover { transform:translate(-1px,-1px); box-shadow:7px 7px 0 var(--ink); }
@@ -1255,6 +1273,36 @@
       <span class="game-info"><strong>오늘의 단어 (국어사전 연동)</strong><small>언제든 다시 도전 · 휴대폰 키보드로 단어를 입력하세요</small></span>
       <span class="game-state" id="wordState">도전하기</span>
     </button>
+    <button class="card game-card" id="openFoodChoice" type="button" style="margin-top:14px">
+      <span class="game-no" style="background:#dff6e8">🍽️</span>
+      <span class="game-info"><strong>오늘은 뭐먹지?</strong><small>음식 종류를 고르고 Yes or No로 오늘의 메뉴를 찾아보세요.</small></span>
+      <span class="game-state">메뉴 추천</span>
+    </button>
+  </section>
+
+  <section id="foodChoiceView" hidden aria-label="오늘은 뭐먹지">
+    <div class="head">
+      <div class="head-main"><h2 class="title">🍽️ 오늘은 뭐먹지?</h2><p class="sub">먼저 먹고 싶은 음식 종류를 선택하고, 질문에 Yes 또는 No로 답해 보세요.</p></div>
+      <button class="btn small" id="foodChoiceBack" type="button">← 미니게임</button>
+    </div>
+    <div class="card food-choice-card" id="foodCategoryPanel">
+      <h3 style="margin:0;font-size:18px">어떤 종류가 끌리나요?</h3>
+      <div class="food-category-grid" id="foodCategoryGrid">
+        <button class="food-category" data-food-category="한식" type="button">🇰🇷 한식</button>
+        <button class="food-category" data-food-category="일식" type="button">🍣 일식</button>
+        <button class="food-category" data-food-category="중식" type="button">🥢 중식</button>
+        <button class="food-category" data-food-category="양식" type="button">🍝 양식</button>
+        <button class="food-category" data-food-category="패스트푸드" type="button">🍔 패스트푸드</button>
+        <button class="food-category" data-food-category="아시안" type="button">🍜 아시안</button>
+        <button class="food-category" data-food-category="분식" type="button">🍢 분식</button>
+        <button class="food-category" data-food-category="아무거나" type="button">🎲 아무거나</button>
+      </div>
+    </div>
+    <div class="card food-choice-card" id="foodTreePanel" hidden>
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap"><strong id="foodChosenCategory">선택한 종류</strong><button class="btn small" id="foodChangeCategory" type="button">종류 다시 선택</button></div>
+      <div class="food-tree" id="foodTree" aria-live="polite"></div>
+      <div style="display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:8px"><button class="btn small" id="foodRestart" type="button">↻ 다시 추천받기</button></div>
+    </div>
   </section>
 
   <section id="wordGame" hidden aria-label="단어 맞추기">
@@ -1320,7 +1368,7 @@
 
 
   /* ---------------- 화면 전환 ---------------- */
-  var views = { main: $("mainView"), board: $("boardView"), explore: $("exploreView"), hub: $("gameHub"), word: $("wordGame"), notice: $("noticeView"), studentId: $("studentIdView"), fortune: $("fortuneView"), places: $("placesView"), chatRank: $("chatRankView"), suggest: $("suggestView") };
+  var views = { main: $("mainView"), board: $("boardView"), explore: $("exploreView"), hub: $("gameHub"), word: $("wordGame"), notice: $("noticeView"), studentId: $("studentIdView"), fortune: $("fortuneView"), places: $("placesView"), chatRank: $("chatRankView"), foodChoice: $("foodChoiceView"), suggest: $("suggestView") };
   var currentAppView = "main";
   var handlingBrowserBack = false;
   try { history.replaceState({ dripcollegeApp: true, view: "main" }, "", location.href); } catch (_historyInitError) {}
@@ -1376,6 +1424,12 @@
   $("goGames").onclick = function () { showView("hub"); updateHubState(); };
   $("hubBack").onclick = function () { showView("main"); };
   $("openWord").onclick = function () { showView("word"); initWordGame(); };
+  $("openFoodChoice").onclick = function () { showView("foodChoice"); resetFoodChoice(); };
+  $("foodChoiceBack").onclick = function () { showView("hub"); updateHubState(); };
+  $("foodChangeCategory").onclick = function () { $("foodTreePanel").hidden = true; $("foodCategoryPanel").hidden = false; };
+  $("foodRestart").onclick = function () { if (foodSelectedCategory) startFoodTree(foodSelectedCategory); };
+  $("foodCategoryGrid").addEventListener("click", function (ev) { var b = ev.target.closest("[data-food-category]"); if (b) startFoodTree(b.getAttribute("data-food-category")); });
+  $("foodTree").addEventListener("click", function (ev) { var b = ev.target.closest("[data-food-answer]"); if (b) answerFoodTree(b.getAttribute("data-food-answer") === "yes"); });
   $("wordBack").onclick = function () { showView("hub"); updateHubState(); };
   $("wordRankRefresh").onclick = function () { renderWordRanking(); };
   $("goNotice").onclick = function () { showView("notice"); };
@@ -1479,6 +1533,54 @@
     var node = $("chatRankStatus"); if (!node) return;
     node.textContent = message || ""; node.className = "chat-rank-status" + (kind ? " " + kind : "");
   }
+  /* 오늘은 뭐먹지: 음식 종류 선택 후 Yes/No 가지치기로 메뉴 추천 */
+  var foodSelectedCategory = "";
+  var foodQuestionIndex = 0;
+  var foodAnswers = [];
+  var foodQuestions = [
+    { text: "국물 있는 음식이 좋아요?", key: "soup" },
+    { text: "매콤한 음식이 좋아요?", key: "spicy" },
+    { text: "면이나 빵 종류가 좋아요?", key: "noodle" }
+  ];
+  var foodMenuBank = [
+    ["한식","김치찌개",1,1,0],["한식","된장찌개",1,0,0],["한식","순두부찌개",1,1,0],["한식","제육볶음",0,1,0],["한식","불고기",0,0,0],["한식","비빔밥",0,1,0],["한식","국밥",1,0,0],["한식","냉면",0,0,1],["한식","칼국수",1,0,1],["한식","떡볶이",0,1,1],
+    ["일식","라멘",1,0,1],["일식","돈카츠",0,0,0],["일식","초밥",0,0,0],["일식","우동",1,0,1],["일식","규동",0,0,0],["일식","카레",0,1,0],["일식","야끼소바",0,1,1],
+    ["중식","짬뽕",1,1,1],["중식","짜장면",0,0,1],["중식","마라탕",1,1,1],["중식","탕수육",0,0,0],["중식","볶음밥",0,0,0],["중식","마파두부덮밥",0,1,0],
+    ["양식","파스타",0,0,1],["양식","피자",0,0,0],["양식","스테이크",0,0,0],["양식","리조또",0,0,0],["양식","크림수프와 샌드위치",1,0,1],["양식","라자냐",0,0,0],
+    ["패스트푸드","햄버거",0,0,1],["패스트푸드","치킨",0,1,0],["패스트푸드","감자튀김과 버거",0,0,1],["패스트푸드","핫도그",0,0,1],["패스트푸드","매운 치킨버거",0,1,1],
+    ["아시안","쌀국수",1,0,1],["아시안","팟타이",0,1,1],["아시안","분짜",0,0,1],["아시안","카레라이스",0,1,0],["아시안","볶음면",0,1,1],["아시안","똠얌쌀국수",1,1,1],
+    ["분식","라볶이",0,1,1],["분식","김밥",0,0,0],["분식","순대",0,0,0],["분식","어묵탕",1,0,0],["분식","잔치국수",1,0,1],["분식","튀김",0,0,0]
+  ];
+  function resetFoodChoice() { foodSelectedCategory = ""; foodAnswers = []; foodQuestionIndex = 0; $("foodCategoryPanel").hidden = false; $("foodTreePanel").hidden = true; }
+  function startFoodTree(category) { foodSelectedCategory = category; foodAnswers = []; foodQuestionIndex = 0; $("foodChosenCategory").textContent = "🍽️ 선택: " + category; $("foodCategoryPanel").hidden = true; $("foodTreePanel").hidden = false; renderFoodTree(); }
+  function renderFoodTree() {
+    var root = $("foodTree"); root.innerHTML = "";
+    var history = el("div", "food-tree-history");
+    foodAnswers.forEach(function (a, i) { var item = el("div", "food-history-item", foodQuestions[i].text + " → " + (a ? "Yes" : "No")); history.appendChild(item); if (i < foodAnswers.length - 1) { var arrow = el("div", "", "↓"); arrow.style.fontWeight = "900"; history.appendChild(arrow); } });
+    root.appendChild(history);
+    if (foodQuestionIndex >= foodQuestions.length) { renderFoodResult(root); return; }
+    if (foodAnswers.length) { var arrowNow = el("div", "", "↓"); arrowNow.style.fontSize = "22px"; arrowNow.style.fontWeight = "900"; root.appendChild(arrowNow); }
+    var node = el("div", "food-tree-node", foodQuestions[foodQuestionIndex].text); root.appendChild(node);
+    var labels = el("div", "food-branch-labels"); labels.innerHTML = "<span>↙ No</span><span>Yes ↘</span>"; root.appendChild(labels);
+    var answers = el("div", "food-answers");
+    var no = el("button", "food-answer no", "No"); no.type = "button"; no.setAttribute("data-food-answer", "no");
+    var yes = el("button", "food-answer yes", "Yes"); yes.type = "button"; yes.setAttribute("data-food-answer", "yes");
+    answers.appendChild(no); answers.appendChild(yes); root.appendChild(answers);
+    var progress = el("div", "", "질문 " + (foodQuestionIndex + 1) + " / " + foodQuestions.length); progress.style.color = "#64748b"; progress.style.fontSize = "12px"; root.appendChild(progress);
+  }
+  function answerFoodTree(answer) { foodAnswers[foodQuestionIndex] = answer; foodQuestionIndex++; renderFoodTree(); }
+  function renderFoodResult(root) {
+    var candidates = foodMenuBank.filter(function (m) { return foodSelectedCategory === "아무거나" || m[0] === foodSelectedCategory; });
+    var scored = candidates.map(function (m) { var score = 0; foodAnswers.forEach(function (a, i) { score += ((!!m[i + 2] === a) ? 1 : 0); }); return { menu:m, score:score }; });
+    var best = Math.max.apply(null, scored.map(function (x) { return x.score; }));
+    var matches = scored.filter(function (x) { return x.score === best; });
+    var chosen = matches[Math.floor(Math.random() * matches.length)];
+    var result = el("div", "food-result"); result.appendChild(el("div", "", "🎉 오늘의 추천 메뉴"));
+    result.appendChild(el("div", "food-result-name", chosen.menu[1]));
+    result.appendChild(el("div", "", foodSelectedCategory === "아무거나" ? "전체 음식 중에서 골랐어요!" : foodSelectedCategory + " 중에서 골랐어요!"));
+    result.appendChild(el("div", "", "Yes/No 답변과 가장 잘 맞는 메뉴예요.")); root.appendChild(result);
+  }
+
   function chatRankDateRange(period) {
     var now = new Date(); var start, end;
     if (period === "monthly") {
