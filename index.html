@@ -635,11 +635,14 @@
   #bottomFixedNav{display:none}
   body.signed-in #bottomFixedNav{position:fixed;left:0;right:0;bottom:0;z-index:80;display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:2px;padding:8px max(7px,env(safe-area-inset-right,0px)) calc(8px + env(safe-area-inset-bottom,0px)) max(7px,env(safe-area-inset-left,0px));background:rgba(255,255,255,.97);border-top:1px solid #dce6ef;box-shadow:0 -4px 18px rgba(30,70,120,.10);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px)}
   #bottomFixedNav .bottom-nav-btn{min-width:0;min-height:48px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;border:0;background:transparent;border-radius:12px;padding:3px 1px;color:#5a6878;font-family:var(--font-body);font-size:11px;font-weight:700;line-height:1.2;white-space:nowrap;box-shadow:none}
-  #bottomFixedNav .bottom-nav-btn .bottom-nav-icon{font-size:21px;line-height:1.15}
+  #bottomFixedNav .bottom-nav-btn .bottom-nav-icon{display:block;line-height:0}
+  #bottomFixedNav .bottom-nav-btn .ico{width:26px;height:26px;stroke:#26323f;stroke-width:1.6;transition:stroke .15s}
+  #bottomFixedNav .bottom-nav-btn .ico .ac{stroke:#35a7e1}
+  #bottomFixedNav .bottom-nav-btn.active .ico{stroke:#087fae}
   #bottomFixedNav .bottom-nav-btn.active{background:#e9f6fd;color:#087fae}
   #bottomFixedNav .bottom-nav-btn:active{transform:scale(.96)}
   @media(min-width:700px){body.signed-in #bottomFixedNav{left:50%;right:auto;transform:translateX(-50%);width:min(100%,780px);border:1px solid #dce6ef;border-bottom:0;border-radius:18px 18px 0 0}}
-  @media(max-width:360px){#bottomFixedNav .bottom-nav-btn{font-size:10px}#bottomFixedNav .bottom-nav-btn .bottom-nav-icon{font-size:19px}}
+  @media(max-width:360px){#bottomFixedNav .bottom-nav-btn{font-size:10px}#bottomFixedNav .bottom-nav-btn .ico{width:23px;height:23px}}
 
 
   /* ===== 서비스 바로가기: 선 아이콘 4열 그리드 (동양생명 스타일) ===== */
@@ -990,12 +993,12 @@
   <button type="button" class="tb-wx" id="tbWeather" title="현재 위치 날씨 자동 표시 · 누르면 위치 다시 확인"><span class="wx-ico" id="wxIco" aria-hidden="true">⛅</span><span class="wx-txt"><span class="wx-main" id="wxMain">날씨 불러오는 중</span><span class="wx-sub" id="wxSub"></span></span></button>
 </header>
 <nav id="bottomFixedNav" aria-label="하단 고정 메뉴">
-  <button class="bottom-nav-btn" id="bottomMain" type="button"><span class="bottom-nav-icon" aria-hidden="true">🏠</span><span>메인</span></button>
-  <button class="bottom-nav-btn" id="bottomNotice" type="button"><span class="bottom-nav-icon" aria-hidden="true">📢</span><span>공지사항</span></button>
-  <button class="bottom-nav-btn" id="bottomBoard" type="button"><span class="bottom-nav-icon" aria-hidden="true">💬</span><span>수다게시판</span></button>
-  <button class="bottom-nav-btn" id="bottomGames" type="button"><span class="bottom-nav-icon" aria-hidden="true">🎮</span><span>미니게임</span></button>
-  <button class="bottom-nav-btn" id="bottomPlaces" type="button"><span class="bottom-nav-icon" aria-hidden="true">🍽️</span><span>맛집투어</span></button>
-  <button class="bottom-nav-btn" id="bottomChatRank" type="button"><span class="bottom-nav-icon" aria-hidden="true">🏆</span><span>채팅순위</span></button>
+  <button class="bottom-nav-btn" id="bottomMain" type="button"><span class="bottom-nav-icon" aria-hidden="true"><svg class="ico" viewBox="0 0 40 40" aria-hidden="true"><path d="M5 19L20 6l15 13"/><path d="M9 16.5V33h22V16.5"/><path class="ac" d="M16 33v-9h8v9"/></svg></span><span>메인</span></button>
+  <button class="bottom-nav-btn" id="bottomNotice" type="button"><span class="bottom-nav-icon" aria-hidden="true"><svg class="ico" viewBox="0 0 40 40" aria-hidden="true"><path d="M7 16h6l12-6v20l-12-6H7z"/><path d="M13 24l2 8h4l-2-7.5"/><path class="ac" d="M29 15c2.5 2 2.5 8 0 10M32 12c4.5 4 4.5 12 0 16"/></svg></span><span>공지사항</span></button>
+  <button class="bottom-nav-btn" id="bottomBoard" type="button"><span class="bottom-nav-icon" aria-hidden="true"><svg class="ico" viewBox="0 0 40 40" aria-hidden="true"><path d="M6 8h20a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H15l-6 5v-5H6a2 2 0 0 1-2-2V10a2 2 0 0 1 2-2z"/><path d="M10 15.5h.01M16 15.5h.01M22 15.5h.01" stroke-width="2.4"/><path class="ac" d="M31 15h2a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-1v4l-5-4h-8"/></svg></span><span>수다게시판</span></button>
+  <button class="bottom-nav-btn" id="bottomGames" type="button"><span class="bottom-nav-icon" aria-hidden="true"><svg class="ico" viewBox="0 0 40 40" aria-hidden="true"><path d="M11 12h18a6 6 0 0 1 6 6l1.5 8a3.5 3.5 0 0 1-6 2.5L27 25H13l-3.5 3.5a3.5 3.5 0 0 1-6-2.5L5 18a6 6 0 0 1 6-6z"/><path class="ac" d="M13 16v5M10.5 18.5h5"/><circle class="ac" cx="26" cy="17.5" r="1.3"/><circle class="ac" cx="30" cy="20.5" r="1.3"/></svg></span><span>미니게임</span></button>
+  <button class="bottom-nav-btn" id="bottomPlaces" type="button"><span class="bottom-nav-icon" aria-hidden="true"><svg class="ico" viewBox="0 0 40 40" aria-hidden="true"><path d="M8 15h20v9a8 8 0 0 1-8 8h-4a8 8 0 0 1-8-8z"/><path d="M28 18h3a3.5 3.5 0 0 1 0 7h-3.5"/><path d="M10 36h18"/><path class="ac" d="M14 6v5M20 5v6M26 6v5"/></svg></span><span>맛집투어</span></button>
+  <button class="bottom-nav-btn" id="bottomChatRank" type="button"><span class="bottom-nav-icon" aria-hidden="true"><svg class="ico" viewBox="0 0 40 40" aria-hidden="true"><path d="M6 7h28v20H19l-8 6v-6H6z"/><path class="ac" d="M12 14h16M12 19h11"/><circle cx="29" cy="29" r="6"/><path d="M29 25v4l2 1"/></svg></span><span>채팅순위</span></button>
 </nav>
 <div class="page">
 
