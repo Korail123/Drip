@@ -961,6 +961,27 @@
   .chat-rank-empty{padding:20px 14px;color:#64748b;font-size:13px;line-height:1.6}
   @media(max-width:620px){.chat-rank-columns{grid-template-columns:1fr}.chat-rank-tools{align-items:stretch}.chat-rank-tools>*{width:100%;box-sizing:border-box}.chat-rank-tools input[type=file]{width:100%}}
 
+
+  /* ===== 학생증 캐릭터 꾸미기: 미리보기 + 가로 스와이프 ===== */
+  .sid-editor { max-width:460px; }
+  .sid-studio { margin:8px 0 12px; padding:12px; border:1px solid #e3ebef; border-radius:18px; background:#f8fbfd; overflow:hidden; }
+  .sid-studio-top { display:flex; gap:12px; align-items:center; margin-bottom:10px; }
+  .sid-live { flex:none; width:118px; aspect-ratio:100/112; border:2px solid #17252d; border-radius:16px; overflow:hidden; background:#fff; }
+  .sid-live svg { display:block; width:100%; height:100%; }
+  .sid-live-side { min-width:0; flex:1; }
+  .sid-live-title { display:block; font-size:15px; margin-bottom:4px; }
+  .sid-studio .sid-swipe-hint { margin:0; font-size:12px; line-height:1.55; color:#647781; font-weight:700; }
+  .sid-cats { display:flex; gap:6px; overflow-x:auto; padding:2px 2px 8px; -webkit-overflow-scrolling:touch; overscroll-behavior-x:contain; scroll-snap-type:x proximity; scrollbar-width:none; }
+  .sid-cats::-webkit-scrollbar { display:none; }
+  .sid-cat { flex:0 0 auto; scroll-snap-align:start; border:1px solid #d5dfe6; background:#fff; border-radius:999px; padding:7px 14px; font-weight:800; font-size:13.5px; white-space:nowrap; }
+  .sid-cat.on { background:#17252d; color:#fff; border-color:#17252d; }
+  #sidAvatarControls.sid-strip { display:flex !important; flex-wrap:nowrap; gap:10px; overflow-x:auto; padding:6px 2px 12px; margin:0; align-items:stretch; -webkit-overflow-scrolling:touch; overscroll-behavior-x:contain; scroll-snap-type:x proximity; touch-action:pan-x pan-y; }
+  .sid-tile { flex:0 0 76px; scroll-snap-align:center; display:flex; flex-direction:column; align-items:center; gap:4px; padding:5px 4px 7px; border:2px solid #dbe4ea; background:#fff; border-radius:14px; font-weight:800; font-size:11.5px; line-height:1.2; }
+  .sid-tile.on { border-color:#079eaa; background:#effafa; box-shadow:0 0 0 3px rgba(7,158,170,.18); }
+  .sid-tile .th { width:62px; aspect-ratio:100/112; border-radius:10px; overflow:hidden; background:#fff; }
+  .sid-tile .th svg { display:block; width:100%; height:100%; }
+  .sid-tile .sw { width:44px; height:44px; border-radius:50%; border:2px solid #17252d; margin:9px 0 9px; }
+  .sid-tile .lb { white-space:nowrap; }
 </style>
 </head>
 <body>
@@ -1129,8 +1150,17 @@
       <div class="sid-field"><label for="sidSkillInput">특기 (학생증 뒷면)</label><input id="sidSkillInput" class="sid-input" maxlength="20" placeholder="예: 엑셀 단축키, 눈치 빠름"></div>
       <div class="sid-field"><label for="sidJobInput">하는 일 (학생증 뒷면)</label><input id="sidJobInput" class="sid-input" maxlength="20" placeholder="예: 물류 관리, 개발"></div>
       <h3 class="sid-h">🎨 프로필 캐릭터</h3>
-      <p class="sid-swipe-hint">👈 손가락으로 좌우로 밀어 옵션 종류와 세부 항목을 넘겨보세요 👉</p>
-      <div id="sidAvatarControls" aria-label="캐릭터 옵션, 좌우로 밀어 보기"></div>
+      <div class="sid-studio">
+        <div class="sid-studio-top">
+          <div class="sid-live" id="sidLive" aria-label="캐릭터 미리보기"></div>
+          <div class="sid-live-side">
+            <b id="sidLiveTitle" class="sid-live-title">캐릭터 고르는 중</b>
+            <p class="sid-swipe-hint">① 위쪽 종류 탭을 옆으로 밀어 고르고<br>② 아래 옵션도 옆으로 밀어 눌러보세요.<br>누르면 왼쪽 미리보기에 바로 반영돼요!</p>
+          </div>
+        </div>
+        <div id="sidCats" class="sid-cats" role="tablist" aria-label="옵션 종류, 좌우로 밀어 보기"></div>
+        <div id="sidAvatarControls" class="sid-strip" aria-label="옵션 목록, 좌우로 밀어 보기"></div>
+      </div>
       <div class="sid-actions"><button class="btn small" id="sidRandom" type="button">🎲 랜덤</button><button class="btn small" id="sidReset" type="button">↺ 기본값</button><button class="btn small coral" id="sidSave" type="button">💾 저장하기</button><button class="btn small" id="sidDownload" type="button">🖼️ 앞면·뒷면 PNG 저장하기</button></div>
       <div id="sidStatus" class="community-status"></div>
       <div id="sidPngPreview"></div>
@@ -1348,7 +1378,7 @@
     <div class="card wg wg-statcard"><h3>내 누적 기록</h3><div class="wg-stats" id="wgStats"></div></div>
     <div class="card wg wg-statcard">
       <div class="wg-top"><h3 style="margin:0">🏆 승률 랭킹</h3><button class="btn small" id="wordRankRefresh" type="button">새로고침</button></div>
-      <p class="community-meta">승률 → 승리 수 → 참가 판수 순 · 3판 이상 참가자만 표시</p>
+      <p class="community-meta">🥊 회원끼리 승률 배틀! 승률 → 승리 수 → 참가 판수 순 · 3판 이상 참가자만 표시 · 판이 끝나면 자동 기록</p>
       <div id="wordRankMine" class="community-meta" style="font-size:14px;font-weight:700"></div>
       <div id="wordRankList"></div>
       <div id="wordRankStatus" class="community-status"></div>
@@ -2701,27 +2731,37 @@
      기본: 길쭉한 계란형 얼굴 · 짧은 물결머리 · 점눈 · 긴 콧대 · 작은 분홍 입술 · 턱 미소선 · 갈색 민소매
      ===================================================================== */
   var AV_GROUPS = [
-    { key: "hair", label: "헤어스타일", type: "seg", opts: [["wavy", "물결머리"], ["slick", "빗어넘김"], ["buzz", "스포츠"], ["part", "가르마"], ["bob", "단발"], ["long", "긴머리"], ["curly", "곱슬"], ["bun", "똥머리"], ["bald", "민머리"]] },
-    { key: "hairColor", label: "머리색", type: "color", opts: [["#1b1b1b", "검정"], ["#6b3f1d", "갈색"], ["#e6b94a", "금발"], ["#9aa3b2", "회색"], ["#c0392b", "빨강"], ["#f08bb4", "분홍"], ["#3b6fd6", "파랑"]] },
-    { key: "expr", label: "표정", type: "seg", opts: [["gentle", "온화"], ["neutral", "기본"], ["smile", "웃음"], ["wow", "놀람"], ["sleepy", "졸림"], ["tired", "야근"], ["angry", "화남"], ["sad", "울상"]] },
-    { key: "clothes", label: "옷", type: "seg", opts: [["tank", "민소매"], ["shirt", "셔츠"], ["hoodie", "후드"], ["tee", "티셔츠"], ["stripe", "줄무늬티"], ["zipup", "집업"], ["suit", "정장"], ["turtle", "목폴라"]] },
-    { key: "clothesColor", label: "옷 색", type: "color", opts: [["#C8703F", "갈색"], ["#E8763A", "주황"], ["#FFD54A", "노랑"], ["#4A7BD0", "파랑"], ["#2F4B8A", "남색"], ["#3FA878", "초록"], ["#8A63C7", "보라"], ["#2B2F3A", "검정"], ["#EE7FA5", "분홍"], ["#F5F5F5", "흰색"]] },
-    { key: "hat", label: "모자", type: "seg", opts: [["none", "없음"], ["cap", "야구모자"], ["beanie", "비니"]] },
+    { key: "species", label: "캐릭터", type: "seg", opts: [["human", "봉철이"], ["monkey", "원숭이"], ["muscle", "근육맨"], ["bear", "곰돌이"], ["blob", "동글이"]] },
+    { key: "hair", label: "헤어스타일", tab: "헤어", type: "seg", opts: [["wavy", "물결머리"], ["slick", "빗어넘김"], ["buzz", "스포츠"], ["part", "가르마"], ["bob", "단발"], ["long", "긴머리"], ["curly", "곱슬"], ["bun", "똥머리"], ["spiky", "뾰족머리"], ["afro", "아프로"], ["bald", "민머리"]] },
+    { key: "hairColor", label: "머리색", type: "color", opts: [["#1b1b1b", "검정"], ["#6b3f1d", "갈색"], ["#e6b94a", "금발"], ["#9aa3b2", "회색"], ["#c0392b", "빨강"], ["#f08bb4", "분홍"], ["#3b6fd6", "파랑"], ["#ff8a1f", "주황"], ["#8a63c7", "보라"], ["#2fb7a0", "민트"], ["#f5f5f5", "흰색"]] },
+    { key: "expr", label: "표정", type: "seg", opts: [["gentle", "온화"], ["neutral", "기본"], ["smile", "웃음"], ["wink", "윙크"], ["love", "하트"], ["wow", "놀람"], ["sleepy", "졸림"], ["tired", "야근"], ["angry", "화남"], ["sad", "울상"], ["cry", "엉엉"]] },
     { key: "eyes", label: "눈", type: "seg", opts: [["dot", "점눈"], ["round", "동그란눈"], ["thin", "가는눈"], ["sparkle", "반짝눈"], ["arch", "웃는눈"]] },
+    { key: "clothes", label: "옷", type: "seg", opts: [["tank", "민소매"], ["shirt", "셔츠"], ["hoodie", "후드"], ["tee", "티셔츠"], ["stripe", "줄무늬티"], ["zipup", "집업"], ["suit", "정장"], ["turtle", "목폴라"], ["overall", "멜빵"], ["vest", "안전조끼"]] },
+    { key: "clothesColor", label: "옷 색", tab: "옷색", type: "color", opts: [["#C8703F", "갈색"], ["#E8763A", "주황"], ["#FFD54A", "노랑"], ["#4A7BD0", "파랑"], ["#2F4B8A", "남색"], ["#3FA878", "초록"], ["#8A63C7", "보라"], ["#2B2F3A", "검정"], ["#EE7FA5", "분홍"], ["#F5F5F5", "흰색"], ["#D9453D", "빨강"], ["#8FA3B5", "회색"]] },
+    { key: "glasses", label: "안경", type: "seg", opts: [["no", "없음"], ["yes", "동글안경"], ["square", "각진안경"], ["sun", "선글라스"]] },
+    { key: "hat", label: "모자", type: "seg", opts: [["none", "없음"], ["cap", "야구모자"], ["beanie", "비니"], ["headband", "머리띠"], ["crown", "왕관"]] },
+    { key: "face", label: "얼굴형", type: "seg", opts: [["long", "길쭉"], ["round", "둥근"], ["square", "각진"], ["blob", "빵빵"]] },
+    { key: "skin", label: "피부색", type: "color", opts: [["#FFDEBF", "밝은"], ["#F6C9A5", "보통"], ["#E0A97D", "황갈"], ["#C58E5E", "구릿빛"], ["#B97A56", "갈색"], ["#8D5A3B", "짙은"], ["#6B4129", "초콜릿"]] },
     { key: "nose", label: "코", type: "seg", opts: [["tall", "긴 콧대"], ["long", "긴코"], ["dot", "점코"], ["L", "L자코"], ["big", "동그란코"]] },
     { key: "mouth", label: "입술", type: "seg", opts: [["lips", "작은입술"], ["smile", "입술 없음"]] },
-    { key: "face", label: "얼굴형", type: "seg", opts: [["long", "길쭉"], ["round", "둥근"], ["square", "각진"]] },
-    { key: "skin", label: "피부색", type: "color", opts: [["#FFDEBF", "밝은"], ["#F6C9A5", "보통"], ["#E0A97D", "황갈"], ["#B97A56", "갈색"], ["#8D5A3B", "짙은"]] },
-    { key: "glasses", label: "안경", type: "seg", opts: [["no", "없음"], ["yes", "안경"]] },
     { key: "gender", label: "체형", type: "seg", opts: [["m", "남성"], ["f", "여성"]] },
     { key: "bg", label: "배경색", type: "color", opts: [["#FFF0C2", "노랑"], ["#D8F7E8", "민트"], ["#FFE8EE", "분홍"], ["#DDEBFF", "하늘"], ["#E8DFFF", "라벤더"], ["#E9EDF3", "회색"], ["#FFD9CC", "코랄"], ["#FFFFFF", "흰색"]] }
   ];
-  var AV_DEFAULT = { gender: "m", hair: "wavy", hairColor: "#1b1b1b", face: "long", skin: "#FFDEBF", expr: "gentle", eyes: "dot", nose: "tall", mouth: "lips", glasses: "no", clothes: "tank", clothesColor: "#C8703F", hat: "none", bg: "#FFF0C2" };
+  // 캐릭터를 바꾸면 어울리는 기본 모양으로 한 번 맞춰 줍니다 (이후 하나씩 자유롭게 바꿀 수 있어요).
+  var SID_PRESETS = {
+    human:  { face: "long", skin: "#FFDEBF", nose: "tall", mouth: "lips", eyes: "dot", hair: "wavy", hat: "none" },
+    monkey: { face: "round", skin: "#B97A56", nose: "dot", mouth: "smile", eyes: "round", hair: "bald", hat: "none", expr: "smile" },
+    muscle: { face: "square", skin: "#B97A56", nose: "big", mouth: "smile", eyes: "thin", hair: "buzz", hat: "none", expr: "neutral", clothes: "tank" },
+    bear:   { face: "round", skin: "#C58E5E", nose: "dot", mouth: "smile", eyes: "dot", hair: "bald", hat: "none", expr: "gentle" },
+    blob:   { face: "blob", skin: "#FFDEBF", nose: "dot", mouth: "smile", eyes: "dot", hair: "spiky", hat: "none", expr: "smile" }
+  };
+  var AV_DEFAULT = { species: "human", gender: "m", hair: "wavy", hairColor: "#1b1b1b", face: "long", skin: "#FFDEBF", expr: "gentle", eyes: "dot", nose: "tall", mouth: "lips", glasses: "no", clothes: "tank", clothesColor: "#C8703F", hat: "none", bg: "#FFF0C2" };
   var AV_INK = "#141414";
   var AV_FACES = {
     long:   { d: "M50 13C40 13 36 22 33 36C31 48 30.5 58 30.5 66C30.5 77 38 83 50 83C62 83 69.5 77 69.5 66C69.5 58 69 48 67 36C64 22 60 13 50 13Z", ear: 29.8, hx: 1 },
     round:  { d: "M50 14C37 14 29.5 24 28.5 42C27.5 60 31 72 38 78C42 81.5 46 83 50 83C54 83 58 81.5 62 78C69 72 72.5 60 71.5 42C70.5 24 63 14 50 14Z", ear: 28.2, hx: 1.28 },
-    square: { d: "M32 26Q32 14 42 14L58 14Q68 14 68 26L69.5 66Q69.5 83 50 83Q30.5 83 30.5 66Z", ear: 29.8, hx: 1.2 }
+    square: { d: "M32 26Q32 14 42 14L58 14Q68 14 68 26L69.5 66Q69.5 83 50 83Q30.5 83 30.5 66Z", ear: 29.8, hx: 1.2 },
+    blob:   { d: "M50 11C30 11 23 29 24.5 48C26 70 36 84 50 84C64 84 74 70 75.5 48C77 29 70 11 50 11Z", ear: 24.5, hx: 1.3 }
   };
 
   // 저장된 값은 허용 목록에 있는 값만 통과 (SVG에 그대로 들어가므로 중요)
@@ -2754,7 +2794,10 @@
     sleepy:  ["M39.5 27L45.5 28.8", "M54.5 28.8L60.5 27"],
     tired:   ["M39.5 27L45.5 29", "M54.5 29L60.5 27"],
     angry:   ["M39.5 25.6L45.5 29.2", "M54.5 29.2L60.5 25.6"],
-    sad:     ["M39.5 29.4L45.5 26.2", "M54.5 26.2L60.5 29.4"]
+    sad:     ["M39.5 29.4L45.5 26.2", "M54.5 26.2L60.5 29.4"],
+    wink:    ["M39.5 28.5Q42.5 24.5 45.5 27.5", "M54.5 27.5Q57.5 24.5 60.5 28.5"],
+    love:    ["M39.5 28.5Q42.5 24.5 45.5 27.5", "M54.5 27.5Q57.5 24.5 60.5 28.5"],
+    cry:     ["M39.5 29.4L45.5 26.2", "M54.5 26.2L60.5 29.4"]
   };
 
   function avHair(a, part) {
@@ -2764,6 +2807,7 @@
       else if (h === "long") s = P("M27 100C24 20 36 8 50 8C64 8 76 20 73 100Q64 98 62 86L38 86Q36 98 27 100Z");
       else if (h === "curly") s = [[33, 22, 8], [40, 14, 8], [50, 11, 8], [60, 14, 8], [67, 22, 8], [31, 38, 6], [69, 38, 6]].map(function (c) { return svgC(c[0], c[1], c[2], hc, 2.4); }).join("");
       else if (h === "bun") s = svgC(50, 8, 8.5, hc, 2.4);
+      else if (h === "afro") s = [[28, 32, 9], [30, 18, 10], [40, 9, 10], [52, 7, 10], [62, 9, 10], [71, 18, 10], [72, 32, 9]].map(function (c) { return svgC(c[0], c[1], c[2], hc, 2.4); }).join("");
     } else {
       if (h === "wavy") s = P("M35.5 19C34 12.5 42 10.5 50 10.8C58 10.5 66 12.5 64.5 19C63.6 20.5 62.6 19.4 61.6 20.6C60.4 22.6 58.6 20.4 57.2 22C55.8 23.6 54 21.4 52.4 23C50.8 24.4 49 21.8 47.4 23.2C45.8 24.6 44 22.2 42.4 23.4C40.8 24.4 39.4 21.4 38 22.2C36.8 22.9 36 21.4 35.5 19Z");
       else if (h === "slick") s = P("M34 28C32 11 42 9.5 50 9.5C58 9.5 68 11 66 28C63 19.5 57 18 50 18C43 18 37 19.5 34 28Z") + svgL("M40 15Q50 11.5 60 15", 1.3);
@@ -2772,6 +2816,8 @@
       else if (h === "bob") s = P("M33 27C34 13 42 11 50 11C58 11 66 13 67 27C61 21 56 22.5 50 20C44 22.5 39 21 33 27Z");
       else if (h === "long") s = P("M31.5 29C32 12 42 9.5 50 9.5C58 9.5 68 12 68.5 29C61 21 56 22 50 19C44 22 39 21 31.5 29Z");
       else if (h === "curly") s = svgC(41, 16.5, 6, hc, 2.2) + svgC(50, 14, 6.5, hc, 2.2) + svgC(59, 16.5, 6, hc, 2.2);
+      else if (h === "spiky") s = P("M33 28L33.5 11L41 19L45 6L50 17L55 6L59 19L66.5 11L67 28C60 21 40 21 33 28Z");
+      else if (h === "afro") s = P("M33 27C37 14 63 14 67 27C60 21 40 21 33 27Z");
     }
     if (!s) return "";
     var sx = (AV_FACES[a.face] || AV_FACES.long).hx;
@@ -2780,12 +2826,14 @@
 
   function avatarSVG(a) {
     var f = a.gender === "f", skin = a.skin, cc = a.clothesColor, e = a.expr, c = a.clothes, o = "";
+    var sp = a.species || "human", animal = sp === "monkey" || sp === "bear", muz = "#F6DDBF";
     var face = AV_FACES[a.face] || AV_FACES.long, shade = "rgba(0,0,0,.16)";
-    var BODY = f ? "M16 112Q18 91 35 82L65 82Q82 91 84 112Z" : "M10 112Q12 90 32 81L68 81Q88 90 90 112Z";
+    var BODY = sp === "muscle" ? "M1 112Q3 88 22 80L78 80Q97 88 99 112Z" : (f ? "M16 112Q18 91 35 82L65 82Q82 91 84 112Z" : "M10 112Q12 90 32 81L68 81Q88 90 90 112Z");
     o += '<rect width="100" height="112" fill="' + a.bg + '"/>';
 
-    // 몸 / 옷 (얼굴이 옷 위로 살짝 겹치는 봉춸이 비율)
-    o += svgP(BODY, c === "tank" ? skin : cc);
+    // 몸 / 옷
+    o += svgP(BODY, c === "tank" ? skin : (c === "overall" || c === "vest") ? "#F5F5F5" : cc);
+    if (sp === "muscle") o += svgP("M39 72L61 72L64 84L36 84Z", skin) + svgL("M24 88Q28 98 26 110", 1.8, "rgba(0,0,0,.28)") + svgL("M76 88Q72 98 74 110", 1.8, "rgba(0,0,0,.28)");
     if (c === "tank") o += svgP("M26 112L27 86Q28 81.5 32 81.5L68 81.5Q72 81.5 73 86L74 112Z", cc);
     else if (c === "shirt") o += svgP("M40 82L50 96L35 91Z", "#fff", 2) + svgP("M60 82L50 96L65 91Z", "#fff", 2) + svgP("M50 95L47 101L50 108L53 101Z", "#2B2F3A", 1.6);
     else if (c === "hoodie") o += svgP("M33 86Q50 107 67 86Q62 80 50 80Q38 80 33 86Z", shade) + svgL("M45 97L45 108", 2.2) + svgL("M55 97L55 108", 2.2);
@@ -2794,43 +2842,57 @@
     else if (c === "zipup") o += svgP("M41 82L50 91L59 82Z", shade, 1.8) + svgL("M50 82L50 112", 2.2);
     else if (c === "suit") o += svgP("M41 82L50 104L59 82Z", "#fff", 2) + svgL("M41 82L31 106", 2) + svgL("M59 82L69 106", 2) + svgP("M50 95L47 101L50 110L53 101Z", "#c0392b", 1.6);
     else if (c === "turtle") o += svgP("M37 78L63 78L64 94Q50 98 36 94Z", cc) + svgP("M37 78L63 78L64 94Q50 98 36 94Z", shade);
+    else if (c === "overall") o += svgP("M34 112L36 92Q50 87 64 92L66 112Z", cc) + svgL("M37 92L34 82", 3, cc) + svgL("M63 92L66 82", 3, cc) + svgC(37.5, 95, 1.3, AV_INK) + svgC(62.5, 95, 1.3, AV_INK);
+    else if (c === "vest") o += svgP("M30 112L32 84L41 82L50 97L59 82L68 84L70 112Z", cc) + svgL("M31.5 101L68.5 101", 3, "#fff") + svgL("M31 108L69 108", 3, "#fff");
 
     o += avHair(a, "back");
 
     // 귀 + 얼굴
-    o += '<ellipse cx="' + face.ear + '" cy="47" rx="3.6" ry="5.2" fill="' + skin + '" stroke="' + AV_INK + '" stroke-width="2.2"/><ellipse cx="' + (100 - face.ear) + '" cy="47" rx="3.6" ry="5.2" fill="' + skin + '" stroke="' + AV_INK + '" stroke-width="2.2"/>';
-    if (f) o += svgC(face.ear, 54, 1.7, "#ffd34d", 1) + svgC(100 - face.ear, 54, 1.7, "#ffd34d", 1);
+    var ex = face.ear;
+    if (sp === "monkey") o += svgC(ex - 1, 47, 8.6, skin, 2.2) + svgC(ex - 1, 47, 4.8, muz) + svgC(101 - ex, 47, 8.6, skin, 2.2) + svgC(101 - ex, 47, 4.8, muz);
+    else if (sp === "bear") o += svgC(34, 17, 8.4, skin, 2.4) + svgC(34, 17, 4.2, muz) + svgC(66, 17, 8.4, skin, 2.4) + svgC(66, 17, 4.2, muz);
+    else {
+      o += '<ellipse cx="' + ex + '" cy="47" rx="3.6" ry="5.2" fill="' + skin + '" stroke="' + AV_INK + '" stroke-width="2.2"/><ellipse cx="' + (100 - ex) + '" cy="47" rx="3.6" ry="5.2" fill="' + skin + '" stroke="' + AV_INK + '" stroke-width="2.2"/>';
+      if (f) o += svgC(ex, 54, 1.7, "#ffd34d", 1) + svgC(100 - ex, 54, 1.7, "#ffd34d", 1);
+    }
     o += svgP(face.d, skin);
 
+    // 동물 얼굴: 이마 무늬 / 주둥이
+    if (sp === "monkey") o += svgP("M37 32Q43.5 24 50 30.5Q56.5 24 63 32Q62 44 50 45Q38 44 37 32Z", muz, 0) + '<ellipse cx="50" cy="63" rx="14.5" ry="12" fill="' + muz + '" stroke="' + AV_INK + '" stroke-width="2"/>';
+    else if (sp === "bear") o += '<ellipse cx="50" cy="62" rx="12.5" ry="10" fill="' + muz + '" stroke="' + AV_INK + '" stroke-width="2"/>';
+
     // 볼 / 눈밑 / 눈썹
-    if (e === "smile" || e === "angry") o += '<circle cx="37" cy="42" r="3.6" fill="#ff8a8a" opacity=".5"/><circle cx="63" cy="42" r="3.6" fill="#ff8a8a" opacity=".5"/>';
+    if (e === "smile" || e === "angry" || e === "love" || e === "wink") o += '<circle cx="37" cy="42" r="3.6" fill="#ff8a8a" opacity=".5"/><circle cx="63" cy="42" r="3.6" fill="#ff8a8a" opacity=".5"/>';
     if (e === "tired") o += svgL("M39.5 37.6Q42.5 39.6 45.5 37.6", 1.2, "#7a6a8a") + svgL("M54.5 37.6Q57.5 39.6 60.5 37.6", 1.2, "#7a6a8a");
-    var b = AV_BROWS[e] || AV_BROWS.gentle, bw = f ? 1.6 : (e === "gentle" ? 2 : 2.6);
+    var b = AV_BROWS[e] || AV_BROWS.gentle, bw = sp === "muscle" ? 3.4 : f ? 1.6 : (e === "gentle" ? 2 : 2.6);
     o += svgL(b[0], bw) + svgL(b[1], bw);
 
     // 눈
-    o += avEye(a.eyes, 42.5) + avEye(a.eyes, 57.5);
+    o += avEye(a.eyes, 42.5) + avEye(e === "wink" ? "arch" : a.eyes, 57.5);
     if (f) o += svgL("M37.8 31.6L36 29.8", 1.5) + svgL("M62.2 31.6L64 29.8", 1.5);
 
     // 코
-    if (a.nose === "tall") o += svgL("M51.4 32.4C51 42 52.5 50 54.4 56.8", 1.9) + svgL("M44.6 56.8C44.8 52.5 45.8 49.5 47.2 47.6L48 49.7L49.3 48.2L50.6 50.2L53.2 48.6", 1.6);
+    if (sp === "monkey") o += svgC(47, 58, 1.4, AV_INK) + svgC(53, 58, 1.4, AV_INK);
+    else if (sp === "bear") o += '<ellipse cx="50" cy="56" rx="4.2" ry="3" fill="#2B2B2B"/>' + svgL("M50 59L50 63", 1.8);
+    else if (a.nose === "tall") o += svgL("M51.4 32.4C51 42 52.5 50 54.4 56.8", 1.9) + svgL("M44.6 56.8C44.8 52.5 45.8 49.5 47.2 47.6L48 49.7L49.3 48.2L50.6 50.2L53.2 48.6", 1.6);
     else if (a.nose === "long") o += svgL("M50.6 34Q48 48 51.5 57.5", 2);
     else if (a.nose === "dot") o += svgC(50, 52, 1.5, AV_INK);
     else if (a.nose === "L") o += svgL("M51 36L51 52L47.5 52", 2);
     else o += '<ellipse cx="50" cy="53" rx="3.4" ry="2.6" fill="rgba(0,0,0,.08)" stroke="' + AV_INK + '" stroke-width="1.8"/>';
 
     // 작은 입술 (코 아래)
-    if (a.mouth === "lips") o += svgP("M47.8 61Q49.2 59.6 50.4 60.6Q51.6 59.6 53.2 61Q51.8 64.4 50.4 64.6Q48.8 64.4 47.8 61Z", f ? "#E0708C" : "#F4A3A8", 1.4);
+    if (!animal && a.mouth === "lips") o += svgP("M47.8 61Q49.2 59.6 50.4 60.6Q51.6 59.6 53.2 61Q51.8 64.4 50.4 64.6Q48.8 64.4 47.8 61Z", f ? "#E0708C" : "#F4A3A8", 1.4);
 
-    // 턱의 입선: 표정에 따라 바뀜
+    // 입선: 표정에 따라 바뀜
     var lc = f ? "#c0405f" : AV_INK;
     if (e === "gentle") o += svgL("M43.5 76Q50 82 56.5 75.7", 2, lc);
     else if (e === "neutral") o += svgL("M45 77.5L55 77.5", 2.2, lc);
-    else if (e === "smile") o += svgP("M43 75Q50 87 57 75Z", "#fff", 2);
+    else if (e === "smile" || e === "wink" || e === "love") o += svgP("M43 75Q50 87 57 75Z", "#fff", 2);
     else if (e === "wow") o += '<ellipse cx="50" cy="77" rx="3.6" ry="4.6" fill="#5a2a2a" stroke="' + AV_INK + '" stroke-width="1.8"/>';
     else if (e === "sleepy") o += svgL("M46 77.5Q50 79.5 54 77.5", 2.2, lc);
     else if (e === "tired") o += svgL("M43.5 77.5Q46.7 74.5 50 77.5Q53.3 80.5 56.5 77.5", 2.2, lc);
     else if (e === "angry") o += svgL("M43.5 79Q50 73.5 56.5 79", 2.4, lc);
+    else if (e === "cry") o += svgP("M43.5 80Q50 72.5 56.5 80Z", "#7a2a3a", 2);
     else o += svgL("M44 79.5Q50 74 56 79.5", 2.4, lc);
 
     // 표정 장식
@@ -2838,15 +2900,21 @@
     else if (e === "tired") o += svgP("M72 30Q69 35 72 37.5Q75 35 72 30Z", "#8fd3ff", 1.2);
     else if (e === "angry") o += svgL("M71 22L76 27M76 22L71 27", 2.2, "#e11d48");
     else if (e === "sad") o += svgP("M38.5 38Q36 42 38.5 44.2Q41 42 38.5 38Z", "#8fd3ff", 1.2);
+    else if (e === "cry") o += svgL("M40 37L39 52", 2.6, "#5bb8ff") + svgL("M60 37L61 52", 2.6, "#5bb8ff");
+    else if (e === "love") o += svgP("M71 22C69 19 73.5 18 74.5 20.6C75.5 18 80 19 78 22L74.5 26Z", "#ff5c8a", 1) + svgP("M24 26C22.5 24 25.8 23.2 26.6 25C27.4 23.2 30.7 24 29.2 26L26.6 29Z", "#ff5c8a", 1);
 
     o += avHair(a, "front");
 
     // 모자 (옷 색을 따라감)
     if (a.hat === "cap") o += svgP("M33 20C32 3 68 3 67 20Z", cc) + svgP("M28.5 19.5L71.5 19.5Q75 23.5 67 24L33 24Q25 23.5 28.5 19.5Z", cc) + svgP("M28.5 19.5L71.5 19.5Q75 23.5 67 24L33 24Q25 23.5 28.5 19.5Z", shade);
     else if (a.hat === "beanie") o += svgP("M30.5 22C29 5 71 5 69.5 22Z", cc) + svgP("M30 17.5Q50 12.5 70 17.5L70.5 24Q50 19 29.5 24Z", cc) + svgP("M30 17.5Q50 12.5 70 17.5L70.5 24Q50 19 29.5 24Z", shade) + svgC(50, 5.4, 3.6, cc, 2.2);
+    else if (a.hat === "headband") o += svgP("M30.5 25Q50 14 69.5 25L69.5 30Q50 19.5 30.5 30Z", cc);
+    else if (a.hat === "crown") o += svgP("M35 21L36.5 6L43.5 13L50 3.5L56.5 13L63.5 6L65 21Z", "#FFD54A") + svgC(50, 14, 1.8, "#E8463A", 1);
 
     // 안경
     if (a.glasses === "yes") o += '<circle cx="42.5" cy="33" r="6.2" fill="rgba(255,255,255,.28)" stroke="' + AV_INK + '" stroke-width="2"/><circle cx="57.5" cy="33" r="6.2" fill="rgba(255,255,255,.28)" stroke="' + AV_INK + '" stroke-width="2"/>' + svgL("M48.7 33L51.3 33", 2) + svgL("M36.3 32L31.5 31", 2) + svgL("M63.7 32L68.5 31", 2);
+    else if (a.glasses === "square") o += '<rect x="35.8" y="28" width="13.4" height="10" rx="2.4" fill="rgba(255,255,255,.28)" stroke="' + AV_INK + '" stroke-width="2"/><rect x="50.8" y="28" width="13.4" height="10" rx="2.4" fill="rgba(255,255,255,.28)" stroke="' + AV_INK + '" stroke-width="2"/>' + svgL("M49.2 32L50.8 32", 2) + svgL("M35.8 31L31.5 30", 2) + svgL("M64.2 31L68.5 30", 2);
+    else if (a.glasses === "sun") o += '<rect x="35.4" y="28" width="14" height="10" rx="3.6" fill="#1d2230" stroke="' + AV_INK + '" stroke-width="2"/><rect x="50.6" y="28" width="14" height="10" rx="3.6" fill="#1d2230" stroke="' + AV_INK + '" stroke-width="2"/>' + svgL("M49.4 31.5L50.6 31.5", 2) + svgL("M35.4 31L31.5 30", 2) + svgL("M64.6 31L68.5 30", 2) + svgL("M38 31L41 29.8", 1.2, "rgba(255,255,255,.7)") + svgL("M53.2 31L56.2 29.8", 1.2, "rgba(255,255,255,.7)");
 
     return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 112" width="100%" height="100%" preserveAspectRatio="xMidYMid slice" role="img" aria-label="프로필 캐릭터">' + o + '</svg>';
   }
@@ -2875,31 +2943,59 @@
       t.style.letterSpacing = n.length > 6 ? ".08em" : "";
     });
     $("sidNickFixed").textContent = n;
+    var lvp = $("sidLive"); if (lvp) lvp.innerHTML = avatarSVG(sidState.avatar);
     [["homeBackMajor", "major"], ["homeBackMotto", "motto"], ["homeBackMbti", "mbti"], ["homeBackHobby", "hobby"], ["homeBackSkill", "skill"], ["homeBackJob", "job"]].forEach(function (x) {
       var e = $(x[0]); if (e) e.textContent = sidState[x[1]] || "-";
     });
     Array.prototype.forEach.call(document.querySelectorAll(".idv-logo"), function (im) { if (im.getAttribute("src") !== IDV_LOGO) im.src = IDV_LOGO; });
   }
-  function buildSidControls() {
-    var box = $("sidAvatarControls"); box.innerHTML = "";
-    AV_GROUPS.forEach(function (g) {
-      var wrap = el("div", "sid-group"), opts = el("div", "sid-opts");
-      wrap.appendChild(el("div", "sid-glabel", g.label));
-      g.opts.forEach(function (o) {
-        var b = el("button", g.type === "color" ? "sid-sw" : "sid-opt", g.type === "color" ? "" : o[1]);
-        b.type = "button"; b.dataset.key = g.key; b.dataset.val = o[0]; b.title = o[1]; b.setAttribute("aria-label", g.label + " " + o[1]);
-        if (g.type === "color") b.style.background = o[0];
-        b.onclick = function () { sidState.avatar[g.key] = String(o[0]); syncSidControls(); renderSidCard(); };
-        opts.appendChild(b);
-      });
-      wrap.appendChild(opts); box.appendChild(wrap);
-    });
-    syncSidControls();
+  /* ----- 캐릭터 꾸미기: 미리보기 + 가로 스와이프 옵션 ----- */
+  var sidCat = "species";
+  function sidGroup(key) { return AV_GROUPS.filter(function (x) { return x.key === key; })[0] || AV_GROUPS[0]; }
+  function sidThumb(g, val) {
+    var t = {}; Object.keys(sidState.avatar).forEach(function (k) { t[k] = sidState.avatar[k]; });
+    t[g.key] = String(val);
+    return avatarSVG(t);
   }
-  function syncSidControls() {
-    Array.prototype.forEach.call($("sidAvatarControls").querySelectorAll("button"), function (b) {
-      b.classList.toggle("on", sidState.avatar[b.dataset.key] === b.dataset.val);
+  function buildSidControls() {
+    var cats = $("sidCats"); if (!cats) return;
+    cats.innerHTML = "";
+    AV_GROUPS.forEach(function (g) {
+      var b = el("button", "sid-cat", g.tab || g.label);
+      b.type = "button"; b.dataset.cat = g.key; b.setAttribute("role", "tab");
+      b.onclick = function () { sidCat = g.key; syncSidControls(true); };
+      cats.appendChild(b);
     });
+    syncSidControls(true);
+  }
+  function syncSidControls(switchedCat) {
+    var cats = $("sidCats"), box = $("sidAvatarControls"); if (!cats || !box) return;
+    var g = sidGroup(sidCat), prev = box.scrollLeft;
+    Array.prototype.forEach.call(cats.querySelectorAll(".sid-cat"), function (b) {
+      var on = b.dataset.cat === sidCat; b.classList.toggle("on", on); b.setAttribute("aria-selected", on ? "true" : "false");
+      if (on && switchedCat === true) { try { cats.scrollTo({ left: Math.max(0, b.offsetLeft - 24), behavior: "smooth" }); } catch (_s) { cats.scrollLeft = Math.max(0, b.offsetLeft - 24); } }
+    });
+    box.innerHTML = "";
+    var curTile = null;
+    g.opts.forEach(function (o) {
+      var isOn = sidState.avatar[g.key] === String(o[0]);
+      var b = el("button", "sid-tile" + (isOn ? " on" : ""));
+      b.type = "button"; b.dataset.key = g.key; b.dataset.val = o[0]; b.title = o[1]; b.setAttribute("aria-label", g.label + " " + o[1]); b.setAttribute("aria-pressed", isOn ? "true" : "false");
+      var th = el("div", g.type === "color" ? "sw" : "th");
+      if (g.type === "color") th.style.background = o[0]; else th.innerHTML = sidThumb(g, o[0]);
+      b.appendChild(th); b.appendChild(el("span", "lb", o[1]));
+      b.onclick = function () { applySidChoice(g.key, String(o[0])); };
+      box.appendChild(b);
+      if (isOn) curTile = b;
+    });
+    if (switchedCat === true) box.scrollLeft = curTile ? Math.max(0, curTile.offsetLeft - 24) : 0; else box.scrollLeft = prev;
+    var lv = $("sidLive"); if (lv) lv.innerHTML = avatarSVG(sidState.avatar);
+    var lt = $("sidLiveTitle"); if (lt) lt.textContent = g.label + " 고르는 중";
+  }
+  function applySidChoice(key, val) {
+    sidState.avatar[key] = val;
+    if (key === "species" && SID_PRESETS[val]) Object.keys(SID_PRESETS[val]).forEach(function (k) { sidState.avatar[k] = SID_PRESETS[val][k]; });
+    syncSidControls(); renderSidCard();
   }
   function fillSidInputs() { $("sidMajorInput").value = sidState.major; $("sidMottoInput").value = sidState.motto; $("sidMbtiInput").value = sidState.mbti || ""; $("sidHobbyInput").value = sidState.hobby || ""; $("sidSkillInput").value = sidState.skill || ""; $("sidJobInput").value = sidState.job || ""; }
 
@@ -3399,26 +3495,73 @@
      ===================================================================== */
   var WORD_RANK_MIN = 3;
 
-  // 한 판이 끝나면 서버에 기록 (같은 6시간 단어는 한 번만 반영되므로 여러 번 호출해도 안전)
-  async function syncWordResult() {
-    if (!supabase || !curState.periodKey) return;
+  // 한 판이 끝나면 서버에 기록합니다. 실패하면 이 기기에 보관해 두었다가 다음에 다시 보냅니다.
+  // (같은 판 key는 서버에서 한 번만 반영되므로 여러 번 보내도 안전합니다.)
+  var WG_PENDING_KEY = "wg_pending_results_v1";
+  function readPending() { try { return JSON.parse(store(WG_PENDING_KEY) || "{}") || {}; } catch (e) { return {}; } }
+  function writePending(p) { store(WG_PENDING_KEY, JSON.stringify(p)); }
+  function queueWordResult() {
+    if (!curState.periodKey || curState.status === "PLAYING") return;
+    var p = readPending();
+    if (!p[curState.periodKey]) { p[curState.periodKey] = { won: curState.status === "WON", attempts: curState.guesses.length, t: Date.now() }; writePending(p); }
+  }
+  var wordSyncing = false;
+  async function flushWordResults() {
+    if (!supabase || wordSyncing) return;
+    var p = readPending(), keys = Object.keys(p);
+    if (!keys.length) return;
+    wordSyncing = true;
     try {
       var u = await currentUser();
       if (!u) return;
-      var r = await supabase.rpc("record_word_result", { p_period_key: curState.periodKey, p_won: curState.status === "WON", p_attempts: curState.guesses.length });
-      if (r.error) console.error("단어 랭킹 기록 실패", r.error);
-    } catch (e) { console.error(e); }
+      for (var i = 0; i < keys.length; i++) {
+        var k = keys[i], it = p[k];
+        var r = await supabase.rpc("record_word_result", { p_period_key: k, p_won: !!it.won, p_attempts: it.attempts | 0 });
+        if (r.error) { console.error("단어 랭킹 기록 실패", r.error); window.__wordRankError = r.error.message; break; }
+        delete p[k]; writePending(p);
+      }
+    } catch (e) { console.error(e); window.__wordRankError = String(e && e.message || e); }
+    finally { wordSyncing = false; }
+  }
+  async function syncWordResult() {
+    queueWordResult();
+    await flushWordResults();
     renderWordRanking();
+  }
+
+  function wordRankMedal(idx) { return idx === 0 ? " gold" : idx === 1 ? " silver" : idx === 2 ? " bronze" : ""; }
+  async function loadWordRankRows() {
+    // 1순위: 서버 함수(get_word_ranking) — 2순위: 테이블 직접 조회
+    var r = await supabase.rpc("get_word_ranking", { p_min_played: WORD_RANK_MIN, p_limit: 50 });
+    if (!r.error) return { rows: r.data || [], note: "" };
+    console.warn("get_word_ranking 실패, 테이블 직접 조회로 대체", r.error);
+    var me = null; try { me = await currentUser(); } catch (_e) {}
+    var t = await supabase.from("word_game_stats").select("user_id,nickname,played,wins,max_streak").gte("played", WORD_RANK_MIN).limit(500);
+    if (t.error) return { rows: null, error: r.error.message + " / " + t.error.message };
+    var rows = (t.data || []).map(function (x) {
+      return { nickname: x.nickname || "회원", wins: x.wins || 0, played: x.played || 0, max_streak: x.max_streak || 0, win_rate: x.played ? (x.wins / x.played) * 100 : 0, is_me: !!(me && x.user_id === me.id) };
+    });
+    rows.sort(function (a, b) { return b.win_rate - a.win_rate || b.wins - a.wins || b.played - a.played; });
+    var rk = 0, prev = null;
+    rows.forEach(function (x, i) { var key = x.win_rate.toFixed(4) + "|" + x.wins + "|" + x.played; if (key !== prev) { rk = i + 1; prev = key; } x.ranking = rk; });
+    return { rows: rows.slice(0, 50), note: "" };
   }
 
   async function renderWordRanking() {
     var list = $("wordRankList"), st = $("wordRankStatus"), mine = $("wordRankMine");
+    if (!list || !st || !mine) return;
     list.innerHTML = ""; mine.textContent = ""; st.textContent = "불러오는 중…";
     if (!supabase) { st.textContent = "Supabase 연결을 확인해 주세요."; return; }
-    var r = await supabase.rpc("get_word_ranking", { p_min_played: WORD_RANK_MIN, p_limit: 50 });
-    if (r.error) { st.textContent = "랭킹 SQL(word_game_ranking.sql)을 먼저 실행해 주세요: " + r.error.message; return; }
-    var data = r.data || [];
-    st.textContent = data.length ? "" : "아직 순위에 오른 회원이 없어요. " + WORD_RANK_MIN + "판 이상 플레이하면 이름이 올라갑니다!";
+    await flushWordResults();
+    var res;
+    try { res = await loadWordRankRows(); } catch (e) { res = { rows: null, error: String(e && e.message || e) }; }
+    if (!res.rows) {
+      st.textContent = "랭킹을 불러오지 못했어요. Supabase SQL Editor에서 word_game_ranking.sql을 한 번 실행해 주세요. (" + res.error + ")";
+      return;
+    }
+    var data = res.rows;
+    if (window.__wordRankError && Object.keys(readPending()).length) st.textContent = "내 결과를 서버에 아직 보내지 못했어요. word_game_ranking.sql 실행 여부를 확인해 주세요. (" + window.__wordRankError + ")";
+    else st.textContent = data.length ? "" : "아직 순위에 오른 회원이 없어요. " + WORD_RANK_MIN + "판 이상 플레이하면 이름이 올라갑니다!";
 
     // 랭킹에 오른 회원들의 학생증 프로필을 닉네임으로 찾아 함께 보여줍니다.
     var avatarByNick = {};
@@ -3433,13 +3576,13 @@
 
     data.forEach(function (row, idx) {
       var item = el("div", "rank-item" + (row.is_me ? " me" : ""));
-      item.appendChild(el("div", "rank-num" + (idx === 0 ? " gold" : idx === 1 ? " silver" : idx === 2 ? " bronze" : ""), String(row.ranking)));
+      item.appendChild(el("div", "rank-num" + wordRankMedal((Number(row.ranking) || idx + 1) - 1), String(row.ranking || idx + 1)));
       var av = el("span", "rank-avatar"); av.setAttribute("aria-label", "프로필 사진");
       av.innerHTML = avatarSVG(sanitizeAvatar(avatarByNick[row.nickname] || AV_DEFAULT));
       item.appendChild(av);
       var info = el("div", "rank-info");
       var top = el("div"); top.appendChild(el("span", "nick", row.nickname + (row.is_me ? " (나)" : ""))); info.appendChild(top);
-      info.appendChild(el("span", "rank-sub", row.wins + "승 / " + row.played + "판 · 최다연승 " + row.max_streak));
+      info.appendChild(el("span", "rank-sub", row.wins + "승 " + Math.max(0, row.played - row.wins) + "패 · " + row.played + "판 · 최다연승 " + (row.max_streak || 0)));
       item.appendChild(info);
       item.appendChild(el("div", "rank-score", Number(row.win_rate).toFixed(1) + "%"));
       list.appendChild(item);
@@ -3450,9 +3593,10 @@
         var m = await supabase.from("word_game_stats").select("played,wins").eq("user_id", me.id).maybeSingle();
         if (m.data && m.data.played > 0) {
           var rate = Math.round((m.data.wins / m.data.played) * 1000) / 10;
-          mine.textContent = "내 기록: " + m.data.played + "판 " + m.data.wins + "승 (" + rate + "%)" + (m.data.played < WORD_RANK_MIN ? " · " + (WORD_RANK_MIN - m.data.played) + "판 더 하면 순위에 표시돼요" : "");
+          var mineRow = data.filter(function (x) { return x.is_me; })[0];
+          mine.textContent = "내 기록: " + m.data.played + "판 " + m.data.wins + "승 (" + rate + "%)" + (mineRow ? " · 현재 " + mineRow.ranking + "위" : "") + (m.data.played < WORD_RANK_MIN ? " · " + (WORD_RANK_MIN - m.data.played) + "판 더 하면 순위에 표시돼요" : "");
         } else mine.textContent = "아직 기록이 없어요. 오늘의 단어에 도전해 보세요!";
-      }
+      } else mine.textContent = "로그인하면 내 승률이 랭킹에 기록돼요.";
     } catch (e) { console.error(e); }
   }
 
