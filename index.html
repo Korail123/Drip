@@ -1973,6 +1973,7 @@
     options = options || {};
     if (!options.fromPop) { try { history.pushState({ dripcollegeApp: true, screen: "login", view: "main" }, "", location.href); } catch (_e) {} }
     document.body.classList.remove("signed-in");
+    try { if (window.__dripPopups) window.__dripPopups.stop(); } catch (_pe) {}
     Object.keys(views).forEach(function (k) { views[k].hidden = (k !== "main"); });
     signupView.hidden = true; loginCard.hidden = false; mainNav.hidden = true; authTopline.hidden = true; $("homeStudentCard").hidden = true;
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -1980,6 +1981,7 @@
   function showSignup(options) { options = options || {}; if (!options.fromPop) { try { history.pushState({ dripcollegeApp: true, screen: "signup", view: "main" }, "", location.href); } catch (_e) {} } mainView.hidden = true; signupView.hidden = false; status("signupStatus", "", ""); window.scrollTo({ top: 0, behavior: "smooth" }); }
   function showSignedIn(nick) {
     document.body.classList.add("signed-in");
+    try { if (window.__dripPopups) window.__dripPopups.start(); } catch (_pe) {}
     signupView.hidden = true; mainView.hidden = false; loginCard.hidden = true; mainNav.hidden = false; authTopline.hidden = false;
     $("signedInLabel").innerHTML = '<span class="mark">' + escapeHtml(nick) + '</span> 님, 환영합니다!';
     loadStudentCard();
@@ -2002,9 +2004,14 @@
       var key = nickKey(nick), email = await nickEmail(nick), pw;
       if (email === ADMIN_EMAIL) {
         // 관리자 계정은 닉네임만으로 열리면 안 되므로 인증번호를 한 번 더 확인합니다.
-        var adminCode = window.prompt("관리자 인증번호를 입력해 주세요.");
-        if (!adminCode) { status("loginStatus", "관리자 인증번호가 필요합니다.", "error"); return; }
-        pw = await authPassword(nick, adminCode);
+        var savedAdminPw = null;
+        try { savedAdminPw = localStorage.getItem("dripcollege_admin_pw"); } catch (_a) {}
+        if (savedAdminPw) { pw = savedAdminPw; }
+        else {
+          var adminCode = window.prompt("관리자 인증번호를 입력해 주세요. (이 기기에서는 처음 한 번만 묻습니다)");
+          if (!adminCode) { status("loginStatus", "관리자 인증번호가 필요합니다.", "error"); return; }
+          pw = await authPassword(nick, adminCode);
+        }
       } else {
         // 기존 계정(인증번호 방식)을 닉네임 방식으로 자동 전환. 실패해도 로그인은 계속 시도합니다.
         try { var prep = await supabase.rpc("nick_login_prepare", { p_key: key }); if (prep.error) console.warn("nick_login_prepare:", prep.error); } catch (_p) {}
@@ -2014,13 +2021,17 @@
       if (r.error) {
         var m = String(r.error.message || r.error.code || "");
         console.error("login error:", r.error);
-        if (/invalid login|invalid_credentials|invalid credentials/i.test(m)) status("loginStatus", "가입되지 않은 닉네임이거나 정보가 맞지 않습니다. 처음이라면 '회원가입'을 눌러 주세요.", "error");
+        if (/invalid login|invalid_credentials|invalid credentials/i.test(m)) {
+          if (email === ADMIN_EMAIL) { try { localStorage.removeItem("dripcollege_admin_pw"); } catch (_x) {} }
+          status("loginStatus", "가입되지 않은 닉네임이거나 정보가 맞지 않습니다. 처음이라면 '회원가입'을 눌러 주세요.", "error");
+        }
         else if (/not confirmed/i.test(m)) status("loginStatus", "이메일 확인이 켜져 있습니다. Supabase Auth 설정에서 'Confirm email'을 꺼 주세요.", "error");
         else if (/rate|too many|429/i.test(m + " " + r.error.status)) status("loginStatus", "시도가 너무 많습니다. 잠시 후 다시 시도해 주세요.", "error");
         else if (/fetch|network|failed|timeout/i.test(m) || !r.error.status) status("loginStatus", "서버에 연결할 수 없습니다. 인터넷 상태를 확인하고, 계속되면 Supabase 프로젝트가 일시정지(Paused)인지 확인해 주세요.", "error");
         else status("loginStatus", "로그인에 실패했습니다: " + m, "error");
         return;
       }
+      if (email === ADMIN_EMAIL && $("rememberLogin").checked) { try { localStorage.setItem("dripcollege_admin_pw", pw); } catch (_s) {} }
       var u = r.data.user || (r.data.session && r.data.session.user);
       var shown = (u && u.user_metadata && u.user_metadata.nickname) || nick;
       try { sessionStorage.setItem("dripcollege_nickname", shown); } catch (_e) {}
@@ -2062,6 +2073,124 @@
     try { sessionStorage.removeItem("dripcollege_nickname"); } catch (_e) {}
     showLogin(); status("loginStatus", "로그아웃되었습니다.", "ok");
   });
+
+  /* =====================================================================
+     신입회원 환영 방명록 / 새 방명록·별점 알림 팝업
+     ===================================================================== */
+  (function () {
+    var css = ".dp-ov{position:fixed;inset:0;z-index:100000;background:rgba(27,35,64,.55);display:flex;align-items:center;justify-content:center;padding:16px;overflow:auto}"
+      + ".dp-box{width:min(100%,420px);max-height:92vh;overflow:auto;background:var(--card,#fff);color:var(--ink,#1B2340);border:3px solid var(--ink,#1B2340);border-radius:22px;box-shadow:0 8px 0 rgba(27,35,64,.25);padding:20px 18px 16px;text-align:center;font-family:var(--font-body,sans-serif)}"
+      + ".dp-emoji{font-size:40px;line-height:1}"
+      + ".dp-title{margin:6px 0 4px;font-family:var(--font-display,sans-serif);font-size:24px;font-weight:400}"
+      + ".dp-text{margin:0 0 10px;font-size:15px;line-height:1.55;color:var(--muted,#5C6684)}"
+      + ".dp-nick{color:var(--coral,#F25430)}"
+      + ".dp-stars{display:flex;justify-content:center;gap:4px;margin:4px 0 10px}"
+      + ".dp-star{background:none;border:0;padding:2px 4px;font-size:30px;line-height:1;color:#D5DAE6;cursor:pointer}"
+      + ".dp-star.on{color:var(--gold,#FFB020)}"
+      + ".dp-ta{width:100%;resize:vertical;min-height:72px;border:2px solid var(--row-line,#E0E6F0);border-radius:14px;padding:10px 12px;font-size:15px;background:#fff}"
+      + ".dp-status{min-height:20px;margin:6px 0 2px;font-size:13px;color:var(--pink-ink,#D6264A)}"
+      + ".dp-actions{display:flex;gap:8px;justify-content:center;margin-top:6px}"
+      + ".dp-btn{min-height:46px;padding:0 18px;border-radius:14px;border:2px solid var(--ink,#1B2340);background:#fff;font-weight:700;font-size:15px;cursor:pointer}"
+      + ".dp-btn.dp-go{background:var(--coral,#F25430);color:#fff;flex:1}"
+      + ".dp-btn[disabled]{opacity:.55;cursor:default}"
+      + ".dp-list{display:flex;flex-direction:column;gap:8px;margin:10px 0;text-align:left}"
+      + ".dp-item{background:var(--slate-bg,#EEF2F8);border-radius:14px;padding:10px 12px}"
+      + ".dp-from{font-size:14px}.dp-rate{color:var(--gold,#FFB020);letter-spacing:1px;margin-left:6px}"
+      + ".dp-msg{margin-top:4px;font-size:15px;white-space:pre-wrap;word-break:break-word}";
+    var styleEl = document.createElement("style"); styleEl.textContent = css; document.head.appendChild(styleEl);
+
+    var timer = null, busy = false, active = false;
+
+    function openModal() {
+      var ov = document.createElement("div"); ov.className = "dp-ov"; ov.setAttribute("role", "dialog"); ov.setAttribute("aria-modal", "true");
+      var box = document.createElement("div"); box.className = "dp-box"; ov.appendChild(box); document.body.appendChild(ov);
+      return { box: box, close: function () { if (ov.parentNode) ov.parentNode.removeChild(ov); } };
+    }
+    function starText(n) { n = Math.max(0, Math.min(5, Number(n) || 0)); return "★★★★★".slice(0, n) + "☆☆☆☆☆".slice(0, 5 - n); }
+
+    function welcomePopup(member) {
+      return new Promise(function (resolve) {
+        var m = openModal(), rating = 0;
+        m.box.innerHTML = '<div class="dp-emoji">🎉</div><h3 class="dp-title">신입회원 환영!</h3>'
+          + '<p class="dp-text"><b class="dp-nick"></b>님이 드립대학에 새로 입학했어요.<br>환영 방명록을 남겨 주세요!</p>'
+          + '<div class="dp-stars" aria-label="별점"></div>'
+          + '<textarea class="dp-ta" maxlength="200" rows="3" placeholder="환영 한마디를 남겨 주세요 (최대 200자)"></textarea>'
+          + '<div class="dp-status" role="status"></div>'
+          + '<div class="dp-actions"><button type="button" class="dp-btn dp-later">나중에</button><button type="button" class="dp-btn dp-go">방명록 남기기</button></div>';
+        m.box.querySelector(".dp-nick").textContent = member.nickname;
+        var starBox = m.box.querySelector(".dp-stars"), starBtns = [];
+        function paint() { starBtns.forEach(function (b, i) { b.className = "dp-star" + (i < rating ? " on" : ""); b.setAttribute("aria-pressed", i < rating ? "true" : "false"); }); }
+        for (var i = 1; i <= 5; i++) (function (n) {
+          var b = document.createElement("button"); b.type = "button"; b.textContent = "★"; b.setAttribute("aria-label", n + "점");
+          b.addEventListener("click", function () { rating = (rating === n) ? 0 : n; paint(); });
+          starBox.appendChild(b); starBtns.push(b);
+        })(i);
+        paint();
+        var ta = m.box.querySelector(".dp-ta"), stat = m.box.querySelector(".dp-status"), go = m.box.querySelector(".dp-go"), later = m.box.querySelector(".dp-later");
+        later.addEventListener("click", function () { m.close(); resolve(false); });
+        go.addEventListener("click", async function () {
+          var content = ta.value.trim();
+          if (!content && !rating) { stat.textContent = "한마디나 별점 중 하나는 남겨 주세요."; return; }
+          go.disabled = true; later.disabled = true; stat.textContent = "";
+          try {
+            var r = await supabase.rpc("add_guestbook", { p_to: member.user_id, p_content: content || null, p_rating: rating || null });
+            if (r.error) throw r.error;
+            m.close(); resolve(true);
+          } catch (err) {
+            console.error("add_guestbook:", err);
+            stat.textContent = "방명록을 남기지 못했습니다. 잠시 후 다시 시도해 주세요.";
+            go.disabled = false; later.disabled = false;
+          }
+        });
+        setTimeout(function () { try { ta.focus(); } catch (_f) {} }, 50);
+      });
+    }
+
+    function noticePopup(items) {
+      return new Promise(function (resolve) {
+        var m = openModal();
+        m.box.innerHTML = '<div class="dp-emoji">💌</div><h3 class="dp-title">새 방명록이 도착했어요</h3><div class="dp-list"></div>'
+          + '<div class="dp-actions"><button type="button" class="dp-btn dp-go">확인</button></div>';
+        var list = m.box.querySelector(".dp-list");
+        items.forEach(function (it) {
+          var card = document.createElement("div"); card.className = "dp-item";
+          var from = document.createElement("div"); from.className = "dp-from";
+          var b = document.createElement("b"); b.textContent = it.from_nickname || "회원"; from.appendChild(b);
+          if (it.rating) { var rt = document.createElement("span"); rt.className = "dp-rate"; rt.textContent = starText(it.rating); from.appendChild(rt); }
+          card.appendChild(from);
+          if (it.content) { var msg = document.createElement("div"); msg.className = "dp-msg"; msg.textContent = it.content; card.appendChild(msg); }
+          list.appendChild(card);
+        });
+        m.box.querySelector(".dp-go").addEventListener("click", function () { m.close(); resolve(); });
+      });
+    }
+
+    async function check() {
+      if (busy || !active || !supabase) return;
+      busy = true;
+      try {
+        var r = await supabase.rpc("get_login_popups");
+        if (r.error || !r.data) { if (r.error) console.warn("get_login_popups:", r.error); return; }
+        var d = r.data, members = d.new_members || [], gb = d.guestbook || [];
+        if (!members.length && !gb.length) return;
+        for (var i = 0; i < members.length && active; i++) await welcomePopup(members[i]);
+        if (gb.length && active) await noticePopup(gb);
+        var wMark = members.length >= 10 ? members[members.length - 1].joined_at : d.server_now;
+        var gMark = gb.length >= 20 ? gb[gb.length - 1].created_at : d.server_now;
+        var mk = await supabase.rpc("mark_popups_seen", { p_welcome_at: wMark, p_guestbook_at: gMark });
+        if (mk.error) console.warn("mark_popups_seen:", mk.error);
+      } catch (e) { console.warn("popup check:", e); } finally { busy = false; }
+    }
+    function start() {
+      if (active) return; active = true;
+      setTimeout(check, 1000);
+      timer = setInterval(function () { if (!document.hidden) check(); }, 45000);
+    }
+    function stop() { active = false; if (timer) { clearInterval(timer); timer = null; } }
+    document.addEventListener("visibilitychange", function () { if (!document.hidden) check(); });
+    window.__dripPopups = { start: start, stop: stop, check: check };
+  })();
+
   if (supabase) {
     supabase.auth.getSession().then(function (r) {
       if (r.data.session) { var u = r.data.session.user; showSignedIn((u.user_metadata && u.user_metadata.nickname) || "회원"); }
