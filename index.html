@@ -1338,7 +1338,7 @@
         <span class="wg-date" id="wgDate">오늘의 단어 (국어사전 연동)</span>
 
       </div>
-      <div class="wg-desc-bar">💡 각 칸에는 자음 또는 모음 하나씩 들어갑니다. 아래 키보드로 입력하고 [입력]을 누르세요. 쌍자음은 같은 자음을 두 번 누르세요 (ㄲ = ㄱ ㄱ).</div>
+      <div class="wg-desc-bar">💡 각 칸에는 자음 또는 모음 하나씩 들어갑니다. 아래 키보드로 입력하고 [입력]을 누르세요. 쌍자음·겹모음은 기본 자모를 이어서 누르세요 (ㄲ = ㄱㄱ, ㅐ = ㅏㅣ, ㅢ = ㅡㅣ).</div>
       <div id="wgBoard" class="wg-board"></div>
       <div id="wgPreview" class="wg-preview" aria-live="polite"></div>
       <div id="wgKeys" class="wg-keys" aria-label="한글 자모 키보드"></div>
@@ -1798,11 +1798,15 @@
     { word: "앵두", hint: "작고 붉은 열매" }
   ];
   var KEY_MAP = {};
+  // 쌍자음·겹모음·겹받침은 기본 자모(자음 14 + 모음 10)로 풀어서 칸마다 하나씩 넣습니다.
+  var WG_EXPAND = {"ㄲ":["ㄱ","ㄱ"],"ㄸ":["ㄷ","ㄷ"],"ㅃ":["ㅂ","ㅂ"],"ㅆ":["ㅅ","ㅅ"],"ㅉ":["ㅈ","ㅈ"],
+    "ㅐ":["ㅏ","ㅣ"],"ㅒ":["ㅑ","ㅣ"],"ㅔ":["ㅓ","ㅣ"],"ㅖ":["ㅕ","ㅣ"],"ㅘ":["ㅗ","ㅏ"],"ㅙ":["ㅗ","ㅏ","ㅣ"],"ㅚ":["ㅗ","ㅣ"],"ㅝ":["ㅜ","ㅓ"],"ㅞ":["ㅜ","ㅓ","ㅣ"],"ㅟ":["ㅜ","ㅣ"],"ㅢ":["ㅡ","ㅣ"],
+    "ㄳ":["ㄱ","ㅅ"],"ㄵ":["ㄴ","ㅈ"],"ㄶ":["ㄴ","ㅎ"],"ㄺ":["ㄹ","ㄱ"],"ㄻ":["ㄹ","ㅁ"],"ㄼ":["ㄹ","ㅂ"],"ㄽ":["ㄹ","ㅅ"],"ㄾ":["ㄹ","ㅌ"],"ㄿ":["ㄹ","ㅍ"],"ㅀ":["ㄹ","ㅎ"],"ㅄ":["ㅂ","ㅅ"]};
   function splitHangulWord(word) {
     var out = [], initial = ["ㄱ","ㄲ","ㄴ","ㄷ","ㄸ","ㄹ","ㅁ","ㅂ","ㅃ","ㅅ","ㅆ","ㅇ","ㅈ","ㅉ","ㅊ","ㅋ","ㅌ","ㅍ","ㅎ"],
         vowel = ["ㅏ","ㅐ","ㅑ","ㅒ","ㅓ","ㅔ","ㅕ","ㅖ","ㅗ","ㅘ","ㅙ","ㅚ","ㅛ","ㅜ","ㅝ","ㅞ","ㅟ","ㅠ","ㅡ","ㅢ","ㅣ"],
         final = ["","ㄱ","ㄲ","ㄳ","ㄴ","ㄵ","ㄶ","ㄷ","ㄹ","ㄺ","ㄻ","ㄼ","ㄽ","ㄾ","ㄿ","ㅀ","ㅁ","ㅂ","ㅄ","ㅅ","ㅆ","ㅇ","ㅈ","ㅊ","ㅋ","ㅌ","ㅍ","ㅎ"],
-        tense = {"ㄲ":["ㄱ","ㄱ"],"ㄸ":["ㄷ","ㄷ"],"ㅃ":["ㅂ","ㅂ"],"ㅆ":["ㅅ","ㅅ"],"ㅉ":["ㅈ","ㅈ"]};
+        tense = WG_EXPAND;
     function pushJamo(j) { if (tense[j]) out.push.apply(out, tense[j]); else out.push(j); }
     Array.from(String(word || "").normalize("NFC")).forEach(function(ch) {
       var code = ch.charCodeAt(0);
@@ -1818,13 +1822,13 @@
     var candidates = WORD_POOL_5.filter(function(w) { return splitHangulWord(w.word).length === 5; });
     var idx = Math.floor(Math.random() * candidates.length), base = candidates[idx] || {word:"학교"};
     var wordObj = { word: base.word, jamo: splitHangulWord(base.word) };
-    return { version: 4, key: "wg_round_" + Date.now() + "_" + Math.random().toString(36).slice(2,8), wordObj: wordObj };
+    return { version: 5, key: "wg_round_" + Date.now() + "_" + Math.random().toString(36).slice(2,8), wordObj: wordObj };
   }
   var curState = { periodKey: "", wordObj: null, guesses: [], currentInput: [], currentRaw: "", status: "PLAYING", keyColors: {} };
   function initWordGame(newRound) {
     var active = null;
     if (!newRound) { try { active = JSON.parse(store("wg_active_round") || "null"); } catch(e) {} }
-    if (!active || !active.key || !active.wordObj || active.version !== 4 || newRound) { active = getNewRound(); store("wg_active_round", JSON.stringify(active)); }
+    if (!active || !active.key || !active.wordObj || active.version !== 5 || newRound) { active = getNewRound(); store("wg_active_round", JSON.stringify(active)); }
     curState.periodKey = active.key; curState.wordObj = active.wordObj;
     var saved = store(active.key); curState.guesses=[]; curState.status="PLAYING"; curState.keyColors={};
     if (saved) { try { var o=JSON.parse(saved); curState.guesses=o.guesses||[]; curState.status=o.status||"PLAYING"; curState.keyColors=o.keyColors||{}; } catch(e) {} }
@@ -1854,37 +1858,47 @@
       }
       board.appendChild(rowEl);
     }
-    $("wgPreview").textContent="";
+    $("wgPreview").textContent=""; updateSubmitBtn();
   }
   var WG_LAYOUT = [
-    ["ㄱ","ㄴ","ㄷ","ㄹ","ㅁ","ㅂ","ㅅ"],
-    ["ㅇ","ㅈ","ㅊ","ㅋ","ㅌ","ㅍ","ㅎ"],
-    ["ㅏ","ㅑ","ㅓ","ㅕ","ㅗ","ㅛ","ㅜ","ㅠ","ㅡ","ㅣ"],
-    ["ㅐ","ㅒ","ㅔ","ㅖ","ㅘ","ㅙ","ㅚ","ㅝ","ㅞ","ㅟ","ㅢ"],
-    ["지우기","입력"]
+    ["ㅂ","ㅈ","ㄷ","ㄱ","ㅅ","ㅛ","ㅕ","ㅑ","←"],
+    ["ㅁ","ㄴ","ㅇ","ㄹ","ㅎ","ㅗ","ㅓ","ㅏ","ㅣ"],
+    ["","ㅋ","ㅌ","ㅊ","ㅍ","ㅠ","ㅜ","ㅡ",""]
   ];
+  function submitLabel() {
+    var n=(curState.currentInput||[]).length;
+    return n===0 ? "글자를 입력하세요" : (n<5 ? (5-n)+"칸 더 입력하세요" : "입력");
+  }
+  function updateSubmitBtn() {
+    var btn=document.querySelector("#wgKeys .wg-submit"); if(!btn) return;
+    var ready=curState.status==="PLAYING" && (curState.currentInput||[]).length===5;
+    btn.textContent=submitLabel(); btn.classList.toggle("ready",ready); btn.disabled=curState.status!=="PLAYING";
+    btn.setAttribute("aria-disabled", ready?"false":"true");
+  }
   function renderKeys() {
     var host=$("wgKeys"); if(!host) return; host.innerHTML="";
     var playing=curState.status==="PLAYING";
     WG_LAYOUT.forEach(function(row){
       var rowEl=el("div","wg-krow");
       row.forEach(function(k){
-        var b=document.createElement("button"); b.type="button"; b.className="wg-key"; b.setAttribute("data-k",k);
-        if(k==="지우기"||k==="입력"){ b.classList.add("wide"); b.textContent=(k==="지우기"?"⌫ 지우기":"입력"); b.setAttribute("aria-label",k); }
-        else { b.textContent=k; var col=curState.keyColors&&curState.keyColors[k]; if(col) b.classList.add(col); }
+        if(!k){ var sp=document.createElement("span"); sp.className="wg-kgap"; rowEl.appendChild(sp); return; }
+        var b=document.createElement("button"); b.type="button"; b.className="wg-key";
+        if(k==="←"){ b.classList.add("back"); b.setAttribute("data-k","지우기"); b.setAttribute("aria-label","지우기"); b.textContent="←"; }
+        else { b.setAttribute("data-k",k); b.textContent=k; var col=curState.keyColors&&curState.keyColors[k]; if(col) b.classList.add(col); }
         if(!playing) b.disabled=true;
         rowEl.appendChild(b);
       });
       host.appendChild(rowEl);
     });
+    var sub=document.createElement("button"); sub.type="button"; sub.className="wg-submit"; sub.setAttribute("data-k","입력");
+    host.appendChild(sub); updateSubmitBtn();
   }
   (function(){ var host=$("wgKeys"); if(host) host.addEventListener("click",function(e){ var b=e.target.closest?e.target.closest("button[data-k]"):null; if(b&&!b.disabled) pressKey(b.getAttribute("data-k")); }); })();
-  var WG_TENSE = {"ㄲ":["ㄱ","ㄱ"],"ㄸ":["ㄷ","ㄷ"],"ㅃ":["ㅂ","ㅂ"],"ㅆ":["ㅅ","ㅅ"],"ㅉ":["ㅈ","ㅈ"]};
   function pressKey(k) {
     if(curState.status!=="PLAYING") return;
     if(k==="입력"||k==="Enter"){ submitGuess(); return; }
     if(k==="지우기"||k==="Backspace"){ curState.currentInput.pop(); renderBoard(); return; }
-    var jamos=WG_TENSE[k]||[k];
+    var jamos=WG_EXPAND[k]||[k];
     if(curState.currentInput.length+jamos.length>5) return;
     jamos.forEach(function(j){ curState.currentInput.push(j); });
     curState.currentRaw=curState.currentInput.join("");
@@ -3701,4 +3715,22 @@
   .community-row .community-author-line{flex-wrap:nowrap!important;gap:6px!important;font-size:11.5px}
   .community-detail .community-author-line{flex-wrap:nowrap!important;gap:6px!important}
 }
+
+/* === 오늘의 단어 키보드 (카카오 스타일) === */
+.wg-keys{display:flex!important;flex-direction:column;gap:8px;max-width:none!important;margin:14px -4px -4px!important;padding:12px 8px 10px;background:#f4f4f5;border-radius:18px}
+.wg-keys .wg-krow{display:grid;grid-template-columns:repeat(9,minmax(0,1fr));gap:6px;justify-content:stretch}
+.wg-keys .wg-kgap{display:block}
+.wg-keys .wg-key{flex:none;max-width:none;width:100%;height:52px;border:0;border-radius:10px;background:#fff;color:#111;font-family:var(--font-body);font-weight:800;font-size:22px;line-height:1;padding:0;box-shadow:none;display:grid;place-items:center;touch-action:manipulation}
+.wg-keys .wg-key.back{font-weight:300;font-size:24px}
+.wg-keys .wg-key:active{background:#e4e4e6;transform:none}
+.wg-keys .wg-key.correct{background:#08a8a4;color:#fff}
+.wg-keys .wg-key.present{background:#f2b632;color:#fff}
+.wg-keys .wg-key.absent{background:#b8bec6;color:#fff}
+.wg-keys .wg-key[disabled]{opacity:.5}
+.wg-keys .wg-submit{margin-top:6px;width:100%;height:54px;border:0;border-radius:14px;background:#e6e6e8;color:#9a9a9f;font-family:var(--font-body);font-weight:800;font-size:17px;touch-action:manipulation}
+.wg-keys .wg-submit.ready{background:var(--kakao,#FEE500);color:#191919}
+.wg-keys .wg-submit[disabled]{opacity:.6}
+@media (max-width:400px){ .wg-keys .wg-key{height:48px;font-size:21px} .wg-keys .wg-krow{gap:5px} }
+.wg-board .wg-tile:not(.correct):not(.present):not(.absent){border:2px solid #dcdcdc!important;border-radius:14px!important;font-weight:800}
+.wg-board .wg-tile.next{border-color:var(--teal)!important}
 </style>
