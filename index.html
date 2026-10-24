@@ -631,7 +631,7 @@
   /* ===== 화면 하단 고정 메뉴 ===== */
   body{padding-bottom:calc(94px + env(safe-area-inset-bottom,0px))!important}
   #bottomFixedNav{display:none}
-  body.signed-in #bottomFixedNav{position:fixed;left:0;right:0;bottom:0;z-index:80;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:2px;padding:8px max(7px,env(safe-area-inset-right,0px)) calc(8px + env(safe-area-inset-bottom,0px)) max(7px,env(safe-area-inset-left,0px));background:rgba(255,255,255,.97);border-top:1px solid #dce6ef;box-shadow:0 -4px 18px rgba(30,70,120,.10);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px)}
+  body.signed-in #bottomFixedNav{position:fixed;left:0;right:0;bottom:0;z-index:80;display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:2px;padding:8px max(7px,env(safe-area-inset-right,0px)) calc(8px + env(safe-area-inset-bottom,0px)) max(7px,env(safe-area-inset-left,0px));background:rgba(255,255,255,.97);border-top:1px solid #dce6ef;box-shadow:0 -4px 18px rgba(30,70,120,.10);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px)}
   #bottomFixedNav .bottom-nav-btn{min-width:0;min-height:48px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;border:0;background:transparent;border-radius:12px;padding:3px 1px;color:#5a6878;font-family:var(--font-body);font-size:11px;font-weight:700;line-height:1.2;white-space:nowrap;box-shadow:none}
   #bottomFixedNav .bottom-nav-btn .bottom-nav-icon{font-size:21px;line-height:1.15}
   #bottomFixedNav .bottom-nav-btn.active{background:#e9f6fd;color:#087fae}
@@ -967,6 +967,7 @@
   <button type="button" class="tb-wx" id="tbWeather" title="현재 위치 날씨 자동 표시 · 누르면 위치 다시 확인"><span class="wx-ico" id="wxIco" aria-hidden="true">⛅</span><span class="wx-txt"><span class="wx-main" id="wxMain">날씨 불러오는 중</span><span class="wx-sub" id="wxSub"></span></span></button>
 </header>
 <nav id="bottomFixedNav" aria-label="하단 고정 메뉴">
+  <button class="bottom-nav-btn" id="bottomMain" type="button"><span class="bottom-nav-icon" aria-hidden="true">🏠</span><span>메인</span></button>
   <button class="bottom-nav-btn" id="bottomNotice" type="button"><span class="bottom-nav-icon" aria-hidden="true">📢</span><span>공지사항</span></button>
   <button class="bottom-nav-btn" id="bottomBoard" type="button"><span class="bottom-nav-icon" aria-hidden="true">💬</span><span>수다게시판</span></button>
   <button class="bottom-nav-btn" id="bottomGames" type="button"><span class="bottom-nav-icon" aria-hidden="true">🎮</span><span>미니게임</span></button>
@@ -1198,12 +1199,8 @@
 
   <!-- ===== 카카오톡 채팅 순위 ===== -->
   <section id="chatRankView" hidden class="community-panel chat-rank-panel" aria-labelledby="chatRankTitle">
-    <div class="head"><div class="head-main"><h2 class="title" id="chatRankTitle">💬 채팅 순위</h2><p class="sub">카카오톡 대화 내보내기 TXT를 기준으로 주간·월간·누적 메시지 수를 집계합니다.</p></div><button class="btn small" id="chatRankBack" type="button">← 메인으로</button></div>
+    <div class="head"><div class="head-main"><h2 class="title" id="chatRankTitle">💬 채팅 순위</h2><p class="sub">카카오톡 대화 내보내기 TXT를 기준으로 주간·월간·누적 메시지 수를 집계합니다. (대화방 명단 기준)</p></div><button class="btn small" id="chatRankBack" type="button">← 메인으로</button></div>
     <div class="card" style="padding:16px">
-      <div id="chatRankAdminTools" hidden>
-        <div class="chat-rank-tools"><label for="chatRankFile">📄 TXT 파일 선택 <input id="chatRankFile" type="file" accept=".txt,text/plain"></label><button class="primary" id="chatRankUpload" type="button">업로드 및 순위 갱신</button><button id="chatRankRefresh" type="button">↻ 순위 새로고침</button></div>
-        <p class="sub">운영자 계정에서만 업로드할 수 있습니다. Supabase Storage 버킷에 TXT를 올려도 서버가 자동으로 분석합니다. 메시지 본문은 저장하지 않고, 중복 업로드는 메시지 지문으로 걸러냅니다.</p>
-      </div>
       <div id="chatRankStatus" class="chat-rank-status" role="status" aria-live="polite">순위를 불러오는 중입니다.</div>
       <div class="chat-rank-switch"><button class="active" data-chat-period="weekly" type="button">📅 주간 (월~일)</button><button data-chat-period="monthly" type="button">🗓️ 월간</button><button data-chat-period="all" type="button">🏁 누적</button></div>
       <div id="chatRankPeriodLabel" class="sub" style="margin:0 0 14px"></div>
@@ -1461,15 +1458,16 @@
   $("goStudentId").onclick = function () { showView("studentId"); loadStudentCard(); };
   $("goPlaces").onclick = function () { showView("places"); initKakaoMap(); };
   // 하단 고정 메뉴는 화면 전환 중에도 항상 같은 위치에 유지됩니다.
+  $("bottomMain").onclick = function () { showView("main"); };
   $("bottomNotice").onclick = function () { showView("notice"); };
   $("bottomBoard").onclick = function () { showView("board"); selectedPostId = null; loadCommunity(); };
   $("bottomGames").onclick = function () { showView("hub"); updateHubState(); };
   $("bottomPlaces").onclick = function () { showView("places"); initKakaoMap(); };
-  $("bottomChatRank").onclick = function () { showView("chatRank"); $("chatRankAdminTools").hidden = !window.__dripIsAdmin; refreshChatRank(); };
+  $("bottomChatRank").onclick = function () { showView("chatRank"); refreshChatRank(); };
   $("openFortuneGame").onclick = function () { showView("fortune"); };
   function updateBottomNavActive(target) {
-    var map = { notice:"bottomNotice", board:"bottomBoard", hub:"bottomGames", word:"bottomGames", foodChoice:"bottomGames", fortune:"bottomGames", places:"bottomPlaces", chatRank:"bottomChatRank" };
-    ["bottomNotice","bottomBoard","bottomGames","bottomPlaces","bottomChatRank"].forEach(function(id){ var b=$(id); if(b) b.classList.toggle("active", map[target]===id); });
+    var map = { main:"bottomMain", notice:"bottomNotice", board:"bottomBoard", hub:"bottomGames", word:"bottomGames", foodChoice:"bottomGames", fortune:"bottomGames", places:"bottomPlaces", chatRank:"bottomChatRank" };
+    ["bottomMain","bottomNotice","bottomBoard","bottomGames","bottomPlaces","bottomChatRank"].forEach(function(id){ var b=$(id); if(b) b.classList.toggle("active", map[target]===id); });
   }
   var originalRenderView = renderView;
   renderView = function(target) { originalRenderView(target); updateBottomNavActive(target); };
@@ -1656,50 +1654,28 @@
     }
     return all;
   }
-  async function chatRankRefreshLegacy() {
-    if (!supabase) { chatRankStatus("Supabase 연결이 없어 채팅 순위를 불러올 수 없습니다.","error"); return; }
-    chatRankStatus("회원 목록과 채팅 집계를 불러오는 중…");
-    try {
-      var range=chatRankDateRange(chatRankPeriod);
-      $("chatRankPeriodLabel").textContent=range.label;
-      var membersResult=await supabase.from("student_cards").select("user_id,nickname").order("nickname",{ascending:true}).limit(10000);
-      if(membersResult.error) throw membersResult.error;
-      var memberMap={}, memberList=[];
-      (membersResult.data||[]).forEach(function(m){var nick=String(m.nickname||"").trim();if(!nick)return;var key=nick.normalize("NFC").toLocaleLowerCase("ko-KR");if(!memberMap[key]){memberMap[key]={nickname:nick,count:0};memberList.push(memberMap[key]);}});
-      var events=await chatRankFetchAll("chat_rank_messages","event_key,nickname,sent_at",range.start.toISOString(),range.end.toISOString());
-      events.forEach(function(event){var key=String(event.nickname||"").trim().normalize("NFC").toLocaleLowerCase("ko-KR");if(memberMap[key])memberMap[key].count++;});
-      var sorted=memberList.slice().sort(function(a,b){return b.count-a.count || a.nickname.localeCompare(b.nickname,"ko");});
-      chatRankRenderRows("chatRankTop",sorted.filter(function(x){return x.count>0;}).slice(0,10),false);
-      var quiet=memberList.slice().sort(function(a,b){return a.count-b.count || a.nickname.localeCompare(b.nickname,"ko");}).slice(0,10);
-      chatRankRenderRows("chatRankQuiet",quiet,true);
-      chatRankStatus("집계 완료 · 현재 학생증이 등록된 회원 "+memberList.length+"명 · 기간 내 중복 제거된 메시지 "+events.length.toLocaleString("ko-KR")+"개", "ok");
-    } catch(err) {
-      console.error("채팅 순위 조회 실패",err);
-      var msg=err && err.message ? err.message : String(err);
-      chatRankStatus(/chat_rank_messages/i.test(msg) ? "채팅 순위 테이블이 아직 준비되지 않았습니다. 제공된 SQL을 Supabase SQL Editor에서 먼저 실행해 주세요." : "채팅 순위를 불러오지 못했습니다: "+msg,"error");
-    }
-  }
+  /* 채팅 순위 집계 대상 명단 (카카오톡 대화상대). 이 명단에 있는 사람만 순위에 올라갑니다.
+     대화상대가 늘거나 닉네임이 바뀌면 여기만 수정하세요. 카톡 닉네임과 글자·띄어쓰기가 같아야 합니다. */
+  var CHAT_RANK_ROSTER = ["딸버맨", "거제 야호", "무지", "생생우동헌터", "조이풀조이풀", "추전어(갯꾸)", "N포세대 의리뽀이", "60계치킨", "개골이", "고먹춘", "공무", "구우me", "김씨", "김천국밥", "나리 ESTJ", "나이스데이", "노리", "대갈통깨부수고싶다상사", "드왕", "딸그락", "띵띵핑", "마이정글", "마포대교", "만식이", "말꼬리잡는 고양이", "멧라니(고라니)", "몰리", "생산맨", "성인인데 어쩔꼬뎅?", "소박이", "소배압", "숨모으기청년", "아픍카코끼리", "앵새기", "열무", "오종열", "은 별", "자몽", "장어탕과 추어탕을 구분할줄 아는 여자", "제네실수", "죽산", "진 자 가", "집사", "짤줍맨", "초롱", "타코야끼", "피자헛둘셋넷(알이즈웰)", "햇님", "호옹 ESTJ"];
   async function refreshChatRank() {
     if (!supabase) { chatRankStatus("Supabase 연결이 없어 채팅 순위를 불러올 수 없습니다.","error"); return; }
     chatRankStatus("채팅 집계를 불러오는 중…");
     try {
       var range=chatRankDateRange(chatRankPeriod);
       $("chatRankPeriodLabel").textContent=range.label;
-      var res=await supabase.rpc("chat_rank_board",{p_period:chatRankPeriod});
-      if(res.error){
-        if(/chat_rank_board|PGRST202|Could not find the function/i.test(String(res.error.code||"")+" "+String(res.error.message||""))) return chatRankRefreshLegacy();
-        throw res.error;
-      }
+      var res=await supabase.rpc("chat_rank_board",{p_period:chatRankPeriod,p_names:CHAT_RANK_ROSTER});
+      if(res.error) throw res.error;
       var rows=(res.data||[]).map(function(r){return {nickname:r.rank_nickname,count:Number(r.rank_count)||0};});
       var total=rows.reduce(function(a,r){return a+r.count;},0);
       var top=rows.filter(function(x){return x.count>0;}).sort(function(a,b){return b.count-a.count||a.nickname.localeCompare(b.nickname,"ko");}).slice(0,10);
       var quiet=rows.slice().sort(function(a,b){return a.count-b.count||a.nickname.localeCompare(b.nickname,"ko");}).slice(0,10);
       chatRankRenderRows("chatRankTop",top,false);
       chatRankRenderRows("chatRankQuiet",quiet,true);
-      chatRankStatus("집계 완료 · 학생증 등록 회원 "+rows.length+"명 · 기간 내 회원 메시지 "+total.toLocaleString("ko-KR")+"개","ok");
+      chatRankStatus("집계 완료 · 대상 명단 "+rows.length+"명 · 기간 내 메시지 "+total.toLocaleString("ko-KR")+"개","ok");
     } catch(err) {
       console.error("채팅 순위 조회 실패",err);
-      chatRankStatus("채팅 순위를 불러오지 못했습니다: "+(err&&err.message?err.message:String(err)),"error");
+      var msg=err&&err.message?err.message:String(err);
+      chatRankStatus(/chat_rank_board|PGRST202|Could not find the function/i.test(String(err&&err.code||"")+" "+msg)?"채팅 순위 함수가 아직 준비되지 않았습니다. 최신 chat_rank_setup.sql을 Supabase SQL Editor에서 실행해 주세요.":"채팅 순위를 불러오지 못했습니다: "+msg,"error");
     }
   }
   function chatRankParseTxt(text) {
@@ -1754,7 +1730,7 @@
     }catch(err){console.error("채팅 TXT 업로드 실패",err);chatRankStatus("업로드 실패: "+(err&&err.message?err.message:String(err)),"error");}
     finally{btn.disabled=false;btn.textContent="업로드 및 순위 갱신";}
   }
-  if($("goChatRank")) $("goChatRank").addEventListener("click",function(){showView("chatRank");$("chatRankAdminTools").hidden=!window.__dripIsAdmin;refreshChatRank();});
+  if($("goChatRank")) $("goChatRank").addEventListener("click",function(){showView("chatRank");refreshChatRank();});
   if($("chatRankBack")) $("chatRankBack").addEventListener("click",function(){showView("main");});
   if($("chatRankUpload")) $("chatRankUpload").addEventListener("click",uploadChatRankTxt);
   if($("chatRankRefresh")) $("chatRankRefresh").addEventListener("click",refreshChatRank);
