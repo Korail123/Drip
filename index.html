@@ -1148,6 +1148,7 @@
     <nav id="mainNav" class="nav-grid" aria-label="메인 메뉴" hidden>
       <button class="nav-btn" id="goNotice" type="button"><span class="ni"><svg class="ico" viewBox="0 0 40 40" aria-hidden="true"><path d="M7 16h6l12-6v20l-12-6H7z"/><path d="M13 24l2 8h4l-2-7.5"/><path class="ac" d="M29 15c2.5 2 2.5 8 0 10M32 12c4.5 4 4.5 12 0 16"/></svg></span><span class="nl">공지사항</span></button>
       <button class="nav-btn" id="goBoard" type="button"><span class="ni"><svg class="ico" viewBox="0 0 40 40" aria-hidden="true"><path d="M6 8h20a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H15l-6 5v-5H6a2 2 0 0 1-2-2V10a2 2 0 0 1 2-2z"/><path d="M10 15.5h.01M16 15.5h.01M22 15.5h.01" stroke-width="2.4"/><path class="ac" d="M31 15h2a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-1v4l-5-4h-8"/></svg></span><span class="nl">수다게시판</span></button>
+      <button class="nav-btn" id="goAuthBoard" type="button"><span class="ni"><svg class="ico" viewBox="0 0 40 40" aria-hidden="true"><path d="M7 9h26v22H7z"/><path d="M12 24l5-6 4 4 4-7 4 9"/><circle class="ac" cx="13" cy="14" r="2"/></svg></span><span class="nl">인증게시판</span></button>
       <button class="nav-btn" id="goStudentId" type="button"><span class="ni"><svg class="ico" viewBox="0 0 40 40" aria-hidden="true"><rect x="5" y="8" width="30" height="24" rx="3"/><circle cx="14" cy="18" r="3.2"/><path d="M9 27c0-3 2.5-4.5 5-4.5s5 1.5 5 4.5"/><path class="ac" d="M23 16h8M23 21h8M23 26h5"/></svg></span><span class="nl">학생증 만들기</span></button>
       <button class="nav-btn" id="goGames" type="button"><span class="ni"><svg class="ico" viewBox="0 0 40 40" aria-hidden="true"><path d="M11 12h18a6 6 0 0 1 6 6l1.5 8a3.5 3.5 0 0 1-6 2.5L27 25H13l-3.5 3.5a3.5 3.5 0 0 1-6-2.5L5 18a6 6 0 0 1 6-6z"/><path class="ac" d="M13 16v5M10.5 18.5h5"/><circle class="ac" cx="26" cy="17.5" r="1.3"/><circle class="ac" cx="30" cy="20.5" r="1.3"/></svg></span><span class="nl">미니게임</span></button>
       <button class="nav-btn" id="goFortune" type="button"><span class="ni"><svg class="ico" viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="17" r="10"/><path d="M12 34h16l-2.5-6h-11z"/><path class="ac" d="M20 11v4M18 13h4M14 18a6 6 0 0 1 3-4.5"/></svg></span><span class="nl">오늘의 사주</span></button>
@@ -1240,6 +1241,14 @@
     </div>
       <p>🎮 디스코드방은 게임을 함께 즐기기 위한 전용 공간입니다. 친목으로 인해 우리 채팅방 구성원이 소외되는 경우는 허용하지 않습니다.</p>
     </details>
+  </section>
+
+  <!-- ===== 인증게시판: 운동/식단 ===== -->
+  <section id="authBoardView" hidden class="community-panel" aria-labelledby="authBoardHead">
+    <div class="head"><div class="head-main"><h2 class="title" id="authBoardHead">🏅 인증게시판</h2><p class="sub">운동과 식단 기록을 사진과 함께 공유해요. 게시물은 Supabase에 저장되어 다른 기기에서도 동기화됩니다.</p></div><div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn small" id="authBoardBack" type="button">← 메인으로</button><button class="btn small coral" id="authBoardNew" type="button">인증글 작성</button></div></div>
+    <div class="auth-board-tabs" role="tablist" aria-label="인증게시판 카테고리"><button type="button" class="active" id="authCategoryExercise" data-auth-category="운동" role="tab" aria-selected="true">💪 운동 인증</button><button type="button" id="authCategoryDiet" data-auth-category="식단" role="tab" aria-selected="false">🥗 식단 인증</button></div>
+    <form id="authBoardComposer" class="community-form" hidden><h3 id="authBoardFormTitle">운동 인증글 작성</h3><label for="authBoardTitle">제목</label><input id="authBoardTitle" maxlength="120" placeholder="예: 오늘 하체 운동 완료!" required><label for="authBoardContent">인증 내용</label><textarea id="authBoardContent" maxlength="5000" rows="5" placeholder="운동 내용, 식단, 느낀 점 등을 적어주세요." required></textarea><label for="authBoardPhoto">사진 첨부 (JPG, PNG, WEBP / 최대 8MB)</label><input id="authBoardPhoto" type="file" accept="image/jpeg,image/png,image/webp"><div id="authBoardPhotoPreview"></div><div class="community-actions"><button type="submit" class="btn coral" id="authBoardSave">등록하기</button><button type="button" class="btn" id="authBoardCancel">취소</button></div><div id="authBoardFormStatus" class="community-status" role="status"></div></form>
+    <div id="authBoardFeed" aria-live="polite"></div><div id="authBoardStatus" class="community-status" role="status" aria-live="polite"></div>
   </section>
 
   <!-- ===== 학생증 / 사주 ===== -->
@@ -1461,8 +1470,13 @@
     </div>
   </div>
 
+<div id="welcomeGuestbookModal" class="welcome-modal" hidden role="presentation"><div class="welcome-dialog" role="dialog" aria-modal="true" aria-labelledby="welcomeGuestbookTitle"><div class="welcome-emoji">🎉</div><h2 id="welcomeGuestbookTitle">가입을 축하합니다!</h2><p>학생증 만들기를 완료하셨네요.<br>다른 학우들에게 첫인사를 남겨 보세요 😊</p><button type="button" id="welcomeGuestbookGo" class="btn coral">📖 방명록 쓰러가기</button><button type="button" id="welcomeGuestbookClose" class="welcome-close">나중에 할게요</button></div></div>
+
 <div class="toast" id="toast" role="status" hidden></div>
 
+<style>
+.auth-board-tabs{display:flex;gap:9px;margin:8px 0 16px}.auth-board-tabs button{flex:1;border:1px solid #d8e2ee;border-radius:13px;background:#fff;padding:12px 10px;font-weight:800;color:#31415f}.auth-board-tabs button.active{background:#173f6b;color:#fff;border-color:#173f6b}.auth-board-item{background:#fff;border:1px solid #e2e7f0;border-radius:16px;padding:15px;margin:12px 0;box-shadow:0 4px 14px rgba(32,43,69,.05)}.auth-board-item h3{margin:0 0 7px;font-size:18px}.auth-board-meta{color:#75819a;font-size:12px;margin-bottom:10px}.auth-board-content{white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.65}.auth-board-image{display:block;width:100%;max-height:480px;object-fit:contain;margin-top:12px;border-radius:12px;background:#f3f6fa}.auth-board-item-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:12px}.welcome-modal{position:fixed;inset:0;z-index:10000;background:rgba(15,27,49,.62);display:flex;align-items:center;justify-content:center;padding:20px}.welcome-modal[hidden]{display:none!important}.welcome-dialog{width:min(100%,390px);padding:27px 22px 22px;text-align:center;border-radius:24px;background:#fff;box-shadow:0 22px 70px rgba(0,0,0,.25);border:2px solid #173f6b}.welcome-emoji{font-size:44px}.welcome-dialog h2{margin:8px 0 10px;font-size:25px;color:#173f6b}.welcome-dialog p{line-height:1.7;color:#53627a;margin:0 0 20px}.welcome-dialog .btn{width:100%;justify-content:center;min-height:48px}.welcome-close{margin-top:12px;border:0;background:transparent;color:#6d7890;padding:9px 15px;font-weight:700}
+</style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 (function () {
@@ -1488,7 +1502,7 @@
 
 
   /* ---------------- 화면 전환 ---------------- */
-  var views = { main: $("mainView"), board: $("boardView"), explore: $("exploreView"), hub: $("gameHub"), word: $("wordGame"), notice: $("noticeView"), studentId: $("studentIdView"), fortune: $("fortuneView"), places: $("placesView"), suggest: $("suggestView") };
+  var views = { main: $("mainView"), board: $("boardView"), authBoard: $("authBoardView"), explore: $("exploreView"), hub: $("gameHub"), word: $("wordGame"), notice: $("noticeView"), studentId: $("studentIdView"), fortune: $("fortuneView"), places: $("placesView"), suggest: $("suggestView") };
   var currentAppView = "main";
   var handlingBrowserBack = false;
   try { history.replaceState({ dripcollegeApp: true, view: "main" }, "", location.href); } catch (_historyInitError) {}
@@ -1539,6 +1553,9 @@
     handlingBrowserBack = false;
   });
   $("goBoard").addEventListener("click", function () { showView("board"); selectedPostId = null; loadCommunity(); });
+  $("goAuthBoard").addEventListener("click", function () { showView("authBoard"); loadAuthBoard(); });
+  $("authBoardBack").onclick = function () { showView("main"); };
+
   $("boardBack").onclick = function () { showView("main"); };
   $("goExplore").onclick = function () { showView("explore"); openExplore(); };
   $("goGames").onclick = function () { showView("hub"); updateHubState(); };
@@ -1883,6 +1900,8 @@
     $("signedInLabel").innerHTML = '<span class="mark">' + escapeHtml(nick) + '</span> 님, 환영합니다!';
     loadStudentCard();
     window.scrollTo({ top: 0, behavior: "smooth" });
+    // 서버에 저장된 학생증 완성 표시가 있고, 방명록 안내를 아직 보지 않은 신규 회원만 노출
+    setTimeout(checkWelcomeGuestbook, 650);
   }
   function ready() { if (!supabase) { status("loginStatus", "Supabase 초기화에 실패했습니다. CDN 로딩, 프로젝트 URL, 공개 API 키를 확인해 주세요.", "error"); return false; } return true; }
 
@@ -1978,7 +1997,11 @@
         return;
       }
       if (!session) {
-        status("signupStatus", "계정은 생성됐지만 로그인 세션이 없습니다. Supabase Authentication의 Email 확인 설정을 점검해 주세요. 기존 계정은 삭제하지 마세요.", "error");
+        status(
+          "signupStatus",
+          "이 사이트는 이메일 인증을 사용하지 않고 인증번호 2030으로 가입하도록 설정되어 있습니다. 다만 Supabase에서 이메일 확인이 켜져 있으면 가입이 막힙니다. Supabase Dashboard → Authentication → Sign In / Providers → Email에서 Confirm email을 끈 뒤 다시 시도해 주세요. 기존 회원이나 데이터는 삭제하지 마세요.",
+          "error"
+        );
         return;
       }
 
@@ -1996,7 +2019,7 @@
       if (/email rate limit exceeded|rate limit/i.test(errorMessage)) {
         status(
           "signupStatus",
-          "Supabase의 인증 요청 제한에 도달했습니다. 가입 버튼을 반복해서 누르지 말고 잠시 기다린 뒤 다시 시도해 주세요. 계속 발생하면 Supabase Dashboard의 Authentication 이메일 발송/요청 제한 설정을 확인해야 합니다. 기존 회원 정보는 삭제하지 마세요.",
+          "Supabase에서 이메일 인증 발송 제한에 도달했습니다. 이 사이트는 이메일 인증 없이 2030 코드로 가입하도록 사용할 수 있습니다. Supabase Dashboard → Authentication → Sign In / Providers → Email에서 Confirm email을 끄면 이메일 인증 발송이 필요하지 않습니다. 설정 후 다시 시도해 주세요. 기존 회원 정보는 삭제하지 마세요.",
           "error"
         );
       } else {
@@ -2184,6 +2207,116 @@
       $("communityComposer").hidden = true; editingPostId = null; $("communityPhoto").value = ""; $("communityPhotoPreview").innerHTML = ""; loadCommunity();
     } catch (err) { setText("communityPostStatus", "저장 실패: " + err.message + " (게시판 SQL 및 사진 저장소 설정을 확인해 주세요.)"); }
   };
+
+  /* =====================================================================
+     인증게시판 — 운동/식단, Supabase DB + Storage + Realtime 동기화
+     ===================================================================== */
+  var authBoardCategory = "운동", authBoardChannel = null, authBoardBusy = false;
+  function setAuthBoardCategory(category) {
+    authBoardCategory = category === "식단" ? "식단" : "운동";
+    document.querySelectorAll("[data-auth-category]").forEach(function (b) {
+      var active = b.getAttribute("data-auth-category") === authBoardCategory;
+      b.classList.toggle("active", active); b.setAttribute("aria-selected", active ? "true" : "false");
+    });
+    $("authBoardFormTitle").textContent = authBoardCategory + " 인증글 작성";
+    $("authBoardTitle").placeholder = authBoardCategory === "운동" ? "예: 오늘 하체 운동 완료!" : "예: 오늘의 식단 기록 🥗";
+    loadAuthBoard();
+  }
+  document.querySelectorAll("[data-auth-category]").forEach(function (b) { b.addEventListener("click", function () { setAuthBoardCategory(b.getAttribute("data-auth-category")); }); });
+  $("authBoardNew").onclick = function () {
+    $("authBoardComposer").reset(); $("authBoardPhotoPreview").innerHTML = ""; $("authBoardFormStatus").textContent = "";
+    $("authBoardFormTitle").textContent = authBoardCategory + " 인증글 작성"; $("authBoardComposer").hidden = false;
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+  $("authBoardCancel").onclick = function () { $("authBoardComposer").hidden = true; };
+  $("authBoardPhoto").onchange = function () {
+    var f = this.files && this.files[0]; $("authBoardPhotoPreview").innerHTML = ""; if (!f) return;
+    if (f.size > 8 * 1024 * 1024) { alert("사진은 8MB 이하만 첨부할 수 있습니다."); this.value = ""; return; }
+    if (!/^image\/(jpeg|png|webp)$/.test(f.type)) { alert("JPG, PNG, WEBP 사진만 첨부할 수 있습니다."); this.value = ""; return; }
+    var img = document.createElement("img"); img.className = "auth-board-image"; img.alt = "사진 미리보기"; img.src = URL.createObjectURL(f); $("authBoardPhotoPreview").appendChild(img);
+  };
+  async function uploadAuthBoardPhoto(file, userId) {
+    if (!file) return null;
+    var ext = (file.name.split(".").pop() || "jpg").toLowerCase().replace(/[^a-z0-9]/g, "");
+    var path = userId + "/" + Date.now() + "-" + crypto.randomUUID() + "." + ext;
+    var up = await supabase.storage.from("verification-photos").upload(path, file, { upsert: false, contentType: file.type, cacheControl: "3600" });
+    if (up.error) throw up.error;
+    return supabase.storage.from("verification-photos").getPublicUrl(path).data.publicUrl;
+  }
+  async function loadAuthBoard() {
+    if (authBoardBusy) return; authBoardBusy = true;
+    if (!supabase) { setText("authBoardStatus", "Supabase 연결을 확인해 주세요."); authBoardBusy = false; return; }
+    setText("authBoardStatus", "인증 게시글을 불러오는 중…");
+    try {
+      var q = await supabase.from("verification_posts").select("id,category,title,content,author_id,author_nickname,image_url,created_at,updated_at").eq("category", authBoardCategory).order("created_at", { ascending: false }).limit(100);
+      if (q.error) throw q.error;
+      var feed = $("authBoardFeed"); feed.replaceChildren();
+      if (!q.data || !q.data.length) { setText("authBoardStatus", "아직 등록된 인증글이 없습니다. 첫 인증을 남겨보세요! 💪"); return; }
+      setText("authBoardStatus", "최근 게시글 " + q.data.length + "개 · 서버 저장 및 동기화 사용 중");
+      var u = await currentUser();
+      q.data.forEach(function (post) {
+        var article = document.createElement("article"); article.className = "auth-board-item";
+        var title = document.createElement("h3"); title.textContent = post.title;
+        var meta = document.createElement("div"); meta.className = "auth-board-meta"; meta.textContent = (post.category === "식단" ? "🥗 식단" : "💪 운동") + " · " + (post.author_nickname || "회원") + " · " + new Date(post.created_at).toLocaleString("ko-KR");
+        var content = document.createElement("div"); content.className = "auth-board-content"; content.textContent = post.content;
+        article.append(title, meta, content);
+        if (post.image_url) { var a = document.createElement("a"); a.href = post.image_url; a.target = "_blank"; a.rel = "noopener noreferrer"; var img = document.createElement("img"); img.className = "auth-board-image"; img.src = post.image_url; img.alt = "인증 첨부 사진"; img.loading = "lazy"; a.appendChild(img); article.appendChild(a); }
+        if (u && (u.id === post.author_id || window.__dripIsAdmin === true)) {
+          var actions = document.createElement("div"); actions.className = "auth-board-item-actions"; var del = document.createElement("button"); del.className = "btn small"; del.type = "button"; del.textContent = "삭제";
+          del.onclick = async function () { if (!confirm("이 인증글을 삭제할까요?")) return; var d = await supabase.from("verification_posts").delete().eq("id", post.id); if (d.error) alert("삭제 실패: " + d.error.message); else loadAuthBoard(); };
+          actions.appendChild(del); article.appendChild(actions);
+        }
+        feed.appendChild(article);
+      });
+    } catch (err) {
+      console.error("인증게시판 조회 오류:", err);
+      setText("authBoardStatus", "불러오기 실패: " + (err.message || String(err)) + " · 인증게시판 SQL 및 verification-photos 저장소 설정을 확인해 주세요.");
+    } finally { authBoardBusy = false; }
+  }
+  $("authBoardComposer").onsubmit = async function (e) {
+    e.preventDefault(); if (!supabase) return;
+    var u = await currentUser(); if (!u) { setText("authBoardFormStatus", "로그인이 필요합니다."); return; }
+    var title = $("authBoardTitle").value.trim(), content = $("authBoardContent").value.trim(), file = $("authBoardPhoto").files && $("authBoardPhoto").files[0];
+    if (!title || !content) { setText("authBoardFormStatus", "제목과 내용을 입력해 주세요."); return; }
+    var save = $("authBoardSave"); save.disabled = true; save.textContent = "저장 중…"; setText("authBoardFormStatus", "서버에 저장하는 중입니다. 창을 닫지 마세요.");
+    try {
+      var imageUrl = await uploadAuthBoardPhoto(file, u.id);
+      var r = await supabase.from("verification_posts").insert({ category: authBoardCategory, title: title, content: content, author_id: u.id, author_nickname: (u.user_metadata && u.user_metadata.nickname) || "회원", image_url: imageUrl });
+      if (r.error) throw r.error;
+      $("authBoardComposer").reset(); $("authBoardPhotoPreview").innerHTML = ""; $("authBoardComposer").hidden = true; setText("authBoardFormStatus", "");
+      await loadAuthBoard(); toast("인증글이 서버에 저장되었습니다! 📸");
+    } catch (err) { console.error("인증글 저장 오류:", err); setText("authBoardFormStatus", "저장 실패: " + (err.message || String(err)) + " · SQL/사진 저장소 설정을 확인해 주세요."); }
+    finally { save.disabled = false; save.textContent = "등록하기"; }
+  };
+  if (supabase) {
+    try { authBoardChannel = supabase.channel("verification-posts-live").on("postgres_changes", { event: "*", schema: "public", table: "verification_posts" }, function () { if (currentAppView === "authBoard") loadAuthBoard(); }).subscribe(); }
+    catch (e) { console.warn("인증게시판 실시간 구독을 시작하지 못했습니다.", e); }
+  }
+
+  /* =====================================================================
+     신규 회원 첫 로그인 안내 — 학생증 완성 후 서버 메타데이터로 1회만 표시
+     ===================================================================== */
+  var welcomeModalBusy = false;
+  async function checkWelcomeGuestbook() {
+    if (welcomeModalBusy || !supabase || !document.body.classList.contains("signed-in")) return;
+    try {
+      var r = await supabase.auth.getUser(), u = r.data && r.data.user; if (!u) return;
+      var m = u.user_metadata || {};
+      if (!m.student_card_completed_at || m.welcome_guestbook_seen === true) return;
+      var card = await supabase.from("student_cards").select("user_id").eq("user_id", u.id).maybeSingle();
+      if (card.error || !card.data) return;
+      welcomeModalBusy = true; $("welcomeGuestbookModal").hidden = false;
+    } catch (e) { console.warn("첫 로그인 축하 팝업 확인 실패:", e); }
+  }
+  async function closeWelcomeGuestbook(goGuestbook) {
+    $("welcomeGuestbookModal").hidden = true; welcomeModalBusy = false;
+    try { var r = await supabase.auth.updateUser({ data: { welcome_guestbook_seen: true } }); if (r.error) console.warn("축하 팝업 확인 상태 저장 실패:", r.error); }
+    catch (e) { console.warn("축하 팝업 확인 상태 저장 실패:", e); }
+    if (goGuestbook) { showView("explore"); openExplore(); }
+  }
+  $("welcomeGuestbookGo").onclick = function () { closeWelcomeGuestbook(true); };
+  $("welcomeGuestbookClose").onclick = function () { closeWelcomeGuestbook(false); };
+  $("welcomeGuestbookModal").addEventListener("click", function (e) { if (e.target === this) closeWelcomeGuestbook(false); });
 
   /* =====================================================================
      Kakao 지도 · 장소 공유 (맛집 / 카페 / 명소 / 숙소 / 술집 / 주차장 / 기타)
@@ -2876,6 +3009,7 @@
     try { u = supabase ? await currentUser() : null; } catch (e) {}
     if (!u) { setText("sidStatus", "로그인이 필요합니다."); return; }
     var major = sidState.major.slice(0, 14), motto = sidState.motto.slice(0, 30);
+    var wasSavedBefore = sidHasSavedCard;
     var payload = {
       user_id: u.id, nickname: (u.user_metadata && u.user_metadata.nickname) || sidNick || "회원",
       major: major, motto: motto, avatar: sidState.avatar, updated_at: new Date().toISOString(),
@@ -2891,6 +3025,11 @@
       try { localStorage.setItem("dripcollege_sid_" + u.id, JSON.stringify({ major: major, motto: motto, avatar: sidState.avatar, mbti: sidState.mbti, hobby: sidState.hobby, skill: sidState.skill, job: sidState.job, synced_at: new Date().toISOString() })); } catch (e) {}
       sidHasSavedCard = true;
       if ($("homeStudentCard")) $("homeStudentCard").hidden = false;
+      // 처음으로 학생증을 완성한 회원에게만 서버 메타데이터로 안내 대기 상태를 기록합니다.
+      if (!wasSavedBefore && !(u.user_metadata && u.user_metadata.student_card_completed_at)) {
+        var metaResult = await supabase.auth.updateUser({ data: { student_card_completed_at: new Date().toISOString(), welcome_guestbook_seen: false } });
+        if (metaResult.error) console.warn("신규 회원 학생증 완료 상태 저장 실패:", metaResult.error);
+      }
       setText("sidStatus", "Supabase 저장 완료! 앞면과 뒷면 정보가 서버에 저장되어 다른 기기에서도 불러올 수 있어요.");
       toast("학생증이 Supabase 데이터베이스에 저장되었어요! 🎓");
       renderSidCard();
