@@ -1167,7 +1167,7 @@
     </div>
   </section>
   <section id="fortuneView" hidden class="community-panel">
-    <div class="head"><div><h2 class="title">🔮 오늘의 사주</h2><p class="sub">SAZU 사주 API로 오늘의 운세를 조회합니다.</p></div><button class="btn small" data-home type="button">← 메인으로</button></div>
+    <div class="head"><div><h2 class="title">🔮 오늘의 사주 (미구현)</h2><p class="sub">SAZU 사주 API로 오늘의 운세를 조회합니다.</p></div><button class="btn small" data-home type="button">← 메인으로</button></div>
     <form id="fortuneForm" class="community-post" style="display:grid;gap:12px">
       <p style="margin:0">생년월일과 태어난 시간을 입력해 주세요. 입력값은 사주 해석 요청에만 사용하며 이 웹페이지의 DB에 저장하지 않습니다.</p>
       <small style="display:block">개인정보 안내: 생년월일·태어난 시간·성별은 서버 함수로 전송된 뒤 SAZU 서비스에 전달됩니다. 이 웹페이지의 데이터베이스나 브라우저 저장소에는 입력값을 저장하지 않습니다. 외부 서비스의 데이터 처리·보관 방식은 SAZU 정책을 확인해 주세요.</small>
@@ -1317,8 +1317,8 @@
       <button class="btn small" id="hubBack" type="button">← 메인으로</button>
     </div>
     <button class="card game-card" id="openWord" type="button">
-      <span class="game-no">1</span>
-      <span class="game-info"><strong>오늘의 단어 (국어사전 연동)</strong><small>언제든 다시 도전 · 휴대폰 키보드로 단어를 입력하세요</small></span>
+      <span class="game-no" style="background:#FFF4E0" aria-hidden="true"><svg viewBox="0 0 40 40" width="36" height="36" style="display:block"><g font-family="sans-serif" font-weight="800" font-size="8" text-anchor="middle" fill="#fff"><rect x="2.5" y="6" width="10" height="10" rx="2.6" fill="#2FA84F"/><text x="7.5" y="13.6">ㄱ</text><rect x="15" y="6" width="10" height="10" rx="2.6" fill="#F5821F"/><text x="20" y="13.6">ㅏ</text><rect x="27.5" y="6" width="10" height="10" rx="2.6" fill="#8C96A3"/><text x="32.5" y="13.6">ㅇ</text><rect x="2.5" y="18.5" width="10" height="10" rx="2.6" fill="#8C96A3"/><text x="7.5" y="26.1">ㄴ</text><rect x="15" y="18.5" width="10" height="10" rx="2.6" fill="#2FA84F"/><text x="20" y="26.1">ㅗ</text><rect x="27.5" y="18.5" width="10" height="10" rx="2.6" fill="#F5821F"/><text x="32.5" y="26.1">ㅁ</text></g><rect x="2.5" y="31" width="35" height="3.4" rx="1.7" fill="#17252d" opacity=".14"/></svg></span>
+      <span class="game-info"><strong>오늘의 단어</strong><small>언제든 다시 도전 · 휴대폰 키보드로 단어를 입력하세요</small></span>
       <span class="game-state" id="wordState">도전하기</span>
     </button>
     <button class="card game-card" id="openFoodChoice" type="button" style="margin-top:14px">
@@ -1328,7 +1328,7 @@
     </button>
     <button class="card game-card" id="openFortuneGame" type="button" style="margin-top:14px">
       <span class="game-no" style="background:#eee8ff">🔮</span>
-      <span class="game-info"><strong>오늘의 사주</strong><small>생년월일과 태어난 시간을 입력하고 오늘의 운세를 확인하세요.</small></span>
+      <span class="game-info"><strong>오늘의 사주 (미구현)</strong><small>생년월일과 태어난 시간을 입력하고 오늘의 운세를 확인하세요.</small></span>
       <span class="game-state">운세 보기</span>
     </button>
   </section>
@@ -1348,6 +1348,8 @@
         <button class="food-category" data-food-category="패스트푸드" type="button">🍔 패스트푸드</button>
         <button class="food-category" data-food-category="아시안" type="button">🍜 아시안</button>
         <button class="food-category" data-food-category="분식" type="button">🍢 분식</button>
+        <button class="food-category" data-food-category="건강식" type="button">🥗 건강식</button>
+        <button class="food-category" data-food-category="야식·안주" type="button">🍻 야식·안주</button>
         <button class="food-category" data-food-category="아무거나" type="button">🎲 아무거나</button>
       </div>
     </div>
@@ -1365,10 +1367,11 @@
     </div>
     <div class="card wg">
       <div class="wg-top">
-        <span class="wg-date" id="wgDate">오늘의 단어 (국어사전 연동)</span>
+        <span class="wg-date" id="wgDate">오늘의 단어</span>
 
       </div>
       <div class="wg-desc-bar">💡 각 칸에는 자음 또는 모음 하나씩 들어갑니다. 아래 키보드로 입력하고 [입력]을 누르세요. 쌍자음·겹모음은 기본 자모를 이어서 누르세요 (ㄲ = ㄱㄱ, ㅐ = ㅏㅣ, ㅢ = ㅡㅣ).</div>
+      <div class="wg-legend"><span><i style="background:#2FA84F"></i>위치까지 맞음</span><span><i style="background:#F5821F"></i>자모만 맞음</span><span><i style="background:#8C96A3"></i>없음</span></div>
       <div id="wgBoard" class="wg-board"></div>
       <div id="wgPreview" class="wg-preview" aria-live="polite"></div>
       <div id="wgKeys" class="wg-keys" aria-label="한글 자모 키보드"></div>
@@ -1489,7 +1492,7 @@
   $("foodChangeCategory").onclick = function () { $("foodTreePanel").hidden = true; $("foodCategoryPanel").hidden = false; };
   $("foodRestart").onclick = function () { if (foodSelectedCategory) startFoodTree(foodSelectedCategory); };
   $("foodCategoryGrid").addEventListener("click", function (ev) { var b = ev.target.closest("[data-food-category]"); if (b) startFoodTree(b.getAttribute("data-food-category")); });
-  $("foodTree").addEventListener("click", function (ev) { var b = ev.target.closest("[data-food-answer]"); if (b) answerFoodTree(b.getAttribute("data-food-answer") === "yes"); });
+  $("foodTree").addEventListener("click", function (ev) { var b = ev.target.closest("[data-food-answer]"); if (b) { answerFoodTree(b.getAttribute("data-food-answer") === "yes"); return; } if (ev.target.closest("[data-food-more]")) renderFoodTree(); });
   $("wordBack").onclick = function () { showView("hub"); updateHubState(); };
   $("wordRankRefresh").onclick = function () { renderWordRanking(); };
   $("goNotice").onclick = function () { showView("notice"); };
@@ -1619,22 +1622,48 @@
   var foodSelectedCategory = "";
   var foodQuestionIndex = 0;
   var foodAnswers = [];
-  var foodQuestions = [
-    { text: "국물 있는 음식이 좋아요?", key: "soup" },
-    { text: "매콤한 음식이 좋아요?", key: "spicy" },
-    { text: "면이나 빵 종류가 좋아요?", key: "noodle" }
+  // 질문 풀: 속성 글자(key)마다 한 질문. 매번 이 중 5개를 무작위로 골라 물어봅니다.
+  var FOOD_Q_POOL = [
+    { key: "s", text: "국물 있는 음식이 좋아요?", tag: "국물" },
+    { key: "h", text: "매콤한 음식이 끌려요?", tag: "매콤" },
+    { key: "n", text: "면이나 빵 종류가 좋아요?", tag: "면·빵" },
+    { key: "m", text: "고기가 들어가면 좋겠어요?", tag: "고기" },
+    { key: "f", text: "해산물이 땡기나요?", tag: "해산물" },
+    { key: "r", text: "밥이 꼭 있어야 하나요?", tag: "밥" },
+    { key: "y", text: "오늘은 든든하게 배불리 먹고 싶나요?", tag: "든든" },
+    { key: "d", text: "바삭한 튀김류가 끌려요?", tag: "바삭" },
+    { key: "g", text: "가볍게 먹고 싶은 날인가요?", tag: "가볍게" },
+    { key: "v", text: "채소가 듬뿍 들어가면 좋겠어요?", tag: "채소" },
+    { key: "c", text: "치즈·크림처럼 부드럽고 진한 맛이 좋아요?", tag: "진한맛" }
   ];
-  var foodMenuBank = [
-    ["한식","김치찌개",1,1,0],["한식","된장찌개",1,0,0],["한식","순두부찌개",1,1,0],["한식","제육볶음",0,1,0],["한식","불고기",0,0,0],["한식","비빔밥",0,1,0],["한식","국밥",1,0,0],["한식","냉면",0,0,1],["한식","칼국수",1,0,1],["한식","떡볶이",0,1,1],
-    ["일식","라멘",1,0,1],["일식","돈카츠",0,0,0],["일식","초밥",0,0,0],["일식","우동",1,0,1],["일식","규동",0,0,0],["일식","카레",0,1,0],["일식","야끼소바",0,1,1],
-    ["중식","짬뽕",1,1,1],["중식","짜장면",0,0,1],["중식","마라탕",1,1,1],["중식","탕수육",0,0,0],["중식","볶음밥",0,0,0],["중식","마파두부덮밥",0,1,0],
-    ["양식","파스타",0,0,1],["양식","피자",0,0,0],["양식","스테이크",0,0,0],["양식","리조또",0,0,0],["양식","크림수프와 샌드위치",1,0,1],["양식","라자냐",0,0,0],
-    ["패스트푸드","햄버거",0,0,1],["패스트푸드","치킨",0,1,0],["패스트푸드","감자튀김과 버거",0,0,1],["패스트푸드","핫도그",0,0,1],["패스트푸드","매운 치킨버거",0,1,1],
-    ["아시안","쌀국수",1,0,1],["아시안","팟타이",0,1,1],["아시안","분짜",0,0,1],["아시안","카레라이스",0,1,0],["아시안","볶음면",0,1,1],["아시안","똠얌쌀국수",1,1,1],
-    ["분식","라볶이",0,1,1],["분식","김밥",0,0,0],["분식","순대",0,0,0],["분식","어묵탕",1,0,0],["분식","잔치국수",1,0,1],["분식","튀김",0,0,0]
-  ];
-  function resetFoodChoice() { foodSelectedCategory = ""; foodAnswers = []; foodQuestionIndex = 0; $("foodCategoryPanel").hidden = false; $("foodTreePanel").hidden = true; }
-  function startFoodTree(category) { foodSelectedCategory = category; foodAnswers = []; foodQuestionIndex = 0; $("foodChosenCategory").textContent = "🍽️ 선택: " + category; $("foodCategoryPanel").hidden = true; $("foodTreePanel").hidden = false; renderFoodTree(); }
+  var FOOD_Q_COUNT = 5;
+  var foodQuestions = FOOD_Q_POOL.slice(0, FOOD_Q_COUNT);
+  var foodRanked = [], foodRankReady = false, foodShownNames = [];
+  var FOOD_EMOJI = { "한식":"🍚", "일식":"🍣", "중식":"🥟", "양식":"🍝", "패스트푸드":"🍔", "아시안":"🍜", "분식":"🍢", "건강식":"🥗", "야식·안주":"🍻" };
+  // [분류, 메뉴, 속성글자] — s국물 h매콤 n면·빵 m고기 f해산물 r밥 y든든 d튀김 g가볍게 v채소 c치즈·크림
+  var foodMenuBank = (
+    "한식|김치찌개:shmry,된장찌개:srv,순두부찌개:shfr,제육볶음:hmry,불고기:mr,비빔밥:hrv,국밥:smry,냉면:sng,칼국수:sn,떡볶이:hy,삼겹살:my,닭갈비:hmy,감자탕:shmy,설렁탕:smr,갈비탕:smry,부대찌개:shmny,보쌈:my,찜닭:hmy,순대국:smry,쌈밥:rmv,해물파전:fd,낙지볶음:hfr,아구찜:hfy,생선구이:frg,청국장:srv,콩나물국밥:shrg,비빔냉면:hng,막국수:nvg,뼈해장국:shmy,곰탕:smr,육회비빔밥:mr,비지찌개:srg;" +
+    "일식|라멘:smny,돈카츠:mdry,초밥:frg,우동:sng,규동:mr,카레:hry,야끼소바:hn,텐동:dfry,사시미정식:frg,샤브샤브:smvg,소바:ng,연어덮밥:fr,오므라이스:rc,가라아게정식:mdr,장어덮밥:fry,스키야키:smy,오코노미야키:dn,타코야키:fd;" +
+    "중식|짬뽕:shnf,짜장면:n,마라탕:shnm,탕수육:md,볶음밥:r,마파두부덮밥:hr,깐풍기:mdh,양꼬치:mh,짬뽕밥:shrf,유린기:md,군만두:dmg,마라샹궈:hmv,울면:sn,고추잡채:hmv,딤섬:mg;" +
+    "양식|파스타:n,피자:ncy,스테이크:my,리조또:rc,크림수프와샌드위치:sncg,라자냐:ncm,함박스테이크:mr,샐러드:vg,토마토파스타:nv,알리오올리오:nh,까르보나라:nc,에그베네딕트:nc,감바스:fh,수제버거:mny,오믈렛:cg;" +
+    "패스트푸드|햄버거:mny,치킨:md,감자튀김과버거:dn,핫도그:dn,매운치킨버거:mhnd,샌드위치:nvg,양념치킨:mhd,너겟세트:mdg,타코:mhn,피자조각:nc;" +
+    "아시안|쌀국수:snm,팟타이:nhf,분짜:nmvg,카레라이스:hry,볶음면:hn,똠얌쌀국수:shnf,나시고랭:hr,반미:nmvg,월남쌈:vgf,커리와난:hny,탄두리치킨:mh,팟카파오덮밥:hmr,푸팟퐁커리:fhr,락사:shnf,케밥:mnv;" +
+    "분식|라볶이:hn,김밥:rg,순대:m,어묵탕:sfg,잔치국수:sng,튀김:dg,쫄면:hnv,치즈라면:shnc,라면:shn,오징어튀김:fd,충무김밥:frg,만두:mg,주먹밥:rg;" +
+    "건강식|포케:frvg,샐러드볼:vg,닭가슴살샐러드:mvg,곤드레밥정식:rvg,보리밥정식:rvg,연어샐러드:fvg,두부샐러드:vg,토마토스프:sv,월남쌈정식:vgf,채소샌드위치:nvg;" +
+    "야식·안주|족발:my,곱창:mhy,닭발:mh,골뱅이무침:fhn,치킨:md,파전:dv,먹태와감자튀김:fd,어묵탕:sfg,감자탕:shmy,오돌뼈:mh"
+  ).split(";").reduce(function (acc, line) {
+    var p = line.split("|"); if (p.length < 2) return acc;
+    p[1].split(",").forEach(function (it) { var q = it.split(":"); if (q[0]) acc.push([p[0], q[0], q[1] || ""]); });
+    return acc;
+  }, []);
+  function foodShuffle(arr) { var a = arr.slice(); for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
+  function resetFoodChoice() { foodSelectedCategory = ""; foodAnswers = []; foodQuestionIndex = 0; foodRankReady = false; $("foodCategoryPanel").hidden = false; $("foodTreePanel").hidden = true; }
+  function startFoodTree(category) {
+    foodSelectedCategory = category; foodAnswers = []; foodQuestionIndex = 0; foodRankReady = false; foodShownNames = [];
+    foodQuestions = foodShuffle(FOOD_Q_POOL).slice(0, FOOD_Q_COUNT); // 매번 다른 질문 조합
+    $("foodChosenCategory").textContent = (FOOD_EMOJI[category] || "🍽️") + " 선택: " + category;
+    $("foodCategoryPanel").hidden = true; $("foodTreePanel").hidden = false; renderFoodTree();
+  }
   function renderFoodTree() {
     var root = $("foodTree"); root.innerHTML = "";
     var history = el("div", "food-tree-history");
@@ -1651,16 +1680,30 @@
     var progress = el("div", "", "질문 " + (foodQuestionIndex + 1) + " / " + foodQuestions.length); progress.style.color = "#64748b"; progress.style.fontSize = "12px"; root.appendChild(progress);
   }
   function answerFoodTree(answer) { foodAnswers[foodQuestionIndex] = answer; foodQuestionIndex++; renderFoodTree(); }
+  function pickFoodMenu() {
+    var pool = foodRanked.filter(function (x) { return foodShownNames.indexOf(x.menu[1]) < 0; });
+    if (!pool.length) { foodShownNames = []; pool = foodRanked.slice(); }
+    var best = Math.max.apply(null, pool.map(function (x) { return x.score; }));
+    var tier = pool.filter(function (x) { return x.score === best; });
+    return tier[Math.floor(Math.random() * tier.length)];
+  }
   function renderFoodResult(root) {
-    var candidates = foodMenuBank.filter(function (m) { return foodSelectedCategory === "아무거나" || m[0] === foodSelectedCategory; });
-    var scored = candidates.map(function (m) { var score = 0; foodAnswers.forEach(function (a, i) { score += ((!!m[i + 2] === a) ? 1 : 0); }); return { menu:m, score:score }; });
-    var best = Math.max.apply(null, scored.map(function (x) { return x.score; }));
-    var matches = scored.filter(function (x) { return x.score === best; });
-    var chosen = matches[Math.floor(Math.random() * matches.length)];
+    if (!foodRankReady) {
+      var cands = foodMenuBank.filter(function (m) { return foodSelectedCategory === "아무거나" || m[0] === foodSelectedCategory; });
+      foodRanked = cands.map(function (m) {
+        var score = 0; foodAnswers.forEach(function (a, i) { if ((m[2].indexOf(foodQuestions[i].key) >= 0) === a) score++; });
+        return { menu: m, score: score };
+      });
+      foodRankReady = true; foodShownNames = [];
+    }
+    var chosen = pickFoodMenu(); foodShownNames.push(chosen.menu[1]);
+    var tags = FOOD_Q_POOL.filter(function (q) { return chosen.menu[2].indexOf(q.key) >= 0; }).map(function (q) { return q.tag; });
     var result = el("div", "food-result"); result.appendChild(el("div", "", "🎉 오늘의 추천 메뉴"));
-    result.appendChild(el("div", "food-result-name", chosen.menu[1]));
-    result.appendChild(el("div", "", foodSelectedCategory === "아무거나" ? "전체 음식 중에서 골랐어요!" : foodSelectedCategory + " 중에서 골랐어요!"));
-    result.appendChild(el("div", "", "Yes/No 답변과 가장 잘 맞는 메뉴예요.")); root.appendChild(result);
+    result.appendChild(el("div", "food-result-name", (FOOD_EMOJI[chosen.menu[0]] || "🍽️") + " " + chosen.menu[1]));
+    result.appendChild(el("div", "", chosen.menu[0] + (tags.length ? " · " + tags.join(" · ") : "")));
+    result.appendChild(el("div", "", foodQuestions.length + "개 질문 중 " + chosen.score + "개가 잘 맞아요."));
+    var more = el("button", "btn small", "🔁 같은 조건으로 다른 메뉴"); more.type = "button"; more.setAttribute("data-food-more", "1"); more.style.marginTop = "10px";
+    result.appendChild(more); root.appendChild(result);
   }
 
   function chatRankDateRange(period) {
@@ -1776,7 +1819,7 @@
   Array.prototype.forEach.call(document.querySelectorAll("[data-chat-period]"),function(button){button.addEventListener("click",function(){chatRankPeriod=button.getAttribute("data-chat-period");document.querySelectorAll("[data-chat-period]").forEach(function(b){b.classList.toggle("active",b===button);});refreshChatRank();});});
 
   /* =====================================================================
-     오늘의 단어 (국어사전 연동) 게임
+     오늘의 단어 게임
      ===================================================================== */
   // 국어사전에 등재된 일반 어휘 중심의 정답 후보. 모든 단어는 자모 확장 후 5칸인 경우만 사용합니다.
   var WORD_POOL_5 = [
@@ -1942,7 +1985,7 @@
     for(var i=0;i<target.length;i++) if(result[i]==="correct") remaining[i]=null;
     for(var j=0;j<target.length;j++) if(result[j]!=="correct"){var f=remaining.indexOf(input[j]);if(f!==-1){result[j]="present";remaining[f]=null;}}
     curState.guesses.push({input:input,result:result});
-    // 키보드 색칠: 정답(초록) > 위치 다름(노랑) > 없음(회색) 순으로 가장 좋은 결과를 유지
+    // 키보드 색칠: 정답(초록) > 위치 다름(주황) > 없음(회색) 순으로 가장 좋은 결과를 유지
     var rank={absent:1,present:2,correct:3};
     input.forEach(function(ch,idx){ var rs=result[idx], old=curState.keyColors[ch]; if(!old||rank[rs]>rank[old]) curState.keyColors[ch]=rs; });
     if(result.every(function(r){return r==="correct";})){curState.status="WON";saveStat(true);}
@@ -1959,7 +2002,7 @@
     rd.hidden = false; rd.className = "wg-result";
     var win = curState.status === "WON", lost = curState.status === "LOST";
     var share = "드립대학 [오늘의 단어 5칸 × 5줄]\n" + (win ? curState.guesses.length + "회 시도 성공!" : lost ? "5회 도전 종료" : "도전 중") + "\n";
-    curState.guesses.forEach(function (g) { g.result.forEach(function (r) { share += (r === "correct" ? "🟩" : r === "present" ? "🟨" : "⬛"); }); share += "\n"; });
+    curState.guesses.forEach(function (g) { g.result.forEach(function (r) { share += (r === "correct" ? "🟩" : r === "present" ? "🟧" : "⬛"); }); share += "\n"; });
     rd.innerHTML = "<strong>" + (win ? "🎉 정답입니다!" : "💪 5번의 기회를 모두 사용했어요.") + "</strong><p>정답 단어: <b>" + escapeHtml(curState.wordObj.word + " (" + curState.wordObj.jamo.join("") + ")") + "</b></p><div class='wg-share'>" + escapeHtml(share.trim()) + "</div><button class='btn small coral' style='margin-top:10px;' id='btnShare' type='button'>결과 복사하기</button>";
     $("btnShare").onclick = function () {
       if (navigator.clipboard && navigator.clipboard.writeText) { navigator.clipboard.writeText(share).then(function () { toast("결과가 클립보드에 복사되었습니다!"); }, function () { toast("복사에 실패했습니다."); }); return; }
@@ -3877,4 +3920,12 @@
 @media (max-width:400px){ .wg-keys .wg-key{height:48px;font-size:21px} .wg-keys .wg-krow{gap:5px} }
 .wg-board .wg-tile:not(.correct):not(.present):not(.absent){border:2px solid #dcdcdc!important;border-radius:14px!important;font-weight:800}
 .wg-board .wg-tile.next{border-color:var(--teal)!important}
+
+/* ===== 오늘의 단어: 칸·키보드 색 통일 — 초록(위치 일치) / 주황(자모만 일치) / 회색(없음) ===== */
+:root{--wg-correct:#2FA84F;--wg-present:#F5821F;--wg-absent:#8C96A3}
+.wg-tile.correct,input.wg-tile.correct,.wg-keys .wg-key.correct,.wg-key.correct{background:var(--wg-correct)!important;color:#fff!important;border-color:var(--wg-correct)!important}
+.wg-tile.present,input.wg-tile.present,.wg-keys .wg-key.present,.wg-key.present{background:var(--wg-present)!important;color:#fff!important;border-color:var(--wg-present)!important}
+.wg-tile.absent,input.wg-tile.absent,.wg-keys .wg-key.absent,.wg-key.absent{background:var(--wg-absent)!important;color:#fff!important;border-color:var(--wg-absent)!important}
+.wg-legend{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin:2px 0 10px;font-size:12.5px;font-weight:800;color:#4a5a63}
+.wg-legend i{display:inline-block;width:14px;height:14px;border-radius:4px;vertical-align:-2px;margin-right:5px}
 </style>
