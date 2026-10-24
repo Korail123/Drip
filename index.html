@@ -1923,11 +1923,22 @@
     }
   });
 
-    $("signupForm").addEventListener("submit", async function (e) {
-    e.preventDefault(); if (!ready()) return;
+    var signupInProgress = false;
+  $("signupForm").addEventListener("submit", async function (e) {
+    e.preventDefault();
+    if (signupInProgress) return;
+    if (!ready()) return;
     var nick = normalizeNick($("signupNickname").value), code = $("signupCode").value.trim();
     if (nick.length < 2) { status("signupStatus", "닉네임은 2자 이상 입력해 주세요.", "error"); return; }
     if (code !== "2030") { status("signupStatus", "인증번호가 올바르지 않습니다.", "error"); return; }
+    signupInProgress = true;
+    var signupButton = $("signupForm").querySelector('button[type="submit"]');
+    if (signupButton) {
+      signupButton.disabled = true;
+      signupButton.dataset.originalText = signupButton.textContent;
+      signupButton.textContent = "가입 처리 중…";
+      signupButton.setAttribute("aria-busy", "true");
+    }
     saveRememberChoice(); status("signupStatus", "등록된 닉네임을 확인하고 있습니다…", "");
     try {
       // 초대 목록에 등록되어 있고 아직 사용되지 않은 닉네임인지 확인
@@ -1981,7 +1992,24 @@
       try { sessionStorage.setItem("dripcollege_nickname", nick); } catch (_e) {}
     } catch (err) {
       console.error("회원가입 오류:", err);
-      status("signupStatus", "회원가입 오류: " + (err && err.message ? err.message : "알 수 없는 오류"), "error");
+      var errorMessage = String(err && err.message ? err.message : "알 수 없는 오류");
+      if (/email rate limit exceeded|rate limit/i.test(errorMessage)) {
+        status(
+          "signupStatus",
+          "Supabase의 인증 요청 제한에 도달했습니다. 가입 버튼을 반복해서 누르지 말고 잠시 기다린 뒤 다시 시도해 주세요. 계속 발생하면 Supabase Dashboard의 Authentication 이메일 발송/요청 제한 설정을 확인해야 합니다. 기존 회원 정보는 삭제하지 마세요.",
+          "error"
+        );
+      } else {
+        status("signupStatus", "회원가입 오류: " + errorMessage, "error");
+      }
+    } finally {
+      signupInProgress = false;
+      if (signupButton) {
+        signupButton.disabled = false;
+        signupButton.textContent = signupButton.dataset.originalText || "가입하기";
+        signupButton.removeAttribute("aria-busy");
+        delete signupButton.dataset.originalText;
+      }
     }
   });
   $("logoutBtn").addEventListener("click", async function () {
