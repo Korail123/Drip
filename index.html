@@ -1956,6 +1956,9 @@
     return Array.from(new Uint8Array(digest)).map(function (b) { return b.toString(16).padStart(2, "0"); }).join("");
   }
   async function nickEmail(nick) { return "u" + await sha256Hex(normalizeNick(nick).toLowerCase()) + "@login.dripcollege.example.com"; }
+  function nickKey(nick) { return normalizeNick(nick).toLowerCase(); }
+  // v2: 닉네임만으로 로그인 (서버 SQL nick_login_prepare 와 같은 규칙)
+  async function authPasswordV2(key) { return await sha256Hex("dripcollege-nick-v2|" + key); }
   async function authPassword(nick, code) { return await sha256Hex("dripcollege-auth-v1|" + normalizeNick(nick).toLowerCase() + "|" + String(code)); }
   function saveRememberChoice() {
     var remember = $("rememberLogin").checked;
@@ -1989,12 +1992,44 @@
   $("loginForm").addEventListener("submit", async function (e) {
     e.preventDefault();
     if (!ready()) return;
+    var btn = $("loginForm").querySelector(".auth-primary");
     var nick = normalizeNick($("loginNickname").value);
     if (nick.length < 2) { status("loginStatus", "닉네임은 2자 이상 입력해 주세요.", "error"); return; }
     saveRememberChoice();
-    // 닉네임만으로 Supabase 계정을 인증하려면 서버 측에서 회원 확인과 세션 발급을 함께 처리해야 합니다.
-    // 브라우저에서 단순히 닉네임만 확인하면 다른 사람을 사칭할 수 있으므로 인증 성공으로 처리하지 않습니다.
-    status("loginStatus", "닉네임 전용 로그인은 서버 인증 기능이 필요합니다. 기존 계정 보호를 위해 서버 기능을 연결한 뒤 로그인할 수 있습니다.", "error");
+    status("loginStatus", "로그인 중입니다…", "");
+    if (btn) btn.disabled = true;
+    try {
+      var key = nickKey(nick), email = await nickEmail(nick), pw;
+      if (email === ADMIN_EMAIL) {
+        // 관리자 계정은 닉네임만으로 열리면 안 되므로 인증번호를 한 번 더 확인합니다.
+        var adminCode = window.prompt("관리자 인증번호를 입력해 주세요.");
+        if (!adminCode) { status("loginStatus", "관리자 인증번호가 필요합니다.", "error"); return; }
+        pw = await authPassword(nick, adminCode);
+      } else {
+        // 기존 계정(인증번호 방식)을 닉네임 방식으로 자동 전환. 실패해도 로그인은 계속 시도합니다.
+        try { var prep = await supabase.rpc("nick_login_prepare", { p_key: key }); if (prep.error) console.warn("nick_login_prepare:", prep.error); } catch (_p) {}
+        pw = await authPasswordV2(key);
+      }
+      var r = await supabase.auth.signInWithPassword({ email: email, password: pw });
+      if (r.error) {
+        var m = String(r.error.message || r.error.code || "");
+        console.error("login error:", r.error);
+        if (/invalid login|invalid_credentials|invalid credentials/i.test(m)) status("loginStatus", "가입되지 않은 닉네임이거나 정보가 맞지 않습니다. 처음이라면 '회원가입'을 눌러 주세요.", "error");
+        else if (/not confirmed/i.test(m)) status("loginStatus", "이메일 확인이 켜져 있습니다. Supabase Auth 설정에서 'Confirm email'을 꺼 주세요.", "error");
+        else if (/rate|too many|429/i.test(m + " " + r.error.status)) status("loginStatus", "시도가 너무 많습니다. 잠시 후 다시 시도해 주세요.", "error");
+        else if (/fetch|network|failed|timeout/i.test(m) || !r.error.status) status("loginStatus", "서버에 연결할 수 없습니다. 인터넷 상태를 확인하고, 계속되면 Supabase 프로젝트가 일시정지(Paused)인지 확인해 주세요.", "error");
+        else status("loginStatus", "로그인에 실패했습니다: " + m, "error");
+        return;
+      }
+      var u = r.data.user || (r.data.session && r.data.session.user);
+      var shown = (u && u.user_metadata && u.user_metadata.nickname) || nick;
+      try { sessionStorage.setItem("dripcollege_nickname", shown); } catch (_e) {}
+      showSignedIn(shown);
+      status("loginStatus", "", "");
+    } catch (err) {
+      console.error(err);
+      status("loginStatus", "서버에 연결할 수 없습니다. 인터넷 상태를 확인하고, 계속되면 Supabase 프로젝트가 일시정지(Paused)인지 확인해 주세요.", "error");
+    } finally { if (btn) btn.disabled = false; }
   });
   $("signupForm").addEventListener("submit", async function (e) {
     e.preventDefault(); if (!ready()) return;
@@ -2006,11 +2041,11 @@
       var chk = await supabase.rpc("validate_member_invite", { p_nickname: nick, p_auth_code: code });
       if (chk.error) throw chk.error;
       if (chk.data !== true) { status("signupStatus", "등록 정보를 찾을 수 없거나 이미 사용된 인증번호입니다. 관리자에게 확인해 주세요.", "error"); return; }
-      var su = await supabase.auth.signUp({ email: await nickEmail(nick), password: await authPassword(nick, code), options: { data: { nickname: nick } } });
+      var su = await supabase.auth.signUp({ email: await nickEmail(nick), password: await authPasswordV2(nickKey(nick)), options: { data: { nickname: nick } } });
       if (su.error) {
         var signupErr = String((su.error && (su.error.message || su.error.code)) || "");
         if (/already registered|already exists|user already|duplicate/i.test(signupErr)) {
-          status("signupStatus", "이미 계정이 생성된 닉네임입니다. 중복 가입은 진행하지 않았습니다. 기존 계정으로 로그인하려면 서버의 닉네임 전용 인증 기능이 필요합니다.", "error");
+          status("signupStatus", "이미 계정이 있는 닉네임입니다. 로그인 화면에서 닉네임만 입력해 로그인해 주세요.", "error");
           return;
         }
         throw su.error;
