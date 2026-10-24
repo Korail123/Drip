@@ -628,6 +628,18 @@
     background:linear-gradient(135deg,#00b0a0,#0a8fd0 55%,#7b6cff);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent}
   @media(max-width:360px){.tb-time{font-size:17px}.wx-main{font-size:14px}.wx-ico{font-size:24px}}
 
+  /* ===== 화면 하단 고정 메뉴 ===== */
+  body{padding-bottom:calc(94px + env(safe-area-inset-bottom,0px))!important}
+  #bottomFixedNav{display:none}
+  body.signed-in #bottomFixedNav{position:fixed;left:0;right:0;bottom:0;z-index:80;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:2px;padding:8px max(7px,env(safe-area-inset-right,0px)) calc(8px + env(safe-area-inset-bottom,0px)) max(7px,env(safe-area-inset-left,0px));background:rgba(255,255,255,.97);border-top:1px solid #dce6ef;box-shadow:0 -4px 18px rgba(30,70,120,.10);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px)}
+  #bottomFixedNav .bottom-nav-btn{min-width:0;min-height:48px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;border:0;background:transparent;border-radius:12px;padding:3px 1px;color:#5a6878;font-family:var(--font-body);font-size:11px;font-weight:700;line-height:1.2;white-space:nowrap;box-shadow:none}
+  #bottomFixedNav .bottom-nav-btn .bottom-nav-icon{font-size:21px;line-height:1.15}
+  #bottomFixedNav .bottom-nav-btn.active{background:#e9f6fd;color:#087fae}
+  #bottomFixedNav .bottom-nav-btn:active{transform:scale(.96)}
+  @media(min-width:700px){body.signed-in #bottomFixedNav{left:50%;right:auto;transform:translateX(-50%);width:min(100%,780px);border:1px solid #dce6ef;border-bottom:0;border-radius:18px 18px 0 0}}
+  @media(max-width:360px){#bottomFixedNav .bottom-nav-btn{font-size:10px}#bottomFixedNav .bottom-nav-btn .bottom-nav-icon{font-size:19px}}
+
+
   /* ===== 서비스 바로가기: 선 아이콘 4열 그리드 (동양생명 스타일) ===== */
   .auth-topline{background:none!important;box-shadow:none!important;padding:4px 6px 0!important;align-items:flex-end}
   .auth-user{display:block;font-size:18px!important;font-weight:800;line-height:1.35}
@@ -954,6 +966,13 @@
   <div class="tb-clock" aria-label="한국 시간"><span class="tb-sub" id="tbDate"></span><span class="tb-time" id="tbTime">--:--:--</span></div>
   <button type="button" class="tb-wx" id="tbWeather" title="현재 위치 날씨 자동 표시 · 누르면 위치 다시 확인"><span class="wx-ico" id="wxIco" aria-hidden="true">⛅</span><span class="wx-txt"><span class="wx-main" id="wxMain">날씨 불러오는 중</span><span class="wx-sub" id="wxSub"></span></span></button>
 </header>
+<nav id="bottomFixedNav" aria-label="하단 고정 메뉴">
+  <button class="bottom-nav-btn" id="bottomNotice" type="button"><span class="bottom-nav-icon" aria-hidden="true">📢</span><span>공지사항</span></button>
+  <button class="bottom-nav-btn" id="bottomBoard" type="button"><span class="bottom-nav-icon" aria-hidden="true">💬</span><span>수다게시판</span></button>
+  <button class="bottom-nav-btn" id="bottomGames" type="button"><span class="bottom-nav-icon" aria-hidden="true">🎮</span><span>미니게임</span></button>
+  <button class="bottom-nav-btn" id="bottomPlaces" type="button"><span class="bottom-nav-icon" aria-hidden="true">🍽️</span><span>맛집투어</span></button>
+  <button class="bottom-nav-btn" id="bottomChatRank" type="button"><span class="bottom-nav-icon" aria-hidden="true">🏆</span><span>채팅순위</span></button>
+</nav>
 <div class="page">
 
   <!-- ===== 메인 화면 ===== -->
@@ -996,7 +1015,6 @@
       <button class="nav-btn" id="goBoard" type="button"><span class="ni"><svg class="ico" viewBox="0 0 40 40" aria-hidden="true"><path d="M6 8h20a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H15l-6 5v-5H6a2 2 0 0 1-2-2V10a2 2 0 0 1 2-2z"/><path d="M10 15.5h.01M16 15.5h.01M22 15.5h.01" stroke-width="2.4"/><path class="ac" d="M31 15h2a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-1v4l-5-4h-8"/></svg></span><span class="nl">수다게시판</span></button>
       <button class="nav-btn" id="goStudentId" type="button"><span class="ni"><svg class="ico" viewBox="0 0 40 40" aria-hidden="true"><rect x="5" y="8" width="30" height="24" rx="3"/><circle cx="14" cy="18" r="3.2"/><path d="M9 27c0-3 2.5-4.5 5-4.5s5 1.5 5 4.5"/><path class="ac" d="M23 16h8M23 21h8M23 26h5"/></svg></span><span class="nl">학생증 만들기</span></button>
       <button class="nav-btn" id="goGames" type="button"><span class="ni"><svg class="ico" viewBox="0 0 40 40" aria-hidden="true"><path d="M11 12h18a6 6 0 0 1 6 6l1.5 8a3.5 3.5 0 0 1-6 2.5L27 25H13l-3.5 3.5a3.5 3.5 0 0 1-6-2.5L5 18a6 6 0 0 1 6-6z"/><path class="ac" d="M13 16v5M10.5 18.5h5"/><circle class="ac" cx="26" cy="17.5" r="1.3"/><circle class="ac" cx="30" cy="20.5" r="1.3"/></svg></span><span class="nl">미니게임</span></button>
-      <button class="nav-btn" id="goFortune" type="button"><span class="ni"><svg class="ico" viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="17" r="10"/><path d="M12 34h16l-2.5-6h-11z"/><path class="ac" d="M20 11v4M18 13h4M14 18a6 6 0 0 1 3-4.5"/></svg></span><span class="nl">오늘의 사주</span></button>
       <button class="nav-btn" id="goExplore" type="button"><span class="ni"><svg class="ico" viewBox="0 0 40 40" aria-hidden="true"><circle cx="16" cy="13" r="6"/><path d="M5 31c0-6 4.7-10 11-10s11 4 11 10"/><circle class="ac" cx="29" cy="26" r="7"/><path class="ac" d="M34 31l4 4M26 26h6M29 23v6"/></svg></span><span class="nl">타 학생 탐방하기</span></button>
       <button class="nav-btn" id="goPlaces" type="button"><span class="ni"><svg class="ico" viewBox="0 0 40 40" aria-hidden="true"><path d="M8 15h20v9a8 8 0 0 1-8 8h-4a8 8 0 0 1-8-8z"/><path d="M28 18h3a3.5 3.5 0 0 1 0 7h-3.5"/><path d="M10 36h18"/><path class="ac" d="M14 6v5M20 5v6M26 6v5"/></svg></span><span class="nl">맛집/카페</span></button>
       <button class="nav-btn" id="goChatRank" type="button"><span class="ni"><svg class="ico" viewBox="0 0 40 40" aria-hidden="true"><path d="M6 7h28v20H19l-8 6v-6H6z"/><path class="ac" d="M12 14h16M12 19h11"/><circle cx="29" cy="29" r="6"/><path d="M29 25v4l2 1"/></svg></span><span class="nl">채팅 순위</span></button>
@@ -1279,6 +1297,11 @@
       <span class="game-info"><strong>오늘은 뭐먹지?</strong><small>음식 종류를 고르고 Yes or No로 오늘의 메뉴를 찾아보세요.</small></span>
       <span class="game-state">메뉴 추천</span>
     </button>
+    <button class="card game-card" id="openFortuneGame" type="button" style="margin-top:14px">
+      <span class="game-no" style="background:#eee8ff">🔮</span>
+      <span class="game-info"><strong>오늘의 사주</strong><small>생년월일과 태어난 시간을 입력하고 오늘의 운세를 확인하세요.</small></span>
+      <span class="game-state">운세 보기</span>
+    </button>
   </section>
 
   <section id="foodChoiceView" hidden aria-label="오늘은 뭐먹지">
@@ -1438,6 +1461,19 @@
   $("goStudentId").onclick = function () { showView("studentId"); loadStudentCard(); };
   $("goFortune").onclick = function () { showView("fortune"); };
   $("goPlaces").onclick = function () { showView("places"); initKakaoMap(); };
+  // 하단 고정 메뉴는 화면 전환 중에도 항상 같은 위치에 유지됩니다.
+  $("bottomNotice").onclick = function () { showView("notice"); };
+  $("bottomBoard").onclick = function () { showView("board"); selectedPostId = null; loadCommunity(); };
+  $("bottomGames").onclick = function () { showView("hub"); updateHubState(); };
+  $("bottomPlaces").onclick = function () { showView("places"); initKakaoMap(); };
+  $("bottomChatRank").onclick = function () { showView("chatRank"); $("chatRankAdminTools").hidden = !window.__dripIsAdmin; refreshChatRank(); };
+  $("openFortuneGame").onclick = function () { showView("fortune"); };
+  function updateBottomNavActive(target) {
+    var map = { notice:"bottomNotice", board:"bottomBoard", hub:"bottomGames", word:"bottomGames", foodChoice:"bottomGames", fortune:"bottomGames", places:"bottomPlaces", chatRank:"bottomChatRank" };
+    ["bottomNotice","bottomBoard","bottomGames","bottomPlaces","bottomChatRank"].forEach(function(id){ var b=$(id); if(b) b.classList.toggle("active", map[target]===id); });
+  }
+  var originalRenderView = renderView;
+  renderView = function(target) { originalRenderView(target); updateBottomNavActive(target); };
   Array.prototype.forEach.call(document.querySelectorAll("[data-home]"), function (b) { b.onclick = function () { showView("main"); }; });
 
   // SAZU 오늘의 운세 조회: API Key는 브라우저에 노출하지 않고 Supabase Edge Function에서 사용합니다.
@@ -1462,13 +1498,13 @@
     }
     var targetDate = [now.getFullYear(), String(now.getMonth()+1).padStart(2,"0"), String(now.getDate()).padStart(2,"0")].join("-");
     var fortuneAbortController = new AbortController();
-    var remaining = 20;
-    var fortuneTimeoutId = setTimeout(function () { fortuneAbortController.abort(); }, 20000);
+    var remaining = 60;
+    var fortuneTimeoutId = setTimeout(function () { fortuneAbortController.abort(); }, 60000);
     var countdownId = setInterval(function () {
       remaining = Math.max(0, remaining - 1);
       countdown.textContent = "남은 시간 " + remaining + "초";
-      if (remaining <= 12) progressHint.textContent = "SAZU 운세 API에서 결과를 가져오고 있습니다.";
-      if (remaining <= 5) progressHint.textContent = "응답이 늦어지고 있어요. 연결 상태를 확인해 주세요.";
+      if (remaining <= 40) progressHint.textContent = "SAZU 운세 API에서 결과를 가져오고 있습니다.";
+      if (remaining <= 10) progressHint.textContent = "응답이 늦어지고 있어요. 연결 상태를 확인하고 있습니다.";
     }, 1000);
     progress.hidden = false; button.disabled = true; button.textContent = "운세 조회 중…";
     status.textContent = "SAZU 운세 API에 조회를 요청하고 있습니다."; status.className = "community-status";
@@ -1480,7 +1516,7 @@
       });
       var payload = await response.json().catch(function () { return {}; });
       if (!response.ok || !payload.success || !payload.data || typeof payload.data !== "object") {
-        throw new Error(payload.error || "운세 조회에 실패했습니다. UN7 운영용 API Key와 Edge Function 배포 상태를 확인해 주세요.");
+        throw new Error((payload.error || "운세 조회에 실패했습니다.") + (payload.stage ? " [단계: " + payload.stage + "]" : "") + (payload.sazuStatus ? " [SAZU 상태: " + payload.sazuStatus + "]" : "") + " (HTTP " + response.status + ")");
       }
       var resultObject = payload.data.modules && typeof payload.data.modules === "object" ? payload.data.modules : payload.data;
       var entries = Object.keys(resultObject).map(function (key) { return { key: key, item: resultObject[key] }; })
@@ -1515,8 +1551,10 @@
       status.textContent = "SAZU 운세 API에서 오늘의 운세를 불러왔습니다."; status.className = "community-status ok";
     } catch (error) {
       status.textContent = error && error.name === "AbortError"
-        ? "운세 조회 시간이 초과되었습니다. 잠시 후 다시 시도해 주세요."
-        : "운세 조회 실패: " + (error && error.message ? error.message : "잠시 후 다시 시도해 주세요.");
+        ? "운세 조회 시간이 초과되었습니다(60초). Supabase 함수 배포 및 SAZU 응답 상태를 확인해 주세요."
+        : (error && error.name === "TypeError"
+          ? "서버 연결 실패(NetworkError). Supabase URL/함수 배포, 브라우저 네트워크, CORS 설정을 확인해 주세요. Edge Function 로그도 확인해 주세요."
+          : "운세 조회 실패: " + (error && error.message ? error.message : "잠시 후 다시 시도해 주세요."));
       status.className = "community-status error";
     } finally {
       clearTimeout(fortuneTimeoutId); clearInterval(countdownId);
