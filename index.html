@@ -1198,14 +1198,14 @@
 
   <!-- ===== 카카오톡 채팅 순위 ===== -->
   <section id="chatRankView" hidden class="community-panel chat-rank-panel" aria-labelledby="chatRankTitle">
-    <div class="head"><div class="head-main"><h2 class="title" id="chatRankTitle">💬 채팅 순위</h2><p class="sub">카카오톡 대화 내보내기 TXT를 기준으로 주간·월간 메시지 수를 집계합니다.</p></div><button class="btn small" id="chatRankBack" type="button">← 메인으로</button></div>
+    <div class="head"><div class="head-main"><h2 class="title" id="chatRankTitle">💬 채팅 순위</h2><p class="sub">카카오톡 대화 내보내기 TXT를 기준으로 주간·월간·누적 메시지 수를 집계합니다.</p></div><button class="btn small" id="chatRankBack" type="button">← 메인으로</button></div>
     <div class="card" style="padding:16px">
       <div id="chatRankAdminTools" hidden>
         <div class="chat-rank-tools"><label for="chatRankFile">📄 TXT 파일 선택 <input id="chatRankFile" type="file" accept=".txt,text/plain"></label><button class="primary" id="chatRankUpload" type="button">업로드 및 순위 갱신</button><button id="chatRankRefresh" type="button">↻ 순위 새로고침</button></div>
-        <p class="sub">운영자 계정에서만 업로드할 수 있습니다. 메시지 본문은 저장하지 않고, 중복 업로드는 메시지 지문으로 걸러냅니다.</p>
+        <p class="sub">운영자 계정에서만 업로드할 수 있습니다. Supabase Storage 버킷에 TXT를 올려도 서버가 자동으로 분석합니다. 메시지 본문은 저장하지 않고, 중복 업로드는 메시지 지문으로 걸러냅니다.</p>
       </div>
       <div id="chatRankStatus" class="chat-rank-status" role="status" aria-live="polite">순위를 불러오는 중입니다.</div>
-      <div class="chat-rank-switch"><button class="active" data-chat-period="weekly" type="button">📅 주간 (월~일)</button><button data-chat-period="monthly" type="button">🗓️ 월간</button></div>
+      <div class="chat-rank-switch"><button class="active" data-chat-period="weekly" type="button">📅 주간 (월~일)</button><button data-chat-period="monthly" type="button">🗓️ 월간</button><button data-chat-period="all" type="button">🏁 누적</button></div>
       <div id="chatRankPeriodLabel" class="sub" style="margin:0 0 14px"></div>
       <div class="chat-rank-columns"><section class="chat-rank-card"><h3>🔥 말 많은 사람 TOP10</h3><div id="chatRankTop"></div></section><section class="chat-rank-card quiet"><h3>🤫 말 없는 사람 WORST10</h3><div id="chatRankQuiet"></div></section></div>
     </div>
@@ -1627,6 +1627,7 @@
   }
 
   function chatRankDateRange(period) {
+    if (period === "all") { return {start:new Date(2000,0,1),end:new Date(2100,0,1),label:"전체 누적 (업로드된 모든 대화)"}; }
     var now = new Date(); var start, end;
     if (period === "monthly") {
       start = new Date(now.getFullYear(), now.getMonth(), 1); end = new Date(now.getFullYear(), now.getMonth()+1, 1);
@@ -1655,7 +1656,7 @@
     }
     return all;
   }
-  async function refreshChatRank() {
+  async function chatRankRefreshLegacy() {
     if (!supabase) { chatRankStatus("Supabase 연결이 없어 채팅 순위를 불러올 수 없습니다.","error"); return; }
     chatRankStatus("회원 목록과 채팅 집계를 불러오는 중…");
     try {
@@ -1676,6 +1677,29 @@
       console.error("채팅 순위 조회 실패",err);
       var msg=err && err.message ? err.message : String(err);
       chatRankStatus(/chat_rank_messages/i.test(msg) ? "채팅 순위 테이블이 아직 준비되지 않았습니다. 제공된 SQL을 Supabase SQL Editor에서 먼저 실행해 주세요." : "채팅 순위를 불러오지 못했습니다: "+msg,"error");
+    }
+  }
+  async function refreshChatRank() {
+    if (!supabase) { chatRankStatus("Supabase 연결이 없어 채팅 순위를 불러올 수 없습니다.","error"); return; }
+    chatRankStatus("채팅 집계를 불러오는 중…");
+    try {
+      var range=chatRankDateRange(chatRankPeriod);
+      $("chatRankPeriodLabel").textContent=range.label;
+      var res=await supabase.rpc("chat_rank_board",{p_period:chatRankPeriod});
+      if(res.error){
+        if(/chat_rank_board|PGRST202|Could not find the function/i.test(String(res.error.code||"")+" "+String(res.error.message||""))) return chatRankRefreshLegacy();
+        throw res.error;
+      }
+      var rows=(res.data||[]).map(function(r){return {nickname:r.rank_nickname,count:Number(r.rank_count)||0};});
+      var total=rows.reduce(function(a,r){return a+r.count;},0);
+      var top=rows.filter(function(x){return x.count>0;}).sort(function(a,b){return b.count-a.count||a.nickname.localeCompare(b.nickname,"ko");}).slice(0,10);
+      var quiet=rows.slice().sort(function(a,b){return a.count-b.count||a.nickname.localeCompare(b.nickname,"ko");}).slice(0,10);
+      chatRankRenderRows("chatRankTop",top,false);
+      chatRankRenderRows("chatRankQuiet",quiet,true);
+      chatRankStatus("집계 완료 · 학생증 등록 회원 "+rows.length+"명 · 기간 내 회원 메시지 "+total.toLocaleString("ko-KR")+"개","ok");
+    } catch(err) {
+      console.error("채팅 순위 조회 실패",err);
+      chatRankStatus("채팅 순위를 불러오지 못했습니다: "+(err&&err.message?err.message:String(err)),"error");
     }
   }
   function chatRankParseTxt(text) {
