@@ -1002,6 +1002,95 @@
     #placesView .place-save-form{padding:13px!important}
   }
 
+
+
+  /* 로그인 화면을 회원가입 화면과 동일한 파스텔 UI로 통일 */
+  .auth-card {
+    width:min(100%,520px) !important;
+    margin:10px auto 22px !important;
+    padding:30px !important;
+    background:rgba(255,255,255,.98) !important;
+    border:1px solid #edf1f5 !important;
+    border-radius:26px !important;
+    box-shadow:0 10px 28px rgba(22,48,75,.10) !important;
+  }
+  .auth-card h2 {
+    color:#102d4b !important;
+    font-family:var(--font-body) !important;
+    font-size:28px !important;
+    font-weight:900 !important;
+    letter-spacing:-.04em;
+    margin:0 0 8px !important;
+  }
+  .auth-card h2 .mark {
+    background:linear-gradient(transparent 62%, #bfeeff 62%) !important;
+    padding:0 2px 2px !important;
+  }
+  .auth-help { color:#7189a5 !important; font-size:13px !important; margin:0 0 18px !important; }
+  .auth-card label:not(.remember-row) { color:#102d4b !important; font-size:13px; margin:13px 0 6px !important; }
+  .auth-card input:not(.remember-checkbox),
+  .auth-card .lrow input {
+    min-height:46px !important;
+    border:1px solid #d4e2ee !important;
+    border-radius:13px !important;
+    padding:10px 13px !important;
+    background:#fbfdff !important;
+    color:#173b5e !important;
+    box-shadow:none !important;
+    outline-offset:2px;
+  }
+  .auth-card input:not(.remember-checkbox)::placeholder { color:#8ca2bb !important; opacity:1; }
+  .auth-card .lrow {
+    display:flex; align-items:center; gap:10px;
+    padding:0 !important; border:0 !important; border-radius:0 !important;
+    background:transparent !important; box-shadow:none !important;
+  }
+  .auth-card .lrow .lic { color:#7950a5 !important; min-width:24px; text-align:center; }
+  .remember-row { color:#153b5e !important; margin:12px 0 2px !important; font-size:14px !important; }
+  .auth-card input.remember-checkbox { accent-color:#08a78f !important; }
+  .auth-actions { display:grid !important; gap:10px !important; margin-top:16px !important; }
+  .auth-primary,.auth-secondary {
+    min-height:48px !important;
+    border:1px solid #d3e4f1 !important;
+    border-radius:14px !important;
+    font-family:var(--font-body) !important;
+    font-size:16px !important;
+    font-weight:800 !important;
+    box-shadow:none !important;
+    transition:filter .15s ease, transform .15s ease;
+  }
+  .auth-primary {
+    color:#fff !important;
+    background:linear-gradient(110deg,#08b6a4 0%,#0798d7 100%) !important;
+    border-color:transparent !important;
+  }
+  .auth-secondary {
+    color:#1769a7 !important;
+    background:#e8f3fb !important;
+    border-color:#d6e7f3 !important;
+  }
+  .auth-primary:hover,.auth-secondary:hover { filter:brightness(.98); }
+  .auth-primary:active,.auth-secondary:active { transform:translateY(1px); }
+  .auth-status { color:#7189a5 !important; }
+  .auth-status.error { color:#c52843 !important; }
+  .auth-status.ok { color:#08734c !important; }
+  .auth-note { color:#7189a5 !important; }
+  /* 로그인 카드의 로고 영역은 회원가입 카드와 비율을 맞추기 위해 숨김 */
+  #loginTitle ~ .auth-brand, #loginTitle + .auth-brand { display:none !important; }
+  @media(max-width:520px) {
+    .auth-card { padding:24px !important; border-radius:22px !important; }
+    .auth-card h2 { font-size:25px !important; }
+  }
+
+</style>
+
+<style id="places-home-order-adjustments">
+  .places-layout-swapped { grid-template-columns:minmax(280px,.82fr) minmax(0,1.18fr); align-items:start; }
+  .places-form-column .place-save-form { margin-top:0; }
+  .places-list-column { display:flex; flex-direction:column; gap:12px; min-width:0; }
+  .places-list-column .places-map { width:100%; }
+  .places-list-column .places-list-head { margin-top:4px; }
+  @media(max-width:760px) { .places-layout-swapped { grid-template-columns:minmax(0,1fr); } }
 </style>
 </head>
 <body>
@@ -1049,13 +1138,12 @@
     <nav id="mainNav" class="nav-grid" aria-label="메인 메뉴" hidden>
       <button class="nav-btn" id="goNotice" type="button"><span class="ni"><svg class="ico" viewBox="0 0 40 40" aria-hidden="true"><path d="M7 16h6l12-6v20l-12-6H7z"/><path d="M13 24l2 8h4l-2-7.5"/><path class="ac" d="M29 15c2.5 2 2.5 8 0 10M32 12c4.5 4 4.5 12 0 16"/></svg></span><span class="nl">공지사항</span></button>
       <button class="nav-btn" id="goBoard" type="button"><span class="ni"><svg class="ico" viewBox="0 0 40 40" aria-hidden="true"><path d="M6 8h20a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H15l-6 5v-5H6a2 2 0 0 1-2-2V10a2 2 0 0 1 2-2z"/><path d="M10 15.5h.01M16 15.5h.01M22 15.5h.01" stroke-width="2.4"/><path class="ac" d="M31 15h2a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-1v4l-5-4h-8"/></svg></span><span class="nl">수다게시판</span></button>
-      <button class="nav-btn" id="goStudentId" type="button"><span class="ni"><svg class="ico" viewBox="0 0 40 40" aria-hidden="true"><rect x="5" y="8" width="30" height="24" rx="3"/><circle cx="14" cy="18" r="3.2"/><path d="M9 27c0-3 2.5-4.5 5-4.5s5 1.5 5 4.5"/><path class="ac" d="M23 16h8M23 21h8M23 26h5"/></svg></span><span class="nl">학생증 만들기</span></button>
-      <button class="nav-btn" id="goGames" type="button"><span class="ni"><svg class="ico" viewBox="0 0 40 40" aria-hidden="true"><path d="M11 12h18a6 6 0 0 1 6 6l1.5 8a3.5 3.5 0 0 1-6 2.5L27 25H13l-3.5 3.5a3.5 3.5 0 0 1-6-2.5L5 18a6 6 0 0 1 6-6z"/><path class="ac" d="M13 16v5M10.5 18.5h5"/><circle class="ac" cx="26" cy="17.5" r="1.3"/><circle class="ac" cx="30" cy="20.5" r="1.3"/></svg></span><span class="nl">미니게임</span></button>
-      <button class="nav-btn" id="goFortune" type="button"><span class="ni"><svg class="ico" viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="17" r="10"/><path d="M12 34h16l-2.5-6h-11z"/><path class="ac" d="M20 11v4M18 13h4M14 18a6 6 0 0 1 3-4.5"/></svg></span><span class="nl">오늘의 사주</span></button>
-      <button class="nav-btn" id="goExplore" type="button"><span class="ni"><svg class="ico" viewBox="0 0 40 40" aria-hidden="true"><circle cx="16" cy="13" r="6"/><path d="M5 31c0-6 4.7-10 11-10s11 4 11 10"/><circle class="ac" cx="29" cy="26" r="7"/><path class="ac" d="M34 31l4 4M26 26h6M29 23v6"/></svg></span><span class="nl">타 학생 탐방하기</span></button>
-      <button class="nav-btn" id="goPlaces" type="button"><span class="ni"><svg class="ico" viewBox="0 0 40 40" aria-hidden="true"><path d="M8 15h20v9a8 8 0 0 1-8 8h-4a8 8 0 0 1-8-8z"/><path d="M28 18h3a3.5 3.5 0 0 1 0 7h-3.5"/><path d="M10 36h18"/><path class="ac" d="M14 6v5M20 5v6M26 6v5"/></svg></span><span class="nl">맛집/카페</span></button>
-      <button class="nav-btn" id="goChatRank" type="button"><span class="ni"><svg class="ico" viewBox="0 0 40 40" aria-hidden="true"><path d="M6 7h28v20H19l-8 6v-6H6z"/><path class="ac" d="M12 14h16M12 19h11"/><circle cx="29" cy="29" r="6"/><path d="M29 25v4l2 1"/></svg></span><span class="nl">채팅 순위</span></button>
       <button class="nav-btn" id="goSuggest" type="button"><span class="ni"><svg class="ico" viewBox="0 0 40 40" aria-hidden="true"><path d="M20 5a9 9 0 0 0-5 16.5V26h10v-4.5A9 9 0 0 0 20 5z"/><path d="M15.5 30h9M17 34h6"/><path class="ac" d="M20 10a5 5 0 0 0-3.5 1.5M20 14v6"/></svg></span><span class="nl">건의사항</span></button>
+      <button class="nav-btn" id="goChatRank" type="button"><span class="ni"><svg class="ico" viewBox="0 0 40 40" aria-hidden="true"><path d="M6 7h28v20H19l-8 6v-6H6z"/><path class="ac" d="M12 14h16M12 19h11"/><circle cx="29" cy="29" r="6"/><path d="M29 25v4l2 1"/></svg></span><span class="nl">채팅 순위</span></button>
+      <button class="nav-btn" id="goExplore" type="button"><span class="ni"><svg class="ico" viewBox="0 0 40 40" aria-hidden="true"><circle cx="16" cy="13" r="6"/><path d="M5 31c0-6 4.7-10 11-10s11 4 11 10"/><circle class="ac" cx="29" cy="26" r="7"/><path class="ac" d="M34 31l4 4M26 26h6M29 23v6"/></svg></span><span class="nl">타 학생 탐방하기</span></button>
+      <button class="nav-btn" id="goStudentId" type="button"><span class="ni"><svg class="ico" viewBox="0 0 40 40" aria-hidden="true"><rect x="5" y="8" width="30" height="24" rx="3"/><circle cx="14" cy="18" r="3.2"/><path d="M9 27c0-3 2.5-4.5 5-4.5s5 1.5 5 4.5"/><path class="ac" d="M23 16h8M23 21h8M23 26h5"/></svg></span><span class="nl">학생증 만들기</span></button>
+      <button class="nav-btn" id="goPlaces" type="button"><span class="ni"><svg class="ico" viewBox="0 0 40 40" aria-hidden="true"><path d="M8 15h20v9a8 8 0 0 1-8 8h-4a8 8 0 0 1-8-8z"/><path d="M28 18h3a3.5 3.5 0 0 1 0 7h-3.5"/><path d="M10 36h18"/><path class="ac" d="M14 6v5M20 5v6M26 6v5"/></svg></span><span class="nl">맛집/카페</span></button>
+      <button class="nav-btn" id="goGames" type="button"><span class="ni"><svg class="ico" viewBox="0 0 40 40" aria-hidden="true"><path d="M11 12h18a6 6 0 0 1 6 6l1.5 8a3.5 3.5 0 0 1-6 2.5L27 25H13l-3.5 3.5a3.5 3.5 0 0 1-6-2.5L5 18a6 6 0 0 1 6-6z"/><path class="ac" d="M13 16v5M10.5 18.5h5"/><circle class="ac" cx="26" cy="17.5" r="1.3"/><circle class="ac" cx="30" cy="20.5" r="1.3"/></svg></span><span class="nl">미니게임</span></button>
     </nav>
     <section id="homeNotice" class="home-notice" aria-label="공지사항 미리보기">
       <h3><span class="mark">공지사항</span></h3>
@@ -1199,16 +1287,8 @@
       <button data-category="주차장" type="button">🅿️ 주차장</button>
       <button data-category="기타" type="button">📌 기타</button>
     </div>
-    <div class="places-layout">
-      <div class="places-left">
-        <div class="places-list-head"><h3>회원들이 저장한 장소</h3><span class="sub">최신순</span></div>
-        <div id="savedPlaces" class="places-list"></div>
-      </div>
-      <div class="places-right">
-        <div>
-          <div id="placesMap" class="places-map" aria-label="Kakao 지도"></div>
-          <p class="community-status" id="placesStatus"></p>
-        </div>
+    <div class="places-layout places-layout-swapped">
+      <div class="places-left places-form-column">
         <form id="placeSaveForm" class="community-form place-save-form">
           <h3 id="placeFormTitle">장소 공유하기</h3>
           <label>분류
@@ -1229,6 +1309,14 @@
           </label>
           <div class="place-form-actions"><button type="submit" id="placeSubmitBtn">장소 저장 및 공유</button><button type="button" id="cancelPlaceEdit" class="place-edit-cancel" hidden>수정 취소</button></div>
         </form>
+      </div>
+      <div class="places-right places-list-column">
+        <div>
+          <div id="placesMap" class="places-map" aria-label="Kakao 지도"></div>
+          <p class="community-status" id="placesStatus"></p>
+        </div>
+        <div class="places-list-head"><h3>회원들이 저장한 장소</h3><span class="sub">최신순</span></div>
+        <div id="savedPlaces" class="places-list"></div>
       </div>
     </div>
   </section>
@@ -2229,8 +2317,8 @@
   function pinImage(cat) {
     var color = CAT_COLOR[cat] || CAT_COLOR["기타"];
     if (pinImgCache[color]) return pinImgCache[color];
-    var svg = '<svg xmlns="http://www.w3.org/2000/svg" width="30" height="40" viewBox="0 0 30 40"><path d="M15 1C7.3 1 1 7.2 1 14.8 1 25 15 39 15 39s14-14 14-24.2C29 7.2 22.7 1 15 1z" fill="' + color + '" stroke="#fff" stroke-width="2"/><circle cx="15" cy="15" r="5.5" fill="#fff"/></svg>';
-    pinImgCache[color] = new kakao.maps.MarkerImage("data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg), new kakao.maps.Size(30, 40), { offset: new kakao.maps.Point(15, 40) });
+    var svg = '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="27" viewBox="0 0 30 40"><path d="M15 1C7.3 1 1 7.2 1 14.8 1 25 15 39 15 39s14-14 14-24.2C29 7.2 22.7 1 15 1z" fill="' + color + '" stroke="#fff" stroke-width="2"/><circle cx="15" cy="15" r="5.5" fill="#fff"/></svg>';
+    pinImgCache[color] = new kakao.maps.MarkerImage("data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg), new kakao.maps.Size(20, 27), { offset: new kakao.maps.Point(10, 27) });
     return pinImgCache[color];
   }
 
