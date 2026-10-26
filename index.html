@@ -15,6 +15,25 @@
 #mainNav .nav-btn{box-shadow:none!important;border:0!important;border-radius:10px!important;background:transparent!important;color:#142235!important;padding:8px 4px!important;gap:5px!important;flex-direction:column!important;font-size:13px!important;font-weight:800!important}
 #mainNav .nav-btn:hover{box-shadow:none!important;transform:translateY(-1px)!important}
 #mainNav .nav-btn:active{box-shadow:none!important;transform:scale(.98)!important}
+
+/* 로그인 화면을 회원가입 화면과 같은 카드 비율·색상·버튼 스타일로 통일 */
+#loginCard.auth-card{width:min(100%,520px)!important;max-width:520px!important;margin:10px auto 22px!important;padding:24px!important;background:#fff!important;border:1px solid #E2E7F0!important;border-radius:16px!important;box-shadow:0 4px 16px #202b450f!important;color:#202B45!important}
+#loginCard #loginTitle{margin:0 0 5px!important;color:#111!important;font-family:var(--font-body)!important;font-size:clamp(23px,4vw,29px)!important;font-weight:900!important;letter-spacing:-.025em!important}
+#loginCard #loginTitle .mark{background:linear-gradient(transparent 62%,#bcecff 62%);padding:0 2px}
+#loginCard .auth-help{margin:0 0 16px!important;padding:0 0 15px!important;border-bottom:1px solid #d2ddeb!important;color:#68758E!important;font-size:13px!important;line-height:1.55!important}
+#loginCard .lrow{display:flex!important;align-items:center!important;gap:10px!important;min-height:46px!important;padding:0 12px!important;border:1px solid #D8DFEA!important;border-radius:10px!important;background:#fff!important}
+#loginCard .lrow .lic{flex:none!important;width:20px!important;text-align:center!important;color:#56358b!important;font-size:18px!important}
+#loginCard .lrow input#loginNickname{flex:1!important;width:100%!important;min-width:0!important;min-height:42px!important;padding:9px 0!important;border:0!important;border-radius:0!important;outline:none!important;background:transparent!important;color:#193b62!important;box-shadow:none!important}
+#loginCard .lrow:focus-within{border-color:#7396e8!important;outline:3px solid rgba(115,150,232,.16)!important}
+#loginCard .remember-row{display:flex!important;align-items:center!important;gap:9px!important;margin:12px 0 2px!important;color:#202B45!important;font-size:13px!important;font-weight:800!important;cursor:pointer!important}
+#loginCard input.remember-checkbox{appearance:auto!important;flex:none!important;width:19px!important;min-width:19px!important;height:19px!important;min-height:19px!important;margin:0!important;padding:0!important;accent-color:#16805d!important;cursor:pointer!important}
+#loginCard .auth-actions{display:grid!important;gap:10px!important;margin-top:16px!important}
+#loginCard .auth-primary,#loginCard button[type=submit]{width:100%!important;min-height:48px!important;border:1px solid transparent!important;border-radius:10px!important;background:linear-gradient(110deg,#00b5a4,#0798d5)!important;color:#fff!important;font-family:var(--font-body)!important;font-size:15px!important;font-weight:800!important;box-shadow:none!important}
+#loginCard .auth-primary:hover{filter:brightness(.98)}
+#loginCard .auth-secondary,#loginCard #openSignup{width:100%!important;min-height:46px!important;margin:0!important;border:1px solid #D8E5F0!important;border-radius:10px!important;background:#E9F4FB!important;color:#1F6F9F!important;font-family:var(--font-body)!important;font-size:15px!important;font-weight:800!important;box-shadow:none!important;text-align:center!important;justify-content:center!important}
+#loginCard .auth-status{margin-top:12px!important;min-height:1.5em!important;font-size:13px!important}
+#loginCard:after{content:none!important;display:none!important}
+@media(max-width:520px){#loginCard.auth-card{width:100%!important;margin:8px auto 18px!important;padding:18px!important;border-radius:16px!important;box-shadow:0 4px 14px #202b4512!important}#loginCard #loginTitle{font-size:25px!important}}
 </style>
 </head>
 <body>
@@ -81,10 +100,8 @@
 <div class="home-suggest-head"><div><span class="home-suggest-kicker">YOUR VOICE MATTERS</span><h3>💡 건의사항 게시판</h3><p>드립대학을 더 좋게 만들 아이디어를 들려주세요.</p></div><button type="button" id="homeSuggestMore" class="home-suggest-more">전체 보기 ›</button></div>
 <div id="homeSuggestPreview" class="home-suggest-preview" aria-live="polite"><p class="home-suggest-empty">건의사항을 불러오는 중…</p></div>
 </section>
-<section id="loginCard" class="auth-card" aria-labelledby="loginTitle">      <div class="du-extracted-brand" aria-label="Drip University Giving Talks">
-<img data-b alt="Drip University Giving Talks 로고">
-</div>
-<h2 id="loginTitle"><span class="mark">로그인</span></h2><p class="auth-help">카카오톡 오픈채팅에서 사용하는 닉네임을 입력해 주세요.</p>
+<section id="loginCard" class="auth-card" aria-labelledby="loginTitle">
+<h2 id="loginTitle"><span class="mark">로그인</span></h2><p class="auth-help">드립대학교에 오신 것을 환영합니다.<br>등록한 닉네임으로 간편하게 로그인하세요.</p>
 <form id="loginForm" autocomplete="off">
 <div class="lrow"><span class="lic" aria-hidden="true">👤</span><input id="loginNickname" aria-label="닉네임" name="nickname" maxlength="24" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="등록한 닉네임" required></div>
 <label class="remember-row" for="rememberLogin"><input class="remember-checkbox" id="rememberLogin" type="checkbox" checked> 자동 로그인</label>
